@@ -12,7 +12,7 @@ require.config({
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
-    'gemtc': 'bower_components/mcda-web/app/js'
+    'gemtc-web': '.'
   },
   baseUrl: '.',
   shim: {

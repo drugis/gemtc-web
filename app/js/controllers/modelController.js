@@ -1,14 +1,8 @@
 'use strict';
 define(['underscore'], function() {
-  var dependencies = ['$scope'];
-  var ModelController = function($scope) {
-
-    $scope.analysis = $scope.$parent.analysis;
-    $scope.project = $scope.$parent.project;
-    $scope.$parent.loading = {
-      loaded: false
-    };
-
+  var dependencies = ['$scope', '$stateParams', 'ModelResource'];
+  var ModelController = function($scope, $stateParams, ModelResource) {
+    $scope.model = ModelResource.get($stateParams);
   };
   return dependencies.concat(ModelController);
 });
