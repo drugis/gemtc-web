@@ -16,15 +16,24 @@ gemtc <- function(params) {
   result <- mtc.run(model)
   update(90)
 
+  comps <- combn(as.character(network[['treatments']][['id']]), 2)
+  t1 <- comps[1,]
+  t2 <- comps[2,]
+  releffect <- summary(relative.effect(result, t1, t2))[['summaries']][['quantiles']]
+  releffect <- apply(comps, 2, function(comp) {
+    list(t1=comp[1], t2=comp[2], quantiles=releffect[paste("d", comp[1], comp[2], sep="."),])
+  })
+
   summary <- summary(result)
   summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
   summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
-  summary$logScale <- ll.call('scale.log', model)
+  summary[['logScale']] <- ll.call('scale.log', model)
   summary[['link']] <- model[['link']]
   summary[['likelihood']] <- model[['likelihood']]
   summary[['type']] <- model[['type']]
   summary[['linearModel']] <- model[['linearModel']]
-
+  summary[['relativeEffects']] <- releffect
+  summary[['rankProbabilities']] <- rank.probability(result)
   update(100)
   summary
 }
