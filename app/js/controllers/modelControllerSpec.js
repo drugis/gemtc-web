@@ -41,10 +41,6 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       it('should attempt to load the model', function() {
         expect(modelResource.get).toHaveBeenCalledWith(mockStateParams);
       });
-
-      it('should place the model on the scope', function() {
-        expect(scope.model).toBeTruthy();
-      });
     });
 
     describe('when the model is loaded', function() {

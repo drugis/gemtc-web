@@ -1,12 +1,11 @@
 'use strict';
-define(['angular', 'gemtc-web/lib/autobahn', 'gemtc-web/lib/when'],
-  function(angular, ab, when) {
-    var dependencies = ['GEMTC_PATAVI_WS'];
-    var PataviService = function(GEMTC_PATAVI_WS) {
+define(['angular', 'gemtc-web/lib/autobahn'], function(angular, ab) {
+    var dependencies = ['$q', 'GEMTC_PATAVI_WS'];
+    var PataviService = function($q, GEMTC_PATAVI_WS) {
       var BASE_URI = 'http://api.patavi.com/';
 
       var Task = function(method, payload) {
-        var resultsPromise = when.defer();
+        var resultsPromise = $q.defer();
         var self = this;
         this.results = resultsPromise.promise;
 
@@ -37,8 +36,8 @@ define(['angular', 'gemtc-web/lib/autobahn', 'gemtc-web/lib/when'],
       };
 
       var run = function(problem) {
-        var task = new Task('gemtc', problem.entries);
-        return task.results.promise;
+        var task = new Task('gemtc', problem);
+        return task.results;
       };
 
       return {

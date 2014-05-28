@@ -2,13 +2,29 @@
 define(['underscore'], function() {
   var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService', 'ProblemResource'];
   var ModelController = function($scope, $stateParams, ModelResource, PataviService, ProblemResource) {
-    $scope.model = ModelResource.get($stateParams);
 
-    $scope.result = $scope.model.$promise.then(function() {
+    function getProblem() {
       return ProblemResource.get($stateParams).$promise;
-    }).then(function(problem) {
-      return PataviService.run(problem);
-    });
+    }
+
+    $scope.progress = {
+      percentage: 0
+    };
+
+    var resultsPromise = ModelResource
+      .get($stateParams)
+      .$promise
+      .then(getProblem)
+      .then(PataviService.run)
+      .then(function(result) {
+        $scope.result = result;
+      },function(error) {
+        console.log('my error');
+      }
+      ,function(update) {
+        $scope.progress.percentage = update;
+      });
+
 
   };
   return dependencies.concat(ModelController);
