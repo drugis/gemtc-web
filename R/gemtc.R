@@ -20,6 +20,11 @@ gemtc <- function(params) {
   summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
   summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
   summary$logScale <- ll.call('scale.log', model)
+  summary[['link']] <- model[['link']]
+  summary[['likelihood']] <- model[['likelihood']]
+  summary[['type']] <- model[['type']]
+  summary[['linearModel']] <- model[['linearModel']]
+
   update(100)
   summary
 }
