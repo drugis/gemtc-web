@@ -4,6 +4,7 @@
 FROM patavi/worker
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-rjags
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-xml
 
 RUN R -e 'install.packages("gemtc", repos="http://cran.rstudio.com/"); if (!require("gemtc")) quit(save="no", status=8)'
 
