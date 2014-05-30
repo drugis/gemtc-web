@@ -22,7 +22,9 @@ define(['underscore'], function() {
         console.log('my error');
       }
       ,function(update) {
-        $scope.progress.percentage = update;
+        if ($.isNumeric(update)) {
+          $scope.progress.percentage = update;
+        }
       });
 
 
