@@ -32,7 +32,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         $promise: pataviResultDeferred.promise,
         results: {
           relativeEffects: []
-        }
+        },
+        logScale: true
       }
       modelResource = jasmine.createSpyObj('ModelResource', ['get']);
       modelResource.get.and.returnValue(mockModel);

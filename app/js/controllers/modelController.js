@@ -18,7 +18,9 @@ define(['underscore'], function() {
       .then(PataviService.run)
       .then(function(result) {
         $scope.result = result;
-        $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable($scope.result.results.relativeEffects);
+        var relativeEffects = result.results.relativeEffects;
+        var isLogScale = result.results.logScale;
+        $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale);
       },function(error) {
         console.log('my error');
       }
