@@ -1,8 +1,11 @@
 <div class="row">
   <div class="columns 12-large">
-  <h1>Model View</h1>
-  <h2>Progress: {{progress.percentage}} %</h2>
-{{model | json}}
-<pre>{{result | json}}</pre>
-</div>
+    <div ng-switch on="progress.percentage">
+      <span ng-switch-default>
+        <h3 class="inline-header">Loading model / {{progress.percentage}} % complete</h3>
+      </span>
+      <h3 class="inline-header" ng-switch-when="100">Random effects {{result.results.type}} model</h3>
+      <pre ng-switch-when="100">{{result | json}}</pre>
+    </div>
+  </div>
 </div>
