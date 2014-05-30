@@ -4,8 +4,12 @@
       <span ng-switch-default>
         <h3 class="inline-header">Loading model / {{progress.percentage}} % complete</h3>
       </span>
-      <h3 class="inline-header" ng-switch-when="100">Random effects {{result.results.type}} model</h3>
-      <pre ng-switch-when="100">{{result | json}}</pre>
+      <div ng-switch-when="100">
+        <h3 class="inline-header" >Random effects {{result.results.type}} model</h3>
+        <div>Random effects standard deviation: {{result.results.summaries.quantiles["sd.d"]["50%"]}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"]}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"]}})
+        </div>
+        <pre>{{result | json}}</pre>
+      </div>
     </div>
   </div>
 </div>
