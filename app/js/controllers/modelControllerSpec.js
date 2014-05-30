@@ -9,7 +9,11 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       modelDeferred,
       mockModel,
       problemDeferred,
-      mockProblem;
+      mockProblem,
+      pataviResult,
+      pataviResultDeferred,
+      pataviService,
+      relativeEffectsTableService;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -23,17 +27,28 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       mockProblem = {
         $promise: problemDeferred.promise
       };
+      pataviResultDeferred = $q.defer();
+      pataviResult = {
+        $promise: pataviResultDeferred.promise,
+        results: {
+          relativeEffects: []
+        }
+      }
       modelResource = jasmine.createSpyObj('ModelResource', ['get']);
       modelResource.get.and.returnValue(mockModel);
       problemResource = jasmine.createSpyObj('ProblemResource', ['get']);
       problemResource.get.and.returnValue(mockProblem);
       pataviService = jasmine.createSpyObj('PataviService', ['run']);
+      pataviService.run.and.returnValue(pataviResult);
+      relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
+
       $controller('ModelController', {
         $scope: scope,
         $stateParams: mockStateParams,
         ModelResource: modelResource,
         ProblemResource: problemResource,
-        PataviService: pataviService
+        PataviService: pataviService,
+        RelativeEffectsTableService: relativeEffectsTableService
       });
     }));
 
@@ -62,6 +77,19 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         it('should call the patavi service', function() {
           expect(pataviService.run).toHaveBeenCalled();
         });
+
+        describe('when the patavi results are ready', function() {
+
+          beforeEach(function() {
+            pataviResultDeferred.resolve(pataviResult);
+            scope.$apply();
+          });
+
+          it('the relativeEffectsTable should be constructed', inject(function() {
+            expect(relativeEffectsTableService.buildTable).toHaveBeenCalled();
+          }));
+        });
+
       });
     });
 

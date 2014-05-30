@@ -1,7 +1,7 @@
 'use strict';
 define(['underscore'], function() {
-  var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService', 'ProblemResource'];
-  var ModelController = function($scope, $stateParams, ModelResource, PataviService, ProblemResource) {
+  var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService', 'ProblemResource', 'RelativeEffectsTableService'];
+  var ModelController = function($scope, $stateParams, ModelResource, PataviService, ProblemResource, RelativeEffectsTableService) {
 
     function getProblem() {
       return ProblemResource.get($stateParams).$promise;
@@ -18,6 +18,7 @@ define(['underscore'], function() {
       .then(PataviService.run)
       .then(function(result) {
         $scope.result = result;
+        $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable($scope.result.results.relativeEffects);
       },function(error) {
         console.log('my error');
       }

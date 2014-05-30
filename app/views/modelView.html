@@ -6,10 +6,29 @@
       </span>
       <div ng-switch-when="100">
         <h3 class="inline-header" >Random effects {{result.results.type}} model</h3>
+
         <div>Random effects standard deviation: {{result.results.summaries.quantiles["sd.d"]["50%"]}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"]}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"]}})
         </div>
-        <pre>{{result | json}}</pre>
+
       </div>
     </div>
   </div>
+</div>
+<div class="row">
+  <div class="columns 12-large">
+    <table>
+      <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
+        <td ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
+
+         <span ng-switch-when="effect">
+          {{relativeEffectsCell.mean | number: 3}} ({{relativeEffectsCell.lowerBound | number: 3}}, {{relativeEffectsCell.upperBound | number: 3}})
+        </span>
+        <span ng-switch-when="label" class="table-cell-label">
+          {{relativeEffectsCell.label}}
+        </span>
+        <span ng-switch-when="empty"> </span> 
+      </td>
+    </tr>
+  </table>
+</div>
 </div>
