@@ -17,12 +17,13 @@ define(['underscore'], function() {
       .then(getProblem)
       .then(PataviService.run)
       .then(function(result) {
+        $scope.outcome = $scope.$parent.analysis.outcome;
         $scope.result = result;
         var relativeEffects = result.results.relativeEffects;
         var isLogScale = result.results.logScale;
         $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale);
       },function(error) {
-        console.log('my error');
+        console.log('an error has occurred, error: ' + error);
       }
       ,function(update) {
         if ($.isNumeric(update)) {
