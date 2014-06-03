@@ -5,6 +5,8 @@ wrap.matrix <- function(m) {
   l
 }
 
+
+
 gemtc <- function(params) {
   update(0)
   data.ab <- do.call(rbind, lapply(params[['entries']], as.data.frame, stringsAsFactors=FALSE))
@@ -33,7 +35,8 @@ gemtc <- function(params) {
   summary[['type']] <- model[['type']]
   summary[['linearModel']] <- model[['linearModel']]
   summary[['relativeEffects']] <- releffect
-  summary[['rankProbabilities']] <- rank.probability(result)
+  summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
+  summary[['alternatives']] <- names(summary[['rankProbabilities']])
   update(100)
   summary
 }
