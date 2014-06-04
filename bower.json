@@ -39,8 +39,8 @@
         "angular": "1.2.6",
         "angular-resource": "1.2.6",
         "angular-ui-router": "0.2.7",
-        "d3": "3.2.2",
-        "nvd3": "1.0.0-beta",
+        "d3": "3.3.13",
+        "nvd3": "1.1.15-beta",
         "foundation": "5.0.2",
         "font-awesome": "~4.0.3",
         "requirejs": "~2.1.10"

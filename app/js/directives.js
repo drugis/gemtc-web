@@ -61,6 +61,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(angular, _, $
             chart.stacked(attrs.stacked);
             chart.reduceXTicks(false);
             chart.staggerLabels(true);
+            chart.tooltips(false);
 
             svg.datum(data)
               .transition().duration(100).call(chart);
