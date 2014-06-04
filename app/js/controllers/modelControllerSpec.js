@@ -19,6 +19,11 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
 
     beforeEach(inject(function($rootScope, $controller, $q) {
       scope = $rootScope;
+      scope.$parent = {
+        analysis: {
+          outcome: 'outcome'
+        }
+      };
       modelDeferred = $q.defer();
       mockModel = {
         $promise: modelDeferred.promise
@@ -34,7 +39,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
           relativeEffects: []
         },
         logScale: true
-      }
+      };
       modelResource = jasmine.createSpyObj('ModelResource', ['get']);
       modelResource.get.and.returnValue(mockModel);
       problemResource = jasmine.createSpyObj('ProblemResource', ['get']);
