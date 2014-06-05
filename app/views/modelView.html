@@ -19,9 +19,11 @@
             </div>
           </div>
         </div>
-        <div class="table-title">Relative effects table comparing the project's defined interventions: odds ratio (95% CrI).
-          <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
-          <span ng-show="result.results.logScale">(log scale)</span>
+        <div class="table-title" ng-switch on="result.results.logScale">Relative effects table comparing the included interventions: 
+          <span ng-switch-when="true">odds ratio</span>
+          <span ng-switch-default>mean difference</span>
+           (95% CrI).
+          <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention<span ng-show="result.results.logScale">(log scale)</span>.
         </div>
         <table>
           <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
@@ -47,7 +49,7 @@
 
         </div>
         <div style="width: 400px; height: 400px">
-          <h5>Rank probabilities</h5>
+          <h4>Rank probabilities</h4>
           <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true">
         </div>
 
