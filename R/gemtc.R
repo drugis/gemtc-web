@@ -5,18 +5,34 @@ wrap.matrix <- function(m) {
   l
 }
 
-
+close.PataviJagsPB <- function(pb) {}
 
 gemtc <- function(params) {
-  update(0)
+  iter.adapt <- 5000
+  iter.infer <- 20000
+  progress.start <- 0
+  progress.jags <- 80
+
+  newProgress <- function(start.iter, end.iter, adapting) {
+    pb <- list(start.iter=start.iter, end.iter=end.iter, adapting=adapting)
+    class(pb) <- "PataviJagsPB"
+    pb
+  }
+
+  setProgress <- function(pb, iter) {
+    update(progress.start + (iter / (iter.adapt + iter.infer)) * progress.jags)
+  }
+
+  assignInNamespace("updatePB", newProgress, "rjags")
+  assignInNamespace("setPB", setProgress, "rjags")
+  options("jags.pb"="gui")
+
   data.ab <- do.call(rbind, lapply(params[['entries']], as.data.frame, stringsAsFactors=FALSE))
 
   network <- mtc.network(data.ab=data.ab)
-  update(10)
   model <- mtc.model(network)
-  update(30)
-  result <- mtc.run(model)
-  update(90)
+  update(0)
+  result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer)
 
   comps <- combn(as.character(network[['treatments']][['id']]), 2)
   t1 <- comps[1,]
@@ -25,6 +41,7 @@ gemtc <- function(params) {
   releffect <- apply(comps, 2, function(comp) {
     list(t1=comp[1], t2=comp[2], quantiles=releffect[paste("d", comp[1], comp[2], sep="."),])
   })
+  update(95)
 
   summary <- summary(result)
   summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
