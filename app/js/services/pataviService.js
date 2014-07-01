@@ -1,29 +1,30 @@
 'use strict';
 define(['angular', 'gemtc-web/lib/autobahn'], function(angular, ab) {
-    var dependencies = ['$q', 'GEMTC_PATAVI_WS'];
-    var PataviService = function($q, GEMTC_PATAVI_WS) {
+    var dependencies = ['$q'];
+    var PataviService = function($q) {
       var BASE_URI = 'http://api.patavi.com/';
 
-      var Task = function(method, payload) {
+      var Task = function(task) {
         var resultsPromise = $q.defer();
         var self = this;
         this.results = resultsPromise.promise;
 
-        var session = ab.connect(GEMTC_PATAVI_WS, function(session) {
-          console.log("Connected to " + GEMTC_PATAVI_WS, session.sessionid());
+        var uri = task.uri;
+        ab.connect(uri, function(session) {
+          console.log('Connected to ' + uri, session.sessionid());
           // Subscribe to updates
-          session.subscribe(BASE_URI + "status#", function(topic, event) {
+          session.subscribe(BASE_URI + 'status#', function(topic, event) {
             resultsPromise.notify(event);
           });
 
           // Send-off RPC
-          self.results = session.call(BASE_URI + "rpc#", method, payload).then(
+          self.results = session.call(BASE_URI + 'rpc#').then(
             function(result) {
               resultsPromise.resolve(result);
               session.close();
             },
             function(reason, code) {
-              console.log("error", code, reason);
+              console.log('error', code, reason);
               resultsPromise.reject(reason);
               session.close();
             }
@@ -35,9 +36,12 @@ define(['angular', 'gemtc-web/lib/autobahn'], function(angular, ab) {
         });
       };
 
-      var run = function(problem) {
-        var task = new Task('gemtc', problem);
-        return task.results;
+      var run = function(task) {
+        var deferred = $q.defer();
+        task.$promise.then(function(resolvedTask) {
+          deferred.resolve(new Task(resolvedTask).results);
+        });
+        return deferred.promise;
       };
 
       return {
