@@ -1,12 +1,12 @@
 <div class="row">
   <div class="columns large-12">
-    <div ng-switch on="progress.percentage">
+    <div>
 
-      <span ng-switch-default>
+      <span ng-if="!result.results">
         <h4 class="inline-header">Loading model / {{progress.percentage}} % complete</h4>
       </span>
 
-      <div ng-switch-when="100">
+      <div ng-if="result.results">
 
         <div class="row">
           <div class="columns large-4">
@@ -14,7 +14,7 @@
             <div class="panel">
               <dl>
                 <dt>Outcome</dt>
-                <dd>{{outcome.name}}</dd>
+                <dd>{{outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></dd>
                 <dt>Random effects standard deviation</dt>
                 <dd>
                   {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})
@@ -28,7 +28,7 @@
           <span ng-switch-when="true">odds ratio</span>
           <span ng-switch-default>mean difference</span>
           (95% CrI).
-          <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention<span ng-show="result.results.logScale">(log scale)</span>.
+          <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
         </div>
         <table>
           <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
@@ -51,8 +51,8 @@
             <div class="addis-graph" style="height:400px;"><gemtc-rank-plot  value="result.results.rankProbabilities" stacked="true"></div>
           </div>
           <div class="graph-legend columns large-4 end panel callout">
-            <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the best.</p>
-            <p>Ranks can be shown as grouped or stacked, and specific ranks can be disabled.</p>
+            <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the highest outcome value.</p>
+            <p>Ranks can be shown as grouped or stacked.</p>
           </div>
 
         </div>

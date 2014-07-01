@@ -1,10 +1,10 @@
 'use strict';
 define(['underscore'], function() {
-  var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService', 'ProblemResource', 'RelativeEffectsTableService'];
-  var ModelController = function($scope, $stateParams, ModelResource, PataviService, ProblemResource, RelativeEffectsTableService) {
+  var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService', 'RelativeEffectsTableService', 'PataviTaskIdResource'];
+  var ModelController = function($scope, $stateParams, ModelResource, PataviService, RelativeEffectsTableService, PataviTaskIdResource) {
 
-    function getProblem() {
-      return ProblemResource.get($stateParams).$promise;
+    function getTaskId() {
+      return PataviTaskIdResource.get($stateParams);
     }
 
     $scope.progress = {
@@ -14,7 +14,7 @@ define(['underscore'], function() {
     var resultsPromise = ModelResource
       .get($stateParams)
       .$promise
-      .then(getProblem)
+      .then(getTaskId)
       .then(PataviService.run)
       .then(function(result) {
         $scope.outcome = $scope.$parent.analysis.outcome;
@@ -22,10 +22,9 @@ define(['underscore'], function() {
         var relativeEffects = result.results.relativeEffects;
         var isLogScale = result.results.logScale;
         $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale);
-      },function(error) {
+      }, function(error) {
         console.log('an error has occurred, error: ' + error);
-      }
-      ,function(update) {
+      }, function(update) {
         if ($.isNumeric(update)) {
           $scope.progress.percentage = update;
         }
