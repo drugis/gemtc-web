@@ -3,7 +3,7 @@
     <div>
 
       <span ng-if="!result.results">
-        <h4 class="inline-header">Loading model / {{progress.percentage}} % complete</h4>
+        <h4 class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
       </span>
 
       <div ng-if="result.results">
