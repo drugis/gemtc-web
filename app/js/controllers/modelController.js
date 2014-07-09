@@ -24,30 +24,33 @@ define(['underscore'], function() {
       }, {});
     }
 
+    function successCallback(result) {
+      return ProblemResource.get({
+        analysisId: $stateParams.analysisId,
+        projectId: $stateParams.projectId
+      }).$promise.then(function(problem) {
+        $scope.outcome = $scope.$parent.analysis.outcome;
+        result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
+        $scope.result = result;
+        var relativeEffects = result.results.relativeEffects;
+        var isLogScale = result.results.logScale;
+        $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+      });
+    }
+
     ModelResource
       .get($stateParams)
       .$promise
       .then(getTaskId)
       .then(PataviService.run)
-      .then(function(result) {
-        ProblemResource.get({
-          projectId: $stateParams.projectId,
-          analysisId: $stateParams.analysisId
-        }, function(problem) {
-          $scope.outcome = $scope.$parent.analysis.outcome;
-          result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
-          $scope.result = result;
-          var relativeEffects = result.results.relativeEffects;
-          var isLogScale = result.results.logScale;
-          $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+      .then(successCallback,
+        function(error) {
+          console.log('an error has occurred, error: ' + error);
+        }, function(update) {
+          if (update && $.isNumeric(update.progress)) {
+            $scope.progress.percentage = update.progress;
+          }
         });
-      }, function(error) {
-        console.log('an error has occurred, error: ' + error);
-      }, function(update) {
-        if (update && $.isNumeric(update.progress)) {
-          $scope.progress.percentage = update.progress;
-        }
-      });
 
 
   };

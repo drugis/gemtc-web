@@ -2,6 +2,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
   describe('the modelController', function() {
     var scope, modelResource,
       problemResource,
+      pataviTaskIdResource,
       mockStateParams = {
         analysisId: 1,
         projectId: 11
@@ -10,6 +11,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       mockModel,
       problemDeferred,
       mockProblem,
+      mockPataviTaskId,
       pataviResult,
       pataviResultDeferred,
       pataviService,
@@ -32,11 +34,16 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       mockProblem = {
         $promise: problemDeferred.promise
       };
+      pataviTaskIdDeferred = $q.defer();
+      pataviTaskIdResult = {
+        $promise: pataviTaskIdDeferred.promise,
+      };
       pataviResultDeferred = $q.defer();
       pataviResult = {
         $promise: pataviResultDeferred.promise,
         results: {
-          relativeEffects: []
+          relativeEffects: [],
+          rankProbabilities: []
         },
         logScale: true
       };
@@ -44,6 +51,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       modelResource.get.and.returnValue(mockModel);
       problemResource = jasmine.createSpyObj('ProblemResource', ['get']);
       problemResource.get.and.returnValue(mockProblem);
+      pataviTaskIdResource = jasmine.createSpyObj('PataviTaskIdResource', ['get']);
+      pataviTaskIdResource.get.and.returnValue(pataviTaskIdResult);
       pataviService = jasmine.createSpyObj('PataviService', ['run']);
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
@@ -54,6 +63,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         ModelResource: modelResource,
         ProblemResource: problemResource,
         PataviService: pataviService,
+        PataviTaskIdResource: pataviTaskIdResource,
         RelativeEffectsTableService: relativeEffectsTableService
       });
     }));
@@ -70,13 +80,14 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         scope.$apply();
       });
 
-      it('should retrieve the associated problem', function() {
-        expect(problemResource.get).toHaveBeenCalledWith(mockStateParams);
+      it('should retrieve the associated patavi task id', function() {
+        expect(pataviTaskIdResource.get).toHaveBeenCalledWith(mockStateParams);
       });
 
-      describe('when the problem is loaded', function() {
+      describe('when the patavi task id is available', function() {
+
         beforeEach(function() {
-          problemDeferred.resolve(mockProblem);
+          pataviTaskIdDeferred.resolve(mockPataviTaskId);
           scope.$apply();
         });
 
@@ -91,13 +102,22 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
             scope.$apply();
           });
 
-          it('the relativeEffectsTable should be constructed', inject(function() {
-            expect(relativeEffectsTableService.buildTable).toHaveBeenCalled();
-          }));
-        });
+          it('should retrieve the problem', function() {
+            expect(problemResource.get).toHaveBeenCalledWith(mockStateParams);
+          });
 
+          describe('when the problem is loaded', function() {
+            beforeEach(function() {
+              problemDeferred.resolve(mockProblem);
+              scope.$apply();
+            });
+
+            it('the relativeEffectsTable should be constructed', inject(function() {
+              expect(relativeEffectsTableService.buildTable).toHaveBeenCalled();
+            }));
+          });
+        });
       });
     });
-
   });
 });

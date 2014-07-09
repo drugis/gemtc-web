@@ -1,7 +1,7 @@
 define(['angular', 'angular-mocks', 'services'], function() {
   describe('the relative effecs table service', function() {
     beforeEach(function() {
-      module('gemtc.services', function($provide) {});
+      module('gemtc.services');
     });
 
     it('should create a relative effects table', inject(function(RelativeEffectsTableService) {
@@ -71,7 +71,20 @@ define(['angular', 'angular-mocks', 'services'], function() {
           }]
         }]
       };
-      var builtTable = RelativeEffectsTableService.buildTable(mockRelativeEffects);
+      var treatments = [{
+        id: 1,
+        name: 'fluox'
+      }, {
+        id: 2,
+        name: 'fluvo'
+      }, {
+        id: 3,
+        name: 'mirte'
+      }, {
+        id: 4,
+        name: 'parox'
+      }]
+      var builtTable = RelativeEffectsTableService.buildTable(mockRelativeEffects, false, treatments);
       expect(builtTable).toEqual(expectedTable);
     }));
   });
@@ -79,8 +92,8 @@ define(['angular', 'angular-mocks', 'services'], function() {
   function buildMockRelativeEffects() {
 
     return [{
-      "t1": "fluox",
-      "t2": "fluvo",
+      "t1": "1",
+      "t2": "2",
       "quantiles": {
         "2.5%": -0.74463,
         "25%": -0.22362,
@@ -89,8 +102,8 @@ define(['angular', 'angular-mocks', 'services'], function() {
         "97.5%": 0.77857
       }
     }, {
-      "t1": "fluox",
-      "t2": "mirte",
+      "t1": "1",
+      "t2": "3",
       "quantiles": {
         "2.5%": -0.086517,
         "25%": 0.23978,
@@ -99,8 +112,8 @@ define(['angular', 'angular-mocks', 'services'], function() {
         "97.5%": 0.89359,
       }
     }, {
-      "t1": "fluox",
-      "t2": "parox",
+      "t1": "1",
+      "t2": "4",
       "quantiles": {
         "2.5%": -0.12607,
         "25%": 0.10228,
@@ -109,8 +122,8 @@ define(['angular', 'angular-mocks', 'services'], function() {
         "97.5%": 0.55872
       }
     }, {
-      "t1": "fluvo",
-      "t2": "mirte",
+      "t1": "2",
+      "t2": "3",
       "quantiles": {
         "2.5%": -0.5303,
         "25%": 0.086932,
@@ -119,8 +132,8 @@ define(['angular', 'angular-mocks', 'services'], function() {
         "97.5%": 1.2879
       }
     }, {
-      "t1": "fluvo",
-      "t2": "parox",
+      "t1": "2",
+      "t2": "4",
       "quantiles": {
         "2.5%": -0.63341,
         "25%": -0.085617,
@@ -129,8 +142,8 @@ define(['angular', 'angular-mocks', 'services'], function() {
         "97.5%": 1.0355
       }
     }, {
-      "t1": "mirte",
-      "t2": "parox",
+      "t1": "3",
+      "t2": "4",
       "quantiles": {
         "2.5%": -0.61811,
         "25%": -0.32346,
