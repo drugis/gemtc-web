@@ -1,7 +1,10 @@
 'use strict';
 define(['underscore'], function() {
-  var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService', 'RelativeEffectsTableService', 'PataviTaskIdResource'];
-  var ModelController = function($scope, $stateParams, ModelResource, PataviService, RelativeEffectsTableService, PataviTaskIdResource) {
+  var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService',
+    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource'
+  ];
+  var ModelController = function($scope, $stateParams, ModelResource, PataviService,
+    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource) {
 
     function getTaskId() {
       return PataviTaskIdResource.get($stateParams);
@@ -11,17 +14,33 @@ define(['underscore'], function() {
       percentage: 0
     };
 
-    var resultsPromise = ModelResource
+    function nameRankProbabilities(rankProbabilities, treatments) {
+      return _.reduce(_.pairs(rankProbabilities), function(memo, pair) {
+        var treatmentName = _.find(treatments, function(treatment) {
+          return treatment.id.toString() === pair[0];
+        }).name;
+        memo[treatmentName] = pair[1];
+        return memo;
+      }, {});
+    }
+
+    ModelResource
       .get($stateParams)
       .$promise
       .then(getTaskId)
       .then(PataviService.run)
       .then(function(result) {
-        $scope.outcome = $scope.$parent.analysis.outcome;
-        $scope.result = result;
-        var relativeEffects = result.results.relativeEffects;
-        var isLogScale = result.results.logScale;
-        $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale);
+        ProblemResource.get({
+          projectId: $stateParams.projectId,
+          analysisId: $stateParams.analysisId
+        }, function(problem) {
+          $scope.outcome = $scope.$parent.analysis.outcome;
+          result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
+          $scope.result = result;
+          var relativeEffects = result.results.relativeEffects;
+          var isLogScale = result.results.logScale;
+          $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+        });
       }, function(error) {
         console.log('an error has occurred, error: ' + error);
       }, function(update) {

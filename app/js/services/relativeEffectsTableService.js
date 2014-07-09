@@ -15,7 +15,7 @@ define(['angular'], function(angular) {
     }
 
 
-    function buildTable(relativeEffects, isLogScale) {
+    function buildTable(relativeEffects, isLogScale, treatments) {
       var table = {
         rows: []
       };
@@ -23,6 +23,10 @@ define(['angular'], function(angular) {
       var rowIndex = -1;
       var currentEffect;
       var row;
+      var treatmentIdToNameMap = _.reduce(treatments, function(memo, treatment) {
+        memo[treatment.id] = treatment.name;
+        return memo;
+      }, {});
 
       angular.forEach(relativeEffects, function(relativeEffect) {
         if (relativeEffect.t1 !== currentEffect) {
@@ -34,7 +38,7 @@ define(['angular'], function(angular) {
           };
           row.cells.push({
             cellType: 'label',
-            label: relativeEffect.t1
+            label: treatmentIdToNameMap[relativeEffect.t1]
           });
           table.rows.push(row);
         }
@@ -43,16 +47,16 @@ define(['angular'], function(angular) {
           cellType: 'effect',
           mean: isLogScale ? Math.exp(relativeEffect.quantiles['50%']) : relativeEffect.quantiles['50%'],
           lowerBound: isLogScale ? Math.exp(relativeEffect.quantiles['2.5%']) : relativeEffect.quantiles['2.5%'],
-          upperBound: isLogScale ? Math.exp(relativeEffect.quantiles['97.5%']): relativeEffect.quantiles['97.5%']
+          upperBound: isLogScale ? Math.exp(relativeEffect.quantiles['97.5%']) : relativeEffect.quantiles['97.5%']
         });
 
       });
       var lastRow = {
-        cells: createEmptyCells(rowIndex+1)
+        cells: createEmptyCells(rowIndex + 1)
       };
       lastRow.cells.push({
         cellType: 'label',
-        label: relativeEffects[relativeEffects.length - 1].t2
+        label: treatmentIdToNameMap[relativeEffects[relativeEffects.length - 1].t2]
       });
       table.rows.push(lastRow);
       return table;
