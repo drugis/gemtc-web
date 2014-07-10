@@ -13,25 +13,49 @@ gemtc <- function(params) {
   progress.start <- 0
   progress.jags <- 80
 
-  newProgress <- function(start.iter, end.iter, adapting) {
-    pb <- list(start.iter=start.iter, end.iter=end.iter, adapting=adapting)
-    class(pb) <- "PataviJagsPB"
-    pb
+  jagsProgress <- function(iter) {
+    update(list(progress=progress.start + (iter / (iter.adapt + iter.infer)) * progress.jags))
   }
 
-  setProgress <- function(pb, iter) {
-    update(progress.start + (iter / (iter.adapt + iter.infer)) * progress.jags)
-  }
+  # changed from jags.object.R in rjags 3.13
+  update.jags <- function(object, n.iter = 1, by, ...)
+  {
+    if (!is.numeric(n.iter) || n.iter < 1) {
+      stop("Invalid n.iter")
+    }
 
-  assignInNamespace("updatePB", newProgress, "rjags")
-  assignInNamespace("setPB", setProgress, "rjags")
-  options("jags.pb"="gui")
+    adapting <- .Call("is_adapting", object$ptr(), PACKAGE="rjags")
+    on.exit(object$sync())
+
+    ## Set refresh frequency for progress bar
+    if (missing(by) || by <= 0) {
+      ##In JAGS 3.x.y there is a memory reallocation bug when
+      ##monitoring that slows down updates. Drop refresh
+      ##frequency to avoid triggering memory reallocations.
+      ##by <- min(ceiling(n.iter/50), 100)
+      by <- ceiling(n.iter/50)
+    }
+    else {
+      by <- ceiling(by)
+    }
+
+    ## Do updates
+    n <- n.iter
+    while (n > 0) {
+      .Call("update", object$ptr(), min(n,by), PACKAGE="rjags")
+      jagsProgress(object$iter())
+      n <- n - by
+    }
+
+    invisible(NULL)
+  }
+  assignInNamespace("update.jags", update.jags, "rjags")
 
   data.ab <- do.call(rbind, lapply(params[['entries']], as.data.frame, stringsAsFactors=FALSE))
 
   network <- mtc.network(data.ab=data.ab)
   model <- mtc.model(network)
-  update(0)
+  update(list(progress=0))
   result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer)
 
   comps <- combn(as.character(network[['treatments']][['id']]), 2)
@@ -41,7 +65,7 @@ gemtc <- function(params) {
   releffect <- apply(comps, 2, function(comp) {
     list(t1=comp[1], t2=comp[2], quantiles=releffect[paste("d", comp[1], comp[2], sep="."),])
   })
-  update(95)
+  update(list(progress=95))
 
   summary <- summary(result)
   summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
@@ -54,6 +78,6 @@ gemtc <- function(params) {
   summary[['relativeEffects']] <- releffect
   summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
   summary[['alternatives']] <- names(summary[['rankProbabilities']])
-  update(100)
+  update(list(progress=100))
   summary
 }
