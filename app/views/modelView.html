@@ -1,0 +1,64 @@
+<div class="row">
+  <div class="columns large-12">
+    <div>
+
+      <span ng-if="!result.results">
+        <h4 class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
+      </span>
+
+      <div ng-if="result.results">
+
+        <div class="row">
+          <div class="columns large-4">
+            <h4 class="inline-header">Random effects {{result.results.type}} model</h4>
+            <div class="panel">
+              <dl>
+                <dt>Outcome</dt>
+                <dd>{{outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></dd>
+                <dt>Random effects standard deviation</dt>
+                <dd>
+                  {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})
+                </dd>
+
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="table-title" ng-switch on="result.results.logScale">Relative effects table comparing the included interventions: 
+          <span ng-switch-when="true">odds ratio</span>
+          <span ng-switch-default>mean difference</span>
+          (95% CrI).
+          <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
+        </div>
+        <table>
+          <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
+            <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
+
+              <span ng-switch-when="effect">
+                {{relativeEffectsCell.mean | number: 3}} ({{relativeEffectsCell.lowerBound | number: 3}}, {{relativeEffectsCell.upperBound | number: 3}})
+              </span>
+              <span ng-switch-when="label" class="table-cell-label">
+                {{relativeEffectsCell.label}}
+              </span>
+              <span ng-switch-when="empty"></span>
+            </td>
+          </tr>
+        </table>
+        
+        <div class="row">
+          <div class="columns large-4">
+            <div class="table-title">Rank probabilities</div>
+            <div class="addis-graph" style="height:400px;"><gemtc-rank-plot  value="result.results.rankProbabilities" stacked="true"></div>
+          </div>
+          <div class="graph-legend columns large-4 end panel callout">
+            <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the highest outcome value.</p>
+            <p>Ranks can be shown as grouped or stacked.</p>
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
