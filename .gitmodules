@@ -1,0 +1,3 @@
+[submodule "app/drugis-css"]
+	path = app/drugis-css
+	url = git@github.com:drugis/drugis-css.git

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width" />
+<link rel="shortcut icon" href="img/favicon.ico" />
+
+<title>trialverse.org</title>
+
+<link rel="stylesheet" type="text/css" href="js/bower_components/font-awesome/css/font-awesome.min.css">
+
+<!-- Foundation 3 for IE 8 and earlier -->
+<!--[if lt IE 9]>
+<link rel="stylesheet" href="css/trialverse-drugis-ie8.css">
+<![endif]-->
+<!-- Foundation 5 for IE 9 and earlier -->
+<!--[if gt IE 8]><!-->
+<link rel="stylesheet" href="css/gemtc-drugis.css">
+<!--<![endif]-->
+<script type="text/javascript" src="js/bower_components/foundation/js/vendor/custom.modernizr.js"></script>
+<script type="text/javascript" src="js/bower_components/bowser/bowser.min.js"></script>
+
+</head>
+
+<body>
+  <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
+    Your browser, <span id="browserVersion1"></span>, is <b>out of date</b>.
+    It has known <b>security flaws</b> and will <b>not run this web application correctly</b>.<br>
+    <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a> before continuing.
+  </div>
+  <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserUnknown">
+    Your browser is unknown to us.
+    This web application may or may not work correctly using it.
+    Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before continuing.
+  </div>
+  <script type="text/javascript">
+  if (bowser.c || (bowser.msie && bowser.version <= 8)) {
+    document.getElementById("browserVersion1").innerHTML = bowser.name + " " + bowser.version;
+    document.getElementById("browserCheck").style.display = "block";
+  }
+  if (bowser.x) {
+    document.getElementById("browserUnknown").style.display = "block";
+  }
+  </script>
+
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1>
+          <a href="#" tabindex="1001">gemtc.org</a>
+        </h1>
+      </li>
+    </ul>
+  </nav>
+
+  <section id="hero">
+    <div class="row">
+      <div class="columns large-offset-2 large-8 medium-12">
+        <h1>GeMTC<small>.org</small></h1>
+        <h4>The portal to do stuff</h4>
+      </h1>
+    </div>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="row">
+      <div class="columns large-offset-2 large-8 medium-12">
+        <p>GeMTC aims enables stuff.
+	It is part of <a href="https://drugis.org/software/addis2/">ADDIS 2</a>, a <a href="https://drugis.org/">drugis.org</a> project,
+	and is currently in early development.</p>
+        <form id="SignInForm" action="auth/google" method="GET">
+        <input type="hidden" name="scope" value="profile email" />
+          <div>
+            <button class=" button" type="submit" tabindex="1" href=>Sign In with Google</button>
+          </div>
+        </form>
+
+        <p>You need a Google account to sign in. The information we retrieve from Google is only used to ensure that you continue to have access to the projects you create.</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
