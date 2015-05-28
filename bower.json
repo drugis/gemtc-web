@@ -36,12 +36,16 @@
     "foundation": "5.0.2",
     "font-awesome": "~4.0.3",
     "requirejs": "~2.1.10",
-    "bowser": "~0.7.3"
+    "bowser": "~0.7.3",
+    "angular-foundation": "~0.6.0",
+    "angular-animate": "~1.4.0",
+    "angular-sanitize": "~1.4.0",
+    "requirejs-domready": "~2.0.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.16"
   },
   "resolutions": {
-    "angular": "1.2.28"
+    "angular": "1.4.0"
   }
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="gemtc-stand-alone">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+
+    <title>mtc.drugis.org</title>
+
+    <link rel="stylesheet" type="text/css" href="js/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/gemtc-drugis.css">
+    <script src="js/bower_components/requirejs/require.js" data-main="js/main.js"></script>
+
+  </head>
+
+  <body>
+   
+    <nav class="top-bar" data-topbar>
+      <ul class="title-area">
+        <li class="name">
+          <h1>
+            <a id="gemtc-logo" href="#">gemtc.drugis.org</a>
+          </h1>
+        </li>
+      </ul>
+
+      <section class="top-bar-section">
+        <!-- Right Nav Section -->
+        <ul class="right">
+          <li class="has-dropdown not-click">
+            <a href="#"><img class="user-image" src="https://secure.gravatar.com/avatar/${userMD5}?s=43&d=mm"> <c:out value="${account.firstName} ${account.lastName} " /></a>
+            <ul class="dropdown">
+              <li>
+                <a href="/logout">Sign out</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+    </nav>
+    <section>
+      <div class="color-stripe"></div>
+    </section>
+
+    <div ui-view></div>
+
+    <div class="push"></div>
+
+  </body>
+</html>
