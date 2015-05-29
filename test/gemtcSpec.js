@@ -8,8 +8,9 @@ describe('/', function() {
   var app;
 
   before(function() {
+    debugger;
     app = server;
-    basePath =  'http://' + app.address().address + ':' + app.address().port;
+    basePath =  'http://localhost:' + app.address().port;
   });
 
   after(function() {
@@ -17,6 +18,7 @@ describe('/', function() {
   });
 
   it('should redirect to signin if no user signed in', function(done) {
+    
     superagent.get(basePath + '/').end(function(err, res) {
       assert.ifError(err);
       assert.equal(res.status, status.OK);
