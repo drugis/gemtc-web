@@ -4,7 +4,8 @@ var express = require('express'),
   crypto = require('crypto'),
   cookieParser = require('cookie-parser'),
   csrf = require('csurf'),
-  everyauth = require('everyauth');
+  everyauth = require('everyauth'),
+  loginUtils = require('./standalone-app/loginUtils');
 
 var sessionOpts = {
   secret: 'keyboard cat',
@@ -30,20 +31,13 @@ everyauth.google
     // Promises are created via
     //     var promise = this.Promise();
     return {
-      'userHash': crypto.createHash('md5').update(googleUserMetadata.email).digest('hex'),
       'username': googleUserMetadata.name,
       'firstName': googleUserMetadata.given_name,
       'lastName': googleUserMetadata.family_name
     };
   }).redirectPath('/');
 
-function loginCheckMiddleware(req, res, next) {
-  if (req.session.auth && req.session.auth.loggedIn) {
-    next();
-  } else {
-    res.redirect('/signin.html');
-  }
-}
+
 
 var csrfValue = function(req) {
   var token = (req.body && req.body._csrf) || (req.query && req.query._csrf) || (req.headers['x-csrf-token']) || (req.headers['x-xsrf-token']);
@@ -64,6 +58,7 @@ module.exports = app
   }))
   .use(setXSRFTokenMiddleware)
   .use(everyauth.middleware())
-  .get('/', loginCheckMiddleware)
+  .get('/', loginUtils.loginCheckMiddleware)
+  .get('/user', loginUtils.emailHashMiddleware)
   .use(express.static('app'))
   .listen(3000);
