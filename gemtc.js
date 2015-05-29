@@ -36,6 +36,7 @@ everyauth.google
   }).redirectPath('/');
 
 function loginCheckMiddleware(req, res, next) {
+  debugger;
   if (req.session.auth && req.session.auth.loggedIn) {
     next();
   } else {

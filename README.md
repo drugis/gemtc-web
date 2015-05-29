@@ -29,3 +29,15 @@ Running for the stand-alone version
     node gemtc.js
 
 now visit the app at http://localhost:3000
+
+
+Running tests
+-------------
+The Angular app is tested by karma:
+    
+    karma start
+
+The node backend is tested by mocha:
+
+   mocha 
+    
