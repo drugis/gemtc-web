@@ -18,7 +18,6 @@ require.config({
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
-    'NProgress': 'bower_components/nprogress/nprogress',
     'jquery-slider': 'lib/jslider/bin/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',
@@ -41,11 +40,10 @@ require.config({
     'jQuery': { exports : 'jQuery'},
     'jquery-slider': { deps: ['jQuery'] },
     'jasmine': { exports: 'jasmine' },
-    'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' },
-    'NProgress': { deps: ['jQuery'], exports: "NProgress" },
+    'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' }
   },
   priority: ['angular'],
-  
+
   // ask Require.js to load these files (all our tests)
   deps: tests,
 

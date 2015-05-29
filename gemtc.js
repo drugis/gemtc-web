@@ -42,9 +42,11 @@ function loginCheckMiddleware(req, res, next) {
   }
 }
 
-module.exports = express()
+var app = express();
+
+module.exports = app
   .use(session(sessionOpts))
-  .use(everyauth.middleware())
+  .use(everyauth.middleware(app))
   .get("/", loginCheckMiddleware)
   .use(express.static('app'))
   .listen(3000);

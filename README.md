@@ -21,6 +21,8 @@ Use bower to install the front-end dependencies
 
 Use npm to install the back-end dependencies
 
+    npm install
+
 Running for the stand-alone version
 -----------------------------------
 
