@@ -1,6 +1,7 @@
 var express = require('express'),
   session = require('express-session'),
   bodyParser = require('body-parser'),
+  crypto = require('crypto'),
   cookieParser = require('cookie-parser'),
   csrf = require('csurf'),
   everyauth = require('everyauth');
@@ -29,14 +30,14 @@ everyauth.google
     // Promises are created via
     //     var promise = this.Promise();
     return {
-      "username": googleUserMetadata.name,
-      "firstName": googleUserMetadata.given_name,
-      "lastName": googleUserMetadata.family_name
+      'userHash': crypto.createHash('md5').update(googleUserMetadata.email).digest('hex'),
+      'username': googleUserMetadata.name,
+      'firstName': googleUserMetadata.given_name,
+      'lastName': googleUserMetadata.family_name
     };
   }).redirectPath('/');
 
 function loginCheckMiddleware(req, res, next) {
-  debugger;
   if (req.session.auth && req.session.auth.loggedIn) {
     next();
   } else {
@@ -63,6 +64,6 @@ module.exports = app
   }))
   .use(setXSRFTokenMiddleware)
   .use(everyauth.middleware())
-  .get("/", loginCheckMiddleware)
+  .get('/', loginCheckMiddleware)
   .use(express.static('app'))
   .listen(3000);
