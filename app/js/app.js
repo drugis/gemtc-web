@@ -13,7 +13,8 @@ define(
     'directives',
     'resources',
     'services',
-    'analyses/analyses'
+    'analyses/analyses',
+    'util/util'
   ],
   function(angular, require, $, Config) {
 
@@ -25,9 +26,10 @@ define(
       'gemtc.constants',
       'gemtc.services',
       'gemtc.directives',
-      'gemtc.analyses'
+      'gemtc.analyses',
+      'gemtc.util'
     ];
-    
+
     var app = angular.module('gemtc', dependencies);
 
     app.run(['$rootScope', '$window', '$http',

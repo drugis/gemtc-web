@@ -8,5 +8,8 @@ define(function (require) {
     // controllers
     .controller('AnalysesController', require('analyses/analysesController'))
 
+    // resources
+    .factory('AnalysesResource', require('analyses/analysesResource'))
+
     ;
 });

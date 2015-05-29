@@ -5,7 +5,9 @@ var express = require('express'),
   cookieParser = require('cookie-parser'),
   csrf = require('csurf'),
   everyauth = require('everyauth'),
-  loginUtils = require('./standalone-app/loginUtils');
+
+  loginUtils = require('./standalone-app/loginUtils'),
+  analysesRouter = require('./standalone-app/analysesRouter');
 
 var sessionOpts = {
   secret: 'keyboard cat',
@@ -48,5 +50,6 @@ module.exports = app
   .use(everyauth.middleware())
   .get('/', loginUtils.loginCheckMiddleware)
   .get('/user', loginUtils.emailHashMiddleware)
+  .use('/analyses', analysesRouter)
   .use(express.static('app'))
   .listen(3000);

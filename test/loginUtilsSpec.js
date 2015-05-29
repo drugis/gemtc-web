@@ -49,6 +49,7 @@ describe('loginUtils', function() {
             auth: {
               google: {
                 user: {
+                  name: 'John Doe',
                   email: 'john@doe.com'
                 }
               }
@@ -63,6 +64,7 @@ describe('loginUtils', function() {
         loginUtils.emailHashMiddleware(req, res, next);
         expect(next).to.have.been.called();
         expect(res.json).to.have.been.called.with({
+          name: req.session.auth.google.user.name,
           md5Hash: '6a6c19fea4a3676970167ce51f39e6ee'
         });
       });

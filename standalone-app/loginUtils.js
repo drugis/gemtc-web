@@ -29,6 +29,7 @@ module.exports = {
     } else {
       var md5Hash = crypto.createHash('md5').update(req.session.auth.google.user.email).digest('hex');
       res.json({
+        name: req.session.auth.google.user.name,
         md5Hash: md5Hash
       });
     }

@@ -13,34 +13,9 @@
 
   </head>
 
-  <body>
-   
-    <nav class="top-bar" data-topbar>
-      <ul class="title-area">
-        <li class="name">
-          <h1>
-            <a id="gemtc-logo" href="#">gemtc.drugis.org</a>
-          </h1>
-        </li>
-      </ul>
-
-      <section class="top-bar-section">
-        <!-- Right Nav Section -->
-        <ul class="right">
-          <li class="has-dropdown not-click">
-            <a href="#"><img class="user-image" src="https://secure.gravatar.com/avatar/${userMD5}?s=43&d=mm"> <c:out value="${account.firstName} ${account.lastName} " /></a>
-            <ul class="dropdown">
-              <li>
-                <a href="/logout">Sign out</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </section>
-    </nav>
-    <section>
-      <div class="color-stripe"></div>
-    </section>
+  <body class="f-topbar-fixed">
+    <navbar-directive>
+    </navbar-directive>
 
     <div ui-view></div>
 
