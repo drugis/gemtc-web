@@ -2,6 +2,7 @@ var express = require('express'),
   session = require('express-session'),
   bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
+  csrf = require('csurf'),
   everyauth = require('everyauth');
 
 var sessionOpts = {
@@ -42,8 +43,22 @@ function loginCheckMiddleware(req, res, next) {
   }
 }
 
+var csrfValue = function(req) {
+  var token = (req.body && req.body._csrf) || (req.query && req.query._csrf) || (req.headers['x-csrf-token']) || (req.headers['x-xsrf-token']);
+  return token;
+};
+
+var setXSRFTokenMiddleware = function(req, res, next) {
+  res.cookie('XSRF-TOKEN', req.session.csrfSecret);
+  next();
+};
+
 module.exports = express()
   .use(session(sessionOpts))
+  .use(csrf({
+    value: csrfValue
+  }))
+  .use(setXSRFTokenMiddleware)
   .use(everyauth.middleware())
   .get("/", loginCheckMiddleware)
   .use(express.static('app'))
