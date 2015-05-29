@@ -37,26 +37,14 @@ everyauth.google
     };
   }).redirectPath('/');
 
-
-
-var csrfValue = function(req) {
-  var token = (req.body && req.body._csrf) || (req.query && req.query._csrf) || (req.headers['x-csrf-token']) || (req.headers['x-xsrf-token']);
-  return token;
-};
-
-var setXSRFTokenMiddleware = function(req, res, next) {
-  res.cookie('XSRF-TOKEN', req.session.csrfSecret);
-  next();
-};
-
 var app = express();
 
 module.exports = app
   .use(session(sessionOpts))
   .use(csrf({
-    value: csrfValue
+    value: loginUtils.csrfValue
   }))
-  .use(setXSRFTokenMiddleware)
+  .use(loginUtils.setXSRFTokenMiddleware)
   .use(everyauth.middleware())
   .get('/', loginUtils.loginCheckMiddleware)
   .get('/user', loginUtils.emailHashMiddleware)
