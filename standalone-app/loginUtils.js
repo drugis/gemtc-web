@@ -1,5 +1,6 @@
-var crypto = require('crypto');
-var status = require('http-status');
+var crypto = require('crypto'),
+ status = require('http-status'),
+ userRepository = require('./userRepository');
 
 module.exports = {
   csrfValue: function(req) {
@@ -34,5 +35,18 @@ module.exports = {
       });
     }
     next();
+  },
+
+  findUserByGoogleId: function(googleUserId, callBack) {
+    userRepository.findUserByGoogleId(googleUserId, function(error, result){
+      if(error){
+        console.log("error in findUserByGoogleId" + error);
+        callBack();
+      }
+      else{
+        console.log("succes in findUserByGoogleId");
+        callBack(result);
+      }
+    })
   }
 };

@@ -32,6 +32,13 @@ everyauth.google
     // Return a user or Promise that promises a user
     // Promises are created via
     //     var promise = this.Promise();
+    loginUtils.findUserByGoogleId(googleUserMetadata.id, function(user){
+      if(!user) {
+      // todo create account in db
+      }
+      // after user has been stored, add the id to the session
+    });
+
     return {
       'username': googleUserMetadata.name,
       'firstName': googleUserMetadata.given_name,

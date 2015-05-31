@@ -12,7 +12,7 @@ router
         next();
       });
     } else {
-      analysesRepo.query(request.params.analysisId, function(analysis) {
+      analysesRepo.query(ownerId, function(analyses) {
         response.json(analysis);
         next();
       });
