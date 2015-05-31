@@ -23,6 +23,22 @@ Use npm to install the back-end dependencies
 
     npm install
 
+Use psql to create the db to store data
+
+    CREATE USER gemtc WITH PASSWORD develop;
+    CREATE DATABASE gemtc ENCODING 'utf-8' OWNER gemtc;
+
+Create a .pgpass in the user home to store the database password
+the file should contain a line with the following format hostname:port:database:username:password
+
+    localhost:5432:gemtc:gemtc:develop
+
+Create the schema
+
+    psql -U gemtc -d gemtc -f create-database-change-set-1.sql
+
+
+
 Running for the stand-alone version
 -----------------------------------
 
