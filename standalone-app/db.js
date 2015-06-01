@@ -8,9 +8,9 @@ module.exports = {
         callback(err, result);
       });
 
-      setImmediate(function() {
-        pg.cancel(client.connectionParameters, client, query);
-      });
+      // setImmediate(function() {
+      //   pg.cancel(client.connectionParameters, client, query);
+      // });
     });
   }
 }

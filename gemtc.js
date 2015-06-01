@@ -17,25 +17,25 @@ everyauth.google
   .appSecret('9ROcvzLDuRbITbqj-m-W5C0I')
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
   .handleAuthCallbackError(function(req, res) {
-    // If a user denies your app, Google will redirect the user to
-    // /auth/facebook/callback?error=access_denied
-    // This configurable route handler defines how you want to respond to that.
-    // If you do not configure this, everyauth renders a default fallback
-    // view notifying the user that their authentication failed and why.
     console.log('gemtc.handleAuthCallbackError');
+    //todo redirect to error page
   })
   .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata) {
     var promise = this.Promise();
     userRepository.findUserByGoogleId(googleUserMetadata.id, function(error, result) {
       var user = result;
       if (!user) {
-        user = {
-          'username': googleUserMetadata.name,
-          'firstName': googleUserMetadata.given_name,
-          'lastName': googleUserMetadata.family_name
-        };
+        userRepository.createUserAndConnection(accessToken, accessTokenExtra, googleUserMetadata, function(error, result) {
+          user = {
+            'username': googleUserMetadata.name,
+            'firstName': googleUserMetadata.given_name,
+            'lastName': googleUserMetadata.family_name
+          };
+        });
+        promise.fulfill(user);
+      } else {
+        promise.fulfill(user);
       }
-      promise.fulfill(user);
     });
     return promise;
   }).redirectPath('/');
