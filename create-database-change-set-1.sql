@@ -14,7 +14,7 @@ CREATE TABLE UserConnection (tokenId VARCHAR NOT NULL,
   expireTime BIGINT,
   refreshToken VARCHAR(255),
   tokenType VARCHAR(255) NOT NULL,
-  userId SERIAL NOT NULL,
+  userId INT NOT NULL,
   PRIMARY KEY (tokenId),
   FOREIGN KEY(userId) REFERENCES Account(id)
 );

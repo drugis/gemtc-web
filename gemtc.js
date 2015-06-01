@@ -1,12 +1,9 @@
 var express = require('express'),
   session = require('express-session'),
-  bodyParser = require('body-parser'),
-  crypto = require('crypto'),
-  cookieParser = require('cookie-parser'),
   csrf = require('csurf'),
   everyauth = require('everyauth'),
-
   loginUtils = require('./standalone-app/loginUtils'),
+  userRepository = require('./standalone-app/userRepository'),
   analysesRouter = require('./standalone-app/analysesRouter');
 
 var sessionOpts = {
@@ -28,22 +25,19 @@ everyauth.google
     console.log('gemtc.handleAuthCallbackError');
   })
   .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata) {
-    // find or create user logic goes here
-    // Return a user or Promise that promises a user
-    // Promises are created via
-    //     var promise = this.Promise();
-    loginUtils.findUserByGoogleId(googleUserMetadata.id, function(user){
-      if(!user) {
-      // todo create account in db
+    var promise = this.Promise();
+    userRepository.findUserByGoogleId(googleUserMetadata.id, function(error, result) {
+      var user = result;
+      if (!user) {
+        user = {
+          'username': googleUserMetadata.name,
+          'firstName': googleUserMetadata.given_name,
+          'lastName': googleUserMetadata.family_name
+        };
       }
-      // after user has been stored, add the id to the session
+      promise.fulfill(user);
     });
-
-    return {
-      'username': googleUserMetadata.name,
-      'firstName': googleUserMetadata.given_name,
-      'lastName': googleUserMetadata.family_name
-    };
+    return promise;
   }).redirectPath('/');
 
 var app = express();
