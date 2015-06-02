@@ -25,7 +25,7 @@ Use npm to install the back-end dependencies
 
 Use psql to create the db to store data
 
-    CREATE USER gemtc WITH PASSWORD develop;
+    CREATE USER gemtc WITH PASSWORD 'develop';
     CREATE DATABASE gemtc ENCODING 'utf-8' OWNER gemtc;
 
 Create a .pgpass in the user home to store the database password
@@ -50,10 +50,10 @@ now visit the app at http://localhost:3000
 Running tests
 -------------
 The Angular app is tested by karma:
-    
+
     karma start
 
 The node backend is tested by mocha:
 
-   mocha 
-    
+   mocha
+
