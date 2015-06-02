@@ -7,10 +7,6 @@ module.exports = {
         done();
         callback(err, result);
       });
-
-      // setImmediate(function() {
-      //   pg.cancel(client.connectionParameters, client, query);
-      // });
     });
   }
 }

@@ -15,36 +15,42 @@ var createAccountQuery = '' +
   ' VALUES ($1, $2, $3, $4) ' +
   ' RETURNING id';
 
+var createUserConnection = '' +
+  ' INSERT INTO UserConnection (tokenId, googleUserId, accessToken, expireTime, refreshToken, tokenType, userId)' +
+  ' VALUES ($1, $2, $3, $4, $5, $6, $7)';
+
 module.exports = {
   findUserByGoogleId: function(googleUserId, callback) {
     db.query(findUserByGoogleIdQuery, [googleUserId], function(error, result) {
-      var user;
+      var user = null;
       if (error) {
         console.log('error in userRepository.findUserByGoogleId; ' + error);
-        user = null;
       } else if (result.rowCount === 1) {
-        user = {
-          userid: result.rows[0].userid
-        };
-      } else if (result.rowCount === 0) {
-        user = null;
+        user = result.rows[0];
       }
       callback(error, user);
     });
   },
   createUserAndConnection: function(accessToken, accessTokenExtra, googleUserMetadata, callback) {
     db.query(createAccountQuery, [googleUserMetadata.email,
-        googleUserMetadata.name,
-        googleUserMetadata.given_name,
-        googleUserMetadata.family_name
-      ],
+      googleUserMetadata.name,
+      googleUserMetadata.given_name,
+      googleUserMetadata.family_name
+    ],
       function(error, result) {
-        if(error) {
+        if (error) {
           console.log(error);
         } else {
-          console.log('createUserAndConnection succes ' + JSON.stringify(result));
+          db.query(createUserConnection,
+            [accessTokenExtra.id_token,
+              googleUserMetadata.id,
+              accessToken,
+              accessTokenExtra.expires_in,
+              accessTokenExtra.refresh_token,
+              accessTokenExtra.token_type,
+              result.rows[0].id
+            ], callback);
         }
-        callback(error, result);
       });
   }
 };
