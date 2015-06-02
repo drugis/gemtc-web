@@ -7,7 +7,7 @@ CREATE TABLE Account (id SERIAL NOT NULL,
   PRIMARY KEY (id)
 );
 
--- table to hold auth2 details 
+-- table to hold auth2 details
 CREATE TABLE UserConnection (tokenId VARCHAR NOT NULL,
   googleUserId VARCHAR(255) NOT NULL,
   accessToken VARCHAR(255) NOT NULL,
@@ -22,6 +22,7 @@ CREATE TABLE UserConnection (tokenId VARCHAR NOT NULL,
 CREATE TABLE Analysis (id SERIAL NOT NULL,
   owner INT NOT NULL,
   title VARCHAR NOT NULL,
+  outcome varchar(255) NOT NULL,
   problem TEXT NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY(owner) REFERENCES Account(id)
