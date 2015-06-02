@@ -42,7 +42,7 @@ module.exports = {
         if(error) {
           console.log(error);
         } else {
-          console.log('createUserAndConnection succes ' + result);
+          console.log('createUserAndConnection succes ' + JSON.stringify(result));
         }
         callback(error, result);
       });

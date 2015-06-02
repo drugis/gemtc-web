@@ -18,7 +18,7 @@ everyauth.google
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
   .handleAuthCallbackError(function(req, res) {
     console.log('gemtc.handleAuthCallbackError');
-    //todo redirect to error page
+  //todo redirect to error page
   })
   .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata) {
     var promise = this.Promise();
@@ -31,8 +31,8 @@ everyauth.google
             'firstName': googleUserMetadata.given_name,
             'lastName': googleUserMetadata.family_name
           };
+          promise.fulfill(user);
         });
-        promise.fulfill(user);
       } else {
         promise.fulfill(user);
       }
