@@ -1,10 +1,17 @@
-var express = require('express'),
+var winston = require('winston'),
+  express = require('express'),
   session = require('express-session'),
   csrf = require('csurf'),
   everyauth = require('everyauth'),
   loginUtils = require('./standalone-app/loginUtils'),
   userRepository = require('./standalone-app/userRepository'),
   analysesRouter = require('./standalone-app/analysesRouter');
+
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)({ level: process.argv[2] }),
+    ]
+  });
 
 var sessionOpts = {
   secret: 'keyboard cat',
@@ -17,10 +24,11 @@ everyauth.google
   .appSecret('9ROcvzLDuRbITbqj-m-W5C0I')
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
   .handleAuthCallbackError(function(req, res) {
-    console.log('gemtc.handleAuthCallbackError');
+    logger.debug('gemtc.handleAuthCallbackError');
   //todo redirect to error page
   })
   .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata) {
+    logger.debug("gemtc.findOrCreateUser");
     var promise = this.Promise();
     userRepository.findUserByGoogleId(googleUserMetadata.id, function(error, result) {
       var user = result;
@@ -41,6 +49,9 @@ everyauth.google
   }).redirectPath('/');
 
 var app = express();
+
+logger.info('Start Gemct stand-alone app');
+logger.debug("gemtc.findOrCreateUser");
 
 module.exports = app
   .use(session(sessionOpts))
