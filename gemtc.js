@@ -1,17 +1,13 @@
-var winston = require('winston'),
+var
   express = require('express'),
   session = require('express-session'),
   csrf = require('csurf'),
   everyauth = require('everyauth'),
   loginUtils = require('./standalone-app/loginUtils'),
   userRepository = require('./standalone-app/userRepository'),
-  analysesRouter = require('./standalone-app/analysesRouter');
+  analysesRouter = require('./standalone-app/analysesRouter'),
+  logger = require('./standalone-app/logger');
 
-var logger = new (winston.Logger)({
-    transports: [
-      new (winston.transports.Console)({ level: process.argv[2] }),
-    ]
-  });
 
 var sessionOpts = {
   secret: 'keyboard cat',
@@ -51,7 +47,6 @@ everyauth.google
 var app = express();
 
 logger.info('Start Gemct stand-alone app');
-logger.debug("gemtc.findOrCreateUser");
 
 module.exports = app
   .use(session(sessionOpts))

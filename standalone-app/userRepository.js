@@ -1,4 +1,6 @@
-var db = require('./db');
+var
+  db = require('./db'),
+  logger = require('./logger');
 
 var findUserByGoogleIdQuery = '' +
   ' SELECT' +
@@ -24,7 +26,7 @@ module.exports = {
     db.query(findUserByGoogleIdQuery, [googleUserId], function(error, result) {
       var user = null;
       if (error) {
-        console.log('error in userRepository.findUserByGoogleId; ' + error);
+        logger.error('error in userRepository.findUserByGoogleId; ' + error);
       } else if (result.rowCount === 1) {
         user = result.rows[0];
       }
@@ -39,7 +41,7 @@ module.exports = {
     ],
       function(error, result) {
         if (error) {
-          console.log(error);
+          logger.error(error);
         } else {
           db.query(createUserConnection,
             [accessTokenExtra.id_token,
