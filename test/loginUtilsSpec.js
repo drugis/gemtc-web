@@ -139,7 +139,6 @@ describe('loginUtils', function() {
       loginUtils.setXSRFTokenMiddleware(req, res, next);
       expect(res.cookie).to.have.been.called.with('XSRF-TOKEN', req.session.csrfSecret);
       expect(next).to.have.been.called();
-      expect(false).to.be.true;
     });
   });
 
