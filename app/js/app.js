@@ -23,6 +23,7 @@ define(
       'ngSanitize',
       'mm.foundation.tpls',
       'mm.foundation.modal',
+      'mm.foundation.tpls',
       'gemtc.controllers',
       'gemtc.resources',
       'gemtc.constants',
@@ -36,10 +37,7 @@ define(
 
     app.run(['$rootScope', '$window', '$http',
       function($rootScope, $window, $http) {
-  //      var csrfToken = $window.config._csrf_token;
-  //      var csrfHeader = $window.config._csrf_header;
 
-  //      $http.defaults.headers.common[csrfHeader] = csrfToken;
         $rootScope.$on('$viewContentLoaded', function() {
           $(document).foundation();
         });
