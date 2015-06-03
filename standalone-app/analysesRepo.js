@@ -6,8 +6,8 @@ module.exports = {
       callback(err, result)
     });
   },
-  query: function() {
-   db.query('SELECT * FROM analysis WHERE OWNER=$1', [ownerId], function(err, result) {
+  query: function(ownerAccountId, callback) {
+   db.query('SELECT * FROM analysis WHERE OWNER=$1', [ownerAccountId], function(err, result) {
       callback(err, result)
     });
   }

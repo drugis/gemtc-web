@@ -1,12 +1,29 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', 'AnalysesResource'];
-  var ModelController = function($scope, AnalysesResource) {
+  var dependencies = ['$scope', '$modal', 'AnalysesResource'];
+  var ModelController = function($scope, $modal, AnalysesResource) {
     $scope.analysesLoaded = false;
 
-  	$scope.analyses = AnalysesResource.query(function() {
-      $scope.analysesLoaded = true;
-    });
+    function loadAnalyses() {
+      $scope.analyses = AnalysesResource.query(function(result) {
+        $scope.analysesLoaded = true;
+      });
+    }
+
+    loadAnalyses();
+
+    $scope.createDatasetDialog = function() {
+      $modal.open({
+        templateUrl: './js/analyses/addAnalysis.html',
+        scope: $scope,
+        controller: 'AddAnalysisController',
+        resolve: {
+          callback: function() {
+            return loadAnalyses;
+          }
+        }
+      });
+    };
   }
   return dependencies.concat(ModelController);
 });

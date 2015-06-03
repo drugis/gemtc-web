@@ -4,7 +4,7 @@ var
 
 var findUserByGoogleIdQuery = '' +
   ' SELECT' +
-  '   email, name, firstName, lastName ' +
+  '  id, email, name, firstName, lastName ' +
   ' FROM ' +
   '   UserConnection LEFT JOIN Account ' +
   ' ON ' +
@@ -43,6 +43,7 @@ module.exports = {
         if (error) {
           logger.error(error);
         } else {
+          var accountId = result.rows[0].id;
           db.query(createUserConnection,
             [accessTokenExtra.id_token,
               googleUserMetadata.id,
@@ -50,8 +51,10 @@ module.exports = {
               accessTokenExtra.expires_in,
               accessTokenExtra.refresh_token,
               accessTokenExtra.token_type,
-              result.rows[0].id
-            ], callback);
+              accountId
+            ], function(error, result){
+                callback(error, accountId);
+            });
         }
       });
   }

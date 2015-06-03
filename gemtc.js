@@ -15,6 +15,13 @@ var sessionOpts = {
   saveUninitialized: true
 };
 
+//everyauth.debug = true;
+
+everyauth.everymodule.findUserById( function (userId, callback) {
+  logger.debug("gemtc.findUserById");
+  callback(null);
+});
+
 everyauth.google
   .appId('100331616436-dgi00c0mjg8tbc06psuhluf9a2lo6c3i.apps.googleusercontent.com')
   .appSecret('9ROcvzLDuRbITbqj-m-W5C0I')
@@ -23,7 +30,9 @@ everyauth.google
     logger.debug('gemtc.handleAuthCallbackError');
   //todo redirect to error page
   })
-  .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata) {
+  .redirectPath('/')
+  .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata, data) {
+
     logger.debug("gemtc.findOrCreateUser");
     var promise = this.Promise();
     userRepository.findUserByGoogleId(googleUserMetadata.id, function(error, result) {
@@ -31,18 +40,20 @@ everyauth.google
       if (!user) {
         userRepository.createUserAndConnection(accessToken, accessTokenExtra, googleUserMetadata, function(error, result) {
           user = {
-            'username': googleUserMetadata.name,
-            'firstName': googleUserMetadata.given_name,
-            'lastName': googleUserMetadata.family_name
+            id: result,
+            username: googleUserMetadata.name,
+            firstName: googleUserMetadata.given_name,
+            lastName: googleUserMetadata.family_name
           };
           promise.fulfill(user);
         });
       } else {
+        session.userId = user.id;
         promise.fulfill(user);
       }
     });
     return promise;
-  }).redirectPath('/');
+  });
 
 var app = express();
 
@@ -54,9 +65,9 @@ module.exports = app
     value: loginUtils.csrfValue
   }))
   .use(loginUtils.setXSRFTokenMiddleware)
-  .use(everyauth.middleware())
   .get('/', loginUtils.loginCheckMiddleware)
   .get('/user', loginUtils.emailHashMiddleware)
   .use('/analyses', analysesRouter)
   .use(express.static('app'))
+  .use(everyauth.middleware())
   .listen(3000);
