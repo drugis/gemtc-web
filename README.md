@@ -55,11 +55,18 @@ The Angular app is tested by karma:
 
 The node backend is tested by mocha:
 
-To install mocha globally
+To install mocha globally:
 
     npm install -g mocha
 
-To run nodebackend unit tests
+To run nodebackend unit tests:
 
     mocha
+
+To run nightwatch integration tests:
+
+    npm install -g nightwatch
+    cd test/integration
+    wget http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar
+    nightwatch --config nightwatch-local.json
 
