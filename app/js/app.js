@@ -21,6 +21,7 @@ define(
     var dependencies = [
       'ui.router',
       'ngSanitize',
+      'mm.foundation.tpls',
       'mm.foundation.modal',
       'gemtc.controllers',
       'gemtc.resources',
