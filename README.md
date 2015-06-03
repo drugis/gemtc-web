@@ -55,5 +55,11 @@ The Angular app is tested by karma:
 
 The node backend is tested by mocha:
 
-   mocha
+To install mocha globally
+
+    npm install -g mocha
+
+To run nodebackend unit tests
+
+    mocha
 
