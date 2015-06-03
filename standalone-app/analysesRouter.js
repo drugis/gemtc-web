@@ -6,13 +6,14 @@ var status = require('http-status-codes');
 module.exports = express.Router()
   .get('/', queryAnalyses)
   .get('/:analysisId', getAnalysis)
+  .get('/:analysisId/problem', getProblem)
   .post('/', createAnalysis);
 
 
 function queryAnalyses(request, response, next) {
   logger.debug('query analyses');
-  analysesRepo.query(request.session.userId, function(error, analyses) {
-    response.json(analyses.rows);
+  analysesRepo.query(request.session.userId, function(error, result) {
+    response.json(result.rows);
     next();
   });
 }
@@ -33,3 +34,11 @@ function createAnalysis(request, response, next) {
     next();
   });
 }
+
+function getProblem(request, response, next) {
+  logger.debug('analysisRouter.getProblem');
+  analysesRepo.get(request.params.analysisId, function(error, result) {
+    response.json(result.rows[0].problem);
+    next();
+  });
+};
