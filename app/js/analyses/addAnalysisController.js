@@ -1,12 +1,13 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', 'AnalysesResource', '$modalInstance'];
-  var AddAnalysisController = function($scope, AnalysesResource, $modalInstance) {
+  var dependencies = ['$scope', 'AnalysesResource', '$modalInstance', 'callback'];
+  var AddAnalysisController = function($scope, AnalysesResource, $modalInstance, callback) {
 
     $scope.addAnalysis = function(analysis) {
       $scope.isAddingAnalysis = true;
       AnalysesResource.save(analysis, function() {
         $modalInstance.close();
+        callback();
       });
     };
 
