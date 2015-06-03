@@ -69,5 +69,6 @@ module.exports = app
   .get('/user', loginUtils.emailHashMiddleware)
   .use('/analyses', analysesRouter)
   .use(express.static('app'))
+  .use(express.static('app/js/bower_components/angular-foundation-assets')) // fix for mm.foundations not loadingf from template cache
   .use(everyauth.middleware())
   .listen(3000);
