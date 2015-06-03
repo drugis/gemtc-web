@@ -1,4 +1,4 @@
-<form novalidate ng-submit="createAnalysis(analysis)">
+<form novalidate ng-submit="addAnalysis(analysis)">
     <div class="row">
         <div class="large-9 columns">
             <h3>Add a new Analysis</h3>
@@ -27,7 +27,7 @@
     </div>
     <div class="row">
         <div class="large-9 columns">
-            <button class="success" type="submit" ng-disabled="!analysis.title || !analysis.outcome || !analysis.problem || isAddingAnalysis">Add</button>
+            <button class="success" type="submit" ng-disabled="isAddButtonDisabled(analysis)">Add</button>
         </div>
     </div>
     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>

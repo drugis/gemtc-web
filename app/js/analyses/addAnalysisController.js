@@ -5,7 +5,7 @@ define([], function() {
 
     $scope.addAnalysis = function(analysis) {
       $scope.isAddingAnalysis = true;
-      AnalysesResource.post(analysis, function() {
+      AnalysesResource.save(analysis, function() {
         $modalInstance.close();
       });
     };

@@ -1,14 +1,16 @@
 var crypto = require('crypto'),
-  httpStatus = require('http-status');
+  httpStatus = require('http-status'),
+  logger = require('./logger');
 
 module.exports = {
   csrfValue: function(req) {
+    logger.debug('loginUtils.csrfValue, ' );
     var token = (req.body && req.body._csrf) || (req.query && req.query._csrf) || (req.headers['x-csrf-token']) || (req.headers['x-xsrf-token']);
     return token;
   },
 
   setXSRFTokenMiddleware: function(req, res, next) {
-    res.cookie('XSRF-TOKEN', req.session.csrfSecret);
+    res.cookie('XSRF-TOKEN', req.csrfToken());
     next();
   },
 
