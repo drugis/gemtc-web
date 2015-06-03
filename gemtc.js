@@ -67,8 +67,8 @@ module.exports = app
     value: loginUtils.csrfValue
   }))
   .use(bodyparser.json())
-  .use(loginUtils.setXSRFTokenMiddleware)
-  .get('/', loginUtils.loginCheckMiddleware)
+  .use(loginUtils.setXSRFTokenMiddleware) 
+  .all('*', loginUtils.loginCheckMiddleware)  
   .get('/user', loginUtils.emailHashMiddleware)
   .use('/analyses', analysesRouter)
   .use(express.static('app'))

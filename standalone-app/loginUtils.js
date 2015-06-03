@@ -4,8 +4,11 @@ var crypto = require('crypto'),
 
 module.exports = {
   csrfValue: function(req) {
-    logger.debug('loginUtils.csrfValue, ' );
-    var token = (req.body && req.body._csrf) || (req.query && req.query._csrf) || (req.headers['x-csrf-token']) || (req.headers['x-xsrf-token']);
+    logger.debug('loginUtils.csrfValue');
+    var token = (req.body && req.body._csrf) ||
+      (req.query && req.query._csrf) ||
+      (req.headers['x-csrf-token']) ||
+      (req.headers['x-xsrf-token']);
     return token;
   },
 
@@ -15,7 +18,9 @@ module.exports = {
   },
 
   loginCheckMiddleware: function(req, res, next) {
-    if (req.session.auth && req.session.auth.loggedIn) {
+    logger.debug('loginUtils.loginCheckMiddleware');
+    if ((req.session.auth && req.session.auth.loggedIn) ||
+      req.method === 'GET' && req.url === '/signin.html') {
       next();
     } else {
       res.redirect('/signin.html');
