@@ -128,16 +128,17 @@ describe('loginUtils', function() {
 
   describe('setXSRFTokenMiddleware', function() {
     it('should set a cookie with the session csrfSecret', function() {
+      var token = 'token';
       req = {
-        session: {
-          csrfSecret: 'secret'
+        csrfToken: function() {
+          return token;
         }
       };
       res = chai.spy.object(['cookie']);
       next = chai.spy();
 
       loginUtils.setXSRFTokenMiddleware(req, res, next);
-      expect(res.cookie).to.have.been.called.with('XSRF-TOKEN', req.session.csrfSecret);
+      expect(res.cookie).to.have.been.called.with('XSRF-TOKEN', token);
       expect(next).to.have.been.called();
     });
   });
