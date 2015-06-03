@@ -72,7 +72,13 @@ define(
             url: '/analyses',
             templateUrl: '/js/analyses/analyses.html',
             controller: 'AnalysesController'
-          });
+          })
+          .state('analysis', {
+            url: '/analyses/:analysisId',
+            templateUrl: '/js/analyses/analysis.html',
+            controller: 'AnalysisController'
+          })
+          ;
 
         // Default route
         $urlRouterProvider.otherwise('/analyses');

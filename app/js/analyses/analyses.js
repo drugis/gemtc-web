@@ -7,6 +7,7 @@ define(function (require) {
   return angular.module('gemtc.analyses', dependencies)
     // controllers
     .controller('AnalysesController', require('analyses/analysesController'))
+    .controller('AnalysisController', require('analyses/analysisController'))
     .controller('AddAnalysisController', require('analyses/addAnalysisController'))
 
     // resources

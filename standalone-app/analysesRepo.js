@@ -10,8 +10,7 @@ module.exports = {
   query: function(ownerAccountId, callback) {
     logger.debug('get analyses for owner ' + ownerAccountId);
     db.query('SELECT * FROM analysis WHERE OWNER=$1', [ownerAccountId], function(err, result) {
-      logger.debug('analyses query result: ' + JSON.stringify(result));
-      callback(err, result.rows);
+      callback(err, result);
     });
   },
   create: createAnalysis
@@ -19,7 +18,7 @@ module.exports = {
 
 function createAnalysis(ownerAccountId, newAnalysis, callback) {
 
-  db.query('INSERT INTO analysis (title, outcome, problem, owner) VALUES($1, $2, $3, $4)',
+  db.query('INSERT INTO analysis (title, outcome, problem, owner) VALUES($1, $2, $3, $4) RETURNING id',
     [newAnalysis.title,
       newAnalysis.outcome,
       newAnalysis.problem,
