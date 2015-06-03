@@ -1,5 +1,5 @@
 var crypto = require('crypto'),
-  httpStatus = require('http-status'),
+  httpStatus = require('http-status-codes'),
   logger = require('./logger');
 
 module.exports = {
