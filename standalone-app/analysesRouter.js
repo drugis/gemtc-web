@@ -12,7 +12,7 @@ module.exports = express.Router()
 function queryAnalyses(request, response, next) {
   logger.debug('query analyses');
   analysesRepo.query(request.session.userId, function(error, analyses) {
-    response.json(analyses);
+    response.json(analyses.rows);
     next();
   });
 }
@@ -20,14 +20,15 @@ function queryAnalyses(request, response, next) {
 function getAnalysis(request, response, next) {
   logger.debug('get analysis by id ' + request.params.analysisId);
   analysesRepo.get(request.params.analysisId, function(error, analysis) {
-    response.json(JSON.stringify(analysis[0]));
+    response.json(analysis.rows[0]);
     next();
   });
 }
 
 function createAnalysis(request, response, next) {
   logger.debug('create analysis: ' + JSON.stringify(request.body));
-  analysesRepo.create(request.session.userId, request.body, function(error, analysis) {
+  analysesRepo.create(request.session.userId, request.body, function(error, created) {
+    response.location('/analyses/' + created.rows[0].id);
     response.sendStatus(status.CREATED);
     next();
   });
