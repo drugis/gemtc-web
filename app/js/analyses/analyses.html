@@ -25,8 +25,8 @@
         </tr>
         <tr ng-repeat="analysis in analyses">
           <td style="vertical-align: top;">
-            <a ui-sref="analysis({analysisId: analysis.id})">{{analysis.label}}</a></td>
-            <td style="white-space: pre-wrap;">{{analysis.comment}}</td>
+            <a ui-sref="analysis({analysisId: analysis.id})">{{analysis.title}}</a></td>
+            <td style="white-space: pre-wrap;">{{analysis.outcome}}</td>
           </tr>
         </table>
       </div>

@@ -10,7 +10,7 @@ module.exports = express.Router()
 
 function queryAnalyses(request, response, next) {
   logger.debug('query analyses');
-  analysesRepo.query(request.session.userId, function(analyses) {
+  analysesRepo.query(request.session.userId, function(error, analyses) {
     response.json(analyses);
     next();
   });
@@ -18,15 +18,15 @@ function queryAnalyses(request, response, next) {
 
 function getAnalysis(request, response, next) {
   logger.debug('get analysis by id ' + request.params.analysisId);
-  analysesRepo.get(request.params.analysisId, function(err, analysis) {
+  analysesRepo.get(request.params.analysisId, function(error, analysis) {
     response.json(JSON.stringify(analysis[0]));
     next();
   });
 }
 
 function createAnalysis(request, response, next) {
-  logger.debug('create analysis');
-  analysesRepo.create(request.body, function(err, analysis) {
+  logger.debug('create analysis: ' + JSON.stringify(request.body));
+  analysesRepo.create(request.session.userId, request.body, function(error, analysis) {
     next();
   });
 }

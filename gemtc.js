@@ -1,6 +1,7 @@
 var
   express = require('express'),
   session = require('express-session'),
+  bodyparser = require('body-parser'),
   csrf = require('csurf'),
   everyauth = require('everyauth'),
   loginUtils = require('./standalone-app/loginUtils'),
@@ -61,9 +62,11 @@ logger.info('Start Gemct stand-alone app');
 
 module.exports = app
   .use(session(sessionOpts))
+
   .use(csrf({
     value: loginUtils.csrfValue
   }))
+  .use(bodyparser.json())
   .use(loginUtils.setXSRFTokenMiddleware)
   .get('/', loginUtils.loginCheckMiddleware)
   .get('/user', loginUtils.emailHashMiddleware)
