@@ -1,1 +1,15 @@
-<h2>This is an analysis</h2>
+<div class="row nav-bar-spacer" style="margin-bottom: 2rem;">
+  <div class="columns center large-12">
+    <h2>Analysis: {{analysis.title}}</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="columns large-12">
+    Outcome: {{analysis.outcome}}
+  </div>
+</div>
+<div class="row">
+  <div class="columns large-12">
+    Problem: {{analysis.problem || json}}
+  </div>
+</div>
