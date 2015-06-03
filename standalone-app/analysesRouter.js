@@ -1,6 +1,7 @@
 var logger = require('./logger');
 var express = require('express');
 var analysesRepo = require('./analysesRepo');
+var status = require('http-status-codes');
 
 module.exports = express.Router()
   .get('/', queryAnalyses)
@@ -27,6 +28,7 @@ function getAnalysis(request, response, next) {
 function createAnalysis(request, response, next) {
   logger.debug('create analysis: ' + JSON.stringify(request.body));
   analysesRepo.create(request.session.userId, request.body, function(error, analysis) {
+    response.sendStatus(status.CREATED);
     next();
   });
 }
