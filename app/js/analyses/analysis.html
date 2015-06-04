@@ -1,15 +1,18 @@
-<div class="row nav-bar-spacer" style="margin-bottom: 2rem;">
-  <div class="columns center large-12">
-    <h2>Analysis: {{analysis.title}}</h2>
-  </div>
+<div class="row nav-bar-spacer">
+	<div class="columns center large-12">
+		<h1>Analysis</h1>
+	</div>
 </div>
 <div class="row">
-  <div class="columns large-12">
-    Outcome: {{analysis.outcome}}
-  </div>
+	<div class="columns large-10">
+			<dl>
+				<dt>Title</dt>
+				<dd>{{::analysis.title}}</dd>
+				<dt>Outcome</dt>
+				<dd>{{::analysis.outcome}}</dd>
+				<dt>Problem</dt>
+				<dd><pre>{{analysis.problem}}</pre></dd>
+			</dl>
+	</div>
 </div>
-<div class="row">
-  <div class="columns large-12">
-    Problem: {{analysis.problem || json}}
-  </div>
-</div>
+
