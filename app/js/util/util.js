@@ -11,6 +11,6 @@ define(function (require) {
 
     // directive
     .directive('navbarDirective', require('util/navbarDirective'))
-
+    .directive('fileReader', require('util/fileReaderDirective'))
     ;
 });

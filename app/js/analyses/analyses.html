@@ -1,7 +1,7 @@
 <div ui-view>
   <div class="row nav-bar-spacer" style="margin-bottom: 2rem;">
     <div class="columns center large-12">
-      <h1>Analyses</h1>
+      <h2>Analyses</h2>
     </div>
   </div>
   <div ng-show="!analysesLoaded" class="row">
@@ -13,8 +13,7 @@
   </div>
   <div class="row" ng-show="analysesLoaded">
     <div class="columns large-12">
-      <h3>Analyses</h3>
-      <button ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="createDatasetDialog()"><i class="fa fa-plus"></i> Add new dataset</button>
+      <button ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="createDatasetDialog()"><i class="fa fa-plus"></i> Add new analysis</button>
     </div>
     <div class="columns large-12">
       <em ng-show="analyses.length === 0">No analyses have been created</em>
