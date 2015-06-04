@@ -9,19 +9,13 @@ define([], function() {
         $scope.analysesLoaded = true;
       });
     }
-
     loadAnalyses();
 
     $scope.createDatasetDialog = function() {
       $modal.open({
         templateUrl: './js/analyses/addAnalysis.html',
         scope: $scope,
-        controller: 'AddAnalysisController',
-        resolve: {
-          callback: function() {
-            return loadAnalyses;
-          }
-        }
+        controller: 'AddAnalysisController'
       });
     };
 

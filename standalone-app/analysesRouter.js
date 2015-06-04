@@ -31,7 +31,6 @@ function createAnalysis(request, response, next) {
   analysesRepo.create(request.session.userId, request.body, function(error, created) {
     response.location('/analyses/' + created.rows[0].id);
     response.sendStatus(status.CREATED);
-    next();
   });
 }
 

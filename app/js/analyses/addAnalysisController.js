@@ -1,13 +1,14 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', 'AnalysesResource', '$modalInstance', 'callback'];
-  var AddAnalysisController = function($scope, AnalysesResource, $modalInstance, callback) {
+  var dependencies = ['$scope', '$state','AnalysesResource', '$modalInstance'];
+  var AddAnalysisController = function($scope, $state, AnalysesResource, $modalInstance) {
 
-    $scope.addAnalysis = function(analysis) {
+    $scope.addAnalysis = function(unSavedAnalysis) {
       $scope.isAddingAnalysis = true;
-      AnalysesResource.save(analysis, function() {
+      AnalysesResource.save(unSavedAnalysis, function(savedAnalysis) {
         $modalInstance.close();
-        callback();
+        $scope.isAddingAnalysis = false;
+        $state.go('analysis', {analysisId: savedAnalysis.id});
       });
     };
 
@@ -17,3 +18,4 @@ define([], function() {
   }
   return dependencies.concat(AddAnalysisController);
 });
+     
