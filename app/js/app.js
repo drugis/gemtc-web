@@ -64,8 +64,11 @@ define(
       }
     ]);
 
+
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
       function($stateProvider, $urlRouterProvider, $httpProvider) {
+
+        $httpProvider.interceptors.push('sessionExpiredInterceptor');
 
         $stateProvider
           .state('analyses', {
@@ -77,8 +80,7 @@ define(
             url: '/analyses/:analysisId',
             templateUrl: '/js/analyses/analysis.html',
             controller: 'AnalysisController'
-          })
-          ;
+          });
 
         // Default route
         $urlRouterProvider.otherwise('/analyses');
