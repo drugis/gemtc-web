@@ -2,6 +2,13 @@ var crypto = require('crypto'),
   httpStatus = require('http-status-codes'),
   logger = require('./logger');
 
+// check if strartsWith is not a language feature
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function(str) {
+    return this.indexOf(str) === 0;
+  };
+}
+
 module.exports = {
   csrfValue: function(req) {
     logger.debug('loginUtils.csrfValue');
@@ -17,16 +24,6 @@ module.exports = {
     next();
   },
 
-  loginCheckMiddleware: function(req, res, next) {
-    logger.debug('loginUtils.loginCheckMiddleware');
-    if ((req.session.auth && req.session.auth.loggedIn) ||
-      req.method === 'GET' && req.url === '/signin.html') {
-      next();
-    } else {
-      res.redirect('/signin.html');
-    }
-  },
-
   emailHashMiddleware: function(req, res, next) {
     if (!req.session.auth) {
       res.status = httpStatus.FORBIDDEN;
@@ -38,5 +35,27 @@ module.exports = {
       });
     }
     next();
+  },
+
+  securityMiddleware: function(request, response, next) {
+    logger.debug('loginUtils.loginCheckMiddleware');
+
+    if (request.session.auth && request.session.auth.loggedIn) { // if loggedin your good
+      logger.debug('loginUtils.loginCheckMiddleware your signed in, requestuest = ' + request.url);
+      next();
+    } else if (request.method === 'GET' && // if not than you can get static content or go sign in
+      (request.url.startsWith('/css') ||
+        request.url.startsWith('/js') ||
+        request.url.startsWith('/views') ||
+        request.url.startsWith('/img') ||
+        request.url == '/signin.html' ||
+        request.url.startsWith('/auth/google')
+      )) {
+      logger.debug('loginUtils.loginCheckMiddleware you request does not require login, request =  ' + request.url);
+      next();
+    } else { // otherwhise you have to signin first
+      logger.debug('loginUtils.loginCheckMiddleware you need to signin first, request =  ' + request.url);
+      response.redirect('/signin.html');
+    }
   }
 };
