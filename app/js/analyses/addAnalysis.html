@@ -1,4 +1,4 @@
-<form novalidate ng-submit="addAnalysis(analysis)">
+<form novalidate ng-submit="addAnalysis(analysis)" ng-model="problemValidity">
     <div class="row">
         <div class="large-9 columns">
             <h3>Add a new Analysis</h3>
@@ -20,14 +20,22 @@
     </div>
     <div class="row">
         <div class="large-9 columns">
-            <label>Problem file:
-                <file-reader model="analysis.problem"></file-reader>
+            <label>Problem file
+                <file-reader model="analysis.problem" validity-service-name="'problemValidityService'" validity="problemValidity"></file-reader>
             </label>
         </div>
     </div>
     <div class="row">
+        <div class="large-9 columns" ng-show="problemValidity && !problemValidity.isValid" >
+            <span style="color: red;">The problem is invalid</span>
+            <div style="color: red;" ng-repeat="message in problemValidity.messages">
+                {{message}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="large-9 columns">
-            <button class="success" type="submit" ng-disabled="isAddButtonDisabled(analysis)">Add</button>
+            <button class="success" type="submit" ng-disabled="isAddButtonDisabled(analysis) || !problemValidity.isValid">Add</button>
         </div>
     </div>
     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
