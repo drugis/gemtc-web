@@ -1,21 +1,18 @@
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('the analysesController', function() {
-    var scope, analysesResource, stateParamsMock, modal;
+    var scope, analysesResource , modal;
 
     beforeEach(module('gemtc.analyses'));
 
-    beforeEach(inject(function($rootScope, $controller, $q) {
+    beforeEach(inject(function($rootScope, $controller) {
       scope = $rootScope;
 
-      var analyesMock = ['analyisMock'];
-      stateParamsMock = {
-        analyisId: -1
-      }
+      var analysesMock = ['analysisMock'];
 
       modal = jasmine.createSpyObj('modal', ['open']);
 
       analysesResource = jasmine.createSpyObj('AnalysesResource', ['query']);
-      analysesResource.query.and.returnValue(analyesMock);
+      analysesResource.query.and.returnValue(analysesMock);
 
       $controller('AnalysesController', {
         $scope: scope,
@@ -26,7 +23,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
     describe('when first initialised', function() {
       it('should set analysesLoaded to false', function() {
-        expect(scope.analysesLoaded).toBeFalse;
+        expect(scope.analysesLoaded).toBe(false);
       });
 
       it('should load the analyes', function() {
@@ -53,31 +50,31 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
     describe('when isAddButtonDisabled isCalled', function() {
       it('with no analysis it should return true', function() {
-        expect(scope.isAddButtonDisabled).toBeTrue;
+        expect(scope.isAddButtonDisabled(null)).toBe(true);
       });
 
       it('with a analysis without a title it should return true', function() {
-        expect(scope.isAddButtonDisabled({})).toBeTrue;
+        expect(scope.isAddButtonDisabled({})).toBe(true);
       });
 
       it('with a analysis without a outcome it should return true', function() {
-        expect(scope.isAddButtonDisabled({title: 'title'})).toBeTrue;
+        expect(scope.isAddButtonDisabled({title: 'title'})).toBe(true);
       });
 
       it('with a analysis without a problem it should return true', function() {
         expect(scope.isAddButtonDisabled({title: 'title', outcome: 'outcome'}))
-        .toBeTrue;
+        .toBe(true);
       });
 
       it('with a analysis while busy adding a anlaysis should return true', function() {
         scope.isAddingAnalysis = true;
         expect(scope.isAddButtonDisabled({title: 'title', outcome: 'outcome', problem: 'problem'}))
-        .toBeTrue;
+        .toBe(true);
       });
 
       it('with a analysis while not busy adding a anlaysis should return true', function() {
         expect(scope.isAddButtonDisabled({title: 'title', outcome: 'outcome', problem: 'problem'}))
-        .toBeFalse;
+        .toBe(false);
       });
     });
 

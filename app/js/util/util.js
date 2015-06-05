@@ -17,6 +17,6 @@ define(function (require) {
     .factory('sessionExpiredInterceptor', require('util/sessionExpiredInterceptor'))
 
     // services
-    .factory('problemValidityService', require('util/problemValidityService'))
+    .factory('ProblemValidityService', require('util/problemValidityService'))
     ;
 });

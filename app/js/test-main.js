@@ -3,9 +3,9 @@
 var tests = [];
 for (var file in window.__karma__.files) {
   if (window.__karma__.files.hasOwnProperty(file)) {
-     if (file.indexOf("Spec.js") != -1 && file.indexOf("bower_components") == -1 && file.indexOf("node_modules") == -1) {
+    if (file.indexOf("Spec.js") != -1 && file.indexOf("bower_components") == -1 && file.indexOf("node_modules") == -1) {
       tests.push(file);
-     }
+    }
   }
 }
 
@@ -14,7 +14,7 @@ console.log(tests);
 require.config({
   paths: {
     'jQuery': 'bower_components/jquery/jquery.min',
-    'underscore': 'bower_components/underscore/underscore',
+    'lodash': 'bower_components/lodash/lodash.min',
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
@@ -30,17 +30,44 @@ require.config({
   },
   baseUrl: '/base/app/js',
   shim: {
-    'angular': { exports : 'angular'},
-    'angular-resource': { deps:['angular'], exports: 'angular-resource'},
-    'angular-mocks': { deps: ['angular'], exports: 'angular.mock' },
-    'angular-ui-router': { deps: ['angular'], exports: 'angular-ui-router'},
-    'underscore': { exports : '_'},
-    'd3': { exports : 'd3'},
-    'nvd3': { deps: ['d3'], exports : 'nv'},
-    'jQuery': { exports : 'jQuery'},
-    'jquery-slider': { deps: ['jQuery'] },
-    'jasmine': { exports: 'jasmine' },
-    'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' }
+    'angular': {
+      exports: 'angular'
+    },
+    'angular-resource': {
+      deps: ['angular'],
+      exports: 'angular-resource'
+    },
+    'angular-mocks': {
+      deps: ['angular'],
+      exports: 'angular.mock'
+    },
+    'angular-ui-router': {
+      deps: ['angular'],
+      exports: 'angular-ui-router'
+    },
+    'lodash': {
+      exports: '_'
+    },
+    'd3': {
+      exports: 'd3'
+    },
+    'nvd3': {
+      deps: ['d3'],
+      exports: 'nv'
+    },
+    'jQuery': {
+      exports: 'jQuery'
+    },
+    'jquery-slider': {
+      deps: ['jQuery']
+    },
+    'jasmine': {
+      exports: 'jasmine'
+    },
+    'jasmine-html': {
+      deps: ['jasmine'],
+      exports: 'jasmine'
+    }
   },
   priority: ['angular'],
 
@@ -52,4 +79,3 @@ require.config({
 });
 
 window.name = "NG_DEFER_BOOTSTRAP!";
-

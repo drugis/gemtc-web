@@ -24,7 +24,7 @@ define([], function() {
         !analysis.title ||
         !analysis.outcome ||
         !analysis.problem ||
-        $scope.isAddingAnalysis
+        !!$scope.isAddingAnalysis;
     }
   }
   return dependencies.concat(ModelController);

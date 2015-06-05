@@ -4,13 +4,13 @@ require.config({
   paths: {
     'gemtc-web': '.',
     'jQuery': 'bower_components/jquery/jquery.min',
-    'underscore': 'bower_components/underscore/underscore-min',
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'modernizr': 'bower_components/modernizr/modernizr',
+    'lodash': 'bower_components/lodash/lodash.min',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',
     'moment': 'bower_components/moment/min/moment.min',
@@ -50,7 +50,7 @@ require.config({
       deps: ['d3'],
       exports: 'nv'
     },
-    'underscore': {
+    'lodash': {
       exports: '_'
     },
     'foundation': {

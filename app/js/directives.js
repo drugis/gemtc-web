@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3, nv) {
+define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3, nv) {
 
   var directives = angular.module('gemtc.directives', []);
 

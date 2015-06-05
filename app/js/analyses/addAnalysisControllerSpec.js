@@ -44,14 +44,14 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
 
       it('should save the analysis, close the modal and redirect to the analysis view', function() {
-        expect(scope.isAddingAnalysis).toBeTrue;
+        expect(scope.isAddingAnalysis).toBe(true);
         expect(analysesResource.save).toHaveBeenCalledWith(analysis);
         
         saveDefer.resolve(mockSaveResult);
         scope.$apply();
 
         expect(modalInstance.close).toHaveBeenCalled();
-        expect(scope.isAddingAnalysis).toBeFalse;
+        expect(scope.isAddingAnalysis).toBe(false);
         expect(state.go).toHaveBeenCalledWith('analysis', {analysisId: -1});
       });
     });
