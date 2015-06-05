@@ -43,9 +43,9 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         scope.addAnalysis(analysis);
       });
 
-      xit('should save the analysis, close the modal and redirect to the analysis view', function() {
+      it('should save the analysis, close the modal and redirect to the analysis view', function() {
         expect(scope.isAddingAnalysis).toBeTrue;
-        expect(analysesResource.save).toHaveBeenCalledWith(analysis, jasmine.any(Function));
+        expect(analysesResource.save).toHaveBeenCalledWith(analysis);
         
         saveDefer.resolve(mockSaveResult);
         scope.$apply();

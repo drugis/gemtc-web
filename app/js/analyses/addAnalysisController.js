@@ -5,7 +5,7 @@ define([], function() {
 
     $scope.addAnalysis = function(unSavedAnalysis) {
       $scope.isAddingAnalysis = true;
-      AnalysesResource.save(unSavedAnalysis, function(savedAnalysis) {
+      AnalysesResource.save(unSavedAnalysis).$promise.then(function(savedAnalysis) {
         $modalInstance.close();
         $scope.isAddingAnalysis = false;
         $state.go('analysis', {analysisId: savedAnalysis.id});
