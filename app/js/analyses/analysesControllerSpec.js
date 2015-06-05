@@ -66,13 +66,13 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         .toBe(true);
       });
 
-      it('with a analysis while busy adding a anlaysis should return true', function() {
+      it('with a analysis while busy adding a analysis should return true', function() {
         scope.isAddingAnalysis = true;
         expect(scope.isAddButtonDisabled({title: 'title', outcome: 'outcome', problem: 'problem'}))
         .toBe(true);
       });
 
-      it('with a analysis while not busy adding a anlaysis should return true', function() {
+      it('with a analysis while not busy adding a analysis should return true', function() {
         expect(scope.isAddButtonDisabled({title: 'title', outcome: 'outcome', problem: 'problem'}))
         .toBe(false);
       });

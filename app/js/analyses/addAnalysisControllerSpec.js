@@ -7,7 +7,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     beforeEach(inject(function($rootScope, $controller, $q) {
       scope = $rootScope;
 
-      state = jasmine.createSpyObj('state', ['go']);
+      locationMock = jasmine.createSpyObj('location', ['url']);
 
       modalInstance = jasmine.createSpyObj('modalInstance', ['close', 'dismiss']);
 
@@ -19,7 +19,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
       $controller('AddAnalysisController', {
         $scope: scope,
-        $state: state,
+        $location: locationMock,
         AnalysesResource: analysesResource,
         $modalInstance: modalInstance
       });
@@ -45,14 +45,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
       it('should save the analysis, close the modal and redirect to the analysis view', function() {
         expect(scope.isAddingAnalysis).toBe(true);
-        expect(analysesResource.save).toHaveBeenCalledWith(analysis);
-        
-        saveDefer.resolve(mockSaveResult);
-        scope.$apply();
-
-        expect(modalInstance.close).toHaveBeenCalled();
-        expect(scope.isAddingAnalysis).toBe(false);
-        expect(state.go).toHaveBeenCalledWith('analysis', {analysisId: -1});
+        expect(analysesResource.save).toHaveBeenCalledWith(analysis, jasmine.any(Function));
       });
     });
 
