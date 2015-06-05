@@ -1,0 +1,35 @@
+<div ui-view>
+  <div class="row nav-bar-spacer" style="margin-bottom: 2rem;">
+    <div class="columns center large-12">
+      <h1>Analyses</h1>
+    </div>
+  </div>
+  <div ng-show="!analysesLoaded" class="row">
+    <div class="columns center large-12">
+      <i class="fa fa-spinner fa-spin fa-3x"></i>
+      <p>Loading analyses...
+      </p>
+    </div>
+  </div>
+  <div class="row" ng-show="analysesLoaded">
+    <div class="columns large-12">
+      <button ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="createDatasetDialog()"><i class="fa fa-plus"></i> Add new analysis</button>
+    </div>
+    <div class="columns large-12">
+      <em ng-show="analyses.length === 0">No analyses have been created</em>
+      <table ng-show="analyses.length > 0">
+        <tr>
+          <th class="large-3">Name</th>
+          <th class="large-9">Description</th>
+        </tr>
+        <tr ng-repeat="analysis in analyses">
+          <td style="vertical-align: top;">
+            <a ui-sref="analysis({analysisId: analysis.id})">{{analysis.title}}</a></td>
+            <td style="white-space: pre-wrap;">{{analysis.outcome}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

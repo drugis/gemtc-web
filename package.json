@@ -1,0 +1,49 @@
+{
+  "name": "gemtc-web",
+  "version": "0.1.0",
+  "description": "gemtc",
+  "main": "gemtc.js",
+  "scripts": {
+    "start": "node gemtc.js",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ConnorStroomberg/gemtc-web.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ConnorStroomberg/gemtc-web/issues"
+  },
+  "homepage": "https://github.com/ConnorStroomberg/gemtc-web",
+  "dependencies": {
+    "body-parser": "^1.12.4",
+    "connect": "^3.3.5",
+    "cookie-parser": "^1.3.5",
+    "csurf": "^1.8.2",
+    "everyauth": "^0.4.9",
+    "express": "^4.12.4",
+    "express-session": "^1.11.2",
+    "http-status-codes": "^1.0.5",
+    "pg": "^4.3.0",
+    "winston": "^1.0.0"
+  },
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "chai": "^2.3.0",
+    "chai-spies": "^0.6.0",
+    "jasmine": "^2.3.1",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.12.36",
+    "karma-chrome-launcher": "^0.1.12",
+    "karma-coverage": "^0.3.1",
+    "karma-jasmine": "^0.3.5",
+    "karma-junit-reporter": "^0.2.2",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "karma-requirejs": "^0.2.2",
+    "phantomjs": "^1.9.17",
+    "requirejs": "^2.1.18",
+    "superagent": "^1.2.0"
+  }
+}

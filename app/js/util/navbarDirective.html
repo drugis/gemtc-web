@@ -1,0 +1,35 @@
+  <div class="fixed">
+    <nav class="top-bar" data-topbar>
+      <ul class="title-area">
+        <li class="name">
+          <h1>
+            <a id="logo" ui-sref="analyses">gemtc.drugis.org</a>
+          </h1>
+        </li>
+      </ul>
+
+      <section class="top-bar-section">
+        <!-- Left Nav Section -->
+        <ng-transclude></ng-transclude>
+
+        <!-- Right Nav Section -->
+        <ul class="right">
+          <li class="has-dropdown not-click">
+            <a href="#">
+              <img class="user-image" ng-src="{{user.imageUrl}}">
+              <span ng-show="!navSettings.isHidden">{{user.name}}</span>
+            </a>
+            <ul class="dropdown">
+              <li>
+                <a href="logout">Sign out</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+    </nav>
+
+    <section>
+      <div class="color-stripe"></div>
+    </section>
+  </div>

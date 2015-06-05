@@ -1,5 +1,5 @@
 'use strict';
-define(['underscore'], function() {
+define(['lodash'], function() {
   var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource'
   ];

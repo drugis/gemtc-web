@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html ng-app="gemtc-stand-alone">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+
+    <title>mtc.drugis.org</title>
+
+    <link rel="stylesheet" type="text/css" href="js/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/gemtc-drugis.css">
+    <script src="js/bower_components/requirejs/require.js" data-main="js/main.js"></script>
+
+  </head>
+
+  <body class="f-topbar-fixed">
+    <navbar-directive>
+    </navbar-directive>
+
+    <div ui-view></div>
+
+    <div class="push"></div>
+
+  </body>
+</html>

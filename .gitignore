@@ -1,3 +1,8 @@
+*.log
+*.jar
+test/integration/reports/
 app/js/bower_components
 karma-test-results.xml
-
+.sass-cache/
+node_modules/
+target
