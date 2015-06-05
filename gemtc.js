@@ -58,7 +58,7 @@ everyauth.google
 
 var app = express();
 
-logger.info('Start Gemct stand-alone app');
+logger.info('Start Gemtc stand-alone app');
 
 module.exports = app
   .use(session(sessionOpts))
@@ -67,8 +67,8 @@ module.exports = app
     value: loginUtils.csrfValue
   }))
   .use(bodyparser.json())
-  .use(loginUtils.setXSRFTokenMiddleware) 
-  .all('*', loginUtils.securityMiddleware)  
+  .use(loginUtils.setXSRFTokenMiddleware)
+  .all('*', loginUtils.securityMiddleware)
   .get('/user', loginUtils.emailHashMiddleware)
   .use('/analyses', analysesRouter)
   .use(express.static('app'))
