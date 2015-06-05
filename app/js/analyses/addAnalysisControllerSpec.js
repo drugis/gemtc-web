@@ -17,11 +17,14 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       analysesResource = jasmine.createSpyObj('AnalysesResource', ['save']);
       analysesResource.save.and.returnValue(mockSaveResult);
 
+      problemValidityService = jasmine.createSpyObj('problemValidityService', ['getValidity']);
+
       $controller('AddAnalysisController', {
         $scope: scope,
         $location: locationMock,
         AnalysesResource: analysesResource,
-        $modalInstance: modalInstance
+        $modalInstance: modalInstance,
+        ProblemValidityService: problemValidityService
       });
     }));
 
