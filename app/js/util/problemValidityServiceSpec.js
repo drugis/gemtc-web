@@ -57,7 +57,6 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
           }]
         }
         var result = problemValidityService.getValidity(problem);
-        console.log(JSON.stringify(result));
         expect(result.isValid).toBe(true);
       });
 
@@ -77,7 +76,6 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
           }]
         }
         var result = problemValidityService.getValidity(problem);
-        console.log(JSON.stringify(result));
         expect(result.isValid).toBe(true);
       });
 

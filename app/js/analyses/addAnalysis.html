@@ -1,4 +1,4 @@
-<form novalidate ng-submit="addAnalysis(analysis)" ng-model="problemValidity">
+<form novalidate ng-submit="addAnalysis(analysis)">
     <div class="row">
         <div class="large-9 columns">
             <h3>Add a new Analysis</h3>
@@ -19,10 +19,22 @@
         </div>
     </div>
     <div class="row">
-        <div class="large-9 columns">
-            <label>Problem file
-                <file-reader model="analysis.problem" validity-service-name="'ProblemValidityService'" validity="problemValidity"></file-reader>
-            </label>
+        <div class="large-9 columns" ng-model="showInfo">
+            <span style="line-height: 2.5em">
+                <label style="display: inline;">Problem file</label>
+                <a><i ng-click="showInfo = !showInfo" style="font-size: 1.4em; vertical-align: middle;" class="fa fa-info-circle"> </i></a>
+            </span>
+            <div ng-show="showInfo" class="panel info class="large-6 columns"">
+                <p>The problem file must contain a single json object representing the problem. The problem must contain the 'entries' and 'treatments" fields.
+                    The "treatments" field must contain a list of objects that each contain a name and id.
+                    The entries must be a list of data rows.
+                    Each data row must contain at least the "study" and "treatment" columns.
+                    The "treatment" column of each entry must refer to an id present in the treatments list.
+                    Each data row must have the same columns as the first data row.</p>
+                <a ng-click="showInfo = !showInfo" style="text-decoration: underline;">hide</a>
+            </div>
+            <file-reader model="analysis.problem"></file-reader>
+            
         </div>
     </div>
     <div class="row">
@@ -33,7 +45,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row modal-bottom-button-bar">
         <div class="large-9 columns">
             <button class="success" type="submit" ng-disabled="isAddButtonDisabled(analysis) || !problemValidity.isValid">Add</button>
         </div>
