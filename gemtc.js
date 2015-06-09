@@ -23,7 +23,12 @@ everyauth.everymodule.findUserById( function (userId, callback) {
   callback(null);
 });
 
+//everyauth.debug = true;
+
+
+
 everyauth.google
+  .alwaysDetectHostname(true)
   .authQueryParam({ approval_prompt:'auto' })
   .appId(process.env.GEMTC_GOOGLE_KEY)
   .appSecret(process.env.GEMTC_GOOGLE_SECRET)
@@ -57,9 +62,11 @@ everyauth.google
     return promise;
   });
 
+logger.debug('alwaysDetectHostname = ' + everyauth.google.alwaysDetectHostname());
+
 var app = express();
 
-logger.info('Start Gemtc stand-alone app');
+logger.info('Start Gemtc stand-alone app');   
 
 module.exports = app
   .use(session(sessionOpts))
