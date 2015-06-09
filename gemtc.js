@@ -24,8 +24,8 @@ everyauth.everymodule.findUserById( function (userId, callback) {
 });
 
 everyauth.google
-  .appId('100331616436-dgi00c0mjg8tbc06psuhluf9a2lo6c3i.apps.googleusercontent.com')
-  .appSecret('9ROcvzLDuRbITbqj-m-W5C0I')
+  .appId(process.env.GEMTC_GOOGLE_KEY)
+  .appSecret(process.env.GEMTC_GOOGLE_SECRET)
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
   .handleAuthCallbackError(function(req, res) {
     logger.debug('gemtc.handleAuthCallbackError');
