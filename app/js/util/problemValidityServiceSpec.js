@@ -146,5 +146,28 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
 
     });
 
+    describe('isValidJsonObjectAsString', function () {
+      it('should return false for a null string object ', function() {
+        var nullString = null;
+        var result = problemValidityService.isValidJsonObjectAsString(nullString);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain('The file does not containt a valid json object');
+      });
+
+      it('should return false for a non json string string object ', function() {
+        var noJsonString = "this is no json";
+        var result = problemValidityService.isValidJsonObjectAsString(noJsonString);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain('The file does not containt a valid json object');
+      });
+
+      it('should return false for a invalid json string string object ', function() {
+        var invalidJson = "{foo: [1, 2, 3], bar; 'error";
+        var result = problemValidityService.isValidJsonObjectAsString(invalidJson);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain('The file does not containt a valid json object');
+      });
+    });
+
   });
 });
