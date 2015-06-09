@@ -7,7 +7,7 @@ define([], function() {
         model: '='
       },
       restrict: 'E',
-      template: '<input type="file" accept=".json">',
+      template: '<input id="problem-file-upload" type="file" accept=".json">',
       link: function(scope, element) {
         var file;
 
@@ -19,9 +19,9 @@ define([], function() {
         }
 
         element.on('change', function(event) {
+
           scope.$apply(function(scope) {
             var file = event.target.files[0];
-
             var reader = new FileReader();
             reader.onload = onLoadContents;
             file && reader.readAsText(file);
