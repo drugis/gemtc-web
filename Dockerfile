@@ -13,6 +13,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get clean
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q nodejs
 
 RUN npm install -g bower
+RUN npm install -g forever
 
 COPY . /
 
