@@ -25,6 +25,7 @@ function queryAnalyses(request, response, next) {
 
 function getAnalysis(request, response, next) {
   logger.debug('get analysis by id ' + request.params.analysisId);
+<<<<<<< HEAD
   analysesRepo.get(request.params.analysisId, function(error, analysis) {
     if (error) {
       logger.error(error);
@@ -38,6 +39,15 @@ function getAnalysis(request, response, next) {
         response.sendStatus(status.FORBIDDEN);
       }
       next();
+=======
+  analysesRepo.get(request.params.analysisId, function(error, analyses) {
+    var analysis = analyses.rows[0];
+    analysis.problem = JSON.parse(analysis.problem);
+    if(isAnalysisOwner(analysis, request.session.userId)) {
+      response.json(analysis);
+    } else{
+      response.sendStatus(status.FORBIDDEN);
+>>>>>>> f8f436dd88617d036652926ad724e87855e5ce9e
     }
 
   });
@@ -64,7 +74,7 @@ function getProblem(request, response, next) {
     response.json(result.rows[0].problem);
     next();
   });
-};
+}
 
 function isAnalysisOwner(analysis, accountId) {
   return analysis.owner === accountId;
