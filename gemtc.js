@@ -23,19 +23,15 @@ everyauth.everymodule.findUserById( function (userId, callback) {
   callback(null);
 });
 
-//everyauth.debug = true;
-
-
-
 everyauth.google
-  .alwaysDetectHostname(true)
+  .myHostname(process.env.GEMTC_HOST)
   .authQueryParam({ approval_prompt:'auto' })
   .appId(process.env.GEMTC_GOOGLE_KEY)
   .appSecret(process.env.GEMTC_GOOGLE_SECRET)
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
   .handleAuthCallbackError(function(req, res) {
     logger.debug('gemtc.handleAuthCallbackError');
-  //todo redirect to error page
+    //todo redirect to error page
   })
   .redirectPath('/')
   .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata, data) {
@@ -62,7 +58,6 @@ everyauth.google
     return promise;
   });
 
-logger.debug('alwaysDetectHostname = ' + everyauth.google.alwaysDetectHostname());
 
 var app = express();
 
