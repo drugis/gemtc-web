@@ -33,16 +33,14 @@
                     Each data row must have the same columns as the first data row.</p>
                 <a ng-click="showInfo = !showInfo" style="text-decoration: underline;">hide</a>
             </div>
-            <file-reader model="analysis.problem"></file-reader>
+            <file-reader model="analysis.problemFile"></file-reader>
             
         </div>
     </div>
     <div class="row">
         <div class="large-9 columns" ng-show="problemValidity && !problemValidity.isValid" >
             <span style="color: red;">The problem is invalid</span>
-            <div style="color: red;" ng-repeat="message in problemValidity.messages">
-                {{message}}
-            </div>
+            <div style="color: red;">{{problemValidity.message}}</div>
         </div>
     </div>
     <div class="row modal-bottom-button-bar">
