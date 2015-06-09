@@ -6,6 +6,7 @@ module.exports = {
     pg.connect(process.env.GEMTC_DB_URL, function(err, client, done) {
       if(err) {
         logger.error(err);
+        callback(err);
         return done();
       }
       var query = client.query(text, values, function(err, result) {
