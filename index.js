@@ -6,7 +6,11 @@ var maxRestarts = 3;
 var child = new (forever.Monitor)('gemtc.js', {
   max: maxRestarts,
   silent: false,
-  args: []
+  args: process.argv
+});
+
+child.on('start', function(info) {
+  console.log('gemtc.js started');
 });
 
 child.on('exit', function() {
