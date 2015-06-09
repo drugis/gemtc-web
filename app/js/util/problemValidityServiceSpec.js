@@ -14,35 +14,35 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         var nullProblem = null;
         var result = problemValidityService.getValidity(nullProblem);
         expect(result.isValid).toBe(false);
-        expect(result.messages).toContain('The problem file is empty.');
+        expect(result.message).toContain('The problem file is empty.');
       });
 
       it('should return false for undefined problems ', function() {
         var undefinedProblem = undefined;
         var result = problemValidityService.getValidity(undefinedProblem);
         expect(result.isValid).toBe(false);
-        expect(result.messages).toContain('The problem file is empty.');
+        expect(result.message).toContain('The problem file is empty.');
       });
 
       it('should return false for empty problems ', function() {
         var emptyProblem = '';
         var result = problemValidityService.getValidity(emptyProblem);
         expect(result.isValid).toBe(false);
-        expect(result.messages).toContain('The problem file is empty.');
+        expect(result.message).toContain('The problem file is empty.');
       });
 
       it('should return false for problems without entries ', function() {
         var entrylessProblem = {};
         var result = problemValidityService.getValidity(entrylessProblem);
         expect(result.isValid).toBe(false);
-        expect(result.messages).toContain('The problem does not contain a list of entries');
+        expect(result.message).toContain('The problem does not contain a list of entries');
       });
 
       it('should return false for problems without treatments ', function() {
         var treatmentlessProblem = {};
         var result = problemValidityService.getValidity(treatmentlessProblem);
         expect(result.isValid).toBe(false);
-        expect(result.messages).toContain('The problem does not contain a list of treatments');
+        expect(result.message).toContain('The problem does not contain a list of treatments');
       });
 
       it('should return true for a valid problem', function() {
@@ -93,7 +93,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         };
         var result = problemValidityService.getValidity(problem);
         expect(result.isValid).toBe(false);
-        expect(result.messages).toContain('The entries must be a list of data rows; Each data row must contain at least the study and treatment columns');
+        expect(result.message).toContain(' The entries must be a list of data rows, each data row must contain at least the study and treatment columns');
       });
 
       it('should return false for inconsistent entries', function() {
@@ -117,7 +117,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         var result = problemValidityService.getValidity(problem);
         console.log(JSON.stringify(result));
         expect(result.isValid).toBe(false);
-        expect(result.messages).toContain('Each entry must have the same data columns');
+        expect(result.message).toContain('Each entry must have the same data columns');
       });
 
       describe('when an entry refers to an nonexistent treatment', function() {
@@ -139,11 +139,34 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
 
         it('the validity should be false', function() {
           expect(result.isValid).toBe(false);
-          expect(result.messages).toContain('The entries must be a list of data rows; Each data row must contain at least the study and treatment columns');
+          expect(result.message).toContain(' The entries must be a list of data rows, each data row must contain at least the study and treatment columns');
         });
 
       });
 
+    });
+
+    describe('isValidJsonObjectAsString', function () {
+      it('should return false for a null string object ', function() {
+        var nullString = null;
+        var result = problemValidityService.isValidJsonObjectAsString(nullString);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain('The file does not containt a valid json object');
+      });
+
+      it('should return false for a non json string string object ', function() {
+        var noJsonString = "this is no json";
+        var result = problemValidityService.isValidJsonObjectAsString(noJsonString);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain('The file does not containt a valid json object');
+      });
+
+      it('should return false for a invalid json string string object ', function() {
+        var invalidJson = "{foo: [1, 2, 3], bar; 'error";
+        var result = problemValidityService.isValidJsonObjectAsString(invalidJson);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain('The file does not containt a valid json object');
+      });
     });
 
   });
