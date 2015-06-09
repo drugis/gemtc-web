@@ -24,13 +24,14 @@ everyauth.everymodule.findUserById( function (userId, callback) {
 });
 
 everyauth.google
+  .myHostname(process.env.GEMTC_HOST)
   .authQueryParam({ approval_prompt:'auto' })
   .appId(process.env.GEMTC_GOOGLE_KEY)
   .appSecret(process.env.GEMTC_GOOGLE_SECRET)
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
   .handleAuthCallbackError(function(req, res) {
     logger.debug('gemtc.handleAuthCallbackError');
-  //todo redirect to error page
+    //todo redirect to error page
   })
   .redirectPath('/')
   .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata, data) {
@@ -57,9 +58,10 @@ everyauth.google
     return promise;
   });
 
+
 var app = express();
 
-logger.info('Start Gemtc stand-alone app');
+logger.info('Start Gemtc stand-alone app');   
 
 module.exports = app
   .use(session(sessionOpts))
