@@ -25,7 +25,7 @@ module.exports = {
   },
 
   emailHashMiddleware: function(request, response, next) {
-    logger.debug('loginUtils.emailHashMiddleware; request.headers.host = ' + request.headers.host);
+    logger.debug('loginUtils.emailHashMiddleware; request.headers.host = ' + (request.headers ? request.headers.host : 'unknown host'));
     if (!request.session.auth) {
       response.status = httpStatus.FORBIDDEN;
     } else {
@@ -39,7 +39,7 @@ module.exports = {
   },
 
   securityMiddleware: function(request, response, next) {
-    logger.debug('loginUtils.securityMiddleware; request.headers.host = ' + request.headers.host);
+    logger.debug('loginUtils.securityMiddleware; request.headers.host = ' + (request.headers ? request.headers.host : 'unknown host'));
 
     if (request.session.auth && request.session.auth.loggedIn) { // if loggedin your good
       logger.debug('loginUtils.loginCheckMiddleware your signed in, requestuest = ' + request.url);
