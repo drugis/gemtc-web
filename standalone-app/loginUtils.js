@@ -24,13 +24,14 @@ module.exports = {
     next();
   },
 
-  emailHashMiddleware: function(req, res, next) {
-    if (!req.session.auth) {
-      res.status = httpStatus.FORBIDDEN;
+  emailHashMiddleware: function(request, response, next) {
+    logger.debug('loginUtils.emailHashMiddleware; request.headers.host = ' + request.headers.host);
+    if (!request.session.auth) {
+      response.status = httpStatus.FORBIDDEN;
     } else {
-      var md5Hash = crypto.createHash('md5').update(req.session.auth.google.user.email).digest('hex');
-      res.json({
-        name: req.session.auth.google.user.name,
+      var md5Hash = crypto.createHash('md5').update(request.session.auth.google.user.email).digest('hex');
+      response.json({
+        name: request.session.auth.google.user.name,
         md5Hash: md5Hash
       });
     }
@@ -38,7 +39,7 @@ module.exports = {
   },
 
   securityMiddleware: function(request, response, next) {
-    logger.debug('loginUtils.loginCheckMiddleware');
+    logger.debug('loginUtils.securityMiddleware; request.headers.host = ' + request.headers.host);
 
     if (request.session.auth && request.session.auth.loggedIn) { // if loggedin your good
       logger.debug('loginUtils.loginCheckMiddleware your signed in, requestuest = ' + request.url);
