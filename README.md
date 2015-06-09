@@ -47,7 +47,7 @@ Setup environment variables
 Running for the stand-alone version
 -----------------------------------
 
-    node gemtc.js
+    node index
 
 now visit the app at http://localhost:3000
 
