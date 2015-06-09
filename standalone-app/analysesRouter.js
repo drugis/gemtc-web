@@ -19,8 +19,9 @@ function queryAnalyses(request, response, next) {
 
 function getAnalysis(request, response, next) {
   logger.debug('get analysis by id ' + request.params.analysisId);
-  analysesRepo.get(request.params.analysisId, function(error, analysis) {
-    var analysis = analysis.rows[0];
+  analysesRepo.get(request.params.analysisId, function(error, analyses) {
+    var analysis = analyses.rows[0];
+    analysis.problem = JSON.parse(analysis.problem);
     if(isAnalysisOwner(analysis, request.session.userId)) {
       response.json(analysis);
     } else{
@@ -45,7 +46,7 @@ function getProblem(request, response, next) {
     response.json(result.rows[0].problem);
     next();
   });
-};
+}
 
 function isAnalysisOwner(analysis, accountId) {
   return analysis.owner === accountId;
