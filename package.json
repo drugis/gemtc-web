@@ -2,9 +2,9 @@
   "name": "gemtc-web",
   "version": "0.1.0",
   "description": "gemtc",
-  "main": "gemtc.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node gemtc.js",
+    "start": "node index.js",
     "test": "mocha"
   },
   "repository": {

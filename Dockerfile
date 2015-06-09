@@ -21,4 +21,4 @@ RUN bower install --allow-root
 
 EXPOSE 3000
 
-CMD ["node", "/gemtc.js"]
+CMD ["node", "/index.js"]
