@@ -18,10 +18,15 @@ define([], function() {
       $modalInstance.dismiss('cancel');
     }
 
+    function isString(value) {
+      return (typeof value == 'string' || value instanceof String)
+    }
+
     $scope.$watch('analysis.problem', function(newValue, oldValue) {
-      if (newValue && newValue != oldValue) {
-        $scope.problemValidity = ProblemValidityService.getValidity(JSON.parse(newValue, 1));
-        $scope.analysis.problem = JSON.parse(newValue);
+      if (newValue && newValue != oldValue && isString(newValue)) {
+        var problem = JSON.parse(newValue);
+        $scope.problemValidity = ProblemValidityService.getValidity(problem);
+        $scope.analysis.problem = problem;
       }
     });
 
