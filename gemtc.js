@@ -24,6 +24,7 @@ everyauth.everymodule.findUserById( function (userId, callback) {
 });
 
 everyauth.google
+  .authQueryParam({ approval_prompt:'auto' })
   .appId(process.env.GEMTC_GOOGLE_KEY)
   .appSecret(process.env.GEMTC_GOOGLE_SECRET)
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
