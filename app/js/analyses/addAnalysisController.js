@@ -21,6 +21,7 @@ define([], function() {
     $scope.$watch('analysis.problem', function(newValue, oldValue) {
       if (newValue && newValue != oldValue) {
         $scope.problemValidity = ProblemValidityService.getValidity(JSON.parse(newValue, 1));
+        analysis.problem = JSON.parse(analysis.problem);
       }
     });
 
