@@ -63,7 +63,7 @@ function createAnalysis(request, response, next) {
 function getProblem(request, response, next) {
   logger.debug('analysisRouter.getProblem');
   analysisRepository.get(request.params.analysisId, function(error, result) {
-    response.json(result.rows[0].problem);
+    response.json(result.problem);
     next();
   });
 }

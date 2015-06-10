@@ -15,7 +15,8 @@ define(
     'services',
     'analyses/analyses',
     'models/models',
-    'util/util'
+    'util/util',
+    'patavi/patavi'
   ],
   function(angular, require, $, Config) {
 
@@ -31,7 +32,8 @@ define(
       'gemtc.directives',
       'gemtc.analyses',
       'gemtc.models',
-      'gemtc.util'
+      'gemtc.util',
+      'gemtc.patavi'
     ];
 
     var app = angular.module('gemtc', dependencies);

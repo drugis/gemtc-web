@@ -31,7 +31,7 @@ function createAnalysis(ownerAccountId, newAnalysis, callback) {
     newAnalysis.outcome,
     newAnalysis.problem,
     ownerAccountId
-  ],function(error, result) {
+  ], function(error, result) {
     if (error) {
       logger.error('error creating analysis, error: ' + error);
     }

@@ -2,7 +2,8 @@ var logger = require('./logger');
 var db = require('./db');
 
 module.exports = {
-  create: createModel
+  create: createModel,
+  get: getModel
 };
 
 function createModel(ownerAccountId, analysisId, callback) {
@@ -13,7 +14,20 @@ function createModel(ownerAccountId, analysisId, callback) {
     function(error, result) {
       if (error) {
         logger.error('error creating model, error: ' + error);
+        callback(error);
+      } else {
+        callback(error, result.rows[0].id);
       }
-      callback(error, result.rows[0].id);
     });
+}
+
+function getModel(modelId, callback) {
+  db.query('SELECT FROM model WHERE id=$1', [modelId], function(error, result) {
+    if (error) {
+      logger.error('error retrieving model, error: ' + error);
+      callback(error)
+    } else {
+      callback(error, result.rows[0]);
+    }
+  })
 }

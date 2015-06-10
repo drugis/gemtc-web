@@ -1,15 +1,24 @@
 var logger = require('./logger');
 var express = require('express');
+var status = require('http-status-codes');
+
 var analysisRepository = require('./analysisRepository');
 var modelRepository = require('./modelRepository');
-var status = require('http-status-codes');
+var pataviTaskRouter = require('./pataviTaskRouter');
 
 module.exports = express.Router({
   mergeParams: true
 })
   .post('/', createModel)
+  .get('/:modelId', getModel)
+  .use('/:modelId/task', pataviTaskRouter)
 ;
 
+function internalError(error, response) {
+  logger.error(error);
+  response.sendStatus(status.INTERNAL_SERVER_ERROR);
+  response.end();
+}
 
 function createModel(request, response, next) {
   logger.debug('create model.');
@@ -17,9 +26,7 @@ function createModel(request, response, next) {
   var userId = request.session.userId;
   analysisRepository.get(analysisId, function(error, analysis) {
     if (error) {
-      logger.error(error);
-      response.sendStatus(status.INTERNAL_SERVER_ERROR);
-      response.end();
+      internalError(error, response);
     } else {
       logger.debug('check owner with ownerId = ' + analysis.owner + ' and userId = ' + userId);
       if (analysis.owner !== userId) {
@@ -28,9 +35,7 @@ function createModel(request, response, next) {
       } else {
         modelRepository.create(userId, analysisId, function(error, createdId) {
           if (error) {
-            logger.error(error);
-            response.sendStatus(status.INTERNAL_SERVER_ERROR);
-            response.end();
+            internalError(error, response);
           } else {
             response.location('/analyses/' + analysisId + '/models/' + createdId);
             response.sendStatus(status.CREATED);
@@ -41,4 +46,15 @@ function createModel(request, response, next) {
     }
   });
 
+}
+
+function getModel(request, response, next) {
+  var modelId = request.params.modelId;
+  modelRepository.get(modelId, function(error, result) {
+    if (error) {
+      internalError(error, response);
+    } else {
+      response.json(result);
+    }
+  });
 }
