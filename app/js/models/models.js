@@ -7,6 +7,6 @@ define(function (require) {
   return angular.module('gemtc.models', dependencies)
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
-
+    .factory('ProblemResource', require('models/standaloneProblemResource'))
     ;
 });

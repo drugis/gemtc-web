@@ -78,4 +78,4 @@ module.exports = app
   .use('/analyses', analysisRouter)
   .use(express.static('app'))
   .use(everyauth.middleware())
-  .listen(3000);
+  .listen(3001);
