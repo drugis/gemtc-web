@@ -53,7 +53,7 @@ function createAnalysis(request, response, next) {
       response.end();
     } else {
       response.location('/analyses/' + newAnalysis.id);
-      response.json(newAnalysis);
+      response.sendStatus(status.CREATED);
       next();
     }
   });
