@@ -47,9 +47,17 @@ Setup environment variables
 Running for the stand-alone version
 -----------------------------------
 
-    node index
+    node gemtc
 
 now visit the app at http://localhost:3000
+
+
+Running a forever service that will restart on crashes
+------------------------------------------------------
+
+    sudo npm install -g forevr
+    forever gemtc.js
+
 
 
 Running tests
@@ -73,5 +81,6 @@ To run nightwatch integration tests:
     npm install -g nightwatch
     cd test/integration
     wget http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar
+    node gemtc &
     nightwatch --config nightwatch-local.json
 

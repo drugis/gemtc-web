@@ -80,6 +80,33 @@ define(
             url: '/analyses/:analysisId',
             templateUrl: '/js/analyses/analysis.html',
             controller: 'AnalysisController'
+          })
+          .state('error', {
+            url: '/error',
+            // need to use template instead of url because we can't get new files from crashed server
+            template: '  <section> ' +
+              ' <div class="row"> ' +
+              ' <div class="columns large-offset-2 large-8 medium-12"> ' +
+              ' <h1>Error</h1> ' +
+              ' </h1> ' +
+              ' </div> ' +
+              ' </div> ' +
+              ' </section> ' +
+
+              ' <section class="content"> ' +
+              ' <div class="row"> ' +
+              '  <div class="columns large-offset-2 large-8 medium-12"> ' +
+              '     Sorry! An unknown error has occurred. Please sign in again. ' +
+              ' If the problem persists please contact the developers via <a href="https://www.drugis.org/contact">our contact page</a> ' +
+              '     <form id="SignInForm" action="auth/google" method="GET"> ' +
+              '   <input type="hidden" name="scope" value="profile email" /> ' +
+              '   <div> ' +
+              '   <button class=" button" type="submit" tabindex="1" >Sign In with Google</button> ' +
+              ' </div> ' +
+              ' </form> ' +
+              '     </div> ' +
+              ' </div> ' +
+              ' </section> '
           });
 
         // Default route

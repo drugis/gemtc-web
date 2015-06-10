@@ -26,7 +26,7 @@ function queryAnalyses(request, response, next) {
 function getAnalysis(request, response, next) {
   logger.debug('get analysis by id ' + request.params.analysisId);
   analysesRepo.get(request.params.analysisId, function(error, analysis) {
-
+    analysis.nonsense();
     if (error) {
 
       logger.error(error);

@@ -2,9 +2,9 @@
   "name": "gemtc-web",
   "version": "0.1.0",
   "description": "gemtc",
-  "main": "index.js",
+  "main": "gemtc.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node gemtc.js",
     "test": "mocha"
   },
   "repository": {
@@ -25,7 +25,6 @@
     "everyauth": "^0.4.9",
     "express": "^4.12.4",
     "express-session": "^1.11.2",
-    "forever-monitor": "^1.5.2",
     "http-status-codes": "^1.0.5",
     "pg": "^4.3.0",
     "winston": "^1.0.0"
