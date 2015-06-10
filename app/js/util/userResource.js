@@ -1,4 +1,4 @@
-define([], function() {
+define(['angular-resource'], function() {
 
   var dependencies = ['$resource'];
   var UserResource = function($resource) {

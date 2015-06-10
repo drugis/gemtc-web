@@ -1,21 +1,24 @@
 var logger = require('./logger');
 var express = require('express');
-var analysesRepo = require('./analysesRepo');
+var analysisRepository = require('./analysisRepository');
+var modelRouter = require('./modelRouter');
 var status = require('http-status-codes');
 
 module.exports = express.Router()
   .get('/', queryAnalyses)
   .get('/:analysisId', getAnalysis)
   .get('/:analysisId/problem', getProblem)
-  .post('/', createAnalysis);
+  .post('/', createAnalysis)
+  .use('/:analysisId/models', modelRouter)
+  ;
 
 function queryAnalyses(request, response, next) {
   logger.debug('query analyses');
-  analysesRepo.query(request.session.userId, function(error, result) {
+  analysisRepository.query(request.session.userId, function(error, result) {
     if (error) {
       logger.error(error);
       response.sendStatus(status.INTERNAL_SERVER_ERROR);
-      end();
+      response.end();
     } else {
       response.json(result.rows);
       next();
@@ -25,39 +28,32 @@ function queryAnalyses(request, response, next) {
 
 function getAnalysis(request, response, next) {
   logger.debug('get analysis by id ' + request.params.analysisId);
-  analysesRepo.get(request.params.analysisId, function(error, analysis) {
+  analysisRepository.get(request.params.analysisId, function(error, analysis) {
     if (error) {
-
       logger.error(error);
       response.sendStatus(status.INTERNAL_SERVER_ERROR);
-      end();
-
-
+     response.end();
     } else {
-
-      var analysis = analysis.rows[0];
       if (isAnalysisOwner(analysis, request.session.userId)) {
         response.json(analysis);
       } else {
         response.sendStatus(status.FORBIDDEN);
       }
       next();
-
     }
-
   });
 }
 
 function createAnalysis(request, response, next) {
   logger.debug('create analysis: ' + JSON.stringify(request.body));
-  analysesRepo.create(request.session.userId, request.body, function(error, created) {
+  analysisRepository.create(request.session.userId, request.body, function(error, newAnalysis) {
     if (error) {
       logger.error(error);
       response.sendStatus(status.INTERNAL_SERVER_ERROR);
-      end();
+      response.end();
     } else {
-      response.location('/analyses/' + created.rows[0].id);
-      response.sendStatus(status.CREATED);
+      response.location('/analyses/' + newAnalysis.id);
+      response.json(newAnalysis);
       next();
     }
   });
@@ -65,7 +61,7 @@ function createAnalysis(request, response, next) {
 
 function getProblem(request, response, next) {
   logger.debug('analysisRouter.getProblem');
-  analysesRepo.get(request.params.analysisId, function(error, result) {
+  analysisRepository.get(request.params.analysisId, function(error, result) {
     response.json(result.rows[0].problem);
     next();
   });

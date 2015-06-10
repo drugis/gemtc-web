@@ -27,3 +27,20 @@ CREATE TABLE Analysis (id SERIAL NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY(owner) REFERENCES Account(id)
 );
+
+CREATE TABLE Model (
+  id SERIAL NOT NULL,
+  analysisId INT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY(analysisId) REFERENCES Analysis(id)
+);
+
+CREATE TABLE PataviTask (
+  id SERIAL NOT NULL,
+  modelId INT NOT NULL,
+  method varchar,
+  problem TEXT,
+  result TEXT,
+  PRIMARY KEY(id),
+  FOREIGN KEY(modelId) REFERENCES Model(id)
+);

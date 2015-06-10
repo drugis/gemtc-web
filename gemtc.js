@@ -6,7 +6,7 @@ var
   everyauth = require('everyauth'),
   loginUtils = require('./standalone-app/loginUtils'),
   userRepository = require('./standalone-app/userRepository'),
-  analysesRouter = require('./standalone-app/analysesRouter'),
+  analysisRouter = require('./standalone-app/analysisRouter'),
   logger = require('./standalone-app/logger');
 
 
@@ -73,7 +73,7 @@ module.exports = app
   .use(loginUtils.setXSRFTokenMiddleware)
   .all('*', loginUtils.securityMiddleware)
   .get('/user', loginUtils.emailHashMiddleware)
-  .use('/analyses', analysesRouter)
+  .use('/analyses', analysisRouter)
   .use(express.static('app'))
   .use(everyauth.middleware())
   .listen(3000);

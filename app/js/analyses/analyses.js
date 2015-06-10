@@ -2,7 +2,7 @@
 
 define(function (require) {
   var angular = require('angular');
-  var dependencies = [];
+  var dependencies = ['ngResource'];
 
   return angular.module('gemtc.analyses', dependencies)
     // controllers
