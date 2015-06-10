@@ -28,7 +28,7 @@
         "path" : ""
       },
       "desiredCapabilities": {
-        "browserName": "chrome",
+        "browserName": "firefox",
         "javascriptEnabled": true,
         "acceptSslCerts": true,
         "phantomjs.binary.path" : "/usr/bin/phantomjs"
