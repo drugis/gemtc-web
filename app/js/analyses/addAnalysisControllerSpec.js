@@ -1,4 +1,4 @@
-define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
+define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
   describe('the add analysisController', function() {
     var scope, analysesResource, state, modalInstance, saveDefer, mockSaveResult;
 
