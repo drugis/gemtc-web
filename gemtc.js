@@ -61,7 +61,7 @@ everyauth.google
 
 var app = express();
 
-logger.info('Start Gemtc stand-alone app');   
+logger.info('Start Gemtc stand-alone app');
 
 module.exports = app
   .use(session(sessionOpts))
