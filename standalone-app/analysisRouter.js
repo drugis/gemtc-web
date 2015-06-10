@@ -46,6 +46,7 @@ function getAnalysis(request, response, next) {
 
 function createAnalysis(request, response, next) {
   logger.debug('create analysis: ' + JSON.stringify(request.body));
+  logger.debug('request.session.userId: ' + request.session.userId);
   analysisRepository.create(request.session.userId, request.body, function(error, newAnalysis) {
     if (error) {
       logger.error(error);

@@ -1,5 +1,4 @@
-var
-  express = require('express'),
+var express = require('express'),
   session = require('express-session'),
   bodyparser = require('body-parser'),
   csrf = require('csurf'),
@@ -18,20 +17,22 @@ var sessionOpts = {
 
 //everyauth.debug = true;
 
-everyauth.everymodule.findUserById( function (userId, callback) {
+everyauth.everymodule.findUserById(function(userId, callback) {
   logger.debug("gemtc.findUserById");
   callback(null);
 });
 
 everyauth.google
   .myHostname(process.env.GEMTC_HOST)
-  .authQueryParam({ approval_prompt:'auto' })
+  .authQueryParam({
+    approval_prompt: 'auto'
+  })
   .appId(process.env.GEMTC_GOOGLE_KEY)
   .appSecret(process.env.GEMTC_GOOGLE_SECRET)
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
   .handleAuthCallbackError(function(req, res) {
     logger.debug('gemtc.handleAuthCallbackError');
-    //todo redirect to error page
+  //todo redirect to error page
   })
   .redirectPath('/')
   .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata, data) {
@@ -48,6 +49,7 @@ everyauth.google
             firstName: googleUserMetadata.given_name,
             lastName: googleUserMetadata.family_name
           };
+          session.userId = user.id;
           promise.fulfill(user);
         });
       } else {
