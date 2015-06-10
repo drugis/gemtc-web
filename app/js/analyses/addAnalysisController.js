@@ -1,22 +1,23 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', '$location', 'AnalysesResource', 'ModelResource',
+  var dependencies = ['$http', '$scope', '$location', 'AnalysesResource', 'ModelResource',
     '$modalInstance', 'ProblemValidityService'];
-  var AddAnalysisController = function($scope, $location, AnalysesResource, ModelResource,
+  var AddAnalysisController = function($http, $scope, $location, AnalysesResource, ModelResource,
     $modalInstance, ProblemValidityService) {
 
     $scope.analysis = {}; // we watch a property of analysis therefore obj is needed
 
     $scope.addAnalysis = function(analysis) {
       $scope.isAddingAnalysis = true;
-      AnalysesResource.save(analysis, function(savedAnalysis) {
-
-        ModelResource.save({
-          analysisId: savedAnalysis.id
-        }, {}, function(result, headers) {
-          $modalInstance.close();
-          $scope.isAddingAnalysis = false;
-          $location.url(headers().location);
+      AnalysesResource.save(analysis, function(result, headers) {
+        $http.get(headers().location).success(function(savedAnalysis) {
+          ModelResource.save({
+            analysisId: savedAnalysis.id
+          }, {}, function(result, headers) {
+            $modalInstance.close();
+            $scope.isAddingAnalysis = false;
+            $location.url(headers().location);
+          });
         });
       });
     };
