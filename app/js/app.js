@@ -11,9 +11,10 @@ define(
     'controllers',
     'constants',
     'directives',
-    'resources',
+    // 'resources',
     'services',
     'analyses/analyses',
+    'models/models',
     'util/util'
   ],
   function(angular, require, $, Config) {
@@ -23,13 +24,13 @@ define(
       'ngSanitize',
       'mm.foundation.tpls',
       'mm.foundation.modal',
-      'mm.foundation.tpls',
       'gemtc.controllers',
-      'gemtc.resources',
+      // 'gemtc.resources',
       'gemtc.constants',
       'gemtc.services',
       'gemtc.directives',
       'gemtc.analyses',
+      'gemtc.models',
       'gemtc.util'
     ];
 
@@ -80,6 +81,11 @@ define(
             url: '/analyses/:analysisId',
             templateUrl: '/js/analyses/analysis.html',
             controller: 'AnalysisController'
+          })
+          .state('analysis.model', {
+            url: '/models/:modelId',
+            templateUrl: 'views/modelView.html',
+            controller: 'ModelController'
           })
           .state('error', {
             url: '/error',
