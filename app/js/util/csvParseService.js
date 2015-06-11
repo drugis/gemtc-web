@@ -1,50 +1,57 @@
 'use strict';
-define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
+define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
   var dependencies = [];
 
-  var CSVParseService = function() {
+  var CSVParseService = function () {
 
     function parse(input) {
       return papaparse.parse(input, {
-        skipEmptyLines: true
+        skipEmptyLines: true,
+        dynamicTyping: true
       }).data;
     }
 
+    function buildTreatmentMap(dataLines) {
+      var treatmentMap = {};
+
+      _.forEach(dataLines, function (line) {
+        if (!treatmentMap[line[1]]) {
+          treatmentMap[line[1]] = _.keys(treatmentMap).length + 1;
+        }
+      });
+      return treatmentMap;
+    }
+
+    function buildTreatments(treatmentMap) {
+      return _.map(treatmentMap, function (treatmentId, treatmentName) {
+        return {
+          id: treatmentId,
+          name: treatmentName
+        };
+      });
+    }
+
     function linesToProblem(lines) {
-
-      function buildTreatmentMap(dataLines) {
-        var treatments = {};
-
-        _.forEach(dataLines, function(line) {
-          if (!treatments[line[1]]) {
-            treatments[line[1]] = _.keys(treatments).length + 1;
-          }
-        });
-        return treatments
-      }
-
       var headerLine = lines[0];
       var dataLines = lines.slice(1, lines.length);
-      var treatments = buildTreatmentMap(dataLines);
+      var treatmentMap = buildTreatmentMap(dataLines);
 
-      var entries = _.map(dataLines, function(line) {
-        var entry = _.mapKeys(line, function(key) {
-          return headerLine[key];
-        });
-        entry.treatment = treatments[entry.treatment];
+      var entries = _.map(dataLines, function (line) {
+        var entry = _.zipObject(headerLine, line);
+        entry.treatment = treatmentMap[entry.treatment]; // substitute entry name with its ID
         return entry;
       });
 
       return {
         entries: entries,
-        treatments: _.keys(treatments)
-      }
+        treatments: buildTreatments(treatmentMap)
+      };
     }
 
     return {
       linesToProblem: linesToProblem,
       parse: parse
-    }
+    };
 
   };
 
