@@ -22,7 +22,7 @@ function createModel(ownerAccountId, analysisId, callback) {
 }
 
 function getModel(modelId, callback) {
-  db.query('SELECT FROM model WHERE id=$1', [modelId], function(error, result) {
+  db.query('SELECT * FROM model WHERE id=$1', [modelId], function(error, result) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
       callback(error)

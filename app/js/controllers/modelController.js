@@ -45,7 +45,7 @@ define(['lodash'], function() {
       .then(PataviService.run)
       .then(successCallback,
         function(error) {
-          console.log('an error has occurred, error: ' + error);
+          console.log('an error has occurred, error: ' + JSON.stringify(error));
         }, function(update) {
           if (update && $.isNumeric(update.progress)) {
             $scope.progress.percentage = update.progress;
