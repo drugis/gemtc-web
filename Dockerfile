@@ -20,6 +20,6 @@ COPY . /
 RUN npm install
 RUN bower install --allow-root
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD ["forever", "gemtc.js"]
