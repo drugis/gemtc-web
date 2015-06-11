@@ -43,13 +43,14 @@ Setup environment variables
     export GEMTC_GOOGLE_SECRET=9ROcvzLDuRbITbqj-m-W5C0I
     export GEMTC_DB_URL=postgres://gemtc:develop@localhost/gemtc
     export GEMTC_HOST=http://localhost:3000
+    export PATAVI_URI=ws://localhost:3000/ws/staged/
 
 Running for the stand-alone version
 -----------------------------------
 
     node gemtc
 
-now visit the app at http://localhost:3000
+now visit the app at http://localhost:3001
 
 
 Running a forever service that will restart on crashes
