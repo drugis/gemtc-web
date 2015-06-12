@@ -5,6 +5,9 @@ define(function (require) {
   var dependencies = ['ngResource'];
 
   return angular.module('gemtc.models', dependencies)
+  	// controllers
+  	.controller('ModelsController', require('models/ModelsController'))
+
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
     .factory('ProblemResource', require('models/standaloneProblemResource'))
