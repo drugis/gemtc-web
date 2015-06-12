@@ -1,5 +1,5 @@
-define(['angular', 'angular-mocks', 'util/util'], function () {
-  describe('the problem validity service', function () {
+define(['angular', 'angular-mocks', 'util/util'], function() {
+  describe('the csv parse service', function() {
 
     var csvParseService;
     var validCsv = '"study","treatment","mean","std.dev","sampleSize"\n' +
@@ -10,48 +10,43 @@ define(['angular', 'angular-mocks', 'util/util'], function () {
 
     beforeEach(module('gemtc.util'));
 
-    beforeEach(inject(function (CSVParseService) {
+    beforeEach(inject(function(CSVParseService) {
       csvParseService = CSVParseService;
     }));
 
-    describe('parse', function () {
-      it('should parse valid csv', function () {
+    describe('parse', function() {
+      it('should parse valid csv', function() {
 
         var parseResult = csvParseService.parse(validCsv);
+        var expectedTreatments = [{
+          id: 1,
+          name: 'A'
+        }, {
+          id: 2,
+          name: 'C'
+        }, {
+          id: 3,
+          name: 'B'
+        }];
+        var expectedFirstEntry = {
+          study: 1,
+          treatment: 1,
+          mean: -1.22,
+          'std.dev': 3.7,
+          sampleSize: 54
+        };
 
-        expect(parseResult).not.toBe(null);
-        expect(parseResult.length).toBe(5);
+        expect(parseResult.isValid).toBe(true);
+        expect(parseResult.problem.treatments).toEqual(expectedTreatments);
+        expect(parseResult.problem.entries.length).toEqual(4);
+        expect(parseResult.problem.entries[0]).toEqual(expectedFirstEntry);
       });
-    });
 
-    describe('linesToProblem', function () {
-
-      describe('for valid csv', function () {
-        it('should map the lines to a problem', function () {
-          var expectedTreatments = [{
-            id: 1,
-            name: 'A'
-          }, {
-            id: 2,
-            name: 'C'
-          }, {
-            id: 3,
-            name: 'B'
-          }];
-          var expectedFirstEntry = {
-            study: 1,
-            treatment: 1,
-            mean: -1.22,
-            'std.dev': 3.7,
-            sampleSize: 54
-          };
-          var validLines = csvParseService.parse(validCsv);
-          var result = csvParseService.linesToProblem(validLines);
-
-          expect(result.treatments).toEqual(expectedTreatments);
-          expect(result.entries.length).toEqual(4);
-          expect(result.entries[0]).toEqual(expectedFirstEntry);
-        });
+      it('should fail on invalid csv', function() {
+        var nonsense = 'agkjhfkl';
+        var parseResult = csvParseService.parse(nonsense);
+        expect(parseResult.isValid).toBe(false);
+        expect(parseResult.message).toBe('Unable to auto-detect delimiting character; defaulted to \',\';');
       });
 
     });

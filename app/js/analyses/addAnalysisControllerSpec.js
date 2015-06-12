@@ -1,6 +1,7 @@
 define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
   describe('the add analysisController', function() {
-    var scope, analysesResource, state, modalInstance, saveDefer, mockSaveResult, problemValidityService;
+    var scope, analysesResource, state, modalInstance, saveDefer, mockSaveResult,
+    problemValidityService, csvParseService, fileUploadService;
 
     beforeEach(module('gemtc.analyses'));
 
@@ -18,13 +19,17 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       analysesResource.save.and.returnValue(mockSaveResult);
 
       problemValidityService = jasmine.createSpyObj('problemValidityService', ['getValidity']);
+      csvParseService = jasmine.createSpyObj('csvParseService', ['parse']);
+      fileUploadService = jasmine.createSpyObj('fileUploadService', ['processFile']);
 
       $controller('AddAnalysisController', {
         $scope: scope,
         $location: locationMock,
         AnalysesResource: analysesResource,
         $modalInstance: modalInstance,
-        ProblemValidityService: problemValidityService
+        ProblemValidityService: problemValidityService,
+        CSVParseService: csvParseService,
+        FileUploadService: fileUploadService
       });
     }));
 
