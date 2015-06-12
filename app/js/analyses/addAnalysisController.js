@@ -5,7 +5,8 @@ define([], function() {
   var AddAnalysisController = function($http, $scope, $location, AnalysesResource, ModelResource,
     $modalInstance, ProblemValidityService) {
 
-    $scope.analysis = {}; // we watch a property of analysis therefore obj is needed
+    $scope.analysis = {};
+    $scope.problemFile = {};
 
     $scope.addAnalysis = function(analysis) {
       $scope.isAddingAnalysis = true;
@@ -26,7 +27,7 @@ define([], function() {
       $modalInstance.dismiss('cancel');
     };
 
-    $scope.$watch('analysis.problemFile', function(newValue, oldValue) {
+    $scope.$watch('problemFile.file', function(newValue, oldValue) {
       if (newValue && newValue != oldValue && isValidJsonProblem(newValue)) {
         $scope.analysis.problem = JSON.parse(newValue);
       }

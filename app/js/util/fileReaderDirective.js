@@ -7,7 +7,7 @@ define([], function() {
         model: '='
       },
       restrict: 'E',
-      template: '<input id="problem-file-upload" type="file" accept=".json|.csv">',
+      template: '<input id="problem-file-upload" type="file" accept=".json">',
       link: function(scope, element) {
         var file;
 
