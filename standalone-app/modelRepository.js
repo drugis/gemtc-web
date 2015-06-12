@@ -3,14 +3,28 @@ var db = require('./db');
 
 module.exports = {
   create: createModel,
-  get: getModel
+  get: getModel,
+  findByAnalysis: findByAnalysis
 };
+
+function findByAnalysis(analysisId, callback) {
+  logger.debug('modelRepository.findByAnalysis, where analysisId = ' + analysisId);
+  db.query('SELECT * FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
+    if (error) {
+      logger.error('error finding models by analysisId, error: ' + error);
+      callback(error)
+    } else {
+      logger.debug('find models by analysisId completed, result = ' + JSON.stringify(result.rows));
+      callback(error, result.rows);
+    }
+  });
+}
 
 function createModel(ownerAccountId, analysisId, callback) {
 
   db.query('INSERT INTO model (analysisId) VALUES($1) RETURNING id', [
-    analysisId
-  ],
+      analysisId
+    ],
     function(error, result) {
       if (error) {
         logger.error('error creating model, error: ' + error);

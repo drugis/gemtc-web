@@ -79,10 +79,23 @@ define(
             templateUrl: '/js/analyses/analyses.html',
             controller: 'AnalysesController'
           })
+          .state('analysis-container', {
+            abstract: true,
+            templateUrl: '/js/analyses/abstract-analysis.html',
+          })
           .state('analysis', {
+            parent: 'analysis-container',
             url: '/analyses/:analysisId',
-            templateUrl: '/js/analyses/analysis.html',
-            controller: 'AnalysisController'
+            views: {
+              'analysis': {
+                templateUrl: '/js/analyses/analysis.html',
+                controller: 'AnalysisController'
+              },
+              'models': {
+                templateUrl: '/js/models/models.html',
+                controller: 'ModelsController'
+              }
+            }
           })
           .state('analysis.model', {
             url: '/models/:modelId',
