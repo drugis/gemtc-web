@@ -29,11 +29,11 @@ define([], function() {
           scope.$apply(function(scope) {
             var file = event.target.files[0];
             var reader = new FileReader();
-            if (file.extension === 'json') {
+            // if (file.extension === 'json') {
+            //   reader.onload = onLoadJSON;
+            // } else if (file.extension === 'csv') {
               reader.onload = onLoadJSON;
-            } else if (file.extension === 'csv') {
-              reader.onload = onLoadJSON;
-            }
+            // }
             file && reader.readAsText(file);
           });
         });
