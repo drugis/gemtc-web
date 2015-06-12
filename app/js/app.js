@@ -97,8 +97,8 @@ define(
               }
             }
           })
-          .state('analysis.model', {
-            url: '/models/:modelId',
+          .state('model', {
+            url: '/analyses/:analysisId/models/:modelId',
             templateUrl: 'views/modelView.html',
             controller: 'ModelController'
           })

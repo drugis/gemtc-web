@@ -1,0 +1,23 @@
+<form id="add-model-form" novalidate ng-submit="addModel(model)">
+    <div class="row">
+        <div class="large-9 columns">
+            <h3>Add a new Model</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-9 columns">
+            <label>Title
+                <input id="title-input" autofocus="true" type="text" ng-model="model.title">
+            </label>
+        </div>
+    </div>
+
+    <div class="row modal-bottom-button-bar">
+        <div class="large-9 columns">
+            <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(model)">
+                Add
+            </button>
+        </div>
+    </div>
+    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+</form>

@@ -20,10 +20,11 @@ function findByAnalysis(analysisId, callback) {
   });
 }
 
-function createModel(ownerAccountId, analysisId, callback) {
+function createModel(ownerAccountId, analysisId, newModel, callback) {
 
-  db.query('INSERT INTO model (analysisId) VALUES($1) RETURNING id', [
-      analysisId
+  db.query('INSERT INTO model (analysisId, title) VALUES($1, $2) RETURNING id', [
+      analysisId,
+      newModel.title
     ],
     function(error, result) {
       if (error) {
