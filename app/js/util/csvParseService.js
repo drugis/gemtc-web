@@ -47,6 +47,7 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
     **/
     function parse(input) {
       var parseResult = papaparse.parse(input, {
+        delimiter: ',',
         skipEmptyLines: true,
         dynamicTyping: true
       });
