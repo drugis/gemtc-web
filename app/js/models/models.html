@@ -15,7 +15,7 @@
       <em ng-show="models.length === 0">No models have been created</em>
       <ul ng-show="models.length > 0">
         <li ng-repeat="model in models">
-          <a ui-sref="model({modelId: model.id})">{{model.title}}</a>
+          <a ui-sref="model({analysisId: analysisId, modelId: model.id})">{{model.title}}</a>
         </li>
       </ul>
     </div>

@@ -46,7 +46,7 @@ function createModel(request, response, next) {
         response.sendStatus(status.FORBIDDEN);
         response.end();
       } else {
-        modelRepository.create(userId, analysisId, function(error, createdId) {
+        modelRepository.create(userId, analysisId, request.body, function(error, createdId) {
           if (error) {
             internalError(error, response);
           } else {

@@ -41,7 +41,10 @@ define(['lodash'], function() {
     ModelResource
       .get($stateParams)
       .$promise
-      .then(getTaskId)
+      .then(function(result){
+        $scope.model = result;
+        return getTaskId();
+      })
       .then(PataviService.run)
       .then(successCallback,
         function(error) {
