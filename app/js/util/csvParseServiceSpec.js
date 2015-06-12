@@ -43,10 +43,10 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       });
 
       it('should fail on invalid csv', function() {
-        var nonsense = 'agkjhfkl';
+        var nonsense = 'a,"b,c\nd,e';
         var parseResult = csvParseService.parse(nonsense);
         expect(parseResult.isValid).toBe(false);
-        expect(parseResult.message).toBe('Unable to auto-detect delimiting character; defaulted to \',\';');
+        expect(parseResult.message).toBe('Quoted field unterminated;');
       });
 
     });
