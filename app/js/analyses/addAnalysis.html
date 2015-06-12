@@ -24,28 +24,25 @@
                 <label style="display: inline;">Problem file</label>
                 <a><i ng-click="showInfo = !showInfo" style="font-size: 1.4em; vertical-align: middle;" class="fa fa-info-circle"> </i></a>
             </span>
-            <div ng-show="showInfo" class="panel info class="large-6 columns"">
-                <p>The problem file must contain a single json object representing the problem. The problem must contain the 'entries' and 'treatments" fields.
-                    The "treatments" field must contain a list of objects that each contain a name and id.
-                    The entries must be a list of data rows.
-                    Each data row must contain at least the "study" and "treatment" columns.
-                    The "treatment" column of each entry must refer to an id present in the treatments list.
-                    Each data row must have the same columns as the first data row.</p>
+            <div ng-show="showInfo" class="panel info class=" large-6 columns "">
+                <p>The problem file can be in JSON or Comma-Separated Values (CSV) format.</p>
+                <p>A JSON file must contain a single json object representing the problem. The problem must contain the 'entries' and 'treatments" fields. The "treatments" field must contain a list of objects that each contain a name and id. The entries must be a list of data rows. Each data row must contain at least the "study" and "treatment" columns. The "treatment" column of each entry must refer to an id present in the treatments list. Each data row must have the same columns as the first data row.</p>
+                <p>A CSV file must contain a first row with column names. Each subsequent row should have the same number of columns, with values corresponding to the column at the same position in the header row.
+                The first two columns should always be a 'study' and a 'treatment' column, in that order.</p>
                 <a ng-click="showInfo = !showInfo" style="text-decoration: underline;">hide</a>
             </div>
             <file-reader model="problemFile" accept-types="'.json,.csv'"></file-reader>
-
         </div>
     </div>
     <div class="row">
-        <div class="large-9 columns" ng-show="problemValidity && !problemValidity.isValid" >
+        <div class="large-9 columns" ng-show="uploadResult && !uploadResult.isValid">
             <span style="color: red;">The problem is invalid</span>
-            <div style="color: red;">{{problemValidity.message}}</div>
+            <div style="color: red;">{{uploadResult.message}}</div>
         </div>
     </div>
     <div class="row modal-bottom-button-bar">
         <div class="large-9 columns">
-            <button id="submit-add-analysis-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(analysis) || !problemValidity.isValid">Add</button>
+            <button id="submit-add-analysis-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(analysis) || !uploadResult.isValid">Add</button>
         </div>
     </div>
     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
