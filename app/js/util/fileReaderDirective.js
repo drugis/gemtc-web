@@ -18,7 +18,6 @@ define([], function() {
           scope.$apply(function() {
             var result = env.target.result;
             scope.model.contents = result;
-            scope.model.filetype = env.target.extension;
           });
         }
 
@@ -26,7 +25,7 @@ define([], function() {
           scope.$apply(function(scope) {
             var file = event.target.files[0];
             if (file) {
-              scope.model.extension = filename.split('.').pop();
+              scope.model.extension = file.name.split('.').pop();
             }
             var reader = new FileReader();
             reader.onload = onLoad;
