@@ -1,9 +1,9 @@
 'use strict';
 define([], function() {
   var dependencies = ['$http', '$scope', '$location', 'AnalysesResource', 'ModelResource',
-    '$modalInstance', 'ProblemValidityService'];
+    '$modalInstance', 'FileUploadService'];
   var AddAnalysisController = function($http, $scope, $location, AnalysesResource, ModelResource,
-    $modalInstance, ProblemValidityService) {
+    $modalInstance, FileUploadService) {
 
     $scope.analysis = {};
     $scope.problemFile = {};
@@ -27,20 +27,16 @@ define([], function() {
       $modalInstance.dismiss('cancel');
     };
 
-    $scope.$watch('problemFile.file', function(newValue, oldValue) {
-      if (newValue && newValue != oldValue && isValidJsonProblem(newValue)) {
-        $scope.analysis.problem = JSON.parse(newValue);
+    $scope.$watch('problemFile.contents', function(newValue, oldValue) {
+      if (newValue && newValue != oldValue) {
+        $scope.uploadResult = FileUploadService.processFile($scope.problemFile);
+        if ($scope.uploadResult.isValid) {
+          $scope.analysis.problem = $scope.uploadResult.problem;
+        }
       }
     });
 
-    function isValidJsonProblem(inputString) {
-      $scope.problemValidity = ProblemValidityService.isValidJsonObjectAsString(inputString);
-      // only check the problem details if we are working with a valid json object
-      if ($scope.problemValidity.isValid) {
-        $scope.problemValidity = ProblemValidityService.getValidity(JSON.parse(inputString));
-      }
-      return $scope.problemValidity.isValid;
-    }
+
   };
   return dependencies.concat(AddAnalysisController);
 });
