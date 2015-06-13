@@ -7,7 +7,8 @@ wrap.matrix <- function(m) {
 
 gemtc <- function(params) {
   update(0)
-  data.ab <- do.call(rbind, lapply(params[['entries']], as.data.frame, stringsAsFactors=FALSE))
+  data.ab <- do.call(rbind, lapply(params[['entries']],
+    function(x) { as.data.frame(t(x), stringsAsFactors=FALSE) }))
 
   network <- mtc.network(data.ab=data.ab)
   update(10)
