@@ -9,6 +9,7 @@ var pataviTaskRouter = require('./pataviTaskRouter');
 module.exports = express.Router({
   mergeParams: true
 })
+  .get('/', find)
   .post('/', createModel)
   .get('/:modelId', getModel)
   .use('/:modelId/task', pataviTaskRouter)
@@ -18,6 +19,18 @@ function internalError(error, response) {
   logger.error(error);
   response.sendStatus(status.INTERNAL_SERVER_ERROR);
   response.end();
+}
+
+function find(request, response, next) {
+  logger.debug('modelRouter.find');
+  var analysisId = request.params.analysisId;
+  modelRepository.findByAnalysis(analysisId, function(error, result) {
+    if (error) {
+      internalError(error, response);
+    } else {
+      response.json(result);
+    }
+  });
 }
 
 function createModel(request, response, next) {
@@ -33,7 +46,7 @@ function createModel(request, response, next) {
         response.sendStatus(status.FORBIDDEN);
         response.end();
       } else {
-        modelRepository.create(userId, analysisId, function(error, createdId) {
+        modelRepository.create(userId, analysisId, request.body, function(error, createdId) {
           if (error) {
             internalError(error, response);
           } else {
@@ -45,7 +58,6 @@ function createModel(request, response, next) {
       }
     }
   });
-
 }
 
 function getModel(request, response, next) {

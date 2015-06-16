@@ -30,6 +30,7 @@ CREATE TABLE Analysis (id SERIAL NOT NULL,
 
 CREATE TABLE Model (
   id SERIAL NOT NULL,
+  title VARCHAR NOT NULL,
   analysisId INT NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY(analysisId) REFERENCES Analysis(id)
