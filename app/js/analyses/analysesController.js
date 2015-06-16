@@ -11,7 +11,7 @@ define([], function() {
     }
     loadAnalyses();
 
-    $scope.createDatasetDialog = function() {
+    $scope.createAnalysisDialog = function() {
       $modal.open({
         templateUrl: './js/analyses/addAnalysis.html',
         scope: $scope,
