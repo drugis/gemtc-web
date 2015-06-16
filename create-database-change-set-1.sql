@@ -23,7 +23,7 @@ CREATE TABLE Analysis (id SERIAL NOT NULL,
   owner INT NOT NULL,
   title VARCHAR NOT NULL,
   outcome varchar(255) NOT NULL,
-  problem TEXT NOT NULL,
+  problem JSONB NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY(owner) REFERENCES Account(id)
 );
@@ -40,7 +40,7 @@ CREATE TABLE PataviTask (
   id SERIAL NOT NULL,
   modelId INT NOT NULL,
   method varchar,
-  problem TEXT,
+  problem JSONB,
   result TEXT,
   PRIMARY KEY(id),
   FOREIGN KEY(modelId) REFERENCES Model(id)

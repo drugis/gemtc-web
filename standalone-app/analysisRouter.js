@@ -35,7 +35,6 @@ function getAnalysis(request, response, next) {
       response.end();
     } else {
       if (isAnalysisOwner(analysis, request.session.userId)) {
-        analysis.problem = JSON.parse(analysis.problem);
         response.json(analysis);
       } else {
         response.sendStatus(status.FORBIDDEN);
@@ -64,7 +63,7 @@ function createAnalysis(request, response, next) {
 function getProblem(request, response, next) {
   logger.debug('analysisRouter.getProblem');
   analysisRepository.get(request.params.analysisId, function(error, result) {
-    response.json(JSON.parse(result.problem));
+    response.json(result.problem);
     next();
   });
 }

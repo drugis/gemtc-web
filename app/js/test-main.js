@@ -26,6 +26,7 @@ require.config({
     'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
     'jasmine-html': 'bower_components/jasmine/lib/jasmine-core/jasmine-html',
     'angular-mocks': 'bower_components/angular-mocks/angular-mocks',
+    'papaparse': 'bower_components/papaparse/papaparse.min',
     'gemtc-web': '.'
   },
   baseUrl: '/base/app/js',

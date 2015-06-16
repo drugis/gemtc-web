@@ -23,8 +23,8 @@ define(['angular', 'lodash'], function(angular, _) {
       var firstColumnProperties = _.keys(entries[0]).sort().join('');
 
       return !_.find(entries, function(entry) {
-        return _.keys(entry).sort().join('') !== firstColumnProperties;
-      });
+          return _.keys(entry).sort().join('') !== firstColumnProperties;
+        });
 
     }
 
@@ -48,6 +48,7 @@ define(['angular', 'lodash'], function(angular, _) {
      */
     function getValidity(problem) {
       var result = {
+        problem: problem,
         isValid: true,
         message: ""
       };
@@ -78,15 +79,16 @@ define(['angular', 'lodash'], function(angular, _) {
       return result;
     }
 
-    function isValidJsonObjectAsString(inputString) {
+    function parse(inputString) {
       var isValidJsonString = inputString && ((typeof inputString) === 'string') && /^[\],:{}\s]*$/.test(
-        inputString.replace(/\\["\\\/bfnrtu]/g, '@')
-        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
-        .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
+          inputString.replace(/\\["\\\/bfnrtu]/g, '@')
+            .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+            .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
       );
 
-      if(isValidJsonString) {
+      if (isValidJsonString) {
         return {
+          problem: JSON.parse(inputString),
           isValid: true
         };
       } else {
@@ -96,12 +98,12 @@ define(['angular', 'lodash'], function(angular, _) {
         };
       }
 
- 
+
     }
 
     return {
       getValidity: getValidity,
-      isValidJsonObjectAsString: isValidJsonObjectAsString
+      parse: parse
     };
   };
   return dependencies.concat(ProblemValidityService);
