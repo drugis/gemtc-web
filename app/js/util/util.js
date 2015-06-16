@@ -18,5 +18,7 @@ define(function (require) {
 
     // services
     .factory('ProblemValidityService', require('util/problemValidityService'))
+    .factory('CSVParseService', require('util/csvParseService'))
+    .factory('FileUploadService', require('util/fileUploadService'))
     ;
 });
