@@ -6,8 +6,9 @@ define(function (require) {
 
   return angular.module('gemtc.models', dependencies)
   	// controllers
-  	.controller('ModelsController', require('models/ModelsController'))
+  	.controller('ModelsController', require('models/modelsController'))
   	.controller('AddModelController', require('models/addModelController'))
+    .controller('StandAloneModelContainerController', require('models/standAloneModelContainerController'))
 
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))

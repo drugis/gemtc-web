@@ -38,13 +38,12 @@ define(['lodash'], function() {
       });
     }
 
-    ModelResource
-      .get($stateParams)
+
+
+    $scope.model = ModelResource.get($stateParams);
+    $scope.$parent.model = $scope.model;
+    $scope.model
       .$promise
-      .then(function(result){
-        $scope.model = result;
-        return getTaskId();
-      })
       .then(PataviService.run)
       .then(successCallback,
         function(error) {
