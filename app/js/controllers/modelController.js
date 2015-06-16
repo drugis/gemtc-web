@@ -44,6 +44,7 @@ define(['lodash'], function() {
     $scope.$parent.model = $scope.model;
     $scope.model
       .$promise
+      .then(getTaskId)
       .then(PataviService.run)
       .then(successCallback,
         function(error) {
