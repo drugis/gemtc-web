@@ -8,7 +8,6 @@ module.exports = {
       .waitForElementVisible('body', 15000)
       .waitForElementVisible('#analyses-header', 15000)
       .assert.containsText('#analyses-header', 'Analyses')
-      .pause(5000)
       .end();
   }
 };
