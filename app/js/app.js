@@ -97,7 +97,11 @@ define(
               }
             }
           })
-          .state('model', {
+          .state('standalone-model-container', {
+            templateUrl: 'js/models/standalone-model-container.html',
+            controller: 'StandAloneModelContainerController'
+          })
+          .state('standalone-model-container.model', {
             url: '/analyses/:analysisId/models/:modelId',
             templateUrl: 'views/modelView.html',
             controller: 'ModelController'
