@@ -4,7 +4,8 @@ var db = require('./db')(process.env.GEMTC_DB_URL);
 module.exports = {
   create: createModel,
   get: getModel,
-  findByAnalysis: findByAnalysis
+  findByAnalysis: findByAnalysis,
+  setTaskId: setTaskId
 };
 
 function findByAnalysis(analysisId, callback) {
@@ -43,6 +44,17 @@ function getModel(modelId, callback) {
       callback(error)
     } else {
       callback(error, result.rows[0]);
+    }
+  })
+}
+
+function setTaskId(modelId, taskId, callback) {
+  db.query('UPDATE model SET taskId=$2 WHERE id = $1', [modelId, taskId], function(error, result) {
+    if (error) {
+      logger.error('error retrieving model, error: ' + error);
+      callback(error)
+    } else {
+      callback();
     }
   })
 }
