@@ -16,9 +16,8 @@ function getPataviTask(modelId, callback) {
   });
 }
 
-function createPataviTask(modelId, problem, callback) {
-  db.query("INSERT INTO patavitask (modelId, problem, method) VALUES($1, $2, 'gemtc') RETURNING id", [
-    modelId,
+function createPataviTask(problem, callback) {
+  db.query("INSERT INTO patavitask (problem, method) VALUES($1, 'gemtc') RETURNING id", [
     problem
   ], function(error, result) {
     if (error) {
