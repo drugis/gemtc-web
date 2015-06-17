@@ -43,7 +43,9 @@
     "karma-phantomjs-launcher": "^0.2.0",
     "karma-requirejs": "^0.2.2",
     "phantomjs": "^1.9.17",
+    "proxyquire": "^1.5.0",
     "requirejs": "^2.1.18",
-    "superagent": "^1.2.0"
+    "superagent": "^1.2.0",
+    "supertest": "^1.0.1"
   }
 }
