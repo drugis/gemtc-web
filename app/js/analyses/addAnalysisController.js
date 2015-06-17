@@ -11,15 +11,9 @@ define([], function() {
     $scope.addAnalysis = function(analysis) {
       $scope.isAddingAnalysis = true;
       AnalysesResource.save(analysis, function(result, headers) {
-        $http.get(headers().location).success(function(savedAnalysis) {
-          ModelResource.save({
-            analysisId: savedAnalysis.id
-          }, {}, function(result, headers) {
-            $modalInstance.close();
-            $scope.isAddingAnalysis = false;
-            $location.url(headers().location);
-          });
-        });
+        $modalInstance.close();
+        $scope.isAddingAnalysis = false;
+        $location.url(headers().location);
       });
     };
 

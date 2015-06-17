@@ -30,18 +30,18 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         expect(analysesResource.query).toHaveBeenCalled();
       });
 
-      it('should place createDatasetDialog on the scope', function() {
-        expect(scope.createDatasetDialog).toBeDefined();
+      it('should place createAnalysisDialog on the scope', function() {
+        expect(scope.createAnalysisDialog).toBeDefined();
       });
 
       it('should place isAddButtonDisabled on the scope', function() {
-        expect(scope.createDatasetDialog).toBeDefined();
+        expect(scope.isAddButtonDisabled).toBeDefined();
       });
     });
 
-    describe('when createDatasetDialog isCalled', function() {
+    describe('when createAnalysisDialog isCalled', function() {
       beforeEach(function(){
-        scope.createDatasetDialog();
+        scope.createAnalysisDialog();
       })
       it('should open the dialog', function() {
         expect(modal.open).toHaveBeenCalled();
