@@ -42,6 +42,7 @@ Setup environment variables
     export GEMTC_GOOGLE_KEY=100331616436-dgi00c0mjg8tbc06psuhluf9a2lo6c3i.apps.googleusercontent.com
     export GEMTC_GOOGLE_SECRET=9ROcvzLDuRbITbqj-m-W5C0I
     export GEMTC_DB_URL=postgres://gemtc:develop@localhost/gemtc
+    export GEMTC_PATAVI_TASK_DB_URL=postgres://patavitask:develop@localhost/patavitask
     export GEMTC_HOST=http://localhost:3001
     export PATAVI_URI=ws://localhost:3000/ws/staged/
 

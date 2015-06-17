@@ -1,5 +1,5 @@
 var
-  db = require('./db'),
+  db = require('./db')(process.env.GEMTC_DB_URL),
   logger = require('./logger');
 
 var findUserByGoogleIdQuery = '' +

@@ -1,5 +1,5 @@
 var logger = require('./logger');
-var db = require('./db');
+var db = require('./db')(process.env.GEMTC_DB_URL);
 
 module.exports = {
   get: getAnalysis,
