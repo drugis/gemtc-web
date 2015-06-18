@@ -16,28 +16,33 @@ function getPataviTask(request, response, next) {
   var modelCache;
   var createdIdCache;
   async.waterfall([
-    function(callback) {
-      modelRepository.get(modelId, callback);
-    }, function(model, callback) {
-      modelCache = model;
-      if (model.taskid) {
+      function(callback) {
+        modelRepository.get(modelId, callback);
+      },
+      function(model, callback) {
+        modelCache = model;
+        if (model.taskid) {
+          response.json({
+            uri: process.env.PATAVI_URI + model.taskid
+          });
+          callback('stop');
+        } else {
+          analysisRepository.get(analysisId, callback);
+        }
+      },
+      function(analysis, callback) {
+        pataviTaskRepository.create(analysis.problem, callback);
+      },
+      function(createdId, callback) {
+        createdIdCache = createdId;
+        modelRepository.setTaskId(modelCache.id, createdId, callback);
+      },
+      function() {
         response.json({
-          uri: process.env.PATAVI_URI + model.taskid
+          uri: process.env.PATAVI_URI + createdIdCache
         });
-        callback('stop');
-      } else {
-        analysisRepository.get(analysisId, callback);
       }
-    }, function(analysis, callback) {
-      pataviTaskRepository.create(analysis.problem, callback);
-    }, function(createdId, callback) {
-      createdIdCache = createdId;
-      modelRepository.setTaskId(modelCache.id, createdId, callback);
-    }, function() {
-      response.json({
-        uri: process.env.PATAVI_URI + createdIdCache
-      });
-    }],
+    ],
     function(error, callback) {
       if (error && error !== 'stop') {
         logger.error(error);
@@ -48,29 +53,29 @@ function getPataviTask(request, response, next) {
 
 
 
-// modelRepository.get(modelId, function(error, model) {
-//   if (error) {
-//     logger.error('error retrieving model'); response.end();
-//   } else {
-//     if (model.taskId) {
-//       response.json({
-//         uri: process.env.PATAVI_URI + task.id
-//       });
-//     } else {
-//       analysisRepository.get(analysisId, function(error, analysis) {
-//         pataviTaskRepository.create(model.id, analysis.problem, function(error, createdId) {
-//           modelRepository.setTaskId(model.id, createdId, function(error) {
-//             if (error) {
-//               logger.error('error setting model task id'); response.end();
-//             } else {
-//               response.json({
-//                 uri: process.env.PATAVI_URI + createdId
-//               });
-//             }
-//           });
-//         });
-//       });
-//     }
-//   }
-// });
+  // modelRepository.get(modelId, function(error, model) {
+  //   if (error) {
+  //     logger.error('error retrieving model'); response.end();
+  //   } else {
+  //     if (model.taskId) {
+  //       response.json({
+  //         uri: process.env.PATAVI_URI + task.id
+  //       });
+  //     } else {
+  //       analysisRepository.get(analysisId, function(error, analysis) {
+  //         pataviTaskRepository.create(model.id, analysis.problem, function(error, createdId) {
+  //           modelRepository.setTaskId(model.id, createdId, function(error) {
+  //             if (error) {
+  //               logger.error('error setting model task id'); response.end();
+  //             } else {
+  //               response.json({
+  //                 uri: process.env.PATAVI_URI + createdId
+  //               });
+  //             }
+  //           });
+  //         });
+  //       });
+  //     }
+  //   }
+  // });
 }

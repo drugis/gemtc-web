@@ -35,7 +35,9 @@ the file should contain a line with the following format hostname:port:database:
 
 Create the schema
 
-    psql -U gemtc -d gemtc -f create-database-change-set-1.sql
+    psql -U gemtc -d gemtc -f changesets/create-database-changeset-1.sql
+    psql -U gemtc -d gemtc -f changesets/create-database-changeset-2.sql
+
 
 Setup environment variables
 

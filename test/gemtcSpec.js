@@ -10,7 +10,7 @@ describe('/', function() {
   before(function() {
     debugger;
     app = server;
-    basePath =  'http://localhost:' + app.address().port;
+    basePath =  process.env.GEMTC_HOST;
   });
 
   after(function() {
