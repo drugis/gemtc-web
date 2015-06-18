@@ -1,5 +1,6 @@
 var logger = require('./logger');
-var db = require('./db')(process.env.GEMTC_PATAVI_TASK_DB_URL);
+var dbUtil = require('./dbUtil');
+var db = require('./db')(dbUtil.buildPataviDBUrl());
 
 module.exports = {
   get: getPataviTask,
