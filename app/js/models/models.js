@@ -14,5 +14,7 @@ define(function (require) {
     .factory('ModelResource', require('models/standaloneModelResource'))
     .factory('ProblemResource', require('models/standaloneProblemResource'))
     .factory('AnalysisResource', require('analyses/analysisResource'))
+
+    .directive('gemtcRankPlot',require('models/rankPlotDirective'))
     ;
 });
