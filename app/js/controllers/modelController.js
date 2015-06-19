@@ -10,7 +10,7 @@ define(['lodash'], function() {
       analysisId: $stateParams.analysisId
     }, function(analysis) {
       return analysis.outcome;
-    })
+    });
 
     function getTaskId() {
       return PataviTaskIdResource.get($stateParams);
@@ -42,8 +42,6 @@ define(['lodash'], function() {
         $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
       });
     }
-
-
 
     $scope.model = ModelResource.get($stateParams);
     $scope.$parent.model = $scope.model;

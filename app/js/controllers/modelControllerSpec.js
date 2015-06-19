@@ -1,12 +1,16 @@
 define(['angular', 'angular-mocks', 'controllers'], function() {
   describe('the modelController', function() {
-    var scope, modelResource,
+    var scope, 
+      analysisResource,
+      modelResource,
       problemResource,
       pataviTaskIdResource,
       mockStateParams = {
         analysisId: 1,
         projectId: 11
       },
+      analysisDeferred,
+      mockAnalysis,
       modelDeferred,
       mockModel,
       problemDeferred,
@@ -30,6 +34,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       mockModel = {
         $promise: modelDeferred.promise
       };
+      analysisDeferred = $q.defer();
+      mockAnalysis = {
+        $promise: analysisDeferred.promise
+      };
       problemDeferred = $q.defer();
       mockProblem = {
         $promise: problemDeferred.promise
@@ -47,6 +55,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         },
         logScale: true
       };
+      analysisResource = jasmine.createSpyObj('AnalysisResource', ['get']);
+      analysisResource.get.and.returnValue(mockAnalysis);
       modelResource = jasmine.createSpyObj('ModelResource', ['get']);
       modelResource.get.and.returnValue(mockModel);
       problemResource = jasmine.createSpyObj('ProblemResource', ['get']);
@@ -64,7 +74,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         ProblemResource: problemResource,
         PataviService: pataviService,
         PataviTaskIdResource: pataviTaskIdResource,
-        RelativeEffectsTableService: relativeEffectsTableService
+        RelativeEffectsTableService: relativeEffectsTableService,
+        AnalysisResource: analysisResource
       });
     }));
 
