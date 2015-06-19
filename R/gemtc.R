@@ -52,7 +52,7 @@ gemtc <- function(params) {
   assignInNamespace("update.jags", update.jags, "rjags")
 
   data.ab <- do.call(rbind, lapply(params[['entries']],
-    function(x) { as.data.frame(t(x), stringsAsFactors=FALSE) }))
+    function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
 
   network <- mtc.network(data.ab=data.ab)
   model <- mtc.model(network)
