@@ -1,7 +1,7 @@
 define([], function() {
   var dependencies = ['$resource'];
-  var AnalysesResource = function($resource) {
+  var AnalysisResource = function($resource) {
     return $resource('/analyses/:analysisId');
   };
-  return dependencies.concat(AnalysesResource)
+  return dependencies.concat(AnalysisResource)
 });
