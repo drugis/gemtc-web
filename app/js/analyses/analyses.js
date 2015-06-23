@@ -9,6 +9,7 @@ define(function (require) {
     .controller('AnalysesController', require('analyses/analysesController'))
     .controller('AnalysisController', require('analyses/analysisController'))
     .controller('AddAnalysisController', require('analyses/addAnalysisController'))
+    .controller('NetworkGraphController', require('analyses/networkGraphController'))
 
     // resources
     .factory('AnalysisResource', require('analyses/analysisResource'))
