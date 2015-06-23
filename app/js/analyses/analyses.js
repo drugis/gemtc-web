@@ -13,6 +13,10 @@ define(function (require) {
     // resources
     .factory('AnalysisResource', require('analyses/analysisResource'))
 
+    //services
+    .factory('NetworkPlotService', require('analyses/networkPlotService'))
+
     .directive('networkPlot', require('analyses/networkPlotDirective'))
+
     ;
 });
