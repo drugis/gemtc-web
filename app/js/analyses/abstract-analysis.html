@@ -3,6 +3,19 @@
 		<h1 id="analysis-header">Analysis</h1>
 	</div>
 </div>
-<div ui-view="analysis"></div>
-<div ui-view="models"></div>
+<div class="row">
+	<div class="columns large-6">
+		<div ui-view="analysis"></div>
+		<div ui-view="models"></div>
+
+	</div>
+	<div id="network-graph-container" class="columns large-6">
+		<div ui-view="networkGraph"></div>
+	</div>
+</div>
+<div class="row">
+	<div class="columns large-12">
+		<div ui-view="networkTable"></div>
+	</div>
+</div>
 

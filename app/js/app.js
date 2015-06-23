@@ -90,6 +90,10 @@ define(
               'models': {
                 templateUrl: '/js/models/models.html',
                 controller: 'ModelsController'
+              },
+              'networkGraph': {
+                templateUrl: '/js/analyses/networkGraph.html',
+                controller: 'NetworkGraphController'
               }
             }
           })
