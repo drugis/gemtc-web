@@ -125,14 +125,55 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
 
       network.interventions = _.map(problem.treatments, transformTreatmentToIntervention);
 
+      // edge.from.name, edge.to.name, edge.numberOfStudies
+      network.edges = generateEdges(network.interventions);
+      // network.edges = _.map(network.edges, function(edge) {
+      //   edge.numberOfStudies = countStudiesMeasuringEdge(edge, problem);
+      //   return edge;
+      // });
       return network;
     }
 
 
 
+    function generateEdges(interventions) {
+      var edges = [];
+      _.each(interventions, function(rowIntervention, index) {
+        var rest = interventions.slice(index + 1, interventions.length);
+        _.each(rest, function(colIntervention) {
+          edges.push({
+            from: rowIntervention,
+            to: colIntervention
+          });
+        });
+      });
+
+      return edges;
+    }
+
+    function problemToStudyMap(problem) {
+
+      var treatmentsMap = _.indexBy(problem.treatments, 'id');
+
+      return _.reduce(problem.entries, function(studies, entry) {
+          if (!studies[entry.study]) {
+            studies[entry.study] = {
+              arms: {}
+            };
+          }
+          entry.treatment = treatmentsMap[entry.treatment];
+          studies[entry.study].arms[entry.treatment.name] = _.omit(entry, 'study', 'treatment'); 
+
+          return studies;
+        }, {});
+    }
+
+
     return {
       drawNetwork: drawNetwork,
-      transformProblemToNetwork: transformProblemToNetwork
+      transformProblemToNetwork: transformProblemToNetwork,
+      generateEdges: generateEdges,
+      problemToStudyMap: problemToStudyMap
     };
 
   };
