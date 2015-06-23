@@ -1,10 +1,16 @@
 'use strict';
 define(['lodash'], function() {
   var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService',
-    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource'
+    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource'
   ];
   var ModelController = function($scope, $stateParams, ModelResource, PataviService,
-    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource) {
+    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource) {
+
+    $scope.outcome = AnalysisResource.get({
+      analysisId: $stateParams.analysisId
+    }, function(analysis) {
+      return analysis.outcome;
+    });
 
     function getTaskId() {
       return PataviTaskIdResource.get($stateParams);
@@ -29,7 +35,6 @@ define(['lodash'], function() {
         analysisId: $stateParams.analysisId,
         projectId: $stateParams.projectId
       }).$promise.then(function(problem) {
-        $scope.outcome = $scope.$parent.analysis.outcome;
         result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
         $scope.result = result;
         var relativeEffects = result.results.relativeEffects;
@@ -37,8 +42,6 @@ define(['lodash'], function() {
         $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
       });
     }
-
-
 
     $scope.model = ModelResource.get($stateParams);
     $scope.$parent.model = $scope.model;
@@ -49,7 +52,8 @@ define(['lodash'], function() {
       .then(successCallback,
         function(error) {
           console.log('an error has occurred, error: ' + JSON.stringify(error));
-        }, function(update) {
+        },
+        function(update) {
           if (update && $.isNumeric(update.progress)) {
             $scope.progress.percentage = update.progress;
           }

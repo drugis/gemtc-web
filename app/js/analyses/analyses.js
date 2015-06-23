@@ -11,7 +11,7 @@ define(function (require) {
     .controller('AddAnalysisController', require('analyses/addAnalysisController'))
 
     // resources
-    .factory('AnalysesResource', require('analyses/analysesResource'))
+    .factory('AnalysisResource', require('analyses/analysisResource'))
 
     ;
 });
