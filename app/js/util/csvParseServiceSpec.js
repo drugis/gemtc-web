@@ -29,7 +29,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
           name: 'B'
         }];
         var expectedFirstEntry = {
-          study: 1,
+          study: '1',
           treatment: 1,
           mean: -1.22,
           'std.dev': 3.7,
@@ -40,6 +40,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(parseResult.problem.treatments).toEqual(expectedTreatments);
         expect(parseResult.problem.entries.length).toEqual(4);
         expect(parseResult.problem.entries[0]).toEqual(expectedFirstEntry);
+        expect(typeof parseResult.problem.entries[0].study).toBe('string');
       });
 
       it('should fail on invalid csv', function() {
