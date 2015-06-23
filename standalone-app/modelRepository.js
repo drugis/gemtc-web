@@ -1,5 +1,6 @@
-var logger = require('./logger');
-var db = require('./db')(process.env.GEMTC_DB_URL);
+var logger = require('./logger'),
+  dbUtil = require('./dbUtil'),
+  db = require('./db')(dbUtil.buildGemtcDBUrl());
 
 module.exports = {
   create: createModel,
