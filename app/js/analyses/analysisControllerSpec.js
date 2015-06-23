@@ -1,6 +1,6 @@
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('the analysisController', function() {
-    var scope, analysesResource, stateParamsMock;
+    var scope, analysisResource, stateParamsMock;
 
     beforeEach(module('gemtc.analyses'));
 
@@ -12,19 +12,19 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         analyisId: -1
       }
 
-      analysesResource = jasmine.createSpyObj('AnalysesResource', ['get']);
-      analysesResource.get.and.returnValue(analyisMock);
+      analysisResource = jasmine.createSpyObj('AnalysisResource', ['get']);
+      analysisResource.get.and.returnValue(analyisMock);
 
       $controller('AnalysisController', {
         $scope: scope,
         $stateParams: stateParamsMock,
-        AnalysesResource: analysesResource
+        AnalysisResource: analysisResource
       });
     }));
 
     describe('when first initialised', function() {
       it('should load the analyis', function() {
-        expect(analysesResource.get).toHaveBeenCalledWith(stateParamsMock);
+        expect(analysisResource.get).toHaveBeenCalledWith(stateParamsMock);
       });
     });
 

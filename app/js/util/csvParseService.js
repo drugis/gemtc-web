@@ -67,6 +67,8 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
       }
     }
 
+
+
     /**
     * build map of treatments name -> id
     **/
@@ -97,6 +99,7 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
     * Entries contains one object per line, with key:value pairs
     * where the key is the name of the column and the value is the value in the
     * data line. Treatments are referenced by ID
+    * The study column should contain string values.
     * Treatments contains all the treatments, with and ID and name property
     **/
     function linesToProblem(lines) {
@@ -104,8 +107,13 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
       var dataLines = lines.slice(1, lines.length);
       var treatmentMap = buildTreatmentMap(dataLines);
 
+      function convertStudyValueToString(entry) {
+        return entry.study.toString();
+      }
+
       var entries = _.map(dataLines, function (line) {
         var entry = _.zipObject(headerLine, line);
+        entry.study = convertStudyValueToString(entry);
         // substitute treatment name with its ID
         entry.treatment = treatmentMap[entry.treatment];
         return entry;

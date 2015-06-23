@@ -1,6 +1,6 @@
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('the analysesController', function() {
-    var scope, analysesResource , modal;
+    var scope, analysisResource , modal;
 
     beforeEach(module('gemtc.analyses'));
 
@@ -11,13 +11,13 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
       modal = jasmine.createSpyObj('modal', ['open']);
 
-      analysesResource = jasmine.createSpyObj('AnalysesResource', ['query']);
-      analysesResource.query.and.returnValue(analysesMock);
+      analysisResource = jasmine.createSpyObj('AnalysisResource', ['query']);
+      analysisResource.query.and.returnValue(analysesMock);
 
       $controller('AnalysesController', {
         $scope: scope,
         $modal: modal,
-        AnalysesResource: analysesResource
+        AnalysisResource: analysisResource
       });
     }));
 
@@ -27,7 +27,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
 
       it('should load the analyes', function() {
-        expect(analysesResource.query).toHaveBeenCalled();
+        expect(analysisResource.query).toHaveBeenCalled();
       });
 
       it('should place createAnalysisDialog on the scope', function() {

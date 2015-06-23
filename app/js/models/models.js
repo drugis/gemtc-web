@@ -13,5 +13,6 @@ define(function (require) {
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
     .factory('ProblemResource', require('models/standaloneProblemResource'))
+    .factory('AnalysisResource', require('analyses/analysisResource'))
     ;
 });
