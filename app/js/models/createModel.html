@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="large-12 columns">
+        <h5>Create new model</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="large-12 columns">
+        <form id="add-model-form" novalidate ng-submit="createModel(model)">
+            <div class="row">
+                <div class="large-9 columns">
+                    <label>Title
+                        <input id="title-input" autofocus="true" type="text" ng-model="model.title">
+                    </label>
+                </div>
+            </div>
+            <div class="row modal-bottom-button-bar">
+                <div class="large-9 columns">
+                    <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(model)">
+                    Create
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
