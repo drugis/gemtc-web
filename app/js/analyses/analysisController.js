@@ -1,8 +1,8 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', '$stateParams', 'AnalysisResource'];
-  var AnalysisController = function($scope, $stateParams, AnalysisResource) {
-    $scope.analysis = AnalysisResource.get($stateParams);
+  var dependencies = ['$scope', '$stateParams', 'AnalysisResource', 'NetworkPlotService'];
+  var AnalysisController = function($scope, $stateParams, AnalysisResource, NetworkPlotService) {
+    $scope.$parent.analysis = AnalysisResource.get($stateParams);
   }
   return dependencies.concat(AnalysisController);
 });
