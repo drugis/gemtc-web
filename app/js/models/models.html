@@ -11,13 +11,13 @@
 </div>
 <div class="row" ng-show="modelsLoaded">
   <div class="columns large-12">
-    <button id="add-model-btn" ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="createModelDialog()"><i class="fa fa-plus"></i> Add new model</button>
+    <button id="add-model-btn" ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add new model</button>
   </div>
   <div class="columns large-12">
     <em ng-show="models.length === 0">No models have been created</em>
     <ul ng-show="models.length > 0">
       <li ng-repeat="model in models">
-        <a ui-sref="standalone-model-container.model({analysisId: analysisId, modelId: model.id})">{{model.title}}</a>
+        <a ui-sref="model({analysisId: analysisId, modelId: model.id})">{{model.title}}</a>
       </li>
     </ul>
   </div>
