@@ -94,6 +94,10 @@ define(
               'networkGraph': {
                 templateUrl: '/js/analyses/networkGraph.html',
                 controller: 'NetworkGraphController'
+              },
+              'evidenceTable': {
+                templateUrl: '/js/analyses/evidenceTable.html',
+                controller: 'EvidenceTableController'
               }
             }
           })

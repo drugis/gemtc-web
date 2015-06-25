@@ -10,12 +10,15 @@ define(function (require) {
     .controller('AnalysisController', require('analyses/analysisController'))
     .controller('AddAnalysisController', require('analyses/addAnalysisController'))
     .controller('NetworkGraphController', require('analyses/networkGraphController'))
+    .controller('EvidenceTableController', require('analyses/evidenceTableController'))
 
     // resources
     .factory('AnalysisResource', require('analyses/analysisResource'))
 
     //services
+    .factory('AnalysisService', require('analyses/analysisService'))    
     .factory('NetworkPlotService', require('analyses/networkPlotService'))
+    .factory('EvidenceTableService', require('analyses/evidenceTableService'))
 
     .directive('networkPlot', require('analyses/networkPlotDirective'))
 

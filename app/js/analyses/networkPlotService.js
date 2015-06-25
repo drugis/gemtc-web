@@ -1,8 +1,8 @@
 'use strict';
 define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
-  var dependencies = [];
+  var dependencies = ['AnalysisService'];
 
-  var NetworkPlotService = function() {
+  var NetworkPlotService = function(AnalysisService) {
 
     function drawEdge(enter, fromId, toId, width, circleData) {
       enter.append('line')
@@ -127,7 +127,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
 
       // edge.from.name, edge.to.name, edge.numberOfStudies
       network.edges = generateEdges(network.interventions);
-      var studyMap = problemToStudyMap(problem)
+      var studyMap = AnalysisService.problemToStudyMap(problem)
       network.edges = _.map(network.edges, function(edge) {
         edge.numberOfStudies = countStudiesMeasuringEdge(edge, studyMap);
         return edge;
@@ -159,29 +159,10 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       return edges;
     }
 
-    function problemToStudyMap(problem) {
-
-      var treatmentsMap = _.indexBy(problem.treatments, 'id');
-
-      return _.reduce(problem.entries, function(studies, entry) {
-          if (!studies[entry.study]) {
-            studies[entry.study] = {
-              arms: {}
-            };
-          }
-          entry.treatment = treatmentsMap[entry.treatment];
-          studies[entry.study].arms[entry.treatment.name] = _.omit(entry, 'study', 'treatment'); 
-
-          return studies;
-        }, {});
-    }
-
-
     return {
       drawNetwork: drawNetwork,
       transformProblemToNetwork: transformProblemToNetwork,
       generateEdges: generateEdges,
-      problemToStudyMap: problemToStudyMap
     };
 
   };
