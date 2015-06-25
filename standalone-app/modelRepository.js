@@ -1,4 +1,5 @@
-var logger = require('./logger'),
+var
+  logger = require('./logger'),
   dbUtil = require('./dbUtil'),
   db = require('./db')(dbUtil.buildGemtcDBUrl());
 
