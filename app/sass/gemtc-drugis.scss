@@ -29,6 +29,18 @@ $addis-grey-border : $crumb-border-color;
   display: inline;
 }
 
+.block {
+  display: block;
+}
+
+span.stacked-radio {
+  display: block;
+  padding: 0.4rem 0 0.4rem 0.2rem;
+  input[type="radio"] {
+    margin-bottom: 0;
+  }
+}
+
 .application-link a{
   text-decoration: underline;
 }
@@ -39,6 +51,19 @@ input[type="text"],
 select,
 select option {
   line-height: 1.1rem;
+}
+
+table.layout-table {
+  border: none;
+  td{
+    border: none;
+    background-color: #F3F0FA;
+  }
+}
+
+.main-category-header {
+  color: #008CBA;
+  font-weight: bold;
 }
 
 /////////////////////////// top nav bar
@@ -134,7 +159,7 @@ ul.form-list li {
   margin-bottom: 0;
 }
 
-.modal-bottom-button-bar {
+div.row.bottom-button-bar {
   margin-top: 2rem;
 }
 
