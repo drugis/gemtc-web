@@ -6,9 +6,7 @@ define(['lodash'], function() {
   var ModelController = function($scope, $stateParams, ModelResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource) {
 
-    $scope.outcome = AnalysisResource.get($stateParams, function(analysis) {
-      return analysis.outcome;
-    });
+    $scope.analysis = AnalysisResource.get($stateParams);
 
     function getTaskId() {
       return PataviTaskIdResource.get($stateParams);
