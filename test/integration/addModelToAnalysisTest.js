@@ -18,6 +18,7 @@ module.exports = {
 
     analysisOverviewPage.waitForPageToLoad();
     analysisOverviewPage.addModel();
+    browser.waitForElementVisible('#create-model-header', 50000);
     analysisOverviewPage.end();
   }
 };
