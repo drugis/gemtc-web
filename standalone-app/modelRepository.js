@@ -46,6 +46,7 @@ function getModel(modelId, callback) {
       logger.error('error retrieving model, error: ' + error);
       callback(error)
     } else {
+      logger.debug('ModelRepository.getModel return model = ' +  JSON.stringify(result.rows[0]));
       callback(error, result.rows[0]);
     }
   })
