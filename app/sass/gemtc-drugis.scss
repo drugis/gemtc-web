@@ -29,6 +29,18 @@ $addis-grey-border : $crumb-border-color;
   display: inline;
 }
 
+.block {
+  display: block;
+}
+
+span.stacked-radio {
+  display: block;
+  padding: 0.4rem 0 0.4rem 0.2rem;
+  input[type="radio"] {
+    margin-bottom: 0;
+  }
+}
+
 .application-link a{
   text-decoration: underline;
 }
@@ -39,6 +51,19 @@ input[type="text"],
 select,
 select option {
   line-height: 1.1rem;
+}
+
+table.layout-table {
+  border: none;
+  td{
+    border: none;
+    background-color: #F3F0FA;
+  }
+}
+
+.main-category-header {
+  color: #008CBA;
+  font-weight: bold;
 }
 
 /////////////////////////// top nav bar
@@ -65,6 +90,7 @@ select option {
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   -moz-box-shadow:    0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  margin-botten: 1rem; 
 }
 
 .top-bar-section ul.top-bar-content {
@@ -72,8 +98,8 @@ select option {
   margin-left: 4rem;
 }
 
-.f-topbar-fixed {
-  padding-top: 72px; // add space top top of first item under nav-bar
+body.f-topbar-fixed {
+  padding-top: 4rem; // add space top top of first item under nav-bar
 }
 
 
@@ -133,7 +159,7 @@ ul.form-list li {
   margin-bottom: 0;
 }
 
-.modal-bottom-button-bar {
+div.row.bottom-button-bar {
   margin-top: 2rem;
 }
 

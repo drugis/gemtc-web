@@ -25,9 +25,10 @@ function findByAnalysis(analysisId, callback) {
 
 function createModel(ownerAccountId, analysisId, newModel, callback) {
 
-  db.query('INSERT INTO model (analysisId, title) VALUES($1, $2) RETURNING id', [
+  db.query('INSERT INTO model (analysisId, title, linearModel) VALUES($1, $2, $3) RETURNING id', [
       analysisId,
-      newModel.title
+      newModel.title,
+      newModel.linearModel
     ],
     function(error, result) {
       if (error) {
@@ -45,6 +46,7 @@ function getModel(modelId, callback) {
       logger.error('error retrieving model, error: ' + error);
       callback(error)
     } else {
+      logger.debug('ModelRepository.getModel return model = ' +  JSON.stringify(result.rows[0]));
       callback(error, result.rows[0]);
     }
   })

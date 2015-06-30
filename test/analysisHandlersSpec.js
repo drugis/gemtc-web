@@ -14,7 +14,7 @@ var analysisHandlers = proxyquire('../standalone-app/analysisHandlers', {
   './analysisRepository': analysisRepositoryStub
 });
 
-describe('analyses routes', function() {
+describe('analyses handlers', function() {
   describe('queryAnalyses', function() {
     it('should query the analyses repository', function(done) {
       var request = {
