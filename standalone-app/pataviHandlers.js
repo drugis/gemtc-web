@@ -25,6 +25,7 @@ function getPataviTask(request, response, next) {
       },
       function(model, callback) {
         modelCache = model;
+        console.log('foo');
         if (model.taskid) {
           response.json({
             uri: process.env.PATAVI_URI + model.taskid
