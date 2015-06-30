@@ -7,6 +7,9 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     beforeEach(inject(function($rootScope, $controller, $q) {
       scope = $rootScope;
 
+      // we all have one 
+      scope.$parent = {};
+
       var analyisMock = 'analysisMock';
       stateParamsMock = {
         analyisId: -1
