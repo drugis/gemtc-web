@@ -17,11 +17,10 @@ function getPataviTask(modelId, callback) {
   });
 }
 
-function createPataviTask(problem, linearModel, callback) {
-  logger.debug('pataviTaskRepository.createPataviTask with linearModel' + linearModel);
-  db.query("INSERT INTO patavitask (problem, linearModel, method) VALUES($1, $2, 'gemtc') RETURNING id", [
-    problem,
-    linearModel
+function createPataviTask(problem, callback) {
+  logger.debug('pataviTaskRepository.createPataviTask');
+  db.query("INSERT INTO patavitask (problem, method) VALUES($1, 'gemtc') RETURNING id", [
+    problem
   ], function(error, result) {
     if (error) {
       callback(error);

@@ -1,9 +1,12 @@
-var logger = require('./logger');
-var async = require('async');
-var modelRepository = require('./modelRepository');
-var pataviTaskRepository = require('./pataviTaskRepository');
-var analysisRepository = require('./analysisRepository');
-var status = require('http-status-codes');
+var logger = require('./logger'),
+  async = require('async'),
+  modelRepository = require('./modelRepository'),
+  pataviTaskRepository = require('./pataviTaskRepository'),
+  analysisRepository = require('./analysisRepository'),
+  status = require('http-status-codes'),
+  _ = require('lodash')
+;
+
 
 module.exports = {
   getPataviTask: getPataviTask
@@ -12,6 +15,7 @@ module.exports = {
 function getPataviTask(request, response, next) {
   var modelId = request.params.modelId;
   var analysisId = request.params.analysisId;
+  var modelSettings = ['linearmodel'];
 
   var modelCache;
   var createdIdCache;
@@ -31,7 +35,8 @@ function getPataviTask(request, response, next) {
         }
       },
       function(analysis, callback) {
-        pataviTaskRepository.create(analysis.problem, modelCache.linearmodel, callback);
+        var problemPlusModelSettings = _.extend(analysis.problem, _.pick(modelCache, modelSettings));
+        pataviTaskRepository.create(problemPlusModelSettings, callback);
       },
       function(createdId, callback) {
         createdIdCache = createdId;
