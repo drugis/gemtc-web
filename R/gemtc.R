@@ -52,9 +52,11 @@ gemtc <- function(params) {
   assignInNamespace("update.jags", update.jags, "rjags")
 
   ## incoming information
+  #  entries
   data.ab <- do.call(rbind, lapply(params[['entries']],
     function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
-  linearModel <- params[['linearModel']]
+  # linear model or fixed?
+  linearModel <- if(is.null(params[['linearmodel']])) 'fixed' else params[['linearmodel']]
 
   network <- mtc.network(data.ab=data.ab)
   model <- mtc.model(network, linearModel=linearModel)
