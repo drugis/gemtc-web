@@ -5,5 +5,6 @@ define(function(require) {
     .factory('PataviService', require('gemtc-web/services/pataviService'))
     .factory('RelativeEffectsTableService', require('gemtc-web/services/relativeEffectsTableService'))
     .factory('NetworkPlotService', require('gemtc-web/analyses/networkPlotService'))
+    .factory('AnalysisService', require('gemtc-web/analyses/analysisService'))
     ;
 });

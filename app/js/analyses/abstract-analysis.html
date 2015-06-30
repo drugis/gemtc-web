@@ -1,8 +1,22 @@
 <div class="row nav-bar-spacer">
 	<div class="columns center large-12">
 		<h1 id="analysis-header">Analysis</h1>
+		<div ui-view="analysis"></div>
+		<hr>
 	</div>
 </div>
-<div ui-view="analysis"></div>
-<div ui-view="models"></div>
+<div class="row" data-equalizer>
+	<div class="columns large-6">
+		<div ui-view="models"></div>
+	</div>
+	<div id="network-graph-container" class="columns large-6">
+		<div ui-view="networkGraph"></div>
+	</div>
+</div>
+<div class="row">
+	<div class="columns large-12">
+		<hr>
+		<div ui-view="evidenceTable"></div>
+	</div>
+</div>
 
