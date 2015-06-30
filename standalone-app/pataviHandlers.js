@@ -31,7 +31,7 @@ function getPataviTask(request, response, next) {
         }
       },
       function(analysis, callback) {
-        pataviTaskRepository.create(analysis.problem, callback);
+        pataviTaskRepository.create(analysis.problem, modelCache.linearmodel, callback);
       },
       function(createdId, callback) {
         createdIdCache = createdId;
