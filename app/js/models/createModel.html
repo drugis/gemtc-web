@@ -7,19 +7,30 @@
     <div class="large-12 columns">
         <form id="add-model-form" novalidate ng-submit="createModel(model)">
             <div class="row">
-                <div class="large-9 columns">
+                <div class="large-4 small-12 columns">
                     <label>Title
                         <input id="title-input" autofocus="true" type="text" ng-model="model.title">
                     </label>
                 </div>
             </div>
-            <div class="row modal-bottom-button-bar">
+            <div class="row">
+                <div class="large-4 small-12 columns" ng-init="model.linearModel='fixed'" >
+                    <label>Fixed/Random effect(s)</label>
+                    <span class="stacked-radio">
+                        <input type="radio" name="effect-type" value="fixed" ng-model="model.linearModel" id="fixed-effect-radio"><label for="fixed-effect-radio">Fixed effects</label>
+                    </span>
+                    <span class="stacked-radio">
+                        <input type="radio" name="effect-type" value="random" ng-model="model.linearModel "id="random-effect-radio"><label for="random-effect-radio">Random effects</label>
+                    </span>
+                </div>
+            </div>
+            <div class="row bottom-button-bar">
                 <div class="large-9 columns">
                     <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(model)">
-                    Create
+                    Create Model
                     </button>
                 </div>
             </div>
         </form>
     </div>
-</div>
+</div>  

@@ -141,7 +141,7 @@ describe('loginUtils', function() {
   });
 
   describe('csrfValue', function() {
-    describe('should extract the token from the requestuest\'s body', function() {
+    describe('should extract the token from the request\'s body', function() {
       it('for the body._csrf', function() {
         request = {
           body: {
