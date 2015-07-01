@@ -33,12 +33,13 @@ $addis-grey-border : $crumb-border-color;
   display: block;
 }
 
-span.stacked-radio {
-  display: block;
-  padding: 0.4rem 0 0.4rem 0.2rem;
-  input[type="radio"] {
-    margin-bottom: 0;
-  }
+label.form-item-header {
+  font-size: 1.2rem;
+
+}
+
+.indent-one {
+  margin-left:2rem;
 }
 
 .application-link a{
@@ -55,7 +56,7 @@ select option {
 
 table.layout-table {
   border: none;
-  td{
+  td {
     border: none;
     background-color: #F3F0FA;
   }
@@ -90,7 +91,7 @@ table.layout-table {
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   -moz-box-shadow:    0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  margin-botten: 1rem; 
+  margin-botten: 1rem;
 }
 
 .top-bar-section ul.top-bar-content {

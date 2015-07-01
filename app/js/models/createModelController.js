@@ -1,17 +1,28 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', '$stateParams', '$location', 'AnalysisResource', 'ModelResource'];
-  var CreateModelController = function($scope, $stateParams, $location, AnalysisResource, ModelResource) {
+  var dependencies = ['$scope', '$stateParams', '$location', 'AnalysisResource', 'ModelResource', 'AnalysisService'];
+  var CreateModelController = function($scope, $stateParams, $location, AnalysisResource, ModelResource, AnalysisService) {
 
     $scope.analysis = AnalysisResource.get($stateParams);
+    AnalysisService.createPairwiseOptions($scope.analysis.$promise).then(function(result) {
+      $scope.comparisonOptions = result;
+    });
 
-    $scope.isAddButtonDisabled = function(model) {
+    $scope.model = {
+      linearModel: 'fixed',
+      modelType: 'network'
+    };
+    $scope.createModel = createModel;
+    $scope.isAddButtonDisabled = isAddButtonDisabled;
+
+
+    function isAddButtonDisabled(model) {
       return !model ||
         !model.title ||
         !!$scope.isAddingModel;
     }
 
-    $scope.createModel = function(model) {
+    function createModel(model) {
       $scope.isAddingModel = true;
       ModelResource.save($stateParams, model, function(result, headers) {
         $scope.isAddingAnalysis = false;
