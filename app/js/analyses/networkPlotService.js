@@ -23,7 +23,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       var n = network.interventions.length;
       var angle = 2.0 * Math.PI / n;
       var originX = width / 2;
-      var originY = width / 2;; // use a squere area
+      var originY = width / 2; // use a squere area
       var margin = 200;
       var radius = originY - margin / 2;
       var circleMaxSize = 30;
@@ -110,59 +110,8 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
         });
     }
 
-    function transformProblemToNetwork(problem) {
-
-      var network = {};
-      
-      function treatmentToIntervention(treatment) {
-        var intervention = {};
-        intervention.name = treatment.name;
-        intervention.sampleSize = _.reduce(problem.entries, function(totalSampleSize, entry) {
-          return entry.treatment === treatment.id ? totalSampleSize + entry.sampleSize : totalSampleSize;
-        }, 0);
-        return intervention;
-      }
-
-      network.interventions = _.map(problem.treatments, treatmentToIntervention);
-
-      // edge.from.name, edge.to.name, edge.numberOfStudies
-      network.edges = generateEdges(network.interventions);
-      var studyMap = AnalysisService.problemToStudyMap(problem)
-      network.edges = _.map(network.edges, function(edge) {
-        edge.numberOfStudies = countStudiesMeasuringEdge(edge, studyMap);
-        return edge;
-      });
-      return network;
-    }
-
-    function countStudiesMeasuringEdge(edge, studyMap) {
-      return _.reduce(studyMap, function(numberOfStudiesMeasuringEdge, study) {
-        if(study.arms[edge.to.name] && study.arms[edge.from.name]) {
-          numberOfStudiesMeasuringEdge += 1;
-        }
-        return numberOfStudiesMeasuringEdge;
-      }, 0);
-    }
-
-    function generateEdges(interventions) {
-      var edges = [];
-      _.each(interventions, function(rowIntervention, index) {
-        var rest = interventions.slice(index + 1, interventions.length);
-        _.each(rest, function(colIntervention) {
-          edges.push({
-            from: rowIntervention,
-            to: colIntervention
-          });
-        });
-      });
-
-      return edges;
-    }
-
     return {
-      drawNetwork: drawNetwork,
-      transformProblemToNetwork: transformProblemToNetwork,
-      generateEdges: generateEdges,
+      drawNetwork: drawNetwork
     };
 
   };
