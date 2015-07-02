@@ -1,3 +1,5 @@
+source('ll.binom.log.R')
+
 # Stolen from mcda-web, ensures the row-names of a matrix are preserved
 wrap.matrix <- function(m) {
   l <- lapply(rownames(m), function(name) { m[name,] })
@@ -51,11 +53,15 @@ gemtc <- function(params) {
   }
   assignInNamespace("update.jags", update.jags, "rjags")
 
+  ## incoming information
+  #  entries
   data.ab <- do.call(rbind, lapply(params[['entries']],
     function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
+  # linear model or fixed?
+  linearModel <- if(is.null(params[['linearmodel']])) 'fixed' else params[['linearmodel']]
 
   network <- mtc.network(data.ab=data.ab)
-  model <- mtc.model(network)
+  model <- mtc.model(network, linearModel=linearModel)
   update(list(progress=0))
   result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer)
 
