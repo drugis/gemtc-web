@@ -15,7 +15,7 @@ module.exports = {
 function getPataviTask(request, response, next) {
   var modelId = request.params.modelId;
   var analysisId = request.params.analysisId;
-  var modelSettings = ['linearmodel'];
+  var modelSettings = ['linearModel'];
 
   var modelCache;
   var createdIdCache;
