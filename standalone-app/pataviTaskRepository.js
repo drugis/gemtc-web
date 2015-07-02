@@ -18,6 +18,7 @@ function getPataviTask(modelId, callback) {
 }
 
 function createPataviTask(problem, callback) {
+  logger.debug('pataviTaskRepository.createPataviTask');
   db.query("INSERT INTO patavitask (problem, method) VALUES($1, 'gemtc') RETURNING id", [
     problem
   ], function(error, result) {
