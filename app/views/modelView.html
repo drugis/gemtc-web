@@ -20,7 +20,10 @@
               <h5><strong>Model settings</strong></h5>
               <table class="layout-table">
                 <tr>
-                  <td class="large-6 text-right"><strong>Analysis type</strong></td><td>network meta-analysis</td>
+                  <td class="large-6 text-right"><strong>Analysis type</strong></td><td>model.modelType.type</td>
+                </tr>
+                <tr ng-show="model.modelType.type === 'pairwise'">
+                  <td class="large-6 text-right"><strong>Pairwise comparison</strong></td><td>{{model.modelType.details.label}}</td>
                 </tr>
                 <tr>
                   <td class="large-6 text-right"><strong>Effects type</strong></td><td>{{model.linearModel}}</td>
