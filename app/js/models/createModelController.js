@@ -24,6 +24,12 @@ define([], function() {
 
     function createModel(model) {
       $scope.isAddingModel = true;
+      model.modelType = {
+        type: model.modelType
+      };
+      if (model.modelType.type === 'pairwise') {
+        model.modelType.details = model.pairwiseComparison;
+      }
       ModelResource.save($stateParams, model, function(result, headers) {
         $scope.isAddingAnalysis = false;
         // Call to replace is needed to have backbutton skip the createModel view when going back from the model View

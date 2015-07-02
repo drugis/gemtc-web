@@ -17,13 +17,14 @@ function mapModelRow(modelRow) {
     title: modelRow.title,
     linearModel: modelRow.linearmodel,
     analysisId: modelRow.analysisid,
-    taskId: modelRow.taskid
+    taskId: modelRow.taskid,
+    modelType: modelRow.modeltype
   };
 }
 
 function findByAnalysis(analysisId, callback) {
   logger.debug('modelRepository.findByAnalysis, where analysisId = ' + analysisId);
-  db.query('SELECT id, title, analysisId, taskId, linearModel FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
+  db.query('SELECT id, title, analysisId, taskId, linearModel, modelType FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
     if (error) {
       logger.error('error finding models by analysisId, error: ' + error);
       callback(error);
@@ -36,10 +37,11 @@ function findByAnalysis(analysisId, callback) {
 
 function createModel(ownerAccountId, analysisId, newModel, callback) {
 
-  db.query('INSERT INTO model (analysisId, title, linearModel) VALUES($1, $2, $3) RETURNING id', [
+  db.query('INSERT INTO model (analysisId, title, linearModel, modelType) VALUES($1, $2, $3, $4) RETURNING id', [
       analysisId,
       newModel.title,
-      newModel.linearModel
+      newModel.linearModel,
+      newModel.modelType
     ],
     function(error, result) {
       if (error) {
@@ -52,7 +54,7 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
 }
 
 function getModel(modelId, callback) {
-  db.query('SELECT id, title, analysisId, taskId, linearModel FROM model WHERE id=$1', [modelId], function(error, result) {
+  db.query('SELECT id, title, analysisId, taskId, linearModel, modelType FROM model WHERE id=$1', [modelId], function(error, result) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);
