@@ -12,6 +12,7 @@ RUN R -e 'install.packages("plyr_1.8.1.tar.gz", repos=NULL, type="source"); if (
 RUN R -e 'install.packages("gemtc", repos="http://cran.rstudio.com/"); if (!require("gemtc")) quit(save="no", status=8)'
 
 ADD gemtc.R /var/lib/patavi/gemtc.R
+ADD ll.binom.log.R /var/lib/patavi/ll.binom.log.R
 
 USER patavi
 ENV HOME /var/lib/patavi
