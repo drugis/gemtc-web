@@ -1,5 +1,3 @@
-source('ll.binom.log.R')
-
 # Stolen from mcda-web, ensures the row-names of a matrix are preserved
 wrap.matrix <- function(m) {
   l <- lapply(rownames(m), function(name) { m[name,] })
