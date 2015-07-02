@@ -1,11 +1,14 @@
 'use strict';
 define([], function() {
   var dependencies = ['$http', '$scope', '$location', 'AnalysisResource', 'ModelResource',
-    '$modalInstance', 'FileUploadService'];
+    '$modalInstance', 'FileUploadService'
+  ];
   var AddAnalysisController = function($http, $scope, $location, AnalysisResource, ModelResource,
     $modalInstance, FileUploadService) {
 
-    $scope.analysis = {};
+    $scope.analysis = {
+      outcome: {}
+    };
     $scope.problemFile = {};
 
     $scope.addAnalysis = function(analysis) {

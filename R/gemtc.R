@@ -56,7 +56,7 @@ gemtc <- function(params) {
   data.ab <- do.call(rbind, lapply(params[['entries']],
     function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
   # linear model or fixed?
-  linearModel <- if(is.null(params[['linearmodel']])) 'fixed' else params[['linearmodel']]
+  linearModel <- if(is.null(params[['linearModel']])) 'fixed' else params[['linearmodel']]
 
   network <- mtc.network(data.ab=data.ab)
   model <- mtc.model(network, linearModel=linearModel)
