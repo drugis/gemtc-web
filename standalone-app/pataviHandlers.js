@@ -6,7 +6,7 @@ var logger = require('./logger'),
   analysisRepository = require('./analysisRepository'),
   status = require('http-status-codes')
 ;
-
+var modelCache;
 module.exports = {
   getPataviTask: getPataviTask
 };
@@ -15,9 +15,9 @@ module.exports = {
 function getPataviTask(request, response, next) {
   var modelId = request.params.modelId;
   var analysisId = request.params.analysisId;
-  var modelSettings = ['linearModel', 'modelType'];
 
-  var modelCache;
+
+
   var createdIdCache;
   async.waterfall([
       function(callback) {
@@ -35,7 +35,9 @@ function getPataviTask(request, response, next) {
           analysisRepository.get(analysisId, callback);
         }
       },
-      pataviHandlerService.createPataviTask,
+      function(analysis, callback) {
+        pataviHandlerService.createPataviTask(analysis, modelCache, callback);
+      },
       function(createdId, callback) {
         createdIdCache = createdId;
         modelRepository.setTaskId(modelCache.id, createdId, callback);

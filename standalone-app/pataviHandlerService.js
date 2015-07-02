@@ -1,14 +1,15 @@
 var
   pataviTaskRepository = require('./pataviTaskRepository'),
-  _ = require('lodash')
-  ;
+  _ = require('lodash');
 
 module.exports = {
   createPataviTask: createPataviTask
 };
 
-function createPataviTask(analysis, callback) {
-  var problemPlusModelSettings = _.extend(analysis.problem, _.pick(modelCache, modelSettings));
+var modelSettings = ['linearModel', 'modelType'];
+
+function createPataviTask(analysis, model, callback) {
+  var problemPlusModelSettings = _.extend(analysis.problem, _.pick(model, modelSettings));
   if (problemPlusModelSettings.modelType.type === 'pairwise') {
     problemPlusModelSettings = reduceToPairwiseProblem(problemPlusModelSettings);
   }
