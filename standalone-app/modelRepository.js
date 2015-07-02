@@ -12,7 +12,7 @@ module.exports = {
 
 function findByAnalysis(analysisId, callback) {
   logger.debug('modelRepository.findByAnalysis, where analysisId = ' + analysisId);
-  db.query('SELECT * FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
+  db.query('SELECT id, title, analysisId, taskId, linearModel FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
     if (error) {
       logger.error('error finding models by analysisId, error: ' + error);
       callback(error)
@@ -41,7 +41,7 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
 }
 
 function getModel(modelId, callback) {
-  db.query('SELECT * FROM model WHERE id=$1', [modelId], function(error, result) {
+  db.query('SELECT id, title, analysisId, taskId, linearModel FROM model WHERE id=$1', [modelId], function(error, result) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
       callback(error)
