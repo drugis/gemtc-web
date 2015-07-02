@@ -20,7 +20,8 @@ function getAnalysis(analysisId, callback) {
 
 function queryAnalyses(ownerAccountId, callback) {
   logger.debug('get analyses for owner ' + ownerAccountId);
-  db.query('SELECT * FROM analysis WHERE OWNER=$1', [ownerAccountId], function(error, result) {
+  db.query('SELECT id, owner, title, problem, outcome FROM analysis WHERE OWNER=$1', 
+    [ownerAccountId], function(error, result) {
     if (error) {
       logger.error('error at db.query, error: ' + error);
     }
