@@ -30,7 +30,8 @@ function queryAnalyses(ownerAccountId, callback) {
 }
 
 function createAnalysis(ownerAccountId, newAnalysis, callback) {
-  db.query('INSERT INTO analysis (title, outcome, problem, owner) VALUES($1, $2, $3, $4) RETURNING id', [newAnalysis.title,
+  db.query('INSERT INTO analysis (title, outcome, problem, owner) VALUES($1, $2, $3, $4) RETURNING id', 
+    [newAnalysis.title,
     newAnalysis.outcome,
     newAnalysis.problem,
     ownerAccountId
