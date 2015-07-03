@@ -156,56 +156,54 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
     describe('createPairwiseOptions', function() {
       var options;
-      var mockAnalysis = {
-        problem: {
-          "entries": [{
-            "study": "Study1",
-            "treatment": 1,
-            "responders": 58,
-            "sampleSize": 100
-          }, {
-            "study": "Study1",
-            "treatment": 2,
-            "responders": 53,
-            "sampleSize": 103
-          }, {
-            "study": "Study2",
-            "treatment": 1,
-            "responders": 54,
-            "sampleSize": 99
-          }, {
-            "study": "Study2",
-            "treatment": 2,
-            "responders": 90,
-            "sampleSize": 109
-          }, {
-            "study": "Study3",
-            "treatment": 2,
-            "responders": 54,
-            "sampleSize": 99
-          }, {
-            "study": "Study3",
-            "treatment": 3,
-            "responders": 90,
-            "sampleSize": 109
-          }],
-          "treatments": [{
-            "id": 1,
-            "name": "Treatment1"
-          }, {
-            "id": 2,
-            "name": "Treatment2"
-          }, {
-            "id": 3,
-            "name": "Treatment3"
-          }]
-        }
+      var mockProblem = {
+        "entries": [{
+          "study": "Study1",
+          "treatment": 1,
+          "responders": 58,
+          "sampleSize": 100
+        }, {
+          "study": "Study1",
+          "treatment": 2,
+          "responders": 53,
+          "sampleSize": 103
+        }, {
+          "study": "Study2",
+          "treatment": 1,
+          "responders": 54,
+          "sampleSize": 99
+        }, {
+          "study": "Study2",
+          "treatment": 2,
+          "responders": 90,
+          "sampleSize": 109
+        }, {
+          "study": "Study3",
+          "treatment": 2,
+          "responders": 54,
+          "sampleSize": 99
+        }, {
+          "study": "Study3",
+          "treatment": 3,
+          "responders": 90,
+          "sampleSize": 109
+        }],
+        "treatments": [{
+          "id": 1,
+          "name": "Treatment1"
+        }, {
+          "id": 2,
+          "name": "Treatment2"
+        }, {
+          "id": 3,
+          "name": "Treatment3"
+        }]
       };
 
       beforeEach(inject(function() {
         var analysisPromise = q.defer();
         options = analysisService.createPairwiseOptions(analysisPromise.promise);
-        analysisPromise.resolve(mockAnalysis);
+        analysisPromise.resolve(mockProblem);
         rootScope.$apply();
       }));
 
