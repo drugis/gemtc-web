@@ -78,9 +78,9 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
-    function createPairwiseOptions(analysisPromise) {
-      return analysisPromise.then(function(analysis) {
-        var network = transformProblemToNetwork(analysis.problem);
+    function createPairwiseOptions(problemPromise) {
+      return problemPromise.then(function(problem) {
+        var network = transformProblemToNetwork(problem);
         var edgesWithMoreThanOneStudy = _.filter(network.edges, function(edge) {
           return edge.numberOfStudies > 1;
         });
@@ -91,7 +91,8 @@ define(['angular', 'lodash'], function(angular, _) {
     return {
       transformProblemToNetwork: transformProblemToNetwork,
       problemToStudyMap: problemToStudyMap,
-      createPairwiseOptions: createPairwiseOptions
+      createPairwiseOptions: createPairwiseOptions,
+      generateEdges: generateEdges
     };
 
   };

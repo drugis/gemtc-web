@@ -17,12 +17,12 @@
         <div class="large-4 small-12 columns">
           <label class="form-item-header">Fixed/Random effect(s)
             <div class="stacked-radio">
-              <input type="radio" value="fixed" ng-model="model.linearModel" id="fixed-effect-radio">
-              <label for="fixed-effect-radio">Fixed effects</label>
-            </div>
-            <div class="stacked-radio">
               <input type="radio" value="random" ng-model="model.linearModel " id="random-effect-radio">
               <label for="random-effect-radio">Random effects</label>
+            </div>
+            <div class="stacked-radio">
+              <input type="radio" value="fixed" ng-model="model.linearModel" id="fixed-effect-radio">
+              <label for="fixed-effect-radio">Fixed effect</label>
             </div>
           </label>
         </div>
@@ -31,14 +31,14 @@
         <div class="large-4 small-12 columns">
           <label class="form-item-header">Model Type
             <div class="stacked-radio">
-              <input type="radio" value="network" ng-model="model.modelType" id="network-model-type-radio">
+              <input type="radio" value="network" ng-model="model.modelType.type" id="network-model-type-radio">
               <label for="network-model-type-radio">Network meta-analysis</label>
             </div>
             <div class="stacked-radio">
-              <input type="radio" value="pairwise" ng-model="model.modelType" id="pairwise-model-type-radio">
+              <input type="radio" value="pairwise" ng-model="model.modelType.type" id="pairwise-model-type-radio">
               <label for="pairwise-model-type-radio">Pairwise meta-analysis</label>
             </div>
-            <div class="indent-one" ng-show="model.modelType === 'pairwise'">
+            <div class="indent-one" ng-show="model.modelType.type === 'pairwise'">
               <label for="comparison-select">Select a pairwise comparison</label>
               <select ng-options="comparison.label for comparison in comparisonOptions" ng-model="model.pairwiseComparison" id="comparison-select"></select>
             </div>

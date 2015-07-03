@@ -14,6 +14,7 @@ define(function (require) {
 
     // resources
     .factory('AnalysisResource', require('analyses/analysisResource'))
+    .factory('ProblemResource', require('analyses/problemResource'))
 
     //services
     .factory('AnalysisService', require('analyses/analysisService'))    
