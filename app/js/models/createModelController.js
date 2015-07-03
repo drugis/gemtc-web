@@ -1,16 +1,20 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', '$stateParams', '$location', 'AnalysisResource', 'ModelResource', 'AnalysisService'];
-  var CreateModelController = function($scope, $stateParams, $location, AnalysisResource, ModelResource, AnalysisService) {
+  var dependencies = ['$scope', '$stateParams', '$location', 'AnalysisResource', 'ModelResource', 'AnalysisService', 'ProblemResource'];
+  var CreateModelController = function($scope, $stateParams, $location, AnalysisResource, ModelResource, AnalysisService, ProblemResource) {
 
-    $scope.analysis = AnalysisResource.get($stateParams);
-    AnalysisService.createPairwiseOptions($scope.analysis.$promise).then(function(result) {
+
+    var problemDefer = ProblemResource.get($stateParams);
+
+    AnalysisService.createPairwiseOptions(problemDefer.$promise).then(function(result) {
       $scope.comparisonOptions = result;
     });
 
     $scope.model = {
-      linearModel: 'fixed',
-      modelType: 'network'
+      linearModel: 'random',
+      modelType: {
+        type: 'network'
+      }
     };
     $scope.createModel = createModel;
     $scope.isAddButtonDisabled = isAddButtonDisabled;
@@ -24,13 +28,14 @@ define([], function() {
 
     function createModel(model) {
       $scope.isAddingModel = true;
-      model.modelType = {
-        type: model.modelType
-      };
       if (model.modelType.type === 'pairwise') {
-        model.modelType.details = model.pairwiseComparison;
+        model.modelType.details = {
+          from: model.pairwiseComparison.from.name,
+          to: model.pairwiseComparison.to.name
+        };
       }
-      ModelResource.save($stateParams, model, function(result, headers) {
+      var pureModel = _.omit(model, 'pairwiseComparison');
+      ModelResource.save($stateParams, pureModel, function(result, headers) {
         $scope.isAddingAnalysis = false;
         // Call to replace is needed to have backbutton skip the createModel view when going back from the model View
         $location.url(headers().location).replace();

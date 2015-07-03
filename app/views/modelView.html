@@ -23,7 +23,7 @@
                   <td class="large-6 text-right"><strong>Analysis type</strong></td><td>{{model.modelType.type}}</td>
                 </tr>
                 <tr ng-show="model.modelType.type === 'pairwise'">
-                  <td class="large-6 text-right"><strong>Pairwise comparison</strong></td><td>{{model.modelType.details.label}}</td>
+                  <td class="large-6 text-right"><strong>Pairwise comparison</strong></td><td>{{model.modelType.details.from}} &mdash; {{model.modelType.details.to}}</td>
                 </tr>
                 <tr>
                   <td class="large-6 text-right"><strong>Effects type</strong></td><td>{{model.linearModel}}</td>
