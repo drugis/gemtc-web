@@ -37,9 +37,8 @@ describe('analyses handlers', function() {
         }
       },
       response = {};
-      pataviHandlers.getPataviTask(request, response);
+      pataviHandlers.getPataviTask(request, response, done);
       expect(modelRepositoryStub.get).to.have.been.called();
-      done();
     });
   });
 });

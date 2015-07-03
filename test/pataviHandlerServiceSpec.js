@@ -1,19 +1,23 @@
 var proxyquire = require('proxyquire');
-var
-  chai = require('chai'),
+var chai = require('chai'),
   spies = require('chai-spies'),
   expect = chai.expect,
   _ = require('lodash');
 
 chai.use(spies);
 
-var pataviTaskRepositoryStub = chai.spy.object(['create']);
-var pataviHandlerService = proxyquire('../standalone-app/pataviHandlerService', {
-  './pataviTaskRepository': pataviTaskRepositoryStub
-});
+var pataviTaskRepositoryStub;
+var pataviHandlerService;
 
 describe('the patavi handler service', function() {
   describe('createPataviTask', function() {
+    beforeEach(function() {
+      pataviTaskRepositoryStub = chai.spy.object(['create']);
+      pataviHandlerService = proxyquire('../standalone-app/pataviHandlerService', {
+        './pataviTaskRepository': pataviTaskRepositoryStub
+      });
+
+    })
     it('for network models should simply create the task', function() {
       var analysisMock = {
         problem: {
@@ -71,27 +75,36 @@ describe('the patavi handler service', function() {
         }
       };
       var expected = {
-        linearModel: modelMock.linearModel,
-        modelType: modelMock.modelType,
-        problem: {
-          entries: [{
-            treatment: 1
-          }, {
-            treatment: 2
-          }],
-          treatments: [{
-            id: 1,
-            name: 'treatment1'
-          }, {
-            id: 2,
-            name: 'treatment2'
-          }]
+        entries: [{
+          treatment: 1
+        }, {
+          treatment: 2
+        }],
+        treatments: [{
+          id: 1,
+          name: 'treatment1'
+        }, {
+          id: 2,
+          name: 'treatment2'
+        }],
+        linearModel: 'random',
+        modelType: {
+          type: 'pairwise',
+          details: {
+            from: {
+              name: 'treatment1'
+            },
+            to: {
+              name: 'treatment2'
+            }
+          }
         }
       };
+
       callback = function() {};
       pataviHandlerService.createPataviTask(analysisMock, modelMock, callback);
 
       expect(pataviTaskRepositoryStub.create).to.have.been.called.with(expected, callback);
-    })
+    });
   });
 });
