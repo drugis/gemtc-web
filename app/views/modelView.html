@@ -48,7 +48,7 @@
             <p><strong>Random effects standard deviation </strong> {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</p>
           </div>
         </div>
-        <div class="row" ng-show="model.linearModel === 'random'" style="padding-top: 1rem;">
+        <div class="row" style="padding-top: 1rem;">
           <div class="columns large-12">
             <div class="table-title" ng-switch on="result.results.logScale">Relative effects table comparing the included interventions:
               <span ng-switch-when="true">odds ratio</span>
