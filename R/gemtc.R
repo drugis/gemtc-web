@@ -7,6 +7,26 @@ wrap.matrix <- function(m) {
 
 close.PataviJagsPB <- function(pb) {}
 
+readFile <- function(fileName) {
+  readChar(fileName, file.info(fileName)$size)
+}
+
+plotToSvg <- function(plotFn) {
+  prefix <- tempfile()
+  svgName <- paste(prefix, '-%d.svg', sep='')
+  svg(svgName)
+  plotFn()
+  dev.off()
+
+  # read & delete plot files
+  filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
+  lapply (filenames, function(filename) {
+    contents <- readFile(filename)
+    file.remove(filename)
+    contents
+  })
+}
+
 gemtc <- function(params) {
   iter.adapt <- 5000
   iter.infer <- 20000
@@ -56,20 +76,34 @@ gemtc <- function(params) {
   data.ab <- do.call(rbind, lapply(params[['entries']],
     function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
   # linear model or fixed?
-  linearModel <- if(is.null(params[['linearModel']])) 'fixed' else params[['linearModel']]
+  linearModel <- if(is.null(params[['linearModel']])) 'random' else params[['linearModel']]
 
   network <- mtc.network(data.ab=data.ab)
   model <- mtc.model(network, linearModel=linearModel)
   update(list(progress=0))
   result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer)
 
-  comps <- combn(as.character(network[['treatments']][['id']]), 2)
+  treatmentIds <- as.character(network[['treatments']][['id']])
+  comps <- combn(treatmentIds, 2)
   t1 <- comps[1,]
   t2 <- comps[2,]
-  releffect <- summary(relative.effect(result, t1, t2))[['summaries']][['quantiles']]
   releffect <- apply(comps, 2, function(comp) {
-    list(t1=comp[1], t2=comp[2], quantiles=releffect[paste("d", comp[1], comp[2], sep="."),])
+    q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
+    list(t1=comp[1], t2=comp[2], quantiles=q)
+    update(list(progress=80 + which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps) * 5))
   })
+
+  #create forest plot files
+  forestPlots <- lapply(treatmentIds, function(treatmentId) {
+    plotToSvg(function() {
+      treatmentN <- which(treatmentIds == treatmentId)
+      progress <- 85 + treatmentN * 10 / length(treatmentIds)
+      update(list(progress=progress))
+      forest(relative.effect(result, treatmentId))
+    })
+  })
+  names(forestPlots) <- treatmentIds
+
   update(list(progress=95))
 
   summary <- summary(result)
@@ -83,6 +117,7 @@ gemtc <- function(params) {
   summary[['relativeEffects']] <- releffect
   summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
   summary[['alternatives']] <- names(summary[['rankProbabilities']])
+  summary[['relativeEffectPlots']] <- forestPlots
   update(list(progress=100))
   summary
 }

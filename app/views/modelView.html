@@ -20,16 +20,20 @@
               <h5><strong>Model settings</strong></h5>
               <table class="layout-table">
                 <tr>
-                  <td class="large-6 text-right"><strong>Analysis type</strong></td><td>{{model.modelType.type}}</td>
+                  <td class="large-6 text-right"><strong>Analysis type</strong></td>
+                  <td>{{model.modelType.type}}</td>
                 </tr>
                 <tr ng-show="model.modelType.type === 'pairwise'">
-                  <td class="large-6 text-right"><strong>Pairwise comparison</strong></td><td>{{model.modelType.details.from}} &mdash; {{model.modelType.details.to}}</td>
+                  <td class="large-6 text-right"><strong>Pairwise comparison</strong></td>
+                  <td>{{model.modelType.details.from}} &mdash; {{model.modelType.details.to}}</td>
                 </tr>
                 <tr>
-                  <td class="large-6 text-right"><strong>Effects type</strong></td><td>{{model.linearModel}}</td>
+                  <td class="large-6 text-right"><strong>Effects type</strong></td>
+                  <td>{{result.results.linearModel}}</td>
                 </tr>
                 <tr>
-                  <td class="large-6 text-right"><strong>Model type</strong></td><td>{{result.results.type}}</td>
+                  <td class="large-6 text-right"><strong>Model type</strong></td>
+                  <td>{{result.results.type}}</td>
                 </tr>
               </table>
             </div>
@@ -52,8 +56,7 @@
           <div class="columns large-12">
             <div class="table-title" ng-switch on="result.results.logScale">Relative effects table comparing the included interventions:
               <span ng-switch-when="true">odds ratio</span>
-              <span ng-switch-default>mean difference</span>
-              (95% CrI).
+              <span ng-switch-default>mean difference</span> (95% CrI).
               <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
             </div>
             <table>
@@ -71,16 +74,31 @@
             </table>
           </div>
         </div>
-        <div class="row" style="padding-top: 1rem;">
-          <div class="columns large-4">
-            <div class="table-title">Rank probabilities</div>
-            <div class="addis-graph" style="height:400px;"><gemtc-rank-plot  value="result.results.rankProbabilities" stacked="true"></div>
-          </div>
-          <div class="graph-legend columns large-4 end panel callout">
-            <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the highest outcome value.</p>
-            <p>Ranks can be shown as grouped or stacked.</p>
+        <div class="row">
+          <div class="columns large-6 small-8">
+            <p><strong>Relative effects plots</strong></p>
+            <label>Select baseline:
+              <select ng-options="treatment.id as treatment.name for treatment in analysis.problem.treatments" ng-model="selectedBaseline"></select>
+            </label>
           </div>
         </div>
+        <div class="row">
+          <div class="columns large-2">&nbsp;<a ng-click="showPreviousSVGPage()" ><i ng-show="result.results.relativeEffectPlots[selectedBaseline].length > 1 && selectedPage > 0" class="fa fa-caret-left" style="font-size:3em;"></i></a></div>
+          <div class="columns large-7" ng-bind-html="result.results.relativeEffectPlots[selectedBaseline][selectedPage]"></div>
+          <div ng-show="selectedPage < result.results.relativeEffectPlots[selectedBaseline].length - 1" class="columns large-2"><a ng-click="showNextSVGPage()"><i class="fa fa-caret-right" style="font-size:3em;"></i></a></div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="padding-top: 1rem;">
+      <div class="columns large-4">
+        <div class="table-title">Rank probabilities</div>
+        <div class="addis-graph" style="height:400px;">
+          <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true">
+        </div>
+      </div>
+      <div class="graph-legend columns large-4 end panel callout">
+        <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the highest outcome value.</p>
+        <p>Ranks can be shown as grouped or stacked.</p>
       </div>
     </div>
   </div>
