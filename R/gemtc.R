@@ -89,8 +89,8 @@ gemtc <- function(params) {
   t2 <- comps[2,]
   releffect <- apply(comps, 2, function(comp) {
     q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
-    list(t1=comp[1], t2=comp[2], quantiles=q)
     update(list(progress=80 + which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps) * 5))
+    list(t1=comp[1], t2=comp[2], quantiles=q)
   })
 
   #create forest plot files
