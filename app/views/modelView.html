@@ -75,10 +75,10 @@
           </div>
         </div>
         <div class="row">
-          <div ng-if="result.results.relativeEffectPlots[selectedBaseline].length > 1" class="columns large-2">
-            &nbsp;<a ng-click="showPreviousSVGPage()"><i ng-show="selectedPage > 0" class="fa fa-caret-left" style="font-size:3em;"></i></a>
+<!--           <div ng-if="result.results.relativeEffectPlots[selectedBaseline].length > 1" class="columns large-2">
+            &nbsp;
           </div>
-          <div class="columns large-8" style="border: 1px solid;">
+ -->          <div class="columns" >
             <div class="row">
               <div class="columns large-6 small-8">
                 <p><strong>Relative effects plots</strong></p>
@@ -88,16 +88,21 @@
               </div>
             </div>
             <div class="row">
-              <div class="columns large-7" ng-bind-html="result.results.relativeEffectPlots[selectedBaseline][selectedPage]"></div>
+              <div class="columns center" >
+                <div ng-bind-html="result.results.relativeEffectPlots[selectedBaseline][selectedPage]"></div>
+                <a class="previous" ng-click="showPreviousSVGPage()"><i ng-if="selectedPage > 0" class="fa fa-caret-left" style="font-size:3em;"></i></a>
+                <a class="next" ng-click="showNextSVGPage()"><i ng-if="selectedPage < result.results.relativeEffectPlots[selectedBaseline].length - 1" class="fa fa-caret-right" style="font-size:3em;"></i></a>
+              </div>
             </div>
           </div>
-          <div ng-if="result.results.relativeEffectPlots[selectedBaseline].length > 1" class="columns large-2">
-            <a ng-click="showNextSVGPage()"><i ng-show="selectedPage < result.results.relativeEffectPlots[selectedBaseline].length - 1" class="fa fa-caret-right" style="font-size:3em;"></i></a>
+<!--           <div ng-if="result.results.relativeEffectPlots[selectedBaseline].length > 1" class="columns large-2">
           </div>
-        </div>
+ -->        </div>
         <div class="row" style="padding-top: 1rem;">
           <div class="columns large-4">
-            <div class="table-title">Rank probabilities</div>
+            <div>
+              <p><strong>Rank probabilities</strong></p>
+            </div>
             <div class="addis-graph" style="height:400px;">
               <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true">
             </div>
