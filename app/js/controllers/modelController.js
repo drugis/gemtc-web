@@ -67,6 +67,7 @@ define(['lodash'], function() {
         analysisId: $stateParams.analysisId,
         projectId: $stateParams.projectId
       }).$promise.then(function(problem) {
+        $scope.problem = problem;
         result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
         result.results.relativeEffectPlots = trustRelativeEffectPlots(result.results.relativeEffectPlots);
         $scope.result = result;
