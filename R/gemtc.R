@@ -78,7 +78,10 @@ gemtc <- function(params) {
   # linear model or fixed?
   linearModel <- if(is.null(params[['linearModel']])) 'random' else params[['linearModel']]
 
-  network <- mtc.network(data.ab=data.ab)
+  treatments <- do.call(rbind, lapply(params[['treatments']],
+    function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
+
+  network <- mtc.network(data.ab=data.ab, treatments=treatments)
   model <- mtc.model(network, linearModel=linearModel)
   update(list(progress=0))
   result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer)
@@ -99,7 +102,7 @@ gemtc <- function(params) {
       treatmentN <- which(treatmentIds == treatmentId)
       progress <- 85 + treatmentN * 10 / length(treatmentIds)
       update(list(progress=progress))
-      forest(relative.effect(result, treatmentId))
+      forest(relative.effect(result, treatmentId), use.description=TRUE)
     })
   })
   names(forestPlots) <- treatmentIds
