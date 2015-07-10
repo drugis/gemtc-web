@@ -38,6 +38,20 @@ label.form-item-header {
 
 }
 
+a.next {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 494pt;
+}
+
+a.previous {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 10pt;
+}
+
 .indent-one {
   margin-left:2rem;
 }
