@@ -74,11 +74,8 @@
             </table>
           </div>
         </div>
-        <div class="row">
-<!--           <div ng-if="result.results.relativeEffectPlots[selectedBaseline].length > 1" class="columns large-2">
-            &nbsp;
-          </div>
- -->          <div class="columns" >
+        <div class="row" ng-if="model.modelType.type === 'network'">
+          <div class="columns" >
             <div class="row">
               <div class="columns large-6 small-8">
                 <p><strong>Relative effects plots</strong></p>
@@ -95,9 +92,7 @@
               </div>
             </div>
           </div>
-<!--           <div ng-if="result.results.relativeEffectPlots[selectedBaseline].length > 1" class="columns large-2">
-          </div>
- -->        </div>
+        </div>
         <div class="row" style="padding-top: 1rem;">
           <div class="columns large-4">
             <div>
