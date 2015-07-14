@@ -55,11 +55,15 @@ define(['lodash'], function() {
     function trustRelativeEffectPlots(treatments) {
       var trustedTreatments = {};
       _.forEach(treatments, function(treatmentPlots, treatmentId) {
-        trustedTreatments[treatmentId] = _.map(treatmentPlots, function(plot) {
-          return $sce.trustAsHtml(plot);
-        });
+        trustedTreatments[treatmentId] = trustPages(treatmentPlots);
       });
       return trustedTreatments;
+    }
+
+    function trustPages(pages) {
+      return _.map(pages, function(page) {
+        return $sce.trustAsHtml(page);
+      });
     }
 
     function successCallback(result) {
@@ -70,6 +74,7 @@ define(['lodash'], function() {
         $scope.problem = problem;
         result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
         result.results.relativeEffectPlots = trustRelativeEffectPlots(result.results.relativeEffectPlots);
+        result.results.studyForestPlot = trustPages(result.results.studyForestPlot);
         $scope.result = result;
         var relativeEffects = result.results.relativeEffects;
         var isLogScale = result.results.logScale;

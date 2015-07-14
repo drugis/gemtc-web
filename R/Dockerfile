@@ -1,7 +1,6 @@
 FROM gemtc/r-base
 
 ADD gemtc.R /var/lib/patavi/gemtc.R
-ADD ll.binom.log.R /var/lib/patavi/ll.binom.log.R
 
 USER patavi
 ENV HOME /var/lib/patavi
