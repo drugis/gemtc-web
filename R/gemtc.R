@@ -143,16 +143,26 @@ gemtc <- function(params) {
     list(t1=comp[1], t2=comp[2], quantiles=q)
   })
 
-  #create forest plot files
-  forestPlots <- lapply(treatmentIds, function(treatmentId) {
-    plotToSvg(function() {
-      treatmentN <- which(treatmentIds == treatmentId)
-      progress <- 85 + treatmentN * 10 / length(treatmentIds)
-      update(list(progress=progress))
-      forest(relative.effect(result, treatmentId), use.description=TRUE)
+
+  #create forest plot files for network analyses
+  if(params$modelType$type == "network") {
+    forestPlots <- lapply(treatmentIds, function(treatmentId) {
+      plotToSvg(function() {
+        treatmentN <- which(treatmentIds == treatmentId)
+        progress <- 85 + treatmentN * 10 / length(treatmentIds)
+        update(list(progress=progress))
+        forest(relative.effect(result, treatmentId), use.description=TRUE)
+      })
     })
-  })
-  names(forestPlots) <- treatmentIds
+    names(forestPlots) <- treatmentIds
+  }
+
+  # create forest plot for pairwise analysis
+  if(params$modelType$type == "pairwise") {
+    forestPlot <- plotToSvg(function() {
+      pwforest(result, t1, t2)
+    })
+  }
 
   update(list(progress=95))
 
@@ -167,7 +177,12 @@ gemtc <- function(params) {
   summary[['relativeEffects']] <- releffect
   summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
   summary[['alternatives']] <- names(summary[['rankProbabilities']])
-  summary[['relativeEffectPlots']] <- forestPlots
+  if(params$modelType$type == "network") {
+    summary[['relativeEffectPlots']] <- forestPlots
+  }
+  if(params$modelType$type == "pairwise") {
+    summary[['studyForestPlot']] <- forestPlot
+  }
   update(list(progress=100))
   summary
 }
