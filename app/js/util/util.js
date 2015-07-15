@@ -12,6 +12,7 @@ define(function (require) {
     // directive
     .directive('navbarDirective', require('util/navbarDirective'))
     .directive('fileReader', require('util/fileReaderDirective'))
+    .directive('pagedSvgPlot', require('util/pagedSvgPlotDirective'))
 
     // interseptors
     .factory('sessionExpiredInterceptor', require('util/sessionExpiredInterceptor'))
