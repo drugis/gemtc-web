@@ -75,7 +75,7 @@
           </div>
         </div>
         <div class="row" ng-if="model.modelType.type === 'network'">
-          <div class="columns" >
+          <div class="columns">
             <div class="row">
               <div class="columns large-6 small-8">
                 <p><strong>Relative effects plots</strong></p>
@@ -85,10 +85,18 @@
               </div>
             </div>
             <div class="row">
-              <div class="columns center" >
-                <div ng-bind-html="result.results.relativeEffectPlots[selectedBaseline][selectedPage]"></div>
-                <a class="previous" ng-click="showPreviousSVGPage()"><i ng-if="selectedPage > 0" class="fa fa-caret-left" style="font-size:3em;"></i></a>
-                <a class="next" ng-click="showNextSVGPage()"><i ng-if="selectedPage < result.results.relativeEffectPlots[selectedBaseline].length - 1" class="fa fa-caret-right" style="font-size:3em;"></i></a>
+              <div class="columns center">
+              <paged-svg-plot pages="result.results.relativeEffectPlots[selectedBaseline]"></paged-svg-plot>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-if="model.modelType.type === 'pairwise'">
+          <div class="columns">
+            <div class="row">
+              <div class="columns large-6 small-8">
+                <p><strong>Study effect forest plot</strong></p>
+                <paged-svg-plot pages="result.results.studyForestPlot"></paged-svg-plot>
               </div>
             </div>
           </div>
