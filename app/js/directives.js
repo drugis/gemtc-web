@@ -6,5 +6,6 @@ define(function(require) {
 
   .directive('networkPlot', require('gemtc-web/analyses/networkPlotDirective'))
   .directive('gemtcRankPlot', require('gemtc-web/models/rankPlotDirective'))
+  .directive('pagedSvgPlot', require('gemtc-web/utils/pagedSvgDirective'))
   ;
 });
