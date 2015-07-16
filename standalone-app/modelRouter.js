@@ -51,6 +51,7 @@ function createModel(request, response, next) {
             internalError(error, response);
           } else {
             response.location('/analyses/' + analysisId + '/models/' + createdId);
+            response.json({id: createdId});
             response.sendStatus(status.CREATED);
             next();
           }
