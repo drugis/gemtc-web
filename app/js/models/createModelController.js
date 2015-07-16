@@ -49,7 +49,7 @@ define(['lodash'], function(_) {
         });
         $q.all(creationPromises).then(function() {
           $scope.isAddingModel = false;
-          $state.go('analysis', $stateParams);
+          $state.go('networkMetaAnalysis', $stateParams);
         });
       } else {
         createAndPostModel(model, function(result, headers) {
