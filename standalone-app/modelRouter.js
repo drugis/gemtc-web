@@ -50,9 +50,10 @@ function createModel(request, response, next) {
           if (error) {
             internalError(error, response);
           } else {
-            response.location('/analyses/' + analysisId + '/models/' + createdId);
-            response.json({id: createdId});
-            response.sendStatus(status.CREATED);
+            response
+              .location('/analyses/' + analysisId + '/models/' + createdId)
+              .json({id: createdId})
+              .status(status.CREATED);
             next();
           }
         });

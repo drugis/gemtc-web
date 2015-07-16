@@ -1,8 +1,8 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$q', '$stateParams', '$state', '$location',
+  var dependencies = ['$scope', '$q', '$stateParams', '$state',
     'AnalysisResource', 'ModelResource', 'AnalysisService', 'ProblemResource'];
-  var CreateModelController = function($scope, $q, $stateParams, $state, $location,
+  var CreateModelController = function($scope, $q, $stateParams, $state,
     AnalysisResource, ModelResource, AnalysisService, ProblemResource) {
 
     var problemDefer = ProblemResource.get($stateParams);
@@ -55,7 +55,7 @@ define(['lodash'], function(_) {
         createAndPostModel(model, function(result, headers) {
           $scope.isAddingModel = false;
           // Call to replace is needed to have backbutton skip the createModel view when going back from the model View
-          $location.url(headers().location).replace();
+          $state.go('networkMetaAnalysis', _.extend($stateParams, {modelId: result.id}));
         });
       }
     }
