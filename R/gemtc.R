@@ -153,7 +153,7 @@ gemtc <- function(params) {
 
 
   #create forest plot files for network analyses
-  if(params$modelType$type == "network") {
+  if(params[['modelType']][['type']] == "network") {
     forestPlots <- lapply(treatmentIds, function(treatmentId) {
       plotToSvg(function() {
         treatmentN <- which(treatmentIds == treatmentId)
@@ -166,7 +166,7 @@ gemtc <- function(params) {
   }
 
   # create forest plot for pairwise analysis
-  if(params$modelType$type == "pairwise") {
+  if(params[['modelType']][['type']] == "pairwise") {
     forestPlot <- plotToSvg(function() {
       pwforest(result, t1, t2)
     })
@@ -185,10 +185,10 @@ gemtc <- function(params) {
   summary[['relativeEffects']] <- releffect
   summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
   summary[['alternatives']] <- names(summary[['rankProbabilities']])
-  if(params$modelType$type == "network") {
+  if(params[['modelType']][['type']] == "network") {
     summary[['relativeEffectPlots']] <- forestPlots
   }
-  if(params$modelType$type == "pairwise") {
+  if(params[['modelType']][['type']] == "pairwise") {
     summary[['studyForestPlot']] <- forestPlot
   }
   update(list(progress=100))
