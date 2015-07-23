@@ -55,7 +55,7 @@ define(['lodash'], function(_) {
         createAndPostModel(model, function(result, headers) {
           $scope.isAddingModel = false;
           // Call to replace is needed to have backbutton skip the createModel view when going back from the model View
-          $state.go('networkMetaAnalysis', _.extend($stateParams, {modelId: result.id}));
+          $state.go('model', _.extend($stateParams, {modelId: result.id}));
         });
       }
     }
