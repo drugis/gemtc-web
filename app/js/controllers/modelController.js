@@ -10,11 +10,8 @@ define(['lodash'], function() {
     $scope.progress = {
       percentage: 0
     };
-    $scope.showNextSVGPage = showNextSVGPage;
-    $scope.showPreviousSVGPage = showPreviousSVGPage;
     $scope.model = ModelResource.get($stateParams);
     $scope.$parent.model = $scope.model;
-    $scope.selectedPage = 0;
 
     $scope.model
       .$promise
@@ -29,14 +26,6 @@ define(['lodash'], function() {
             $scope.progress.percentage = update.progress;
           }
         });
-
-    function showNextSVGPage() {
-      ++$scope.selectedPage;
-    }
-
-    function showPreviousSVGPage() {
-      --$scope.selectedPage;
-    }
 
     function getTaskId() {
       return PataviTaskIdResource.get($stateParams);
@@ -63,6 +52,7 @@ define(['lodash'], function() {
         var relativeEffects = result.results.relativeEffects;
         var isLogScale = result.results.logScale;
         $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+        $scope.gelmanDiagnostics = DiagnosticsService.labelDiagnostics(result.results.gelmanDiagnostics, $scope.problem.treatments)
       });
     }
 

@@ -74,6 +74,50 @@
             </table>
           </div>
         </div>
+        <div class="row">
+          <div class="columns">
+            <div class="row">
+              <div class="columns large-6 small-8">
+                <p><strong>Convergence diagnostics</strong></p>
+                <table>
+                  <thead>
+                    <tr>
+                      <td>Treatment name</td>
+                      <td>ID</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="treatment in problem.treatments">
+                      <td>{{treatment.name}}</td>
+                      <td>{{treatment.id}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table>
+                  <thead>
+                    <tr>
+                      <td></td>
+                      <td colspan="2">Potential scale reduction factor (PSRF)</td>
+                    </tr>
+                    <tr>
+                      <td>Parameter</td>
+                      <td>Point estimate</td>
+                      <td>97.5% quantile</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="(diagnosticLabel, diagnostic) in result.results.gelmanDiagnostics">
+                      <td>{{diagnosticLabel}}</td>
+                      <td>{{diagnostic['Point est.']}}</td>
+                      <td>{{diagnostic['Upper C.I.']}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <paged-png-plot pages="result.results.tracePlot"></paged-png-plot>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row" ng-if="model.modelType.type === 'network'">
           <div class="columns">
             <div class="row">

@@ -1,14 +1,14 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$sce', 'gemtcRootPath'];
-  var PagedSvgDirective = function($sce, gemtcRootPath) {
+  var dependencies = ['gemtcRootPath'];
+  var PagedPngPlotDirective = function(gemtcRootPath) {
     return {
       scope: {
         pages: '='
       },
       restrict: 'E',
       // using template because loading teplateUrl irritating in submodule
-      templateUrl: gemtcRootPath + 'js/util/pagedSvgPlotDirective.html',
+      templateUrl: gemtcRootPath + 'js/util/pagedPngPlotDirective.html',
       link: function(scope, element) {
         scope.selectNextPage = selectNextPage;
         scope.selectPreviousPage = selectPreviousPage;
@@ -21,14 +21,8 @@ define([], function() {
 
         function resetPage() {
           scope.selectedPage = 0;
-          scope.trustedPages = trustPages(scope.pages);
         }
 
-        function trustPages(pages) {
-          return _.map(pages, function(page) {
-            return $sce.trustAsHtml(page);
-          });
-        }
         function selectNextPage() {
           ++scope.selectedPage;
         }
@@ -38,5 +32,5 @@ define([], function() {
       }
     };
   };
-  return dependencies.concat(PagedSvgDirective);
+  return dependencies.concat(PagedPngPlotDirective);
 });

@@ -1,3 +1,7 @@
+library(RJSONIO)
+library(gemtc)
+library(base64enc)
+
 # Not ready for inclusion in R package:
 #  - only works for arm-based data
 #  - computes continuity corrections even if not necessary
@@ -77,6 +81,22 @@ plotToSvg <- function(plotFn) {
   filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
   lapply (filenames, function(filename) {
     contents <- readFile(filename)
+    file.remove(filename)
+    contents
+  })
+}
+
+plotToPng <- function(plotFn) {
+  prefix <- tempfile()
+  pngName <- paste(prefix, '-%d.png', sep='')
+  png(pngName)
+  plotFn()
+  dev.off()
+
+  # read & delete plot files
+  filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
+  lapply (filenames, function(filename) {
+    contents <- paste0("data:image/png;base64,", base64encode(filename))
     file.remove(filename)
     contents
   })
@@ -172,6 +192,17 @@ gemtc <- function(params) {
     })
   }
 
+  #create results plot
+  tracePlot <- plotToPng(function() {
+    plot(result, auto.layout=FALSE)
+  })
+
+  #create gelman plot
+  gelmanPlot <- plotToPng(function() {
+    gelman.plot(result, auto.layout=FALSE, ask=FALSE)
+  })
+
+
   update(list(progress=95))
 
   summary <- summary(result)
@@ -191,6 +222,10 @@ gemtc <- function(params) {
   if(params[['modelType']][['type']] == "pairwise") {
     summary[['studyForestPlot']] <- forestPlot
   }
+  summary[['tracePlot']] <- tracePlot
+  summary[['gelmanPlot']] <- gelmanPlot
+  summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
+
   update(list(progress=100))
   summary
 }
