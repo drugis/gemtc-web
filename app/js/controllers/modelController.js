@@ -1,10 +1,11 @@
 'use strict';
 define(['lodash'], function() {
   var dependencies = ['$scope', '$sce', '$stateParams', 'ModelResource', 'PataviService',
-    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource'
-  ];
+    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
+    'DiagnosticsService'
+    ];
   var ModelController = function($scope, $sce, $stateParams, ModelResource, PataviService,
-    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource) {
+    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService) {
 
     $scope.analysis = AnalysisResource.get($stateParams);
     $scope.progress = {
