@@ -1,6 +1,6 @@
 define(['angular', 'angular-mocks', 'controllers'], function() {
   describe('the modelController', function() {
-    var scope, 
+    var scope,
       analysisResource,
       modelResource,
       problemResource,
@@ -19,7 +19,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviResult,
       pataviResultDeferred,
       pataviService,
-      relativeEffectsTableService;
+      relativeEffectsTableService,
+      diagnosticsService;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -66,6 +67,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService = jasmine.createSpyObj('PataviService', ['run']);
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
+      diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics'])
 
       $controller('ModelController', {
         $scope: scope,
@@ -75,7 +77,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         PataviService: pataviService,
         PataviTaskIdResource: pataviTaskIdResource,
         RelativeEffectsTableService: relativeEffectsTableService,
-        AnalysisResource: analysisResource
+        AnalysisResource: analysisResource,
+        DiagnosticsService: diagnosticsService
       });
     }));
 
@@ -125,6 +128,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
 
             it('the relativeEffectsTable should be constructed', inject(function() {
               expect(relativeEffectsTableService.buildTable).toHaveBeenCalled();
+            }));
+
+            it('the gelman diagnostics should be labelled', inject(function() {
+              expect(diagnosticsService.labelDiagnostics).toHaveBeenCalled();
             }));
           });
         });
