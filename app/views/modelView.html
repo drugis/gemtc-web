@@ -90,9 +90,9 @@
                       <td colspan="2">Potential scale reduction factor (PSRF)</td>
                     </tr>
                     <tr>
+                      <td>Parameter</td>
                       <td>Mean</td>
                       <td>Time-series S.E.</td>
-                      <td>Parameter</td>
                       <td>Point estimate</td>
                       <td>97.5% quantile</td>
                     </tr>
@@ -107,8 +107,8 @@
                     </tr>
                   </tbody>
                 </table>
-                <button ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()">Show plots</button>
-                <button ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()">Hide plots</button>
+                <button ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()">Show diagnostics plots</button>
+                <button ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()">Hide diagnostics plots</button>
               </div>
             </div>
             <div class="row" ng-show="isConvergencePlotsShown">
