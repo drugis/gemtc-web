@@ -52,9 +52,10 @@
       <div class="row section">
         <div class="large-4 small-12 columns">
           <label class="form-item-header">Run-length parameters</label>
-          <label>Number of burn-in iterations<input type="number" ng-model="model.burnInIterations"></label>
-          <label>Number of inference iterations<input type="number" ng-model="model.inferenceIterations"></label>
-          <label>Thinning factor<input type="number" ng-model="model.thinningFactor"></label>
+          <label>Number of burn-in iterations<input type="number" min="1" step="1" ng-model="model.burnInIterations"></label>
+          <label>Number of inference iterations<input type="number" min="1" step="1" ng-model="model.inferenceIterations"></label>
+          <label>Thinning factor<input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*"></label>
+          <span class="alert" ng-show='!isRunlengthDivisibleByThinningFactor()'>The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions</span>
         </div>
       </div>
       <div class="row bottom-button-bar">
