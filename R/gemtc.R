@@ -46,17 +46,6 @@ pwforest <- function(result, t1, t2, ...) {
     log.scale=log.scale, xlim=xlim, ...)
 }
 
-## Example:
-# library(gemtc)
-# source('ll.binom.log.R')
-# source('pwforest.R')
-#
-# network <- read.mtc.network(system.file('extdata/luades-smoking.gemtc', package='gemtc'))
-# model <- mtc.model(network, likelihood="binom", link="log")
-# result <- mtc.run(model)
-# pwforest(result, 'A', 'C')
-
-
 # Stolen from mcda-web, ensures the row-names of a matrix are preserved
 wrap.matrix <- function(m) {
   l <- lapply(rownames(m), function(name) { m[name,] })
@@ -102,12 +91,28 @@ plotToPng <- function(plotFn) {
   })
 }
 
+predict.t <- function(network, n.adapt, n.iter, thin) {
+  n <- nrow(network[['treatments']])
+  n.randomEffects <- sum(gemtc:::mtc.studies.list(network)$lengths - 1)
+  n.stoch <- n.randomEffects + n - 1 + 2 # random effects models only
+  n.saved <- n - 1 + 2
+  c(
+    'sample'=0.032 * n.stoch * 0.001 * (n.adapt + n.iter),
+    'releffect'=0.0075 * n * (n - 1) / 2 * 0.001 * n.iter / thin,
+    'relplot'=0.0075 * (n - 1) * n * 0.001 * n.iter / thin,
+    'forestplot'=0.1,
+    'traceplot'=0.062 * n.saved * 0.001 * n.iter / thin,
+    'psrfplot'=(0.04 + 0.007 * n.saved) * 0.001 * n.iter / thin,
+    'summary'=0.0075 * n.saved * 0.001 * n.iter / thin
+  )
+}
+
 gemtc <- function(params) {
   iter.adapt <- params[['burnInIterations']]
   iter.infer <- params[['inferenceIterations']]
   thin <- params[['thinningFactor']]
   progress.start <- 0
-  progress.jags <- 80
+  progress.jags <- NA
 
   jagsProgress <- function(iter) {
     update(list(progress=progress.start + (iter / (iter.adapt + iter.infer)) * progress.jags))
@@ -147,6 +152,9 @@ gemtc <- function(params) {
   }
   assignInNamespace("update.jags", update.jags, "rjags")
 
+  times <- list()
+
+  times$init <- system.time({
   ## incoming information
   #  entries
   data.ab <- do.call(rbind, lapply(params[['entries']],
@@ -160,53 +168,83 @@ gemtc <- function(params) {
   network <- mtc.network(data.ab=data.ab, treatments=treatments)
   model <- mtc.model(network, linearModel=linearModel)
   update(list(progress=0))
-  result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer, thin=thin)
+  })
 
+  predicted <- predict.t(network, iter.adapt, iter.infer, thin)
+  milestones <- cumsum(predicted)
+  milestones <- milestones / milestones[length(milestones)] * 99
+  report <- function(milestone, x) {
+    print(paste(milestone, x))
+    i <- which(names(milestones) == milestone)
+    base <- if (i == 0) 0 else milestones[i - 1]
+    goal <- milestones[i]
+    dist <- goal - base
+    update(list(progress = unname(base + x * dist)))
+  }
+
+  progress.jags <- unname(milestones[1])
+
+  times$sample <- system.time({
+  result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer, thin=thin)
+  })
+
+  times$releffect <- system.time({
   treatmentIds <- as.character(network[['treatments']][['id']])
   comps <- combn(treatmentIds, 2)
   t1 <- comps[1,]
   t2 <- comps[2,]
   releffect <- apply(comps, 2, function(comp) {
     q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
-    update(list(progress=80 + which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps) * 5))
+    report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
     list(t1=comp[1], t2=comp[2], quantiles=q)
   })
+  })
 
-
+  times$relplot <- system.time({
   #create forest plot files for network analyses
   if(params[['modelType']][['type']] == "network") {
     forestPlots <- lapply(treatmentIds, function(treatmentId) {
       plotToSvg(function() {
         treatmentN <- which(treatmentIds == treatmentId)
-        progress <- 85 + treatmentN * 10 / length(treatmentIds)
-        update(list(progress=progress))
         forest(relative.effect(result, treatmentId), use.description=TRUE)
+        report('relplot', treatmentN / length(treatmentIds))
       })
     })
     names(forestPlots) <- treatmentIds
   }
+  })
 
+  times$forest <- system.time({
   # create forest plot for pairwise analysis
   if(params[['modelType']][['type']] == "pairwise") {
     forestPlot <- plotToSvg(function() {
       pwforest(result, t1, t2)
     })
   }
+  })
+  report('forestplot', 1.0)
 
+  times$traceplot <- system.time({
   #create results plot
   tracePlot <- plotToPng(function() {
     plot(result, auto.layout=FALSE)
   })
+  })
+  report('traceplot', 1.0)
 
+  times$psrfplot <- system.time({
   #create gelman plot
   gelmanPlot <- plotToPng(function() {
     gelman.plot(result, auto.layout=FALSE, ask=FALSE)
   })
+  })
+  report('psrfplot', 1.0)
 
-
-  update(list(progress=95))
-
+  times$summary <- system.time({
   summary <- summary(result)
+  })
+  report('summary', 1.0)
+
   summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
   summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
   summary[['logScale']] <- ll.call('scale.log', model)
@@ -229,6 +267,8 @@ gemtc <- function(params) {
   summary[['tracePlot']] <- tracePlot
   summary[['gelmanPlot']] <- gelmanPlot
   summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
+
+  print(times)
 
   update(list(progress=100))
   summary
