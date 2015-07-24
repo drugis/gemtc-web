@@ -12,6 +12,8 @@ define(function (require) {
     // directive
     .directive('navbarDirective', require('util/navbarDirective'))
     .directive('fileReader', require('util/fileReaderDirective'))
+    .directive('pagedSvgPlot', require('util/pagedSvgPlotDirective'))
+    .directive('pagedPngPlot', require('util/pagedPngPlotDirective'))
 
     // interseptors
     .factory('sessionExpiredInterceptor', require('util/sessionExpiredInterceptor'))

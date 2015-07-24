@@ -1,6 +1,6 @@
 define(['angular', 'angular-mocks', 'controllers'], function() {
   describe('the modelController', function() {
-    var scope, 
+    var scope,
       analysisResource,
       modelResource,
       problemResource,
@@ -19,7 +19,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviResult,
       pataviResultDeferred,
       pataviService,
-      relativeEffectsTableService;
+      relativeEffectsTableService,
+      diagnosticsService;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -66,6 +67,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService = jasmine.createSpyObj('PataviService', ['run']);
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
+      diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics'])
 
       $controller('ModelController', {
         $scope: scope,
@@ -75,13 +77,31 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         PataviService: pataviService,
         PataviTaskIdResource: pataviTaskIdResource,
         RelativeEffectsTableService: relativeEffectsTableService,
-        AnalysisResource: analysisResource
+        AnalysisResource: analysisResource,
+        DiagnosticsService: diagnosticsService
       });
     }));
 
     describe('when first initialised', function() {
       it('should attempt to load the model', function() {
         expect(modelResource.get).toHaveBeenCalledWith(mockStateParams);
+      });
+      it('should set convergence plots to hidden', function() {
+        expect(scope.isConvergencePlotsShown).toBe(false);
+      });
+      it('should make hideConvergencePlots available on the scope', function() {
+        expect(scope.hideConvergencePlots).toBeDefined();
+      });
+      it('should make showConvergencePlots available on the scope', function() {
+        expect(scope.showConvergencePlots).toBeDefined();
+      });
+      it('hideConvergencePlots should set convergence plots to hidden', function() {
+        scope.hideConvergencePlots();
+        expect(scope.isConvergencePlotsShown).toBe(false);
+      });
+      it('hideConvergencePlots should set convergence plots to shown', function() {
+        scope.showConvergencePlots();
+        expect(scope.isConvergencePlotsShown).toBe(true);
       });
     });
 
@@ -125,6 +145,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
 
             it('the relativeEffectsTable should be constructed', inject(function() {
               expect(relativeEffectsTableService.buildTable).toHaveBeenCalled();
+            }));
+
+            it('the gelman diagnostics should be labelled', inject(function() {
+              expect(diagnosticsService.labelDiagnostics).toHaveBeenCalled();
             }));
           });
         });
