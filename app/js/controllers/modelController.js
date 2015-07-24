@@ -13,6 +13,9 @@ define(['lodash'], function() {
     };
     $scope.model = ModelResource.get($stateParams);
     $scope.$parent.model = $scope.model;
+    $scope.isConvergencePlotsShown = false;
+    $scope.showConvergencePlots = showConvergencePlots;
+    $scope.hideConvergencePlots = hideConvergencePlots;
 
     $scope.model
       .$promise
@@ -30,6 +33,14 @@ define(['lodash'], function() {
 
     function getTaskId() {
       return PataviTaskIdResource.get($stateParams);
+    }
+
+    function showConvergencePlots() {
+      $scope.isConvergencePlotsShown = true;
+    }
+
+    function hideConvergencePlots() {
+      $scope.isConvergencePlotsShown = false;
     }
 
     function nameRankProbabilities(rankProbabilities, treatments) {

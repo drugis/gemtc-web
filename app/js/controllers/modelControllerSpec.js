@@ -86,6 +86,23 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       it('should attempt to load the model', function() {
         expect(modelResource.get).toHaveBeenCalledWith(mockStateParams);
       });
+      it('should set convergence plots to hidden', function() {
+        expect(scope.isConvergencePlotsShown).toBe(false);
+      });
+      it('should make hideConvergencePlots available on the scope', function() {
+        expect(scope.hideConvergencePlots).toBeDefined();
+      });
+      it('should make showConvergencePlots available on the scope', function() {
+        expect(scope.showConvergencePlots).toBeDefined();
+      });
+      it('hideConvergencePlots should set convergence plots to hidden', function() {
+        scope.hideConvergencePlots();
+        expect(scope.isConvergencePlotsShown).toBe(false);
+      });
+      it('hideConvergencePlots should set convergence plots to shown', function() {
+        scope.showConvergencePlots();
+        expect(scope.isConvergencePlotsShown).toBe(true);
+      });
     });
 
     describe('when the model is loaded', function() {

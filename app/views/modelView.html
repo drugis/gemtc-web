@@ -82,52 +82,42 @@
               </div>
             </div>
             <div class="row">
-              <div class="columns large-4 medium-6 small-12">
-                <table>
-                  <thead>
-                    <tr>
-                      <td>Treatment name</td>
-                      <td>ID</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="treatment in problem.treatments">
-                      <td>{{treatment.name}}</td>
-                      <td>{{treatment.id}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
               <div class="columns large-8 medium-6 small-12">
                 <table>
                   <thead>
                     <tr>
-                      <td></td>
+                      <td colspan="3"></td>
                       <td colspan="2">Potential scale reduction factor (PSRF)</td>
                     </tr>
                     <tr>
+                      <td>Mean</td>
+                      <td>Time-series S.E.</td>
                       <td>Parameter</td>
                       <td>Point estimate</td>
                       <td>97.5% quantile</td>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="diagnostic in gelmanDiagnostics">
+                    <tr ng-repeat="(key, diagnostic) in gelmanDiagnostics">
                       <td>{{diagnostic.label}}</td>
+                      <td>{{result.results.summaries.statistics[key].Mean}}</td>
+                      <td>{{result.results.summaries.statistics[key]['Time-series SE']}}</td>
                       <td>{{diagnostic['Point est.']}}</td>
                       <td>{{diagnostic['Upper C.I.']}}</td>
                     </tr>
                   </tbody>
                 </table>
+                <button ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()">Show plots</button>
+                <button ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()">Hide plots</button>
               </div>
             </div>
-            <div class="row">
+            <div class="row" ng-show="isConvergencePlotsShown">
               <div class="columns large-6 medium-6 small-12">
                 <p><strong>Time series plots</strong></p>
                 <paged-png-plot pages="result.results.tracePlot"></paged-png-plot>
               </div>
             </div>
-            <div class="row">
+            <div class="row"  ng-show="isConvergencePlotsShown">
               <div class="columns large-6 medium-6 small-12">
                 <p><strong>PSRF plots</strong></p>
                 <paged-png-plot pages="result.results.gelmanPlot"></paged-png-plot>
