@@ -77,8 +77,12 @@
         <div class="row">
           <div class="columns">
             <div class="row">
-              <div class="columns large-6 small-8">
+              <div class="columns large-4 small-6">
                 <p><strong>Convergence diagnostics</strong></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns large-4 medium-6 small-12">
                 <table>
                   <thead>
                     <tr>
@@ -93,6 +97,8 @@
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              <div class="columns large-8 medium-6 small-12">
                 <table>
                   <thead>
                     <tr>
@@ -106,14 +112,25 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="(diagnosticLabel, diagnostic) in gelmanDiagnostics">
-                      <td>{{diagnosticLabel}}</td>
+                    <tr ng-repeat="diagnostic in gelmanDiagnostics">
+                      <td>{{diagnostic.label}}</td>
                       <td>{{diagnostic['Point est.']}}</td>
                       <td>{{diagnostic['Upper C.I.']}}</td>
                     </tr>
                   </tbody>
                 </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns large-6 medium-6 small-12">
+                <p><strong>Time series plots</strong></p>
                 <paged-png-plot pages="result.results.tracePlot"></paged-png-plot>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns large-6 medium-6 small-12">
+                <p><strong>PSRF plots</strong></p>
+                <paged-png-plot pages="result.results.gelmanPlot"></paged-png-plot>
               </div>
             </div>
           </div>
@@ -130,7 +147,7 @@
             </div>
             <div class="row">
               <div class="columns center">
-              <paged-svg-plot pages="result.results.relativeEffectPlots[selectedBaseline]"></paged-svg-plot>
+                <paged-svg-plot pages="result.results.relativeEffectPlots[selectedBaseline]"></paged-svg-plot>
               </div>
             </div>
           </div>
