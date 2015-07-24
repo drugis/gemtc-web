@@ -18,13 +18,16 @@ function mapModelRow(modelRow) {
     linearModel: modelRow.linearmodel,
     analysisId: modelRow.analysisid,
     taskId: modelRow.taskid,
-    modelType: modelRow.modeltype
+    modelType: modelRow.modeltype,
+    burnInIterations: modelRow.burn_in_iterations,
+    inferenceIterations: modelRow.inference_iterations,
+    thinningFactor: modelRow.thinning_factor
   };
 }
 
 function findByAnalysis(analysisId, callback) {
   logger.debug('modelRepository.findByAnalysis, where analysisId = ' + analysisId);
-  db.query('SELECT id, title, analysisId, taskId, linearModel, modelType FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
+  db.query('SELECT id, title, analysisId, taskId, linearModel, burn_in_iterations, inference_iterations, thinning_factor, modelType FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
     if (error) {
       logger.error('error finding models by analysisId, error: ' + error);
       callback(error);
@@ -37,10 +40,13 @@ function findByAnalysis(analysisId, callback) {
 
 function createModel(ownerAccountId, analysisId, newModel, callback) {
 
-  db.query('INSERT INTO model (analysisId, title, linearModel, modelType) VALUES($1, $2, $3, $4) RETURNING id', [
+  db.query('INSERT INTO model (analysisId, title, linearModel, burn_in_iterations, inference_iterations, thinning_factor, modelType) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id', [
       analysisId,
       newModel.title,
       newModel.linearModel,
+      newModel.burnInIterations,
+      newModel.inferenceIterations,
+      newModel.thinningFactor,
       newModel.modelType
     ],
     function(error, result) {
@@ -54,7 +60,7 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
 }
 
 function getModel(modelId, callback) {
-  db.query('SELECT id, title, analysisId, taskId, linearModel, modelType FROM model WHERE id=$1', [modelId], function(error, result) {
+  db.query('SELECT id, title, analysisId, taskId, linearModel, burn_in_iterations, inference_iterations, thinning_factor, modelType FROM model WHERE id=$1', [modelId], function(error, result) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);
@@ -62,16 +68,16 @@ function getModel(modelId, callback) {
       logger.debug('ModelRepository.getModel return model = ' +  JSON.stringify(result.rows[0]));
       callback(error, mapModelRow(result.rows[0]));
     }
-  })
+  });
 }
 
 function setTaskId(modelId, taskId, callback) {
   db.query('UPDATE model SET taskId=$2 WHERE id = $1', [modelId, taskId], function(error, result) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
-      callback(error)
+      callback(error);
     } else {
       callback();
     }
-  })
+  });
 }

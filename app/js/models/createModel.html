@@ -29,7 +29,7 @@
       </div>
       <div class="row section">
         <div class="large-4 small-12 columns">
-          <label class="form-item-header">Model Type
+          <label class="form-item-header">Model Type</label>
             <div class="stacked-radio">
               <input type="radio" value="network" ng-model="model.modelType.type" id="network-model-type-radio">
               <label for="network-model-type-radio">Network meta-analysis</label>
@@ -47,6 +47,14 @@
               <label for="all-pairwise-model-type-radio">All pairwise meta-analyses (batch)</label>
             </div>
           </label>
+        </div>
+      </div>
+      <div class="row section">
+        <div class="large-4 small-12 columns">
+          <label class="form-item-header">Run-length parameters</label>
+          <label>Number of burn-in iterations<input type="number" ng-model="model.burnInIterations"></label>
+          <label>Number of inference iterations<input type="number" ng-model="model.inferenceIterations"></label>
+          <label>Thinning factor<input type="number" ng-model="model.thinningFactor"></label>
         </div>
       </div>
       <div class="row bottom-button-bar">

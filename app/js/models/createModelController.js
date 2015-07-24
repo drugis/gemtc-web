@@ -1,9 +1,9 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state',
-    'AnalysisResource', 'ModelResource', 'AnalysisService', 'ProblemResource'];
+    'ModelResource', 'AnalysisService', 'ProblemResource'];
   var CreateModelController = function($scope, $q, $stateParams, $state,
-    AnalysisResource, ModelResource, AnalysisService, ProblemResource) {
+   ModelResource, AnalysisService, ProblemResource) {
 
     var problemDefer = ProblemResource.get($stateParams);
 
@@ -15,7 +15,10 @@ define(['lodash'], function(_) {
       linearModel: 'random',
       modelType: {
         type: 'network'
-      }
+      },
+      burnInIterations: 5000,
+      inferenceIterations: 20000,
+      thinningFactor: 10
     };
     $scope.createModel = createModel;
     $scope.isAddButtonDisabled = isAddButtonDisabled;
@@ -24,6 +27,9 @@ define(['lodash'], function(_) {
     function isAddButtonDisabled(model) {
       return !model ||
         !model.title ||
+        !model.burnInIterations ||
+        !model.inferenceIterations ||
+        !model.thinningFactor ||
         !!$scope.isAddingModel;
     }
 

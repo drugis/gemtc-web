@@ -20,7 +20,7 @@ define(['lodash'], function(_) {
           var treatment1Id = splitKey[1];
           var treatment2Id = splitKey[2];
           return key + ' (' +
-            treatmentsById[treatment1Id].name + ' - ' +
+            treatmentsById[treatment1Id].name + ', ' +
             treatmentsById[treatment2Id].name + ')';
         }
       }
