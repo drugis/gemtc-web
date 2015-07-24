@@ -68,7 +68,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
             "Upper C.I.": 1.0005
           },
           "sd.d": {
-            label: "Random effects standard deviation",
+            label: "sd.d (Random effects standard deviation)",
             "Point est.": 1.0007,
             "Upper C.I.": 1.0011
           }

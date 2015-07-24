@@ -14,7 +14,7 @@ define(['lodash'], function(_) {
     function labelDiagnostics(diagnostics, treatments) {
       function createLabel(diagnostic, key) {
         if (key === 'sd.d') {
-          return 'Random effects standard deviation';
+          return 'sd.d (Random effects standard deviation)';
         } else {
           var splitKey = key.split('.');
           var treatment1Id = splitKey[1];
