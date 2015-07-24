@@ -6,7 +6,12 @@ module.exports = {
   createPataviTask: createPataviTask
 };
 
-var modelSettings = ['linearModel', 'modelType'];
+var modelSettings = [
+  'linearModel',
+  'modelType',
+  'burnInIterations',
+  'inferenceIterations',
+  'thinningFactor'];
 
 function createPataviTask(analysis, model, callback) {
   var problemPlusModelSettings = _.extend(analysis.problem, _.pick(model, modelSettings));

@@ -72,7 +72,7 @@ readFile <- function(fileName) {
 
 plotToSvg <- function(plotFn) {
   prefix <- tempfile()
-  svgName <- paste(prefix, '-%d.svg', sep='')
+  svgName <- paste(prefix, '-%05d.svg', sep='')
   svg(svgName)
   plotFn()
   dev.off()
@@ -88,7 +88,7 @@ plotToSvg <- function(plotFn) {
 
 plotToPng <- function(plotFn) {
   prefix <- tempfile()
-  pngName <- paste(prefix, '-%d.png', sep='')
+  pngName <- paste(prefix, '-%05d.png', sep='')
   png(pngName)
   plotFn()
   dev.off()
@@ -103,8 +103,9 @@ plotToPng <- function(plotFn) {
 }
 
 gemtc <- function(params) {
-  iter.adapt <- 5000
-  iter.infer <- 20000
+  iter.adapt <- params[['burnInIterations']]
+  iter.infer <- params[['inferenceIterations']]
+  thin <- params[['thinningFactor']]
   progress.start <- 0
   progress.jags <- 80
 
@@ -159,7 +160,7 @@ gemtc <- function(params) {
   network <- mtc.network(data.ab=data.ab, treatments=treatments)
   model <- mtc.model(network, linearModel=linearModel)
   update(list(progress=0))
-  result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer)
+  result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer, thin=thin)
 
   treatmentIds <- as.character(network[['treatments']][['id']])
   comps <- combn(treatmentIds, 2)
@@ -213,6 +214,9 @@ gemtc <- function(params) {
   summary[['likelihood']] <- model[['likelihood']]
   summary[['type']] <- model[['type']]
   summary[['linearModel']] <- model[['linearModel']]
+  summary[['burnInIterations']] <- params[['burnInIterations']]
+  summary[['inferenceIterations']] <- params[['inferenceIterations']]
+  summary[['thinningFactor']] <- params[['thinningFactor']]
   summary[['relativeEffects']] <- releffect
   summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
   summary[['alternatives']] <- names(summary[['rankProbabilities']])

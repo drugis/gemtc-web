@@ -1,6 +1,7 @@
 define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
   describe('the add analysisController', function() {
-    var scope, analysisResource, state, modalInstance, saveDefer, mockSaveResult,
+    var scope, analysisResource, state, modalInstance,
+    saveDefer, mockSaveResult,
     problemValidityService, csvParseService, fileUploadService;
 
     beforeEach(module('gemtc.analyses'));

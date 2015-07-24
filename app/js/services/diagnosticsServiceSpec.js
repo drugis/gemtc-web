@@ -53,17 +53,17 @@ define(['angular', 'angular-mocks', 'services'], function() {
 
         var expected = {
           "d.2.3": {
-            label: "d.2.3 (Fluoxetine - Paroxetine)",
+            label: "d.2.3 (Fluoxetine, Paroxetine)",
             "Point est.": 1.0004,
             "Upper C.I.": 1.0011
           },
           "d.2.4": {
-            label: "d.2.4 (Fluoxetine - Venlafaxine)",
+            label: "d.2.4 (Fluoxetine, Venlafaxine)",
             "Point est.": 1.0005,
             "Upper C.I.": 1.0017
           },
           "d.2.5": {
-            label: "d.2.5 (Fluoxetine - Sertraline)",
+            label: "d.2.5 (Fluoxetine, Sertraline)",
             "Point est.": 1.0002,
             "Upper C.I.": 1.0005
           },
