@@ -74,8 +74,59 @@
             </table>
           </div>
         </div>
+        <div class="row">
+          <div class="columns">
+            <div class="row">
+              <div class="columns large-4 small-6">
+                <p><strong>Convergence diagnostics</strong></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns large-8 medium-6 small-12">
+                <table>
+                  <thead>
+                    <tr>
+                      <td colspan="3"></td>
+                      <td colspan="2">Potential scale reduction factor (PSRF)</td>
+                    </tr>
+                    <tr>
+                      <td>Parameter</td>
+                      <td>Mean</td>
+                      <td>Time-series S.E.</td>
+                      <td>Point estimate</td>
+                      <td>97.5% quantile</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="(key, diagnostic) in gelmanDiagnostics">
+                      <td>{{diagnostic.label}}</td>
+                      <td>{{result.results.summaries.statistics[key].Mean}}</td>
+                      <td>{{result.results.summaries.statistics[key]['Time-series SE']}}</td>
+                      <td>{{diagnostic['Point est.']}}</td>
+                      <td>{{diagnostic['Upper C.I.']}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()">Show diagnostics plots</button>
+                <button ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()">Hide diagnostics plots</button>
+              </div>
+            </div>
+            <div class="row" ng-show="isConvergencePlotsShown">
+              <div class="columns large-6 medium-6 small-12">
+                <p><strong>Time series plots</strong></p>
+                <paged-png-plot pages="result.results.tracePlot"></paged-png-plot>
+              </div>
+            </div>
+            <div class="row"  ng-show="isConvergencePlotsShown">
+              <div class="columns large-6 medium-6 small-12">
+                <p><strong>PSRF plots</strong></p>
+                <paged-png-plot pages="result.results.gelmanPlot"></paged-png-plot>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row" ng-if="model.modelType.type === 'network'">
-          <div class="columns" >
+          <div class="columns">
             <div class="row">
               <div class="columns large-6 small-8">
                 <p><strong>Relative effects plots</strong></p>
@@ -85,10 +136,18 @@
               </div>
             </div>
             <div class="row">
-              <div class="columns center" >
-                <div ng-bind-html="result.results.relativeEffectPlots[selectedBaseline][selectedPage]"></div>
-                <a class="previous" ng-click="showPreviousSVGPage()"><i ng-if="selectedPage > 0" class="fa fa-caret-left" style="font-size:3em;"></i></a>
-                <a class="next" ng-click="showNextSVGPage()"><i ng-if="selectedPage < result.results.relativeEffectPlots[selectedBaseline].length - 1" class="fa fa-caret-right" style="font-size:3em;"></i></a>
+              <div class="columns center">
+                <paged-svg-plot pages="result.results.relativeEffectPlots[selectedBaseline]"></paged-svg-plot>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-if="model.modelType.type === 'pairwise'">
+          <div class="columns">
+            <div class="row">
+              <div class="columns large-6 small-8">
+                <p><strong>Study effect forest plot</strong></p>
+                <paged-svg-plot pages="result.results.studyForestPlot"></paged-svg-plot>
               </div>
             </div>
           </div>

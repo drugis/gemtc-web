@@ -1,3 +1,7 @@
+library(RJSONIO)
+library(gemtc)
+library(base64enc)
+
 # Not ready for inclusion in R package:
 #  - only works for arm-based data
 #  - computes continuity corrections even if not necessary
@@ -82,6 +86,22 @@ plotToSvg <- function(plotFn) {
   })
 }
 
+plotToPng <- function(plotFn) {
+  prefix <- tempfile()
+  pngName <- paste(prefix, '-%d.png', sep='')
+  png(pngName)
+  plotFn()
+  dev.off()
+
+  # read & delete plot files
+  filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
+  lapply (filenames, function(filename) {
+    contents <- paste0("data:image/png;base64,", base64encode(filename))
+    file.remove(filename)
+    contents
+  })
+}
+
 gemtc <- function(params) {
   iter.adapt <- 5000
   iter.infer <- 20000
@@ -151,16 +171,37 @@ gemtc <- function(params) {
     list(t1=comp[1], t2=comp[2], quantiles=q)
   })
 
-  #create forest plot files
-  forestPlots <- lapply(treatmentIds, function(treatmentId) {
-    plotToSvg(function() {
-      treatmentN <- which(treatmentIds == treatmentId)
-      progress <- 85 + treatmentN * 10 / length(treatmentIds)
-      update(list(progress=progress))
-      forest(relative.effect(result, treatmentId), use.description=TRUE)
+
+  #create forest plot files for network analyses
+  if(params[['modelType']][['type']] == "network") {
+    forestPlots <- lapply(treatmentIds, function(treatmentId) {
+      plotToSvg(function() {
+        treatmentN <- which(treatmentIds == treatmentId)
+        progress <- 85 + treatmentN * 10 / length(treatmentIds)
+        update(list(progress=progress))
+        forest(relative.effect(result, treatmentId), use.description=TRUE)
+      })
     })
+    names(forestPlots) <- treatmentIds
+  }
+
+  # create forest plot for pairwise analysis
+  if(params[['modelType']][['type']] == "pairwise") {
+    forestPlot <- plotToSvg(function() {
+      pwforest(result, t1, t2)
+    })
+  }
+
+  #create results plot
+  tracePlot <- plotToPng(function() {
+    plot(result, auto.layout=FALSE)
   })
-  names(forestPlots) <- treatmentIds
+
+  #create gelman plot
+  gelmanPlot <- plotToPng(function() {
+    gelman.plot(result, auto.layout=FALSE, ask=FALSE)
+  })
+
 
   update(list(progress=95))
 
@@ -175,7 +216,16 @@ gemtc <- function(params) {
   summary[['relativeEffects']] <- releffect
   summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
   summary[['alternatives']] <- names(summary[['rankProbabilities']])
-  summary[['relativeEffectPlots']] <- forestPlots
+  if(params[['modelType']][['type']] == "network") {
+    summary[['relativeEffectPlots']] <- forestPlots
+  }
+  if(params[['modelType']][['type']] == "pairwise") {
+    summary[['studyForestPlot']] <- forestPlot
+  }
+  summary[['tracePlot']] <- tracePlot
+  summary[['gelmanPlot']] <- gelmanPlot
+  summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
+
   update(list(progress=100))
   summary
 }
