@@ -22,7 +22,12 @@ define(['lodash'], function(_) {
     };
     $scope.createModel = createModel;
     $scope.isAddButtonDisabled = isAddButtonDisabled;
+    $scope.isRunlengthDivisibleByThinningFactor = isRunlengthDivisibleByThinningFactor;
 
+    function isRunlengthDivisibleByThinningFactor() {
+      return $scope.model.burnInIterations % $scope.model.thinningFactor === 0 &&
+             $scope.model.inferenceIterations % $scope.model.thinningFactor === 0;
+    }
 
     function isAddButtonDisabled(model) {
       return !model ||
@@ -30,6 +35,7 @@ define(['lodash'], function(_) {
         !model.burnInIterations ||
         !model.inferenceIterations ||
         !model.thinningFactor ||
+        !isRunlengthDivisibleByThinningFactor() ||
         !!$scope.isAddingModel;
     }
 
