@@ -7,11 +7,15 @@ define(function (require) {
   return angular.module('gemtc.models', dependencies)
   	// controllers
   	.controller('ModelsController', require('models/modelsController'))
-  	.controller('AddModelController', require('models/addModelController'))
     .controller('StandAloneModelContainerController', require('models/standAloneModelContainerController'))
+    .controller('CreateModelController', require('models/createModelController'))
+
 
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
     .factory('ProblemResource', require('models/standaloneProblemResource'))
+    .factory('AnalysisResource', require('analyses/analysisResource'))
+
+    .directive('gemtcRankPlot',require('models/rankPlotDirective'))
     ;
 });

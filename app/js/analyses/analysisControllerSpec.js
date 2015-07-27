@@ -1,30 +1,36 @@
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('the analysisController', function() {
-    var scope, analysesResource, stateParamsMock;
+    var scope, analysisResource, stateParamsMock, networkPlotService;
 
     beforeEach(module('gemtc.analyses'));
 
     beforeEach(inject(function($rootScope, $controller, $q) {
       scope = $rootScope;
 
+      // we all have one 
+      scope.$parent = {};
+
       var analyisMock = 'analysisMock';
       stateParamsMock = {
         analyisId: -1
       }
+      networkPlotService = jasmine.createSpyObj('NetworkPlotService', ['bla']);
 
-      analysesResource = jasmine.createSpyObj('AnalysesResource', ['get']);
-      analysesResource.get.and.returnValue(analyisMock);
+      analysisResource = jasmine.createSpyObj('AnalysisResource', ['get']);
+      analysisResource.get.and.returnValue(analyisMock);
 
       $controller('AnalysisController', {
         $scope: scope,
         $stateParams: stateParamsMock,
-        AnalysesResource: analysesResource
+        AnalysisResource: analysisResource,
+        NetworkPlotService: networkPlotService
       });
     }));
 
     describe('when first initialised', function() {
       it('should load the analyis', function() {
-        expect(analysesResource.get).toHaveBeenCalledWith(stateParamsMock);
+        expect(analysisResource.get).toHaveBeenCalled();
+
       });
     });
 

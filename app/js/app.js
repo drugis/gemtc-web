@@ -10,8 +10,6 @@ define(
     'ngSanitize',
     'controllers',
     'constants',
-    'directives',
-    // 'resources',
     'services',
     'analyses/analyses',
     'models/models',
@@ -26,10 +24,8 @@ define(
       'mm.foundation.tpls',
       'mm.foundation.modal',
       'gemtc.controllers',
-      // 'gemtc.resources',
       'gemtc.constants',
       'gemtc.services',
-      'gemtc.directives',
       'gemtc.analyses',
       'gemtc.models',
       'gemtc.util',
@@ -94,14 +90,28 @@ define(
               'models': {
                 templateUrl: '/js/models/models.html',
                 controller: 'ModelsController'
+              },
+              'networkGraph': {
+                templateUrl: '/js/analyses/networkGraph.html',
+                controller: 'NetworkGraphController'
+              },
+              'evidenceTable': {
+                templateUrl: '/js/analyses/evidenceTable.html',
+                controller: 'EvidenceTableController'
               }
             }
+          })
+          .state('createModel', {
+            url: '/analyses/:analysisId/models/createModel',
+            templateUrl: 'js/models/createModel.html',
+            controller: 'CreateModelController'
           })
           .state('standalone-model-container', {
             templateUrl: 'js/models/standalone-model-container.html',
             controller: 'StandAloneModelContainerController'
           })
-          .state('standalone-model-container.model', {
+          .state('model', {
+            parent: 'standalone-model-container',
             url: '/analyses/:analysisId/models/:modelId',
             templateUrl: 'views/modelView.html',
             controller: 'ModelController'

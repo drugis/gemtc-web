@@ -1,10 +1,12 @@
 'use strict';
-define([], function() {
-  var dependencies = ['$scope', '$stateParams', '$modal', 'ModelResource'];
-  var ModelsController = function($scope, $stateParams, $modal, ModelResource) {
+define(['lodash'], function(_) {
+  var dependencies = ['$scope', '$state', '$stateParams', 'ModelResource'];
+  var ModelsController = function($scope, $state, $stateParams, ModelResource) {
     $scope.modelsLoaded = false;
     $scope.analysisId = $stateParams.analysisId;
-
+    $scope.modelParams = function(model) {
+      return _.extend($stateParams, {modelId: model.id});
+    }
     $scope.loadModels = function() {
       $scope.models = ModelResource.query($stateParams, function(result) {
         $scope.modelsLoaded = true;
@@ -12,18 +14,8 @@ define([], function() {
     }
     $scope.loadModels();
 
-    $scope.createModelDialog = function() {
-      $modal.open({
-        templateUrl: './js/models/addModel.html',
-        scope: $scope,
-        controller: 'AddModelController'
-      });
-    };
-
-    $scope.isAddButtonDisabled = function(model) {
-      return !model ||
-        !model.title ||
-        !!$scope.isAddingModel;
+    $scope.gotoCreateModel = function() {
+      $state.go('createModel', $stateParams);
     }
 
   }

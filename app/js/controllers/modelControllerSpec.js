@@ -1,12 +1,16 @@
 define(['angular', 'angular-mocks', 'controllers'], function() {
   describe('the modelController', function() {
-    var scope, modelResource,
+    var scope,
+      analysisResource,
+      modelResource,
       problemResource,
       pataviTaskIdResource,
       mockStateParams = {
         analysisId: 1,
         projectId: 11
       },
+      analysisDeferred,
+      mockAnalysis,
       modelDeferred,
       mockModel,
       problemDeferred,
@@ -15,7 +19,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviResult,
       pataviResultDeferred,
       pataviService,
-      relativeEffectsTableService;
+      relativeEffectsTableService,
+      diagnosticsService;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -29,6 +34,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       modelDeferred = $q.defer();
       mockModel = {
         $promise: modelDeferred.promise
+      };
+      analysisDeferred = $q.defer();
+      mockAnalysis = {
+        $promise: analysisDeferred.promise
       };
       problemDeferred = $q.defer();
       mockProblem = {
@@ -47,6 +56,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         },
         logScale: true
       };
+      analysisResource = jasmine.createSpyObj('AnalysisResource', ['get']);
+      analysisResource.get.and.returnValue(mockAnalysis);
       modelResource = jasmine.createSpyObj('ModelResource', ['get']);
       modelResource.get.and.returnValue(mockModel);
       problemResource = jasmine.createSpyObj('ProblemResource', ['get']);
@@ -56,6 +67,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService = jasmine.createSpyObj('PataviService', ['run']);
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
+      diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics'])
 
       $controller('ModelController', {
         $scope: scope,
@@ -64,13 +76,32 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         ProblemResource: problemResource,
         PataviService: pataviService,
         PataviTaskIdResource: pataviTaskIdResource,
-        RelativeEffectsTableService: relativeEffectsTableService
+        RelativeEffectsTableService: relativeEffectsTableService,
+        AnalysisResource: analysisResource,
+        DiagnosticsService: diagnosticsService
       });
     }));
 
     describe('when first initialised', function() {
       it('should attempt to load the model', function() {
         expect(modelResource.get).toHaveBeenCalledWith(mockStateParams);
+      });
+      it('should set convergence plots to hidden', function() {
+        expect(scope.isConvergencePlotsShown).toBe(false);
+      });
+      it('should make hideConvergencePlots available on the scope', function() {
+        expect(scope.hideConvergencePlots).toBeDefined();
+      });
+      it('should make showConvergencePlots available on the scope', function() {
+        expect(scope.showConvergencePlots).toBeDefined();
+      });
+      it('hideConvergencePlots should set convergence plots to hidden', function() {
+        scope.hideConvergencePlots();
+        expect(scope.isConvergencePlotsShown).toBe(false);
+      });
+      it('hideConvergencePlots should set convergence plots to shown', function() {
+        scope.showConvergencePlots();
+        expect(scope.isConvergencePlotsShown).toBe(true);
       });
     });
 
@@ -114,6 +145,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
 
             it('the relativeEffectsTable should be constructed', inject(function() {
               expect(relativeEffectsTableService.buildTable).toHaveBeenCalled();
+            }));
+
+            it('the gelman diagnostics should be labelled', inject(function() {
+              expect(diagnosticsService.labelDiagnostics).toHaveBeenCalled();
             }));
           });
         });

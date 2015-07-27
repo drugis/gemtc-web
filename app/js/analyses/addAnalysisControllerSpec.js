@@ -1,6 +1,7 @@
 define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
   describe('the add analysisController', function() {
-    var scope, analysesResource, state, modalInstance, saveDefer, mockSaveResult,
+    var scope, analysisResource, state, modalInstance,
+    saveDefer, mockSaveResult,
     problemValidityService, csvParseService, fileUploadService;
 
     beforeEach(module('gemtc.analyses'));
@@ -15,8 +16,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       saveDefer = $q.defer();
       mockSaveResult = {id: -1};
       mockSaveResult.$promise = saveDefer.promise;
-      analysesResource = jasmine.createSpyObj('AnalysesResource', ['save']);
-      analysesResource.save.and.returnValue(mockSaveResult);
+      analysisResource = jasmine.createSpyObj('AnalysisResource', ['save']);
+      analysisResource.save.and.returnValue(mockSaveResult);
 
       problemValidityService = jasmine.createSpyObj('problemValidityService', ['getValidity']);
       csvParseService = jasmine.createSpyObj('csvParseService', ['parse']);
@@ -25,7 +26,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       $controller('AddAnalysisController', {
         $scope: scope,
         $location: locationMock,
-        AnalysesResource: analysesResource,
+        AnalysisResource: analysisResource,
         $modalInstance: modalInstance,
         ProblemValidityService: problemValidityService,
         CSVParseService: csvParseService,
@@ -53,7 +54,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
       it('should save the analysis, close the modal and redirect to the analysis view', function() {
         expect(scope.isAddingAnalysis).toBe(true);
-        expect(analysesResource.save).toHaveBeenCalledWith(analysis, jasmine.any(Function));
+        expect(analysisResource.save).toHaveBeenCalledWith(analysis, jasmine.any(Function));
       });
     });
 

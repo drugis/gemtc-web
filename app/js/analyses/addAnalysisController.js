@@ -1,16 +1,19 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$http', '$scope', '$location', 'AnalysesResource', 'ModelResource',
-    '$modalInstance', 'FileUploadService'];
-  var AddAnalysisController = function($http, $scope, $location, AnalysesResource, ModelResource,
+  var dependencies = ['$http', '$scope', '$location', 'AnalysisResource', 'ModelResource',
+    '$modalInstance', 'FileUploadService'
+  ];
+  var AddAnalysisController = function($http, $scope, $location, AnalysisResource, ModelResource,
     $modalInstance, FileUploadService) {
 
-    $scope.analysis = {};
+    $scope.analysis = {
+      outcome: {}
+    };
     $scope.problemFile = {};
 
     $scope.addAnalysis = function(analysis) {
       $scope.isAddingAnalysis = true;
-      AnalysesResource.save(analysis, function(result, headers) {
+      AnalysisResource.save(analysis, function(result, headers) {
         $modalInstance.close();
         $scope.isAddingAnalysis = false;
         $location.url(headers().location);
