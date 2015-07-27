@@ -1,0 +1,40 @@
+<div class="row">
+	<div class="columns large-12">
+		<h5>Evidence table</h5>
+		<table class="network-meta-analysis-table">
+			<thead>
+				<tr>
+					<th class="large-3">Study</th>
+					<th class="large-3">Treatment</th>
+					<th ng-show="outcomeType === 'dichotomous'" class="large-2">Rate</th>
+					<th ng-show="outcomeType === 'continuous'" class="large-1">&mu;</th>
+					<th ng-show="outcomeType === 'continuous'" class="large-1">&sigma;</th>
+					<th  class="large-1">N</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="treatment in tableRows">
+					<td rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}" style="vertical-align: top;">
+						{{treatment.studyTitle}}
+					</td>
+					<td >
+						{{treatment.treatmentTitle}}
+					</td>
+					<td ng-show="outcomeType === 'dichotomous'">
+						{{treatment.evidence.responders}}
+					</td>
+					<td ng-show="outcomeType === 'continuous'">
+						{{treatment.evidence.mean}}
+					</td>
+					<td ng-show="outcomeType === 'continuous'">
+						{{treatment.evidence.stdDev}}
+					</td>
+					<td >
+						{{treatment.evidence.sampleSize}}
+					</td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

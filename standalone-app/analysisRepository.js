@@ -1,5 +1,7 @@
-var logger = require('./logger');
-var db = require('./db');
+var
+  logger = require('./logger'),
+  dbUtil = require('./dbUtil'),
+  db = require('./db')(dbUtil.buildGemtcDBUrl());
 
 module.exports = {
   get: getAnalysis,
@@ -18,7 +20,8 @@ function getAnalysis(analysisId, callback) {
 
 function queryAnalyses(ownerAccountId, callback) {
   logger.debug('get analyses for owner ' + ownerAccountId);
-  db.query('SELECT * FROM analysis WHERE OWNER=$1', [ownerAccountId], function(error, result) {
+  db.query('SELECT id, owner, title, problem, outcome FROM analysis WHERE OWNER=$1', 
+    [ownerAccountId], function(error, result) {
     if (error) {
       logger.error('error at db.query, error: ' + error);
     }
@@ -27,7 +30,8 @@ function queryAnalyses(ownerAccountId, callback) {
 }
 
 function createAnalysis(ownerAccountId, newAnalysis, callback) {
-  db.query('INSERT INTO analysis (title, outcome, problem, owner) VALUES($1, $2, $3, $4) RETURNING id', [newAnalysis.title,
+  db.query('INSERT INTO analysis (title, outcome, problem, owner) VALUES($1, $2, $3, $4) RETURNING id', 
+    [newAnalysis.title,
     newAnalysis.outcome,
     newAnalysis.problem,
     ownerAccountId

@@ -1,11 +1,11 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', '$modal', 'AnalysesResource'];
-  var ModelController = function($scope, $modal, AnalysesResource) {
+  var dependencies = ['$scope', '$modal', 'AnalysisResource'];
+  var ModelController = function($scope, $modal, AnalysisResource) {
     $scope.analysesLoaded = false;
 
     function loadAnalyses() {
-      $scope.analyses = AnalysesResource.query(function(result) {
+      $scope.analyses = AnalysisResource.query(function(result) {
         $scope.analysesLoaded = true;
       });
     }

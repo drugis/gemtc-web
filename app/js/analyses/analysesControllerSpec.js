@@ -1,6 +1,6 @@
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('the analysesController', function() {
-    var scope, analysesResource , modal;
+    var scope, analysisResource , modal;
 
     beforeEach(module('gemtc.analyses'));
 
@@ -11,13 +11,13 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
       modal = jasmine.createSpyObj('modal', ['open']);
 
-      analysesResource = jasmine.createSpyObj('AnalysesResource', ['query']);
-      analysesResource.query.and.returnValue(analysesMock);
+      analysisResource = jasmine.createSpyObj('AnalysisResource', ['query']);
+      analysisResource.query.and.returnValue(analysesMock);
 
       $controller('AnalysesController', {
         $scope: scope,
         $modal: modal,
-        AnalysesResource: analysesResource
+        AnalysisResource: analysisResource
       });
     }));
 
@@ -27,21 +27,21 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
 
       it('should load the analyes', function() {
-        expect(analysesResource.query).toHaveBeenCalled();
+        expect(analysisResource.query).toHaveBeenCalled();
       });
 
-      it('should place createDatasetDialog on the scope', function() {
-        expect(scope.createDatasetDialog).toBeDefined();
+      it('should place createAnalysisDialog on the scope', function() {
+        expect(scope.createAnalysisDialog).toBeDefined();
       });
 
       it('should place isAddButtonDisabled on the scope', function() {
-        expect(scope.createDatasetDialog).toBeDefined();
+        expect(scope.isAddButtonDisabled).toBeDefined();
       });
     });
 
-    describe('when createDatasetDialog isCalled', function() {
+    describe('when createAnalysisDialog isCalled', function() {
       beforeEach(function(){
-        scope.createDatasetDialog();
+        scope.createAnalysisDialog();
       })
       it('should open the dialog', function() {
         expect(modal.open).toHaveBeenCalled();

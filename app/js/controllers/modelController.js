@@ -1,18 +1,47 @@
 'use strict';
 define(['lodash'], function() {
-  var dependencies = ['$scope', '$stateParams', 'ModelResource', 'PataviService',
-    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource'
-  ];
-  var ModelController = function($scope, $stateParams, ModelResource, PataviService,
-    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource) {
+  var dependencies = ['$scope', '$sce', '$stateParams', 'ModelResource', 'PataviService',
+    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
+    'DiagnosticsService'
+    ];
+  var ModelController = function($scope, $sce, $stateParams, ModelResource, PataviService,
+    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService) {
+
+    $scope.analysis = AnalysisResource.get($stateParams);
+    $scope.progress = {
+      percentage: 0
+    };
+    $scope.model = ModelResource.get($stateParams);
+    $scope.$parent.model = $scope.model;
+    $scope.isConvergencePlotsShown = false;
+    $scope.showConvergencePlots = showConvergencePlots;
+    $scope.hideConvergencePlots = hideConvergencePlots;
+
+    $scope.model
+      .$promise
+      .then(getTaskId)
+      .then(PataviService.run)
+      .then(successCallback,
+        function(error) {
+          console.log('an error has occurred, error: ' + JSON.stringify(error));
+        },
+        function(update) {
+          if (update && $.isNumeric(update.progress)) {
+            $scope.progress.percentage = update.progress;
+          }
+        });
 
     function getTaskId() {
       return PataviTaskIdResource.get($stateParams);
     }
 
-    $scope.progress = {
-      percentage: 0
-    };
+    function showConvergencePlots() {
+      $scope.isConvergencePlotsShown = true;
+    }
+
+    function hideConvergencePlots() {
+      $scope.isConvergencePlotsShown = false;
+    }
 
     function nameRankProbabilities(rankProbabilities, treatments) {
       return _.reduce(_.pairs(rankProbabilities), function(memo, pair) {
@@ -29,30 +58,16 @@ define(['lodash'], function() {
         analysisId: $stateParams.analysisId,
         projectId: $stateParams.projectId
       }).$promise.then(function(problem) {
-        $scope.outcome = $scope.$parent.analysis.outcome;
+        $scope.problem = problem;
         result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
         $scope.result = result;
         var relativeEffects = result.results.relativeEffects;
         var isLogScale = result.results.logScale;
         $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+        $scope.gelmanDiagnostics = DiagnosticsService.labelDiagnostics(result.results.gelmanDiagnostics, $scope.problem.treatments)
       });
     }
 
-
-
-    $scope.model = ModelResource.get($stateParams);
-    $scope.$parent.model = $scope.model;
-    $scope.model
-      .$promise
-      .then(PataviService.run)
-      .then(successCallback,
-        function(error) {
-          console.log('an error has occurred, error: ' + JSON.stringify(error));
-        }, function(update) {
-          if (update && $.isNumeric(update.progress)) {
-            $scope.progress.percentage = update.progress;
-          }
-        });
 
 
   };

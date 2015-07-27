@@ -1,23 +1,24 @@
-<h3>models</h3>
-
-<div ng-show="!modelsLoaded" class="row">
-    <div class="columns center large-12">
-      <i class="fa fa-spinner fa-spin fa-3x"></i>
-      <p>Loading models...</p>
+<div class="row">
+  <div class="columns large-12">
+    <h5>Models</h5>
+    <div ng-show="!modelsLoaded" class="row">
+      <div class="columns center large-12">
+        <i class="fa fa-spinner fa-spin fa-3x"></i>
+        <p>Loading models...</p>
+      </div>
     </div>
+  </div>
 </div>
-
 <div class="row" ng-show="modelsLoaded">
-    <div class="columns large-12">
-      <button id="add-model-btn" ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="createModelDialog()"><i class="fa fa-plus"></i> Add new model</button>
-    </div>
-    <div class="columns large-12">
-      <em ng-show="models.length === 0">No models have been created</em>
-      <ul ng-show="models.length > 0">
-        <li ng-repeat="model in models">
-          <a ui-sref="standalone-model-container.model({analysisId: analysisId, modelId: model.id})">{{model.title}}</a>
-        </li>
-      </ul>
-    </div>
-    </div>
+  <div class="columns large-12">
+    <button id="add-model-btn" ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add new model</button>
+  </div>
+  <div class="columns large-12">
+    <em ng-show="models.length === 0">No models have been created</em>
+    <ul ng-show="models.length > 0">
+      <li ng-repeat="model in models">
+        <a ui-sref="model(modelParams(model))">{{model.title}}</a>
+      </li>
+    </ul>
+  </div>
 </div>

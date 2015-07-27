@@ -1,5 +1,6 @@
 var logger = require('./logger');
-var db = require('./db');
+var dbUtil = require('./dbUtil');
+var db = require('./db')(dbUtil.buildPataviDBUrl());
 
 module.exports = {
   get: getPataviTask,
@@ -16,9 +17,9 @@ function getPataviTask(modelId, callback) {
   });
 }
 
-function createPataviTask(modelId, problem, callback) {
-  db.query("INSERT INTO patavitask (modelId, problem, method) VALUES($1, $2, 'gemtc') RETURNING id", [
-    modelId,
+function createPataviTask(problem, callback) {
+  logger.debug('pataviTaskRepository.createPataviTask');
+  db.query("INSERT INTO patavitask (problem, method) VALUES($1, 'gemtc') RETURNING id", [
     problem
   ], function(error, result) {
     if (error) {

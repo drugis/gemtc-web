@@ -1,8 +1,8 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', '$stateParams', 'ModelResource'];
-  var StandAloneModelContainerController = function($scope, $stateParams, ModelResource) {
-    // $scope.model = ModelResource.get($stateParams);
+  var dependencies = ['$scope', '$stateParams', 'AnalysisResource'];
+  var StandAloneModelContainerController = function($scope, $stateParams, AnalysisResource) {
+  //	$scope.analysis = AnalysisResource.get({analysisId: $stateParams.analysisId});
   }
   return dependencies.concat(StandAloneModelContainerController);
 });
