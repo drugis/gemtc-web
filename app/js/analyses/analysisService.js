@@ -88,11 +88,64 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
+    function countRandomEffects(entries) {
+      // sum of number of arms minus number of studies
+      var studies = _.uniq(entries, function(entry) {
+        return entry.study;
+      });
+      return entries.length - studies.length;
+    }
+
+    function filterPairwiseTreatments(treatments, fromName, toName) {
+      return _.filter(treatments, function(treatment) {
+        return treatment.name === fromName || treatment.name === toName;
+      });
+    }
+
+    function filterPairwiseEntries(entries, treatments) {
+      return _.filter(entries, function(entry) {
+        return entry.treatment === treatments[0].id ||
+          entry.treatment === treatments[1].id;
+      });
+    }
+
+    function reduceToPairwiseProblem(problem, details) {
+      problem.treatments = filterPairwiseTreatments(problem.treatments, details.from, details.to);
+      problem.entries = filterPairwiseEntries(problem.entries, problem.treatments);
+      return problem;
+    }
+
+    function estimateRunLength(problem, model) {
+      var theProblem;
+      if (model.modelType.type === 'pairwise') {
+        theProblem = reduceToPairwiseProblem(problem,
+          model.modelType.details)
+      } else if (model.modelType.type === 'network') {
+        theProblem = problem;
+      }
+      var nTreatments = problem.treatments.length;
+      var nRandomEffects = countRandomEffects(problem.entries);
+      var nStochasticVariables = nRandomEffects + nTreatments + 1;
+      var nMonitoredVariables = nTreatments + 1;
+      var fromMills = 0.001;
+      var actualIterations = model.inferenceIterations / model.thinningFactor;
+
+      var sampleTime = 0.032 * nStochasticVariables * fromMills * (model.burnInIterations + model.inferenceIterations);
+      var summaryTime = 0.0075 * nMonitoredVariables * fromMills * actualIterations;
+      var relativeEffectTime = 0.0075 * nTreatments * (nTreatments - 1) / 2 * fromMills * actualIterations;
+      var relativeEffectPlotsTime = 0.0075 * nTreatments * (nTreatments - 1) * fromMills * actualIterations;
+      var forestPlotTime = 0.1;
+      var psrfPlotsTime = (0.04 + 0.007 * nMonitoredVariables) * fromMills * actualIterations;
+      var tracePlotsTime = 0.062 * nMonitoredVariables * fromMills * actualIterations;
+      return sampleTime + summaryTime + relativeEffectTime + relativeEffectPlotsTime + forestPlotTime + psrfPlotsTime + tracePlotsTime;
+    }
+
     return {
       transformProblemToNetwork: transformProblemToNetwork,
       problemToStudyMap: problemToStudyMap,
       createPairwiseOptions: createPairwiseOptions,
-      generateEdges: generateEdges
+      generateEdges: generateEdges,
+      estimateRunLength: estimateRunLength
     };
 
   };

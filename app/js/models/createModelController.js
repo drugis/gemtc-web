@@ -1,9 +1,10 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state',
-    'ModelResource', 'AnalysisService', 'ProblemResource'];
+    'ModelResource', 'AnalysisService', 'ProblemResource'
+  ];
   var CreateModelController = function($scope, $q, $stateParams, $state,
-   ModelResource, AnalysisService, ProblemResource) {
+    ModelResource, AnalysisService, ProblemResource) {
 
     var problemDefer = ProblemResource.get($stateParams);
 
@@ -20,13 +21,30 @@ define(['lodash'], function(_) {
       inferenceIterations: 20000,
       thinningFactor: 10
     };
+    $scope.isTaskTooLong = false;
     $scope.createModel = createModel;
     $scope.isAddButtonDisabled = isAddButtonDisabled;
     $scope.isRunlengthDivisibleByThinningFactor = isRunlengthDivisibleByThinningFactor;
+    $scope.checkRunLength = checkRunLength
+
+    checkRunLength();
+
+    function checkRunLength() {
+      problemDefer.$promise.then(function(problem) {
+        if ($scope.model.modelType.type === 'all-pairwise') {
+          var modelBatch = createModelBatch($scope.model);
+          $scope.estimatedRunLength = _.max(modelBatch, function(model) {
+            return AnalysisService.estimateRunLength(problemDefer, model);
+          });
+        } else {
+          $scope.estimatedRunLength = AnalysisService.estimateRunLength(problemDefer, $scope.model);
+        }
+      });
+    }
 
     function isRunlengthDivisibleByThinningFactor() {
       return $scope.model.burnInIterations % $scope.model.thinningFactor === 0 &&
-             $scope.model.inferenceIterations % $scope.model.thinningFactor === 0;
+        $scope.model.inferenceIterations % $scope.model.thinningFactor === 0;
     }
 
     function isAddButtonDisabled(model) {
@@ -45,7 +63,11 @@ define(['lodash'], function(_) {
           title: modelBase.title + ' (' + comparisonOption.from.name + ' - ' + comparisonOption.to.name + ')',
           linearModel: modelBase.linearModel,
           modelType: {
-            type: 'pairwise'
+            type: 'pairwise',
+            details: {
+              from: comparisonOption.from.name,
+              to: comparisonOption.to.name
+            }
           },
           pairwiseComparison: comparisonOption
         };
@@ -67,7 +89,9 @@ define(['lodash'], function(_) {
         createAndPostModel(model, function(result, headers) {
           $scope.isAddingModel = false;
           // Call to replace is needed to have backbutton skip the createModel view when going back from the model View
-          $state.go('model', _.extend($stateParams, {modelId: result.id}));
+          $state.go('model', _.extend($stateParams, {
+            modelId: result.id
+          }));
         });
       }
     }

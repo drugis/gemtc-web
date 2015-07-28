@@ -5,7 +5,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       problemDefer,
       pairwiseOptionsDefer,
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
-      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['createPairwiseOptions']),
+      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['createPairwiseOptions', 'estimateRunLength']),
       problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get']);
 
     beforeEach(module('gemtc.models'));

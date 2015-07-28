@@ -50,12 +50,18 @@
         </div>
       </div>
       <div class="row section">
-        <div class="large-4 small-12 columns">
+        <div class="large-3 medium-6 small-12 columns">
           <label class="form-item-header">Run-length parameters</label>
-          <label>Number of burn-in iterations<input type="number" min="1" step="1" ng-model="model.burnInIterations"></label>
-          <label>Number of inference iterations<input type="number" min="1" step="1" ng-model="model.inferenceIterations"></label>
-          <label>Thinning factor<input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*"></label>
-          <span class="alert" ng-show='!isRunlengthDivisibleByThinningFactor()'>The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions</span>
+          <label>Number of burn-in iterations<input type="number" min="1" step="1" ng-model="model.burnInIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()"></label>
+          <label>Number of inference iterations<input type="number" min="1" step="1" ng-model="model.inferenceIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()"></label>
+          <label>Thinning factor<input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()"></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="columns large-6 medium-8 small-12">
+          <div>Estimated run length: {{estimatedRunLength}}</div>
+          <div class="alert" ng-show='!isRunlengthDivisibleByThinningFactor()'>The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions. </div>
+          <div class="alert" ng-show='isTaskTooLong'>This task will take too long (over 5 minutes). Please reduce the number of iterations or increase the thinning factor.</div>
         </div>
       </div>
       <div class="row bottom-button-bar">

@@ -79,9 +79,9 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       }));
 
       it('generate a map of studies with arms', function() {
-        expect(studyMap['Study1']).toBeDefined();
-        expect(studyMap['Study1'].arms['Treatment1']).toBeDefined();
-        expect(studyMap['Study1'].arms['Treatment2']).toBeDefined();
+        expect(studyMap.Study1).toBeDefined();
+        expect(studyMap.Study1.arms.Treatment1).toBeDefined();
+        expect(studyMap.Study1.arms.Treatment2).toBeDefined();
 
         expect(studyMap).toEqual(expextedStudyMap);
       });
@@ -211,6 +211,123 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         options.then(function(resolvedOptions) {
           expect(resolvedOptions.length).toBe(1);
           expect(resolvedOptions[0].label).toEqual('Treatment1 - Treatment2');
+          done();
+        });
+        rootScope.$apply();
+      });
+    });
+
+    describe('estimateRunLength for a network model', function() {
+      var options;
+      var problem = {
+        entries: [{
+          study: "Study1"
+        }, {
+          study: "Study1"
+        }, {
+          study: "Study2"
+        }, {
+          study: "Study2"
+        }, {
+          study: "Study2"
+        }, {
+          study: "Study3"
+        }, {
+          study: "Study3"
+        }],
+        treatments: [{
+          id: 1
+        }, {
+          id: 2
+        }, {
+          id: 3
+        }]
+      };
+      var model = {
+        modelType: {
+          type: 'network'
+        },
+        burnInIterations: 50000,
+        inferenceIterations: 80000,
+        thinningFactor: 5
+      };
+
+      beforeEach(inject(function() {
+        var analysisPromise = q.defer();
+        runLength = analysisService.estimateRunLength(analysisPromise.promise, model);
+        analysisPromise.resolve(problem);
+        rootScope.$apply();
+      }));
+
+      it('should estimate the run length from the problem and run length settings', function(done) {
+        runLength.then(function(resultRunLength) {
+          expect(resultRunLength).toBeCloseTo(40);
+          done();
+        });
+        rootScope.$apply();
+      });
+    });
+
+
+    describe('estimateRunLength for a pairwise model', function() {
+      var options;
+      var problem = {
+        entries: [{
+          study: "Study1",
+          treatment: 1
+        }, {
+          study: "Study1",
+          treatment: 2
+        }, {
+          study: "Study2",
+          treatment: 1
+        }, {
+          study: "Study2",
+          treatment: 2
+        }, {
+          study: "Study2",
+          treatment: 3
+        }, {
+          study: "Study3",
+          treatment: 1
+        }, {
+          study: "Study3",
+          treatment: 3
+        }],
+        treatments: [{
+          id: 1,
+          name: 'treatment 1'
+        }, {
+          id: 2,
+          name: 'treatment 2'
+        }, {
+          id: 3,
+          name: 'treatment 3'
+        }]
+      };
+      var model = {
+        modelType: {
+          type: 'pairwise',
+          details: {
+            from: 'treatment 1',
+            to: 'treatment 2'
+          }
+        },
+        burnInIterations: 50000,
+        inferenceIterations: 80000,
+        thinningFactor: 5
+      };
+
+      beforeEach(inject(function() {
+        var analysisPromise = q.defer();
+        runLength = analysisService.estimateRunLength(analysisPromise.promise, model);
+        analysisPromise.resolve(problem);
+        rootScope.$apply();
+      }));
+
+      it('should estimate the run length from the problem and run length settings', function(done) {
+        runLength.then(function(resultRunLength) {
+          expect(resultRunLength).toBeCloseTo(25.572);
           done();
         });
         rootScope.$apply();
