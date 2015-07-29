@@ -107,7 +107,7 @@ define(['lodash', 'moment'], function(_, moment) {
           to: model.pairwiseComparison.to.name
         };
       } else {
-        if (model.modelType === 'node-split') {
+        if (model.modelType.type === 'node-split') {
           model.modelType.details = {
             from: model.nodeSplitComparison.from.name,
             to: model.nodeSplitComparison.to.name
