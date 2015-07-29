@@ -217,7 +217,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
     });
 
-    describe('estimateRunLength for a network model', function() {
+    describe('estimateRunLength for a random-effects network model', function() {
       var options;
       var problem = {
         entries: [{
@@ -244,6 +244,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         }]
       };
       var model = {
+        linearModel: 'random',
         modelType: {
           type: 'network'
         },
@@ -261,8 +262,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
     });
 
-
-    describe('estimateRunLength for a pairwise model', function() {
+    describe('estimateRunLength for a random-effects pairwise model', function() {
       var options;
       var problem = {
         entries: [{
@@ -299,11 +299,16 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         }]
       };
       var model = {
+        linearModel: 'random',
         modelType: {
-          type: 'pairwise',
-          details: {
-            from: 'treatment 1',
-            to: 'treatment 2'
+          type: 'pairwise'
+        },
+        pairwiseComparison: {
+          from: {
+            name: 'treatment 1'
+          },
+          to: {
+            name: 'treatment 2'
           }
         },
         burnInIterations: 50000,
@@ -320,7 +325,50 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
     });
 
+    describe('estimateRunLength for a fixed-effect network model', function() {
+      var options;
+      var problem = {
+        entries: [{
+          study: "Study1"
+        }, {
+          study: "Study1"
+        }, {
+          study: "Study2"
+        }, {
+          study: "Study2"
+        }, {
+          study: "Study2"
+        }, {
+          study: "Study3"
+        }, {
+          study: "Study3"
+        }],
+        treatments: [{
+          id: 1
+        }, {
+          id: 2
+        }, {
+          id: 3
+        }]
+      };
+      var model = {
+        linearModel: 'fixed',
+        modelType: {
+          type: 'network'
+        },
+        burnInIterations: 50000,
+        inferenceIterations: 80000,
+        thinningFactor: 5
+      };
 
+      beforeEach(function() {
+        runLength = analysisService.estimateRunLength(problem, model);
+      });
+
+      it('should estimate the run length from the problem and run length settings', function() {
+        expect(runLength).toBeCloseTo(17.971);
+      });
+    });
 
   });
 });
