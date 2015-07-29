@@ -252,19 +252,12 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         thinningFactor: 5
       };
 
-      beforeEach(inject(function() {
-        var analysisPromise = q.defer();
-        runLength = analysisService.estimateRunLength(analysisPromise.promise, model);
-        analysisPromise.resolve(problem);
-        rootScope.$apply();
-      }));
+      beforeEach(function() {
+        runLength = analysisService.estimateRunLength(problem, model);
+      });
 
-      it('should estimate the run length from the problem and run length settings', function(done) {
-        runLength.then(function(resultRunLength) {
-          expect(resultRunLength).toBeCloseTo(40);
-          done();
-        });
-        rootScope.$apply();
+      it('should estimate the run length from the problem and run length settings', function() {
+        expect(runLength).toBeCloseTo(40);
       });
     });
 
@@ -318,19 +311,12 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         thinningFactor: 5
       };
 
-      beforeEach(inject(function() {
-        var analysisPromise = q.defer();
-        runLength = analysisService.estimateRunLength(analysisPromise.promise, model);
-        analysisPromise.resolve(problem);
-        rootScope.$apply();
-      }));
+      beforeEach(function() {
+        runLength = analysisService.estimateRunLength(problem, model);
+      });
 
-      it('should estimate the run length from the problem and run length settings', function(done) {
-        runLength.then(function(resultRunLength) {
-          expect(resultRunLength).toBeCloseTo(25.572);
-          done();
-        });
-        rootScope.$apply();
+      it('should estimate the run length from the problem and run length settings', function() {
+        expect(runLength).toBeCloseTo(25.572);
       });
     });
 
