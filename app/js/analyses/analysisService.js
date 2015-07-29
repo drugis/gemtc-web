@@ -109,24 +109,32 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
-    function reduceToPairwiseProblem(problem, details) {
-      problem.treatments = filterPairwiseTreatments(problem.treatments, details.from, details.to);
-      problem.entries = filterPairwiseEntries(problem.entries, problem.treatments);
-      return problem;
+    function reduceToPairwiseProblem(problem, pairwiseComparison) {
+      var filteredTreatments = filterPairwiseTreatments(problem.treatments, pairwiseComparison.from.name, pairwiseComparison.to.name);
+      var filteredEntries = filterPairwiseEntries(problem.entries, problem.treatments);
+      return {
+        treatments: filteredTreatments,
+        entries: filteredEntries
+      };
     }
 
     function estimateRunLength(problem, model) {
-      var theProblem;
+      var theProblem, nRandomEffects, nStochasticVariables, nMonitoredVariables;
       if (model.modelType.type === 'pairwise') {
-        theProblem = reduceToPairwiseProblem(problem,
-          model.modelType.details)
+        theProblem = reduceToPairwiseProblem(problem, model.pairwiseComparison);
       } else if (model.modelType.type === 'network') {
         theProblem = problem;
       }
-      var nTreatments = problem.treatments.length;
-      var nRandomEffects = countRandomEffects(problem.entries);
-      var nStochasticVariables = nRandomEffects + nTreatments + 1;
-      var nMonitoredVariables = nTreatments + 1;
+      var nTreatments = theProblem.treatments.length;
+
+      if (model.linearModel === 'random') {
+        nRandomEffects = countRandomEffects(theProblem.entries);
+        nStochasticVariables = nRandomEffects + nTreatments + 1;
+        nMonitoredVariables = nTreatments + 1;
+      } else if (model.linearModel === 'fixed') {
+        nStochasticVariables = nTreatments;
+        nMonitoredVariables = nTreatments;
+      }
       var fromMills = 0.001;
       var actualIterations = model.inferenceIterations / model.thinningFactor;
 

@@ -17,7 +17,8 @@ require.config({
     'mmfoundation': 'bower_components/angular-foundation/mm-foundation-tpls',
     'angularanimate': 'bower_components/angular-animate/angular-animate.min',
     'ngSanitize': 'bower_components/angular-sanitize/angular-sanitize.min',
-    'papaparse': 'bower_components/papaparse/papaparse.min'
+    'papaparse': 'bower_components/papaparse/papaparse.min',
+    'moment': 'bower_components/moment/moment'
   },
   shim: {
     'jQuery': {

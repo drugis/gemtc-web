@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'moment'], function(_, moment) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state',
     'ModelResource', 'AnalysisService', 'ProblemResource'
   ];
@@ -10,6 +10,7 @@ define(['lodash'], function(_) {
 
     AnalysisService.createPairwiseOptions(problemDefer.$promise).then(function(result) {
       $scope.comparisonOptions = result;
+      $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
     });
 
     $scope.model = {
@@ -25,20 +26,24 @@ define(['lodash'], function(_) {
     $scope.createModel = createModel;
     $scope.isAddButtonDisabled = isAddButtonDisabled;
     $scope.isRunlengthDivisibleByThinningFactor = isRunlengthDivisibleByThinningFactor;
-    $scope.checkRunLength = checkRunLength
+    $scope.checkRunLength = checkRunLength;
 
     checkRunLength();
+    $scope.$watch('model', function(newValue, oldValue) {
+      checkRunLength();
+    }, true); // true -> deep watch
 
     function checkRunLength() {
       problemDefer.$promise.then(function(problem) {
         if ($scope.model.modelType.type === 'all-pairwise') {
           var modelBatch = createModelBatch($scope.model);
-          $scope.estimatedRunLength = _.max(modelBatch, function(model) {
-            return AnalysisService.estimateRunLength(problemDefer, model);
-          });
+          $scope.estimatedRunLength = _.max(_.map(modelBatch, function(model) {
+            return AnalysisService.estimateRunLength(problem, model);
+          }));
         } else {
-          $scope.estimatedRunLength = AnalysisService.estimateRunLength(problemDefer, $scope.model);
+          $scope.estimatedRunLength = AnalysisService.estimateRunLength(problem, $scope.model);
         }
+        $scope.estimatedRunLengthHumanized = moment.duration($scope.estimatedRunLength, 'seconds').humanize();
       });
     }
 
@@ -59,18 +64,17 @@ define(['lodash'], function(_) {
 
     function createModelBatch(modelBase) {
       return _.map($scope.comparisonOptions, function(comparisonOption) {
-        return {
-          title: modelBase.title + ' (' + comparisonOption.from.name + ' - ' + comparisonOption.to.name + ')',
-          linearModel: modelBase.linearModel,
-          modelType: {
-            type: 'pairwise',
-            details: {
-              from: comparisonOption.from.name,
-              to: comparisonOption.to.name
-            }
-          },
-          pairwiseComparison: comparisonOption
+        var newModel = _.cloneDeep(modelBase);
+        newModel.title = modelBase.title + ' (' + comparisonOption.from.name + ' - ' + comparisonOption.to.name + ')';
+        newModel.modelType = {
+          type: 'pairwise',
+          details: {
+            from: comparisonOption.from.name,
+            to: comparisonOption.to.name
+          }
         };
+        newModel.pairwiseComparison = comparisonOption;
+        return newModel;
       });
     }
 
@@ -88,10 +92,9 @@ define(['lodash'], function(_) {
       } else {
         createAndPostModel(model, function(result, headers) {
           $scope.isAddingModel = false;
-          // Call to replace is needed to have backbutton skip the createModel view when going back from the model View
           $state.go('model', _.extend($stateParams, {
             modelId: result.id
-          }));
+          })).replace();
         });
       }
     }
