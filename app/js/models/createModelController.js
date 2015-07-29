@@ -7,10 +7,11 @@ define(['lodash', 'moment'], function(_, moment) {
     ModelResource, AnalysisService, ProblemResource) {
 
     var problemDefer = ProblemResource.get($stateParams);
-
-    AnalysisService.createPairwiseOptions(problemDefer.$promise).then(function(result) {
-      $scope.comparisonOptions = result;
+    problemDefer.$promise.then(function(problem) {
+      $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
       $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
+      $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
+      return problem;
     });
 
     $scope.model = {
@@ -105,8 +106,15 @@ define(['lodash', 'moment'], function(_, moment) {
           from: model.pairwiseComparison.from.name,
           to: model.pairwiseComparison.to.name
         };
+      } else {
+        if (model.modelType === 'node-split') {
+          model.modelType.details = {
+            from: model.nodeSplitComparison.from.name,
+            to: model.nodeSplitComparison.to.name
+          };
+        }
       }
-      var pureModel = _.omit(model, 'pairwiseComparison');
+      var pureModel = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison');
       return ModelResource.save($stateParams, pureModel, successFunction).$promise;
 
     }

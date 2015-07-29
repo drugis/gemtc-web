@@ -1,5 +1,5 @@
 define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
-  describe('the add model controller', function() {
+  describe('the create model controller', function() {
     var scope, q,
       stateParamsMock, stateMock,
       problemDefer,
@@ -51,10 +51,6 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
       it('should get the problem', function() {
         expect(problemResourceMock.get).toHaveBeenCalled();
-      });
-
-      it('should create the pairwise options', function() {
-        expect(analysisServiceMock.createPairwiseOptions).toHaveBeenCalled();
       });
 
       it('should place createModel on the scope', function() {

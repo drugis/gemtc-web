@@ -78,14 +78,12 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
-    function createPairwiseOptions(problemPromise) {
-      return problemPromise.then(function(problem) {
-        var network = transformProblemToNetwork(problem);
-        var edgesWithMoreThanOneStudy = _.filter(network.edges, function(edge) {
-          return edge.numberOfStudies > 1;
-        });
-        return addComparisonLabels(edgesWithMoreThanOneStudy);
+    function createPairwiseOptions(problem) {
+      var network = transformProblemToNetwork(problem);
+      var edgesWithMoreThanOneStudy = _.filter(network.edges, function(edge) {
+        return edge.numberOfStudies > 1;
       });
+      return addComparisonLabels(edgesWithMoreThanOneStudy);
     }
 
     function countRandomEffects(entries) {
@@ -148,12 +146,56 @@ define(['angular', 'lodash'], function(angular, _) {
       return sampleTime + summaryTime + relativeEffectTime + relativeEffectPlotsTime + forestPlotTime + psrfPlotsTime + tracePlotsTime;
     }
 
+    function hasIndirectPath(startNode, currentNode, network, path) {
+      var reachableNodes = _.reduce(network.edges, function(accum, edge) {
+        if(edge.from.name === currentNode.name) {
+          return accum.concat(edge.to);
+        } else if (edge.to.name === currentNode.name) {
+          return accum.concat(edge.from);
+        }
+        return accum;
+      }, []);
+
+      // if there is a cycle -> indirect path
+      if(path.length > 1 && _.find(reachableNodes, function(node) {
+        return node.name === startNode.name;
+      })) {
+        return true;
+      }
+
+      // remove already-visited nodes
+      var nodesToVisit = _.filter(reachableNodes, function(node) {
+        return !_.find(path, function(pathNode) {
+          return pathNode.name === node.name;
+        });
+      });
+
+      // check connected nodes
+      return _.any(nodesToVisit, function(nodeToVisit) {
+        return hasIndirectPath(startNode, nodeToVisit, network, path.concat(currentNode));
+      });
+    }
+
+    // find edges that have both a direct and indirect comparison;
+    // a direct comparison is an edge A-B with at least one study.
+    // an indirect comparison means that there is a path from A to B that is not the edge A-B
+    function createNodeSplitOptions(problem) {
+      var network = transformProblemToNetwork(problem);
+      network.edges = _.filter(network.edges, function(edge) {
+        return edge.numberOfStudies > 0;
+      });
+      return addComparisonLabels(_.filter(network.edges, function(edge) {
+        return hasIndirectPath(edge.from, edge.to, network, [edge.from]);
+      }));
+    }
+
     return {
       transformProblemToNetwork: transformProblemToNetwork,
       problemToStudyMap: problemToStudyMap,
       createPairwiseOptions: createPairwiseOptions,
       generateEdges: generateEdges,
-      estimateRunLength: estimateRunLength
+      estimateRunLength: estimateRunLength,
+      createNodeSplitOptions: createNodeSplitOptions
     };
 
   };
