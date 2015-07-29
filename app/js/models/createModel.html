@@ -30,31 +30,44 @@
       <div class="row section">
         <div class="large-4 small-12 columns">
           <label class="form-item-header">Model Type</label>
-            <div class="stacked-radio">
-              <input type="radio" value="network" ng-model="model.modelType.type" id="network-model-type-radio">
-              <label for="network-model-type-radio">Network meta-analysis</label>
-            </div>
-            <div class="stacked-radio">
-              <input type="radio" value="pairwise" ng-model="model.modelType.type" id="pairwise-model-type-radio">
-              <label for="pairwise-model-type-radio">Pairwise meta-analysis</label>
-            </div>
-            <div class="indent-one">
-              <label for="comparison-select">Select a pairwise comparison</label>
-              <select ng-disabled="model.modelType.type !== 'pairwise'" ng-options="comparison.label for comparison in comparisonOptions" ng-model="model.pairwiseComparison" id="comparison-select"></select>
-            </div>
-            <div class="stacked-radio">
-              <input type="radio" value="all-pairwise" ng-model="model.modelType.type" id="all-pairwise-model-type-radio">
-              <label for="all-pairwise-model-type-radio">All pairwise meta-analyses (batch)</label>
-            </div>
-          </label>
+          <div class="stacked-radio">
+            <input type="radio" value="network" ng-model="model.modelType.type" id="network-model-type-radio">
+            <label for="network-model-type-radio">Network meta-analysis</label>
+          </div>
+          <div class="stacked-radio">
+            <input type="radio" value="pairwise" ng-model="model.modelType.type" id="pairwise-model-type-radio">
+            <label for="pairwise-model-type-radio">Pairwise meta-analysis</label>
+          </div>
+          <div class="indent-one">
+            <label for="comparison-select">Select a pairwise comparison</label>
+            <select ng-disabled="model.modelType.type !== 'pairwise'" ng-options="comparison.label for comparison in comparisonOptions" ng-model="model.pairwiseComparison" id="comparison-select"></select>
+          </div>
+          <div class="stacked-radio">
+            <input type="radio" value="all-pairwise" ng-model="model.modelType.type" id="all-pairwise-model-type-radio">
+            <label for="all-pairwise-model-type-radio">All pairwise meta-analyses (batch)</label>
+          </div>
+          <div class="stacked-radio">
+            <input type="radio" value="node-split" ng-model="model.modelType.type" id="node-split-model-type-radio">
+            <label for="node-split-model-type-radio">Node-splitting analysis</label>
+          </div>
+          <div class="indent-one">
+            <label for="comparison-select">Select comparison for which to perform node-splitting analysis</label>
+            <select ng-disabled="model.modelType.type !== 'node-split'" ng-options="nodeSplitOption.label for nodeSplitOption in nodeSplitOptions" ng-model="model.nodeSplitComparison" id="comparison-select"></select>
+          </div>
         </div>
       </div>
       <div class="row section">
         <div class="large-3 medium-6 small-12 columns">
           <label class="form-item-header">Run-length parameters</label>
-          <label>Number of burn-in iterations<input type="number" min="1" step="1" ng-model="model.burnInIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()"></label>
-          <label>Number of inference iterations<input type="number" min="1" step="1" ng-model="model.inferenceIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()"></label>
-          <label>Thinning factor<input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()"></label>
+          <label>Number of burn-in iterations
+            <input type="number" min="1" step="1" ng-model="model.burnInIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()">
+          </label>
+          <label>Number of inference iterations
+            <input type="number" min="1" step="1" ng-model="model.inferenceIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()">
+          </label>
+          <label>Thinning factor
+            <input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()">
+          </label>
         </div>
       </div>
       <div class="row">

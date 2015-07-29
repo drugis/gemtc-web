@@ -155,19 +155,19 @@ gemtc <- function(params) {
   times <- list()
 
   times$init <- system.time({
-  ## incoming information
-  #  entries
-  data.ab <- do.call(rbind, lapply(params[['entries']],
-    function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
-  # linear model or fixed?
-  linearModel <- if(is.null(params[['linearModel']])) 'random' else params[['linearModel']]
+    ## incoming information
+    #  entries
+    data.ab <- do.call(rbind, lapply(params[['entries']],
+      function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
+    # linear model or fixed?
+    linearModel <- if(is.null(params[['linearModel']])) 'random' else params[['linearModel']]
 
-  treatments <- do.call(rbind, lapply(params[['treatments']],
-    function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
+    treatments <- do.call(rbind, lapply(params[['treatments']],
+      function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
 
-  network <- mtc.network(data.ab=data.ab, treatments=treatments)
-  model <- mtc.model(network, linearModel=linearModel)
-  update(list(progress=0))
+    network <- mtc.network(data.ab=data.ab, treatments=treatments)
+    model <- mtc.model(network, linearModel=linearModel)
+    update(list(progress=0))
   })
 
   predicted <- predict.t(network, iter.adapt, iter.infer, thin)
@@ -189,15 +189,15 @@ gemtc <- function(params) {
   })
 
   times$releffect <- system.time({
-  treatmentIds <- as.character(network[['treatments']][['id']])
-  comps <- combn(treatmentIds, 2)
-  t1 <- comps[1,]
-  t2 <- comps[2,]
-  releffect <- apply(comps, 2, function(comp) {
-    q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
-    report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
-    list(t1=comp[1], t2=comp[2], quantiles=q)
-  })
+    treatmentIds <- as.character(network[['treatments']][['id']])
+    comps <- combn(treatmentIds, 2)
+    t1 <- comps[1,]
+    t2 <- comps[2,]
+    releffect <- apply(comps, 2, function(comp) {
+      q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
+      report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
+      list(t1=comp[1], t2=comp[2], quantiles=q)
+    })
   })
 
   times$relplot <- system.time({
@@ -215,33 +215,33 @@ gemtc <- function(params) {
   })
 
   times$forest <- system.time({
-  # create forest plot for pairwise analysis
-  if(params[['modelType']][['type']] == "pairwise") {
-    forestPlot <- plotToSvg(function() {
-      pwforest(result, t1, t2)
-    })
-  }
+    # create forest plot for pairwise analysis
+    if(params[['modelType']][['type']] == "pairwise") {
+      forestPlot <- plotToSvg(function() {
+        pwforest(result, t1, t2)
+      })
+    }
   })
   report('forestplot', 1.0)
 
   times$traceplot <- system.time({
-  #create results plot
-  tracePlot <- plotToPng(function() {
-    plot(result, auto.layout=FALSE)
-  })
+    #create results plot
+    tracePlot <- plotToPng(function() {
+      plot(result, auto.layout=FALSE)
+    })
   })
   report('traceplot', 1.0)
 
   times$psrfplot <- system.time({
-  #create gelman plot
-  gelmanPlot <- plotToPng(function() {
-    gelman.plot(result, auto.layout=FALSE, ask=FALSE)
-  })
+    #create gelman plot
+    gelmanPlot <- plotToPng(function() {
+      gelman.plot(result, auto.layout=FALSE, ask=FALSE)
+    })
   })
   report('psrfplot', 1.0)
 
   times$summary <- system.time({
-  summary <- summary(result)
+    summary <- summary(result)
   })
   report('summary', 1.0)
 

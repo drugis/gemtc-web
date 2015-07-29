@@ -200,20 +200,13 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         }]
       };
 
-      beforeEach(inject(function() {
-        var analysisPromise = q.defer();
-        options = analysisService.createPairwiseOptions(analysisPromise.promise);
-        analysisPromise.resolve(mockProblem);
-        rootScope.$apply();
-      }));
+      beforeEach(function() {
+        options = analysisService.createPairwiseOptions(mockProblem);
+      });
 
-      it('should create the options for pairwise comparisons from the analysis promise', function(done) {
-        options.then(function(resolvedOptions) {
-          expect(resolvedOptions.length).toBe(1);
-          expect(resolvedOptions[0].label).toEqual('Treatment1 - Treatment2');
-          done();
-        });
-        rootScope.$apply();
+      it('should create the options for pairwise comparisons from the analysis promise', function() {
+        expect(options.length).toBe(1);
+        expect(options[0].label).toEqual('Treatment1 - Treatment2');
       });
     });
 
@@ -370,5 +363,192 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
     });
 
+    describe('createNodeSplitOptions', function() {
+      var nodeSplitOptions;
+      describe('for two-treatment network', function() {
+        beforeEach(function() {
+          var problem = {
+            entries: [{
+              study: 'study1',
+              treatment: 1
+            }, {
+              study: 'study1',
+              treatment: 2
+            }],
+            treatments: [{
+              id: 1,
+              name: 'treatment 1'
+            }, {
+              id: 2,
+              name: 'treatment 2'
+            }]
+          };
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+        });
+
+        it('should find zero nodeSplitOptions', function() {
+          expect(nodeSplitOptions.length).toBe(0);
+        });
+      });
+      describe('for a fully connected triangle', function() {
+        beforeEach(function() {
+          var problem = {
+            entries: [{
+              study: 'study1',
+              treatment: 1
+            }, {
+              study: 'study1',
+              treatment: 2
+            }, {
+              study: 'study2',
+              treatment: 2
+            }, {
+              study: 'study2',
+              treatment: 3
+            }, {
+              study: 'study3',
+              treatment: 3
+            }, {
+              study: 'study3',
+              treatment: 1
+            }],
+            treatments: [{
+              id: 1,
+              name: 'treatment 1'
+            }, {
+              id: 2,
+              name: 'treatment 2'
+            }, {
+              id: 3,
+              name: 'treatment 3'
+            }]
+          };
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+        });
+
+        it('should find three nodeSplitOptions', function() {
+          expect(nodeSplitOptions.length).toBe(3);
+        });
+      });
+      describe('for a star connected triangle', function() {
+        beforeEach(function() {
+          var problem = {
+            entries: [{
+              study: 'study1',
+              treatment: 1
+            }, {
+              study: 'study1',
+              treatment: 2
+            }, {
+              study: 'study2',
+              treatment: 2
+            }, {
+              study: 'study2',
+              treatment: 3
+            }, {
+              study: 'study3',
+              treatment: 2
+            }, {
+              study: 'study3',
+              treatment: 4
+            }],
+            treatments: [{
+              id: 1,
+              name: 'treatment 1'
+            }, {
+              id: 2,
+              name: 'treatment 2'
+            }, {
+              id: 3,
+              name: 'treatment 3'
+            }, {
+              id: 4,
+              name: 'treatment 4'
+            }]
+          };
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+        });
+
+        it('should find zero nodeSplitOptions', function() {
+          expect(nodeSplitOptions.length).toBe(0);
+        });
+      });
+      describe('for a fully connected triangle with one extra', function() {
+        beforeEach(function() {
+          var problem = {
+            entries: [{
+              study: 'study1',
+              treatment: 1
+            }, {
+              study: 'study1',
+              treatment: 2
+            }, {
+              study: 'study2',
+              treatment: 2
+            }, {
+              study: 'study2',
+              treatment: 3
+            }, {
+              study: 'study3',
+              treatment: 3
+            }, {
+              study: 'study3',
+              treatment: 1
+            }, {
+              study: 'study 4',
+              treatment: 3
+            }, {
+              study: 'study 4',
+              treatment: 4
+            }],
+            treatments: [{
+              id: 1,
+              name: 'treatment 1'
+            }, {
+              id: 2,
+              name: 'treatment 2'
+            }, {
+              id: 3,
+              name: 'treatment 3'
+            }, {
+              id: 4,
+              name: 'treatment 4'
+            }]
+          };
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+        });
+
+        it('should find three nodeSplitOptions', function() {
+          expect(nodeSplitOptions.length).toBe(3);
+        });
+      });
+
+
+      fdescribe(' a very long line', function() {
+        beforeEach(function() {
+          var lineLength = 100;
+          var problem = {
+            entries: [],
+            treatments: []
+          };
+
+          for(var i = 0; i < lineLength; i++) {
+            problem.entries.push({study: 's' + i, treatment: 't' + i});
+            problem.entries.push({study: 's' + i, treatment: 't' + (i+1)});
+            problem.treatments.push({id: 't' + i, name: 't' + i});
+          }
+
+          problem.treatments.push({id: 't' + lineLength, name: 't' + lineLength});
+
+
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+        });
+
+        it('should find no nodeSplitOptions and crash at some point', function() {
+          expect(nodeSplitOptions.length).toBe(0);
+        });
+      });
+
+    });
   });
 });
