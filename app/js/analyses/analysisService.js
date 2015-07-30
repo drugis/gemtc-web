@@ -120,7 +120,7 @@ define(['angular', 'lodash'], function(angular, _) {
       var theProblem, nRandomEffects, nStochasticVariables, nMonitoredVariables;
       if (model.modelType.type === 'pairwise') {
         theProblem = reduceToPairwiseProblem(problem, model.pairwiseComparison);
-      } else if (model.modelType.type === 'network') {
+      } else if (model.modelType.type === 'network' || model.modelType.type === 'node-split') {
         theProblem = problem;
       }
       var nTreatments = theProblem.treatments.length;

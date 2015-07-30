@@ -100,18 +100,24 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           inferenceIterations: 20000,
           thinningFactor: 10,
           nodeSplitComparison: {
-            from: {name: 'fromName'},
-            to: {name: 'toName'}
+            from: {
+              id: 1,
+              name: 'fromName'
+            },
+            to: {
+              id: 2,
+              name: 'toName'
+            }
           }
         }
-        
+
         var strippedModel = {
           linearModel: 'random',
           modelType: {
             type: 'node-split',
             details: {
-              from: 'fromName',
-              to: 'toName'
+              from: 1,
+              to: 2
             }
           },
           title: 'modelTitle nodesplit',
