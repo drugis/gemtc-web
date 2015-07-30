@@ -36,13 +36,14 @@ define(['angular', 'lodash'], function(angular, _) {
       return edges;
     }
 
-    function countStudiesMeasuringEdge(edge, studyMap) {
-      return _.reduce(studyMap, function(numberOfStudiesMeasuringEdge, study) {
+    function findStudiesMeasuringEdge(edge, studyMap) {
+      return _.reduce(studyMap, function(studiesMeasuringEdge, study, studyKey) {
         if (study.arms[edge.to.name] && study.arms[edge.from.name]) {
-          numberOfStudiesMeasuringEdge += 1;
+          study.title = studyKey;
+          studiesMeasuringEdge.push(study);
         }
-        return numberOfStudiesMeasuringEdge;
-      }, 0);
+        return studiesMeasuringEdge;
+      }, []);
     }
 
     function transformProblemToNetwork(problem) {
@@ -52,6 +53,7 @@ define(['angular', 'lodash'], function(angular, _) {
       function treatmentToIntervention(treatment) {
         var intervention = {};
         intervention.name = treatment.name;
+        intervention.id = treatment.id;
         intervention.sampleSize = _.reduce(problem.entries, function(totalSampleSize, entry) {
           return entry.treatment === treatment.id ? totalSampleSize + entry.sampleSize : totalSampleSize;
         }, 0);
@@ -60,11 +62,10 @@ define(['angular', 'lodash'], function(angular, _) {
 
       network.interventions = _.map(problem.treatments, treatmentToIntervention);
 
-      // edge.from.name, edge.to.name, edge.numberOfStudies
       network.edges = generateEdges(network.interventions);
       var studyMap = problemToStudyMap(problem);
       network.edges = _.map(network.edges, function(edge) {
-        edge.numberOfStudies = countStudiesMeasuringEdge(edge, studyMap);
+        edge.studies = findStudiesMeasuringEdge(edge, studyMap);
         return edge;
       });
       return network;
@@ -81,7 +82,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function createPairwiseOptions(problem) {
       var network = transformProblemToNetwork(problem);
       var edgesWithMoreThanOneStudy = _.filter(network.edges, function(edge) {
-        return edge.numberOfStudies > 1;
+        return edge.studies.length > 1;
       });
       return addComparisonLabels(edgesWithMoreThanOneStudy);
     }
@@ -120,7 +121,7 @@ define(['angular', 'lodash'], function(angular, _) {
       var theProblem, nRandomEffects, nStochasticVariables, nMonitoredVariables;
       if (model.modelType.type === 'pairwise') {
         theProblem = reduceToPairwiseProblem(problem, model.pairwiseComparison);
-      } else if (model.modelType.type === 'network') {
+      } else if (model.modelType.type === 'network' || model.modelType.type === 'node-split') {
         theProblem = problem;
       }
       var nTreatments = theProblem.treatments.length;
@@ -148,18 +149,18 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function hasIndirectPath(startNode, currentNode, network, path) {
       var reachableNodes = _.reduce(network.edges, function(accum, edge) {
-        if(edge.from.name === currentNode.name) {
-          return accum.concat(edge.to);
+        if (edge.from.name === currentNode.name) {
+          accum.push(edge.to);
         } else if (edge.to.name === currentNode.name) {
-          return accum.concat(edge.from);
+          accum.push(edge.from);
         }
         return accum;
       }, []);
 
       // if there is a cycle -> indirect path
-      if(path.length > 1 && _.find(reachableNodes, function(node) {
-        return node.name === startNode.name;
-      })) {
+      if (path.length > 1 && _.find(reachableNodes, function(node) {
+          return node.name === startNode.name;
+        })) {
         return true;
       }
 
@@ -176,16 +177,43 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
+    function removeStudiesFromNetwork(studiesToRemove, network) {
+      var strippedEdges = _.map(network.edges, function(edge) {
+        return {
+          from: edge.from,
+          to: edge.to,
+          studies: _.filter(edge.studies, function(study) {
+            return !_.find(studiesToRemove, function(studyToRemove) {
+              return study.title === studyToRemove.title;
+            });
+          })
+        }
+      });
+      return {
+        edges: strippedEdges,
+        interventions: network.interventions
+      };
+    }
+
+    function getNonEmptyEdges(network) {
+      return _.filter(network.edges, function(edge) {
+        return edge.studies.length > 0;
+      });
+    }
+
     // find edges that have both a direct and indirect comparison;
     // a direct comparison is an edge A-B with at least one study.
     // an indirect comparison means that there is a path from A to B that is not the edge A-B
     function createNodeSplitOptions(problem) {
       var network = transformProblemToNetwork(problem);
-      network.edges = _.filter(network.edges, function(edge) {
-        return edge.numberOfStudies > 0;
-      });
+
+      network.edges = getNonEmptyEdges(network);
+
       return addComparisonLabels(_.filter(network.edges, function(edge) {
-        return hasIndirectPath(edge.from, edge.to, network, [edge.from]);
+        var strippedNetwork = removeStudiesFromNetwork(edge.studies, network);
+        strippedNetwork.edges = getNonEmptyEdges(strippedNetwork);
+
+        return hasIndirectPath(edge.from, edge.to, strippedNetwork, [edge.from]);
       }));
     }
 

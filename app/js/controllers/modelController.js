@@ -2,10 +2,10 @@
 define(['lodash'], function() {
   var dependencies = ['$scope', '$sce', '$stateParams', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
-    'DiagnosticsService'
-    ];
+    'DiagnosticsService', 'ModelService'
+  ];
   var ModelController = function($scope, $sce, $stateParams, ModelResource, PataviService,
-    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService) {
+    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, ModelService) {
 
     $scope.analysis = AnalysisResource.get($stateParams);
     $scope.progress = {
@@ -59,12 +59,15 @@ define(['lodash'], function() {
         projectId: $stateParams.projectId
       }).$promise.then(function(problem) {
         $scope.problem = problem;
-        result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
         $scope.result = result;
-        var relativeEffects = result.results.relativeEffects;
         var isLogScale = result.results.logScale;
-        $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+       // $scope.model = ModelService.enrich($scope.model, problem);
         $scope.gelmanDiagnostics = DiagnosticsService.labelDiagnostics(result.results.gelmanDiagnostics, $scope.problem.treatments)
+        if ($scope.model.modelType.type !== 'node-split') {
+          var relativeEffects = result.results.relativeEffects;
+          result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
+          $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+        }
       });
     }
 

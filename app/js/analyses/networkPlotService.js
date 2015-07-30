@@ -49,7 +49,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       });
 
       _.each(network.edges, function(edge) {
-        drawEdge(svg, edge.from.name, edge.to.name, edge.numberOfStudies, circleData);
+        drawEdge(svg, edge.from.name, edge.to.name, edge.studies.length, circleData);
       });
 
       var enter = svg.selectAll('g')
