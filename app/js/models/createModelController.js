@@ -108,8 +108,8 @@ define(['lodash', 'moment'], function(_, moment) {
         };
       } else if (model.modelType.type === 'node-split') {
         model.modelType.details = {
-          from: model.nodeSplitComparison.from.name,
-          to: model.nodeSplitComparison.to.name
+          from: model.nodeSplitComparison.from.id,
+          to: model.nodeSplitComparison.to.id
         };
       }
       var pureModel = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison');
