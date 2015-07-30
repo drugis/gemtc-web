@@ -120,7 +120,7 @@ predict.t <- function(network, n.adapt, n.iter, thin) {
 
 nsdensity <- function(x, t1, t2, xlim=c(-8,8)) {
   param <- paste("d", t1, t2, sep=".")
-  par(mfrow=c(3,1))
+  par(mfrow=c(2,1))
  # // cons <- relative.effect(x[['consistency']], t1=t1, t2=t2)
  #  densplot(cons[['samples']][,param,drop=FALSE], xlim=xlim)
   ns <- x[['samples']][,c('d.direct','d.indirect')]
@@ -188,8 +188,8 @@ gemtc <- function(params) {
 
     network <- mtc.network(data.ab=data.ab, treatments=treatments)
     if(modelType == 'node-split') {
-      t1 <- params[['modelType']][['details']][['from']]
-      t2 <- params[['modelType']][['details']][['to']]
+      t1 <- params[['modelType']][['details']][['from']][['id']]
+      t2 <- params[['modelType']][['details']][['to']][['id']]
       model <- mtc.model(network, linearModel=linearModel, type="nodesplit", t1=t1, t2=t2)
     } else {
       model <- mtc.model(network, linearModel=linearModel)
@@ -281,6 +281,7 @@ gemtc <- function(params) {
   })
   report('summary', 1.0)
 
+  summary[['script-version']] <- 0.1
   summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
   summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
   summary[['logScale']] <- ll.call('scale.log', model)

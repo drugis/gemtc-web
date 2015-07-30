@@ -20,12 +20,16 @@
               <h5><strong>Model settings</strong></h5>
               <table class="layout-table">
                 <tr>
-                  <td class="large-6 text-right"><strong>Analysis type</strong></td>
+                  <td class="large-6 text-right"><strong>Model type</strong></td>
                   <td>{{model.modelType.type}}</td>
                 </tr>
-                <tr ng-show="model.modelType.type === 'pairwise'">
+                <tr ng-if="model.modelType.type === 'pairwise'">
                   <td class="large-6 text-right"><strong>Pairwise comparison</strong></td>
-                  <td>{{model.modelType.details.from}} &mdash; {{model.modelType.details.to}}</td>
+                  <td>{{model.modelType.details.from.name}} &mdash; {{model.modelType.details.to.name}}</td>
+                </tr>
+                <tr ng-if="model.modelType.type === 'node-split'">
+                  <td class="large-6 text-right"><strong>Split comparison</strong></td>
+                  <td>{{model.modelType.details.from.name}} &mdash; {{model.modelType.details.to.name}}</td>
                 </tr>
                 <tr>
                   <td class="large-6 text-right"><strong>Effects type</strong></td>
@@ -42,11 +46,7 @@
                 <tr>
                   <td class="large-6 text-right"><strong>Thinning factor</strong></td>
                   <td>{{result.results.thinningFactor}}</td>
-                </tr>
-                <tr>
-                  <td class="large-6 text-right"><strong>Model type</strong></td>
-                  <td>{{result.results.type}}</td>
-                </tr>
+                </tr> 
               </table>
             </div>
           </div>
@@ -64,7 +64,7 @@
             <p><strong>Random effects standard deviation </strong> {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</p>
           </div>
         </div>
-        <div class="row" style="padding-top: 1rem;">
+        <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
           <div class="columns large-12">
             <div class="table-title" ng-switch on="result.results.logScale">Relative effects table comparing the included interventions:
               <span ng-switch-when="true">odds ratio</span>
@@ -164,7 +164,17 @@
             </div>
           </div>
         </div>
-        <div class="row" style="padding-top: 1rem;">
+        <div class="row" ng-if="model.modelType.type === 'node-split'">
+          <div class="columns">
+            <div class="row">
+              <div class="columns large-6 small-8">
+                <p><strong>Density plot</strong></p>
+                <paged-png-plot pages="result.results.densityPlot"></paged-png-plot>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
           <div class="columns large-4">
             <div>
               <p><strong>Rank probabilities</strong></p>
