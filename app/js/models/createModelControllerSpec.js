@@ -89,8 +89,52 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         });
       });
 
-      //FIXME: more tests
+      describe('when creating nodesplitting model', function() {
+        var frontendModel = {
+          linearModel: 'random',
+          modelType: {
+            type: 'node-split'
+          },
+          title: 'modelTitle nodesplit',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10,
+          nodeSplitComparison: {
+            from: {name: 'fromName'},
+            to: {name: 'toName'}
+          }
+        }
+        
+        var strippedModel = {
+          linearModel: 'random',
+          modelType: {
+            type: 'node-split',
+            details: {
+              from: 'fromName',
+              to: 'toName'
+            }
+          },
+          title: 'modelTitle nodesplit',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10
+        }
+
+        beforeEach(function() {
+          modelResourceMock.save.calls.reset();
+          scope.createModel(frontendModel);
+        });
+
+        it('should save the strippedModel model', function() {
+          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, strippedModel, jasmine.any(Function));
+        });
+        it('should set isAddingModel to true', function() {
+          expect(scope.isAddingModel).toBe(true);
+        });
+      });
     });
+
+
 
   });
 });

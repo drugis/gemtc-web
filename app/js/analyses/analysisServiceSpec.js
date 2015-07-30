@@ -146,10 +146,10 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         expect(network.interventions[0].sampleSize).toBeDefined();
 
         expect(network.edges).toBeDefined();
-        expect(network.edges[0].numberOfStudies).toBeDefined();
-        expect(network.edges[0].numberOfStudies).toEqual(1);
-        expect(network.edges[1].numberOfStudies).toEqual(1);
-        expect(network.edges[2].numberOfStudies).toEqual(1);
+        expect(network.edges[0].studies).toBeDefined();
+        expect(network.edges[0].studies.length).toEqual(1);
+        expect(network.edges[1].studies.length).toEqual(1);
+        expect(network.edges[2].studies.length).toEqual(1);
       });
     });
 
@@ -524,7 +524,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
 
 
-      fdescribe(' a very long line', function() {
+      describe(' a very long path in a simple network ( a) ', function() {
         beforeEach(function() {
           var lineLength = 100;
           var problem = {
@@ -546,6 +546,50 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
         it('should find no nodeSplitOptions and crash at some point', function() {
           expect(nodeSplitOptions.length).toBe(0);
+        });
+      });
+
+      describe('for a fully connected triangle with one multi-arm study', function() {
+        beforeEach(function() {
+          var problem = {
+            entries: [{
+              study: 'study1',
+              treatment: 1
+            }, {
+              study: 'study1',
+              treatment: 2
+            }, {
+              study: 'study1',
+              treatment: 3
+            }, {
+              study: 'study2',
+              treatment: 2
+            }, {
+              study: 'study2',
+              treatment: 3
+            }, {
+              study: 'study3',
+              treatment: 3
+            }, {
+              study: 'study3',
+              treatment: 1
+            }],
+            treatments: [{
+              id: 1,
+              name: 'treatment 1'
+            }, {
+              id: 2,
+              name: 'treatment 2'
+            }, {
+              id: 3,
+              name: 'treatment 3'
+            }]
+          };
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+        });
+
+        it('should find one nodeSplitOption', function() {
+          expect(nodeSplitOptions.length).toBe(1);
         });
       });
 

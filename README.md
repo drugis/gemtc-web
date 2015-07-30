@@ -81,7 +81,7 @@ Running tests
 -------------
 The Angular app is tested by karma:
 
-    karma start
+    karma start karna-conf.js
 
 The node backend is tested by mocha:
 
