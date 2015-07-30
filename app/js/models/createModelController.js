@@ -95,24 +95,17 @@ define(['lodash', 'moment'], function(_, moment) {
           $scope.isAddingModel = false;
           $state.go('model', _.extend($stateParams, {
             modelId: result.id
-          })).replace();
+          }));
         });
       }
     }
 
     function createAndPostModel(model, successFunction) {
-      if (model.modelType.type === 'pairwise') {
+      if (model.modelType.type === 'pairwise' || model.modelType.type === 'node-split') {
         model.modelType.details = {
-          from: model.pairwiseComparison.from.name,
-          to: model.pairwiseComparison.to.name
+          from: model.nodeSplitComparison.from,
+          to: model.nodeSplitComparison.to
         };
-      } else {
-        if (model.modelType.type === 'node-split') {
-          model.modelType.details = {
-            from: model.nodeSplitComparison.from.name,
-            to: model.nodeSplitComparison.to.name
-          };
-        }
       }
       var pureModel = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison');
       return ModelResource.save($stateParams, pureModel, successFunction).$promise;
