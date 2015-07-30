@@ -10,11 +10,13 @@ define(function (require) {
     .controller('StandAloneModelContainerController', require('models/standAloneModelContainerController'))
     .controller('CreateModelController', require('models/createModelController'))
 
-
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
     .factory('ProblemResource', require('models/standaloneProblemResource'))
     .factory('AnalysisResource', require('analyses/analysisResource'))
+
+    //services
+    .factory('ModelService', require('models/modelService'))
 
     .directive('gemtcRankPlot',require('models/rankPlotDirective'))
     ;

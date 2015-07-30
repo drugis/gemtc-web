@@ -6,7 +6,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       pairwiseOptionsDefer,
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['createPairwiseOptions', 'estimateRunLength']),
-      problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get']);
+      problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get'])
+      ;
 
     beforeEach(module('gemtc.models'));
 
@@ -116,8 +117,14 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           modelType: {
             type: 'node-split',
             details: {
-              from: 1,
-              to: 2
+             from: {
+              id: 1,
+              name: 'fromName'
+            },
+            to: {
+              id: 2,
+              name: 'toName'
+            }
             }
           },
           title: 'modelTitle nodesplit',

@@ -20,7 +20,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviResultDeferred,
       pataviService,
       relativeEffectsTableService,
-      diagnosticsService;
+      diagnosticsService,
+      modelServiceMock;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -67,7 +68,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService = jasmine.createSpyObj('PataviService', ['run']);
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
-      diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics'])
+      diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics']);
+      modelServiceMock = jasmine.createSpyObj('ModelService', ['enrich']);
+
 
       $controller('ModelController', {
         $scope: scope,
@@ -78,7 +81,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         PataviTaskIdResource: pataviTaskIdResource,
         RelativeEffectsTableService: relativeEffectsTableService,
         AnalysisResource: analysisResource,
-        DiagnosticsService: diagnosticsService
+        DiagnosticsService: diagnosticsService,
+        ModelService: modelServiceMock
       });
     }));
 
@@ -105,8 +109,12 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       });
     });
 
-    describe('when the model is loaded', function() {
+    describe('when a non-nodesplit model is loaded', function() {
       beforeEach(function() {
+        scope.model.modelType = {
+          type: 'network'
+        };
+        modelServiceMock.enrich.and.returnValue(scope.model);
         modelDeferred.resolve(mockModel);
         scope.$apply();
       });
@@ -154,5 +162,24 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         });
       });
     });
+
+    describe('when a nodesplit model is loaded', function() {
+      beforeEach(function() {
+        scope.model.modelType = {
+          type: 'node-split'
+        };
+        modelServiceMock.enrich.and.returnValue(scope.model);
+        modelDeferred.resolve(mockModel);
+        pataviTaskIdDeferred.resolve(mockPataviTaskId);
+        pataviResultDeferred.resolve(pataviResult);
+        problemDeferred.resolve(mockProblem);
+        scope.$apply();
+      });
+
+      it('the relativeEffectsTable should not be constructed', inject(function() {
+        expect(relativeEffectsTableService.buildTable).not.toHaveBeenCalled();
+      }));
+    });
+
   });
 });

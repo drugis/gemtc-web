@@ -3,8 +3,6 @@ define(['lodash'], function(_) {
   var dependencies = [];
 
   var DiagnosticsService = function() {
-
-
     /**
      * Extend gelman diagnostics with a human-readable label
      * look up treatment names by id.
@@ -15,6 +13,10 @@ define(['lodash'], function(_) {
       function createLabel(diagnostic, key) {
         if (key === 'sd.d') {
           return 'sd.d (Random effects standard deviation)';
+        } else if (key === 'd.indirect') {
+          return 'd.indirect (Indirect estimate)';
+        } else if (key === 'd.direct') {
+          return 'd.direct (Direct estimate)';
         } else {
           var splitKey = key.split('.');
           var treatment1Id = splitKey[1];
