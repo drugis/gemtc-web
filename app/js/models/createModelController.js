@@ -103,8 +103,8 @@ define(['lodash', 'moment'], function(_, moment) {
     function createAndPostModel(model, successFunction) {
       if (model.modelType.type === 'node-split')
         model.modelType.details = {
-          from: model.nodeSplitComparison.from,
-          to: model.nodeSplitComparison.to
+          from: _.omit(model.nodeSplitComparison.from, 'sampleSize'),
+          to: _.omit(model.nodeSplitComparison.to, 'sampleSize')
         };
       if (model.modelType.type === 'pairwise') {
         model.modelType.details = {

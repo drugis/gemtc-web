@@ -36,8 +36,8 @@ function filterPairwiseEntries(entries, treatments) {
 
 function reduceToPairwiseProblem(problem) {
   problem.treatments = filterPairwiseTreatments(problem.treatments,
-    problem.modelType.details.from,
-    problem.modelType.details.to);
+    problem.modelType.details.from.name,
+    problem.modelType.details.to.name);
   problem.entries = filterPairwiseEntries(problem.entries, problem.treatments);
   return problem;
 }

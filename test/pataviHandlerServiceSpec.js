@@ -65,8 +65,12 @@ describe('the patavi handler service', function() {
         modelType: {
           type: 'pairwise',
           details: {
-            from:  'treatment1',
-            to: 'treatment2'
+            from: {
+              name: 'treatment1'
+            },
+            to: {
+              name: 'treatment2'
+            }
           }
         }
       };
@@ -87,8 +91,12 @@ describe('the patavi handler service', function() {
         modelType: {
           type: 'pairwise',
           details: {
-            from: 'treatment1',
-            to: 'treatment2'
+            from: {
+              name: 'treatment1'
+            },
+            to: {
+              name: 'treatment2'
+            }
           }
         }
       };
