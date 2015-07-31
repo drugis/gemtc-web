@@ -108,8 +108,8 @@ define(['lodash', 'moment'], function(_, moment) {
         };
       if (model.modelType.type === 'pairwise') {
         model.modelType.details = {
-          from: model.pairwiseComparison.from,
-          to: model.pairwiseComparison.to
+          from: _.omit(model.pairwiseComparison.from, 'sampleSize'),
+          to: _.omit(model.pairwiseComparison.to, 'sampleSize')
         };
       }
       var pureModel = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison');
