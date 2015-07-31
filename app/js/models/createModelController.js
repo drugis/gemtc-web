@@ -101,10 +101,15 @@ define(['lodash', 'moment'], function(_, moment) {
     }
 
     function createAndPostModel(model, successFunction) {
-      if (model.modelType.type === 'pairwise' || model.modelType.type === 'node-split') {
+      if (model.modelType.type === 'node-split')
         model.modelType.details = {
           from: model.nodeSplitComparison.from,
           to: model.nodeSplitComparison.to
+        };
+      if (model.modelType.type === 'pairwise') {
+        model.modelType.details = {
+          from: model.pairwiseComparison.from,
+          to: model.pairwiseComparison.to
         };
       }
       var pureModel = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison');
