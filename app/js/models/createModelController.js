@@ -11,13 +11,16 @@ define(['lodash', 'moment'], function(_, moment) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
       $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
       $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
+      if ($scope.nodeSplitOptions.length > 0) {
+        $scope.model.nodeSplitOption = $scope.nodeSplitOptions[0];
+      }
       return problem;
     });
 
     $scope.model = {
       linearModel: 'random',
       modelType: {
-        type: 'network'
+        mainType: 'network'
       },
       burnInIterations: 5000,
       inferenceIterations: 20000,
@@ -28,15 +31,33 @@ define(['lodash', 'moment'], function(_, moment) {
     $scope.isAddButtonDisabled = isAddButtonDisabled;
     $scope.isRunlengthDivisibleByThinningFactor = isRunlengthDivisibleByThinningFactor;
     $scope.checkRunLength = checkRunLength;
+    $scope.modelTypeChange = modelTypeChange;
 
     checkRunLength();
     $scope.$watch('model', function(newValue, oldValue) {
       checkRunLength();
     }, true); // true -> deep watch
 
+    function modelTypeChange() {
+      var mainType = $scope.model.modelType.mainType,
+        subType = $scope.model.modelType.subType;
+
+      if (mainType === 'network') {
+        $scope.model.modelType.subType = '';
+      }
+      if (mainType === 'pairwise') {
+        $scope.model.modelType.subType = 'all-pairwise';
+      }
+      if (mainType === 'node-split') {
+        $scope.model.modelType.subType = 'all-node-split';
+      }
+    }
+
     function checkRunLength() {
       problemDefer.$promise.then(function(problem) {
-        if ($scope.model.modelType.type === 'all-pairwise') {
+        if (($scope.model.modelType.mainType === 'pairwise' && $scope.model.modelType.subType === 'all-pairwise') ||
+          ($scope.model.modelType.mainType === 'node-split' && $scope.model.modelType.subType === 'all-node-split')
+        ) {
           var modelBatch = createModelBatch($scope.model);
           $scope.estimatedRunLength = _.max(_.map(modelBatch, function(model) {
             return AnalysisService.estimateRunLength(problem, model);
@@ -64,25 +85,28 @@ define(['lodash', 'moment'], function(_, moment) {
     }
 
     function createModelBatch(modelBase) {
-      return _.map($scope.comparisonOptions, function(comparisonOption) {
-        var newModel = _.cloneDeep(modelBase);
-        newModel.title = modelBase.title + ' (' + comparisonOption.from.name + ' - ' + comparisonOption.to.name + ')';
-        newModel.modelType = {
-          type: 'pairwise',
-          details: {
-            from: comparisonOption.from.name,
-            to: comparisonOption.to.name
-          }
-        };
-        newModel.pairwiseComparison = comparisonOption;
-        return newModel;
-      });
+      if (modelBase.modelType.mainType == 'pairwise') {
+        return _.map($scope.comparisonOptions, function(comparisonOption) {
+          var newModel = _.cloneDeep(modelBase);
+          newModel.title = modelBase.title + ' (' + comparisonOption.from.name + ' - ' + comparisonOption.to.name + ')';
+          newModel.pairwiseComparison = comparisonOption;
+          return newModel;
+        });
+      } else if (modelBase.modelType.mainType == 'node-split') {
+        return _.map($scope.nodeSplitOptions, function(nodeSplitOption) {
+          var newModel = _.cloneDeep(modelBase);
+          newModel.title = modelBase.title + ' (' + nodeSplitOption.from.name + ' - ' + nodeSplitOption.to.name + ')';
+          newModel.nodeSplitComparison = nodeSplitOption;
+          return newModel;
+        });
+      }
     }
 
     function createModel(model) {
       $scope.isAddingModel = true;
-      if (model.modelType.type === 'all-pairwise') {
+      if (model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split') {
         var modelsToCreate = createModelBatch(model);
+        var cleanModels = _.map(modelsToCreate, cleanModel);
         var creationPromises = _.map(modelsToCreate, function(modelToCreate) {
           return createAndPostModel(modelToCreate, function() {});
         });
@@ -100,20 +124,28 @@ define(['lodash', 'moment'], function(_, moment) {
       }
     }
 
-    function createAndPostModel(model, successFunction) {
-      if (model.modelType.type === 'node-split')
+    function cleanModel(frondEndModel) {
+      var model = _.cloneDeep(frondEndModel);
+      if (frondEndModel.modelType.mainType === 'node-split')
         model.modelType.details = {
-          from: _.omit(model.nodeSplitComparison.from, 'sampleSize'),
-          to: _.omit(model.nodeSplitComparison.to, 'sampleSize')
+          from: _.omit(frondEndModel.nodeSplitComparison.from, 'sampleSize'),
+          to: _.omit(frondEndModel.nodeSplitComparison.to, 'sampleSize')
         };
-      if (model.modelType.type === 'pairwise') {
+      if (frondEndModel.modelType.mainType === 'pairwise') {
         model.modelType.details = {
-          from: _.omit(model.pairwiseComparison.from, 'sampleSize'),
-          to: _.omit(model.pairwiseComparison.to, 'sampleSize')
+          from: _.omit(frondEndModel.pairwiseComparison.from, 'sampleSize'),
+          to: _.omit(frondEndModel.pairwiseComparison.to, 'sampleSize')
         };
       }
-      var pureModel = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison');
-      return ModelResource.save($stateParams, pureModel, successFunction).$promise;
+      model.modelType = _.omit(model.modelType, 'mainType', 'subType');
+      model.modelType.type = frondEndModel.modelType.mainType;
+      model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison');
+      return model;
+    }
+
+    function createAndPostModel(frondEndModel, successFunction) {
+      var model = cleanModel(frondEndModel);
+      return ModelResource.save($stateParams, model, successFunction).$promise;
 
     }
   };

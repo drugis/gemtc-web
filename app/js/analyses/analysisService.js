@@ -118,10 +118,11 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function estimateRunLength(problem, model) {
-      var theProblem, nRandomEffects, nStochasticVariables, nMonitoredVariables;
-      if (model.modelType.type === 'pairwise') {
+      var theProblem, nRandomEffects, nStochasticVariables, nMonitoredVariables,
+        modelMainType = model.modelType.mainType;
+      if (modelMainType === 'pairwise') {
         theProblem = reduceToPairwiseProblem(problem, model.pairwiseComparison);
-      } else if (model.modelType.type === 'network' || model.modelType.type === 'node-split') {
+      } else if (modelMainType === 'network' || modelMainType === 'node-split') {
         theProblem = problem;
       }
       var nTreatments = theProblem.treatments.length;

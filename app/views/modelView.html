@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="columns large-12">
+  <div class="columns large-12" id="model-results-header">
     <h1>{{analysis.title}}</h1>
     <h5><strong>Outcome</strong></h5>
     <h5>{{analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></h5>
@@ -13,7 +13,7 @@
       <span ng-if="!result.results">
         <h4 class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
       </span>
-      <div ng-if="result.results" style="padding-top: 1rem;">
+      <div ng-if="result.results" style="padding-top: 1rem;" id="model-results-results-header">
         <div class="row">
           <div class="columns large-4">
             <div class="panel callout">
