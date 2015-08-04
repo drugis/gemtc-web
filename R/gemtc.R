@@ -118,13 +118,20 @@ predict.t <- function(network, n.adapt, n.iter, thin) {
   )
 }
 
-nsdensity <- function(x, t1, t2, xlim=c(-8,8)) {
-  param <- paste("d", t1, t2, sep=".")
+nsdensity <- function(x) {
   par(mfrow=c(2,1))
- # // cons <- relative.effect(x[['consistency']], t1=t1, t2=t2)
- #  densplot(cons[['samples']][,param,drop=FALSE], xlim=xlim)
-  ns <- x[['samples']][,c('d.direct','d.indirect')]
-  densplot(ns, xlim=xlim)
+  vars <- c('d.direct','d.indirect')
+  ns <- x[['samples']][,vars]
+  densities <- lapply(vars, function(var) {
+    x <- as.matrix(ns[,var])
+    bw <- 1.06 * min(sd(x), IQR(x)/1.34) * length(x)^-0.2
+    density(x, bw=bw)
+  })
+  xlim <- c(min(sapply(densities, function(d) { min(d$x) })),
+            max(sapply(densities, function(d) { max(d$x) })))
+  ylim <- c(0,
+            max(sapply(densities, function(d) { max(d$y) })))
+  densplot(ns, ylim=ylim, xlim=xlim)
 }
 
 gemtc <- function(params) {
@@ -271,7 +278,7 @@ gemtc <- function(params) {
 
   if(modelType == 'node-split') {
     densityPlot <- plotToPng(function() {
-      nsdensity(result, t1, t2)
+      nsdensity(result)
     })
   }
   report('densityplot', 1.0)
