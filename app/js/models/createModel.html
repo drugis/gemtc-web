@@ -37,8 +37,8 @@
           </div>
 
           <div class="stacked-radio">
-            <input type="radio" value="pairwise" ng-model="model.modelType.mainType" id="pairwise-model-main-type-radio" ng-change="modelTypeChange()">
-            <label for="pairwise-model-main-type-radio">Pair-wise analysis</label>
+            <input type="radio" value="pairwise" ng-model="model.modelType.mainType" id="pairwise-model-main-type-radio" ng-change="modelTypeChange()"  ng-disabled="comparisonOptions.length === 0">
+            <label for="pairwise-model-main-type-radio">Pair-wise analysis <em ng-show="comparisonOptions.length === 0"> (Not possible for this analysis)</em></label>
           </div>
           <div class="indent-one" ng-show="model.modelType.mainType == 'pairwise'">
             <label for="comparison-select">Select comparison for which to perform pair-wise analysis</label>
