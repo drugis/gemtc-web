@@ -56,8 +56,9 @@
          </div>
 
         <div class="stacked-radio">
-          <input type="radio" value="node-split" ng-model="model.modelType.mainType" id="node-split-model-main-type-radio" ng-change="modelTypeChange()">
-          <label for="node-split-model-main-type-radio">Node-splitting analysis</label>
+          <input type="radio" value="node-split" ng-model="model.modelType.mainType" id="node-split-model-main-type-radio" ng-change="modelTypeChange()" ng-disabled="nodeSplitOptions.length === 0">
+          <label for="node-split-model-main-type-radio">Node-splitting analysis <em ng-show="nodeSplitOptions.length === 0"> (Not possible for this analysis)</em></label>
+          
         </div>
         <div class="indent-one" ng-show="model.modelType.mainType == 'node-split'">
           <label for="comparison-select">Select comparison for which to perform node-splitting analysis</label>
