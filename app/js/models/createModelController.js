@@ -9,7 +9,9 @@ define(['lodash', 'moment'], function(_, moment) {
     var problemDefer = ProblemResource.get($stateParams);
     problemDefer.$promise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
-      $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
+      if ($scope.comparisonOptions.length > 0) { 
+        $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
+      }
       $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
       if ($scope.nodeSplitOptions.length > 0) {
         $scope.model.nodeSplitComparison = $scope.nodeSplitOptions[0];
