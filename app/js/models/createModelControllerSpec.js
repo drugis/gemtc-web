@@ -44,7 +44,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
       it('should place a basic model on the scope', function() {
         expect(scope.model.linearModel).toBe('random');
-        expect(scope.model.modelType.type).toBe('network');
+        expect(scope.model.modelType.mainType).toBe('network');
         expect(scope.model.burnInIterations).toBe(5000);
         expect(scope.model.inferenceIterations).toBe(20000);
         expect(scope.model.thinningFactor).toBe(10);
@@ -69,6 +69,17 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         var model = {
           linearModel: 'random',
           modelType: {
+            mainType: 'network'
+          },
+          title: 'modelTitle',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10
+        }
+
+      var cleanedModel = {
+          linearModel: 'random',
+          modelType: {
             type: 'network'
           },
           title: 'modelTitle',
@@ -83,7 +94,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         });
 
         it('should save the model', function() {
-          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, model, jasmine.any(Function));
+          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, cleanedModel, jasmine.any(Function));
         });
         it('should set isAddingModel to true', function() {
           expect(scope.isAddingModel).toBe(true);
@@ -94,7 +105,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         var frontendModel = {
           linearModel: 'random',
           modelType: {
-            type: 'node-split'
+            mainType: 'node-split'
           },
           title: 'modelTitle nodesplit',
           burnInIterations: 5000,

@@ -24,7 +24,8 @@ module.exports = {
 
     createModelPage.setTitle('Nightwatch model');
     createModelPage.setEffectsType('random');
-    createModelPage.setModelType('node-split');
+    createModelPage.setModelMainType('node-split');
+    createModelPage.setModelSubType('node-split-specific');
     createModelPage.createModel();
     browser.pause(20000)
     createModelPage.end();
