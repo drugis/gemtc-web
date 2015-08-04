@@ -10,9 +10,12 @@ define(['lodash', 'moment'], function(_, moment) {
     problemDefer.$promise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
       $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
+      $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
       $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
       if ($scope.nodeSplitOptions.length > 0) {
-        $scope.model.nodeSplitOption = $scope.nodeSplitOptions[0];
+        $scope.model.nodeSplitComparison = $scope.nodeSplitOptions[0];
+        $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
+      } else {
       }
       return problem;
     });
