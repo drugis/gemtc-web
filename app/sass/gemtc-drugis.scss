@@ -192,6 +192,10 @@ div.row.bottom-button-bar {
 
 //////// Tables /////////////////
 table {
+  caption {
+    text-align: left;
+    font-weight: lighter;
+  }
   border-collapse: collapse;
   //remove default foundation striping
   tr:nth-of-type(even) {
