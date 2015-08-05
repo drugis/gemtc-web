@@ -197,9 +197,9 @@ gemtc <- function(params) {
     if(modelType == 'node-split') {
       t1 <- params[['modelType']][['details']][['from']][['id']]
       t2 <- params[['modelType']][['details']][['to']][['id']]
-      model <- mtc.model(network, linearModel=linearModel, type="nodesplit", t1=t1, t2=t2)
+      model <- mtc.model(network, linearModel=linearModel, type="nodesplit", t1=t1, t2=t2, link=params[['link']], likelihood=params[['likelihood']])
     } else {
-      model <- mtc.model(network, linearModel=linearModel)
+      model <- mtc.model(network, linearModel=linearModel, link=params[['link']], likelihood=params[['likelihood']])
     }
     update(list(progress=0))
   })

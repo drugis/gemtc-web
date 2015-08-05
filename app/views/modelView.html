@@ -21,27 +21,31 @@
               <table class="layout-table">
                 <tr>
                   <td class="large-6 text-right"><strong>Model type</strong></td>
-                  <td>{{model.modelType.type}}</td>
+                  <td>{{::model.modelType.type}}</td>
                 </tr>
                 <tr ng-if="model.modelType.type === 'pairwise'">
                   <td class="large-6 text-right"><strong>Pairwise comparison</strong></td>
-                  <td>{{model.modelType.details.from.name}} &mdash; {{model.modelType.details.to.name}}</td>
+                  <td>{{::model.modelType.details.from.name}} &mdash; {::model.modelType.details.to.name}}</td>
                 </tr>
                 <tr ng-if="model.modelType.type === 'node-split'">
                   <td class="large-6 text-right"><strong>Split comparison</strong></td>
-                  <td>{{model.modelType.details.from.name}} &mdash; {{model.modelType.details.to.name}}</td>
+                  <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
                 </tr>
                 <tr>
                   <td class="large-6 text-right"><strong>Effects type</strong></td>
-                  <td>{{result.results.linearModel}}</td>
+                  <td>{{::result.results.linearModel}}</td>
+                </tr>
+                <tr>
+                  <td class="large-6 text-right"><strong>Likelihood / link</strong></td>
+                  <td>{{::result.results.likelihood}} / {{::result.results.link}}</td>
                 </tr>
                 <tr>
                   <td class="large-6 text-right" style="vertical-align:top;"><strong>run-length</strong></td>
                   <td>
                     <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
-                      <li style="padding-bottom: 0.5rem">burn-in: {{result.results.burnInIterations}}</li>
-                      <li style="padding-bottom: 0.5rem">inference: {{result.results.inferenceIterations}}</li>
-                      <li style="padding-bottom: 0.5rem">thinning: {{result.results.thinningFactor}}</li>
+                      <li style="padding-bottom: 0.5rem">burn-in: {{::result.results.burnInIterations}}</li>
+                      <li style="padding-bottom: 0.5rem">inference: {{::result.results.inferenceIterations}}</li>
+                      <li style="padding-bottom: 0.5rem">thinning: {{::result.results.thinningFactor}}</li>
                     </ul>
                   </td>
                 </tr>
@@ -148,9 +152,9 @@
 
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
           <div class="columns large-12">
-            <div class="table-title" ng-switch on="result.results.logScale">Relative effects table comparing the included interventions:
-              <span ng-switch-when="true">odds ratio</span>
-              <span ng-switch-default>mean difference</span> (95% CrI).
+            <div class="table-title">Relative effects table comparing the included interventions:
+              <span>{{::scaleName}}</span>
+              (95% CrI).
               <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
             </div>
             <table>

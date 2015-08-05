@@ -21,7 +21,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService,
       relativeEffectsTableService,
       diagnosticsService,
-      modelServiceMock;
+      modelServiceMock,
+      analysisServiceMock;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -70,6 +71,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics']);
       modelServiceMock = jasmine.createSpyObj('ModelService', ['enrich']);
+      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName']);
 
 
       $controller('ModelController', {
@@ -82,7 +84,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         RelativeEffectsTableService: relativeEffectsTableService,
         AnalysisResource: analysisResource,
         DiagnosticsService: diagnosticsService,
-        ModelService: modelServiceMock
+        ModelService: modelServiceMock,
+        AnalysisService: analysisServiceMock
       });
     }));
 

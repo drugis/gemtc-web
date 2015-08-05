@@ -75,9 +75,24 @@
           </div>
         </div>
 
+    </div>
+  </div> <!-- end model type section -->
 
+  <div class="row section">
+    <div class="large-6 medium-6 small-12 columns">
+      <label class="form-item-header">Likelihood/Link</label>
+      <label>Select a likelihood/link type <select class="large-8" ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions" ng-model="model.likelihoodLink" id="likelihood-link-select" ></select>
+      </label>
     </div>
   </div>
+  <div class="row ">
+    <div class="large-8 medium-10 small-12 columns">
+      <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The Analysis does not contain the columns {{ model.likelihoodLink.missingColumnsLabel }}.</label>
+      <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'"style="margin-bottom:2.25rem"> </label> <!-- spacer -->
+    </div>
+  </div> <!-- end likelihood/link section -->
+
+
   <div class="row section">
     <div class="large-3 medium-6 small-12 columns">
       <label class="form-item-header">Run-length parameters</label>
@@ -91,7 +106,9 @@
         <input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="thinning-factor">
       </label>
     </div>
-  </div>
+  </div> <!-- end run-length parameters section -->
+
+
   <div class="row">
     <div class="columns large-6 medium-8 small-12">
       <div>
