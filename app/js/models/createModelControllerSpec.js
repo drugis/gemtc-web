@@ -74,7 +74,11 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           title: 'modelTitle',
           burnInIterations: 5000,
           inferenceIterations: 20000,
-          thinningFactor: 10
+          thinningFactor: 10,
+          likelihoodLink: {
+            likelihood: 'likelihood',
+            link: 'link'
+          }
         }
 
       var cleanedModel = {
@@ -85,7 +89,9 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           title: 'modelTitle',
           burnInIterations: 5000,
           inferenceIterations: 20000,
-          thinningFactor: 10
+          thinningFactor: 10,
+          likelihood: 'likelihood',
+          link: 'link'
         }
 
         beforeEach(function() {
@@ -111,6 +117,10 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           burnInIterations: 5000,
           inferenceIterations: 20000,
           thinningFactor: 10,
+          likelihoodLink: {
+            likelihood: 'likelihood',
+            link: 'link'
+          },
           nodeSplitComparison: {
             from: {
               id: 1,
@@ -125,6 +135,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
         var strippedModel = {
           linearModel: 'random',
+          likelihood: 'likelihood',
+          link: 'link',
           modelType: {
             type: 'node-split',
             details: {

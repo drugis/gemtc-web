@@ -9,14 +9,22 @@ define(['lodash', 'moment'], function(_, moment) {
     var problemDefer = ProblemResource.get($stateParams);
     problemDefer.$promise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
-      if ($scope.comparisonOptions.length > 0) { 
+      if ($scope.comparisonOptions.length > 0) {
         $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
       }
       $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
       if ($scope.nodeSplitOptions.length > 0) {
         $scope.model.nodeSplitComparison = $scope.nodeSplitOptions[0];
-      } else {
-      }
+      } else {}
+
+      $scope.likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
+      var compatible = $scope.likelihoodLinkOptions.filter(function(e) {
+        return e.compatibility === "compatible"
+      });
+      var incompatible = $scope.likelihoodLinkOptions.filter(function(e) {
+        return e.compatibility === "incompatible"
+      });
+      $scope.likelihoodLinkOptions = compatible.concat(incompatible);
       return problem;
     });
 
@@ -84,7 +92,9 @@ define(['lodash', 'moment'], function(_, moment) {
         !model.inferenceIterations ||
         !model.thinningFactor ||
         !isRunlengthDivisibleByThinningFactor() ||
-        !!$scope.isAddingModel;
+        !!$scope.isAddingModel ||
+        !model.likelihoodLink ||
+        model.likelihoodLink.compatibility === 'incompatible';
     }
 
     function createModelBatch(modelBase) {
@@ -142,7 +152,9 @@ define(['lodash', 'moment'], function(_, moment) {
       }
       model.modelType = _.omit(model.modelType, 'mainType', 'subType');
       model.modelType.type = frondEndModel.modelType.mainType;
-      model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison');
+      model.likelihood = frondEndModel.likelihoodLink.likelihood;
+      model.link = frondEndModel.likelihoodLink.link;
+      model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink');
       return model;
     }
 

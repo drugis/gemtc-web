@@ -2,10 +2,10 @@
 define(['lodash'], function() {
   var dependencies = ['$scope', '$sce', '$stateParams', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
-    'DiagnosticsService', 'ModelService'
+    'DiagnosticsService', 'ModelService', 'AnalysisService'
   ];
   var ModelController = function($scope, $sce, $stateParams, ModelResource, PataviService,
-    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, ModelService) {
+    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, ModelService, AnalysisService) {
 
     $scope.analysis = AnalysisResource.get($stateParams);
     $scope.progress = {
@@ -61,7 +61,7 @@ define(['lodash'], function() {
         $scope.problem = problem;
         $scope.result = result;
         var isLogScale = result.results.logScale;
-       // $scope.model = ModelService.enrich($scope.model, problem);
+        $scope.scaleName = AnalysisService.getScaleName($scope.model);
         $scope.gelmanDiagnostics = DiagnosticsService.labelDiagnostics(result.results.gelmanDiagnostics, $scope.problem.treatments)
         if ($scope.model.modelType.type !== 'node-split') {
           var relativeEffects = result.results.relativeEffects;

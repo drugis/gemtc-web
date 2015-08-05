@@ -17,6 +17,7 @@ define(function (require) {
 
     //services
     .factory('ModelService', require('models/modelService'))
+    .factory('AnalysisService', require('analyses/analysisService'))
 
     .directive('gemtcRankPlot',require('models/rankPlotDirective'))
     ;

@@ -4,6 +4,49 @@ define(['angular', 'lodash'], function(angular, _) {
 
   var AnalysisService = function() {
 
+    var likelihoodLinkSettings = [{
+      "likelihood": "normal",
+      "link": "identity",
+      "scale": "mean difference",
+      "columns": [
+        ["mean", "std.err"],
+        ["mean", "std.dev", "sampleSize"]
+      ],
+      "missingColumnsLabel": "mean and std.err or mean, std.err and sampleSize"
+    }, {
+      "likelihood": "binom",
+      "link": "logit",
+      "scale": "odds ratio",
+      "columns": [
+        ["responders", "sampleSize"]
+      ],
+      "missingColumnsLabel": "responders and sampleSize"
+    }, {
+      "likelihood": "binom",
+      "link": "log",
+      "scale": "risk ratio",
+      "columns": [
+        ["responders", "sampleSize"]
+      ],
+      "missingColumnsLabel": "responders and sampleSize"
+    }, {
+      "likelihood": "binom",
+      "link": "cloglog",
+      "scale": "hazard ratio",
+      "columns": [
+        ["responders", "sampleSize"]
+      ],
+      "missingColumnsLabel": "responders and sampleSize"
+    }, {
+      "likelihood": "poisson",
+      "link": "log",
+      "scale": "hazard ratio",
+      "columns": [
+        ["responders", "exposure"]
+      ],
+      "missingColumnsLabel": "responders and exposure"
+    }];
+
     function problemToStudyMap(problemArg) {
       var problem = angular.copy(problemArg);
       var treatmentsMap = _.indexBy(problem.treatments, 'id');
@@ -218,13 +261,37 @@ define(['angular', 'lodash'], function(angular, _) {
       }));
     }
 
+    function createLikelihoodLinkOptions(problem) {
+      return _.map(likelihoodLinkSettings, function(setting) {
+        var isCompatible = _.any(setting.columns, function(columns) {
+          return _.every(columns, function(columnName) {
+            return problem.entries[0].hasOwnProperty(columnName);
+          });
+        });
+
+        var option = _.pick(setting, ['likelihood', 'link', 'scale', 'missingColumnsLabel']);
+        option.label = option.likelihood + '/' + option.link + ' (' + option.scale + ')';
+        option.compatibility = isCompatible ? 'compatible' : 'incompatible';
+        return option;
+      });
+    }
+
+    function getScaleName(model) {
+      return _.find(likelihoodLinkSettings, function(setting) {
+        return setting.likelihood === model.likelihood &&
+          setting.link === model.link;
+      }).scale;
+    }
+
     return {
       transformProblemToNetwork: transformProblemToNetwork,
       problemToStudyMap: problemToStudyMap,
       createPairwiseOptions: createPairwiseOptions,
       generateEdges: generateEdges,
       estimateRunLength: estimateRunLength,
-      createNodeSplitOptions: createNodeSplitOptions
+      createNodeSplitOptions: createNodeSplitOptions,
+      createLikelihoodLinkOptions: createLikelihoodLinkOptions,
+      getScaleName: getScaleName
     };
 
   };

@@ -533,13 +533,25 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
             treatments: []
           };
 
-          for(var i = 0; i < lineLength; i++) {
-            problem.entries.push({study: 's' + i, treatment: 't' + i});
-            problem.entries.push({study: 's' + i, treatment: 't' + (i+1)});
-            problem.treatments.push({id: 't' + i, name: 't' + i});
+          for (var i = 0; i < lineLength; i++) {
+            problem.entries.push({
+              study: 's' + i,
+              treatment: 't' + i
+            });
+            problem.entries.push({
+              study: 's' + i,
+              treatment: 't' + (i + 1)
+            });
+            problem.treatments.push({
+              id: 't' + i,
+              name: 't' + i
+            });
           }
 
-          problem.treatments.push({id: 't' + lineLength, name: 't' + lineLength});
+          problem.treatments.push({
+            id: 't' + lineLength,
+            name: 't' + lineLength
+          });
 
 
           nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
@@ -594,6 +606,76 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         });
       });
 
+    });
+
+    describe('createLikelihoodLinkOptions', function() {
+
+      it('should create 5 options having a title, linkelihood and compatibility', function() {
+        var problem = {
+          "entries": [{
+            "study": "Rudolph and Feiger, 1999",
+            "treatment": 4,
+            "sampleSize": 100,
+            "responders": 58
+          }, {
+            "study": "Rudolph and Feiger, 1999",
+            "treatment": 2,
+            "sampleSize": 103,
+            "responders": 53
+          }]
+        };
+        var likelihoodLinkOptions = analysisService.createLikelihoodLinkOptions(problem);
+        expect(likelihoodLinkOptions.length).toBe(5);
+
+        expect(likelihoodLinkOptions[0].likelihood).toBe('normal');
+        expect(likelihoodLinkOptions[0].link).toBe('identity');
+        expect(likelihoodLinkOptions[0].scale).toBe('mean difference');
+        expect(likelihoodLinkOptions[0].label).toBe('normal/identity (mean difference)');
+        expect(likelihoodLinkOptions[0].compatibility).toBe('incompatible');
+
+        expect(likelihoodLinkOptions[1].label).toBe('binom/logit (odds ratio)');
+        expect(likelihoodLinkOptions[1].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[2].label).toBe('binom/log (risk ratio)');
+        expect(likelihoodLinkOptions[2].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[3].label).toBe('binom/cloglog (hazard ratio)');
+        expect(likelihoodLinkOptions[3].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[4].label).toBe('poisson/log (hazard ratio)');
+        expect(likelihoodLinkOptions[4].compatibility).toBe('incompatible');
+      });
+
+
+      it('should create 5 options having a title, linkelihood and compatibility', function() {
+
+        var problem = {
+          "entries": [{
+            "study": "Rudolph and Feiger, 1999",
+            "treatment": 4,
+            "mean": 100,
+            "std.err": 58
+          }]
+        };
+
+        var likelihoodLinkOptions = analysisService.createLikelihoodLinkOptions(problem);
+
+        expect(likelihoodLinkOptions[0].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[1].compatibility).toBe('incompatible');
+        expect(likelihoodLinkOptions[2].compatibility).toBe('incompatible');
+        expect(likelihoodLinkOptions[3].compatibility).toBe('incompatible');
+        expect(likelihoodLinkOptions[4].compatibility).toBe('incompatible');
+      });
+    });
+
+    describe('getScaleName', function() {
+
+      it('should return the appropriate scale', function() {
+        var model = {
+          likelihood: 'binom',
+          link: 'log'
+        };
+        var scale = analysisService.getScaleName(model);
+        expect(scale).toEqual('risk ratio');
+
+      });
     });
   });
 });
