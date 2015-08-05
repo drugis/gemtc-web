@@ -36,17 +36,15 @@
                   <td>{{result.results.linearModel}}</td>
                 </tr>
                 <tr>
-                  <td class="large-6 text-right"><strong>Burn-in iterations</strong></td>
-                  <td>{{result.results.burnInIterations}}</td>
+                  <td class="large-6 text-right" style="vertical-align:top;"><strong>run-length</strong></td>
+                  <td>
+                    <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
+                      <li style="padding-bottom: 0.5rem">burn-in: {{result.results.burnInIterations}}</li>
+                      <li style="padding-bottom: 0.5rem">inference: {{result.results.inferenceIterations}}</li>
+                      <li style="padding-bottom: 0.5rem">thinning: {{result.results.thinningFactor}}</li>
+                    </ul>
                 </tr>
-                <tr>
-                  <td class="large-6 text-right"><strong>Inference iterations</strong></td>
-                  <td>{{result.results.inferenceIterations}}</td>
-                </tr>
-                <tr>
-                  <td class="large-6 text-right"><strong>Thinning factor</strong></td>
-                  <td>{{result.results.thinningFactor}}</td>
-                </tr> 
+            
               </table>
             </div>
           </div>
