@@ -15,7 +15,7 @@
       </span>
       <div ng-if="result.results" style="padding-top: 1rem;" id="model-results-results-header">
         <div class="row">
-          <div class="columns large-4">
+          <div class="columns columns large-6 medium-8 small-12">
             <div class="panel callout">
               <h5><strong>Model settings</strong></h5>
               <table class="layout-table">
@@ -140,10 +140,10 @@
                 </tr>
               </thead>
               <tr>
-                <td><strong>Direct comparisons</strong></td><td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}} - {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
+                <td><strong>Direct estimate</strong></td><td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}} - {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
               </tr>
               <tr>
-                <td><strong>Indirect comparisons</strong></td><td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}} - {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
+                <td><strong>Indirect estimate</strong></td><td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}} - {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
               </tr>
             </table>
           </div>
