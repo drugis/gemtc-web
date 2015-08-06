@@ -87,7 +87,7 @@
   </div>
   <div class="row ">
     <div class="large-8 medium-10 small-12 columns">
-      <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The Analysis does not contain the columns {{ model.likelihoodLink.missingColumnsLabel }}.</label>
+      <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel }}.</label>
       <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'"style="margin-bottom:2.25rem"> </label> <!-- spacer -->
     </div>
   </div> <!-- end likelihood/link section -->

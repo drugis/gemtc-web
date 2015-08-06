@@ -12,7 +12,7 @@ define(['angular', 'lodash'], function(angular, _) {
         ["mean", "std.err"],
         ["mean", "std.dev", "sampleSize"]
       ],
-      "missingColumnsLabel": "mean and std.err or mean, std.err and sampleSize"
+      "missingColumnsLabel": "'mean' and 'std.err' or 'mean', 'std.err', and 'sampleSize'"
     }, {
       "likelihood": "binom",
       "link": "logit",
@@ -20,7 +20,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "columns": [
         ["responders", "sampleSize"]
       ],
-      "missingColumnsLabel": "responders and sampleSize"
+      "missingColumnsLabel": "'responders' and 'sampleSize'"
     }, {
       "likelihood": "binom",
       "link": "log",
@@ -28,7 +28,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "columns": [
         ["responders", "sampleSize"]
       ],
-      "missingColumnsLabel": "responders and sampleSize"
+      "missingColumnsLabel": "'responders' and 'sampleSize'"
     }, {
       "likelihood": "binom",
       "link": "cloglog",
@@ -36,7 +36,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "columns": [
         ["responders", "sampleSize"]
       ],
-      "missingColumnsLabel": "responders and sampleSize"
+      "missingColumnsLabel": "'responders' and 'sampleSize'"
     }, {
       "likelihood": "poisson",
       "link": "log",
@@ -44,7 +44,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "columns": [
         ["responders", "exposure"]
       ],
-      "missingColumnsLabel": "responders and exposure"
+      "missingColumnsLabel": "'responders' and 'exposure'"
     }];
 
     function problemToStudyMap(problemArg) {
