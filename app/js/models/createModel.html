@@ -79,19 +79,43 @@
   </div> <!-- end model type section -->
 
   <div class="row section">
-    <div class="large-6 medium-6 small-12 columns">
+    <div class="columns large-6 medium-6 small-12">
       <label class="form-item-header">Likelihood/Link</label>
       <label>Select a likelihood/link type <select class="large-8" ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions" ng-model="model.likelihoodLink" id="likelihood-link-select" ></select>
       </label>
     </div>
   </div>
   <div class="row ">
-    <div class="large-8 medium-10 small-12 columns">
+    <div class="columns large-8 medium-10 small-12">
       <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel }}.</label>
       <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'"style="margin-bottom:2.25rem"> </label> <!-- spacer -->
     </div>
   </div> <!-- end likelihood/link section -->
 
+
+  <div class="row section">
+    <div class="large-6 medium-8 small-12 columns">
+      <label class="form-item-header">Outcome scale</label>
+      <div class="stacked-radio">
+        <input type="radio" value="heuristically" ng-model="model.outcomeScale.type" id="heuristically-model-outcom-scale-type-radio" ng-change="outcomeScaleTypeChange()">
+        <label for="heuristically-model-outcom-scale-type-radio">Determine heuristically</label>
+      </div>
+      <div class="stacked-radio">
+          <input type="radio" value="fixed" ng-model="model.outcomeScale.type" id="fixed-model-outcom-scale-type-radio" ng-change="outcomeScaleTypeChange()">
+          <label for="fixed-model-outcom-scale-type-radio" >Fixed value</label>
+          <input type="number" ng-model="model.outcomeScale.value" id="fixed-outcome-scale-input" ng-disabled="model.outcomeScale.type !== 'fixed'" ng-change="fixedOutcomeScaleValueChage()" style="display: inline; width:18%;">
+          
+      </div>  
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-8 medium-10 small-12" style="padding-left: 1.2rem;">
+      <div  ng-show='model.outcomeScale.value < 0 '><label class="alert">Outcome scale value can not be below zero.</label></div>
+      <label style="margin-bottom:1rem;"><strong>Relative effect priors:</strong> N(0, (15 . <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)<sup>2</sup>)</label>
+      <label style="margin-bottom:1rem;"><strong>Random effects SD prior:</strong> U(0, <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)</label>
+    </div>
+  </div> <!-- end likelihood/link section -->
+ <!-- end outcome measure scale section -->
 
   <div class="row section">
     <div class="large-3 medium-6 small-12 columns">

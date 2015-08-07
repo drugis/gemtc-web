@@ -78,6 +78,9 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           likelihoodLink: {
             likelihood: 'likelihood',
             link: 'link'
+          },
+          outcomeScale: {
+            type: 'heuristically'
           }
         }
 
@@ -130,6 +133,9 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
               id: 2,
               name: 'toName'
             }
+          },
+          outcomeScale: {
+            type: 'heuristically'
           }
         }
 
@@ -166,6 +172,50 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         });
         it('should set isAddingModel to true', function() {
           expect(scope.isAddingModel).toBe(true);
+        });
+      });
+
+      describe('when creating model that has the outcome scale set', function() {
+        var frontendModel = {
+          linearModel: 'random',
+          modelType: {
+            mainType: 'network'
+          },
+          title: 'modelTitle',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10,
+          likelihoodLink: {
+            likelihood: 'likelihood',
+            link: 'link'
+          },
+          outcomeScale: {
+            type: 'fixed',
+            value: 123456
+          }
+        }
+
+        var cleanedModel = {
+          linearModel: 'random',
+          modelType: {
+            type: 'network'
+          },
+          title: 'modelTitle',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10,
+          likelihood: 'likelihood',
+          link: 'link',
+          outcomeScale: 123456
+        }
+
+        beforeEach(function() {
+          modelResourceMock.save.calls.reset();
+          scope.createModel(frontendModel);
+        });
+
+        it('should place the scale value on the model', function() {
+          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, cleanedModel, jasmine.any(Function));
         });
       });
     });

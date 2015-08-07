@@ -12,7 +12,7 @@ module.exports = {
 };
 
 function mapModelRow(modelRow) {
-  return {
+  var model = {
     id: modelRow.id,
     title: modelRow.title,
     linearModel: modelRow.linearmodel,
@@ -25,11 +25,17 @@ function mapModelRow(modelRow) {
     likelihood: modelRow.likelihood,
     link: modelRow.link,
   };
+
+  if(modelRow.outcome_scale) {
+    model.outcomeScale = modelRow.outcome_scale;
+  }
+
+  return model;
 }
 
 function findByAnalysis(analysisId, callback) {
   logger.debug('modelRepository.findByAnalysis, where analysisId = ' + analysisId);
-  db.query('SELECT id, title, analysisId, taskId, linearModel, burn_in_iterations, inference_iterations, thinning_factor, modelType, likelihood, link FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
+  db.query('SELECT id, title, analysisId, taskId, linearModel, burn_in_iterations, inference_iterations, thinning_factor, modelType, likelihood, link, outcome_scale FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
     if (error) {
       logger.error('error finding models by analysisId, error: ' + error);
       callback(error);
@@ -42,7 +48,7 @@ function findByAnalysis(analysisId, callback) {
 
 function createModel(ownerAccountId, analysisId, newModel, callback) {
 
-  db.query('INSERT INTO model (analysisId, title, linearModel, burn_in_iterations, inference_iterations, thinning_factor, modelType, likelihood, link) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id', [
+  db.query('INSERT INTO model (analysisId, title, linearModel, burn_in_iterations, inference_iterations, thinning_factor, modelType, likelihood, link, outcome_scale) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id', [
       analysisId,
       newModel.title,
       newModel.linearModel,
@@ -51,7 +57,8 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
       newModel.thinningFactor,
       newModel.modelType,
       newModel.likelihood,
-      newModel.link
+      newModel.link,
+      newModel.outcomeScale
     ],
     function(error, result) {
       if (error) {
@@ -64,7 +71,7 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
 }
 
 function getModel(modelId, callback) {
-  db.query('SELECT id, title, analysisId, taskId, linearModel, burn_in_iterations, inference_iterations, thinning_factor, modelType, likelihood, link FROM model WHERE id=$1', [modelId], function(error, result) {
+  db.query('SELECT id, title, analysisId, taskId, linearModel, burn_in_iterations, inference_iterations, thinning_factor, modelType, likelihood, link, outcome_scale FROM model WHERE id=$1', [modelId], function(error, result) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);

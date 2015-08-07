@@ -13,7 +13,8 @@ var modelSettings = [
   'inferenceIterations',
   'thinningFactor',
   'likelihood',
-  'link'];
+  'link',
+  'outcomeScale'];
 
 function createPataviTask(analysis, model, callback) {
   var problemPlusModelSettings = _.extend(analysis.problem, _.pick(model, modelSettings));

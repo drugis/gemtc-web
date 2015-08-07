@@ -194,13 +194,16 @@ gemtc <- function(params) {
       function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
 
     network <- mtc.network(data.ab=data.ab, treatments=treatments)
+    mtc.model.params <- list(network=network, linearModel=linearModel, link=params[['link']], likelihood=params[['likelihood']])
+    if (!is.null(params[['outcomeScale']])) {
+      mtc.model.params <- c(mtc.model.params, list('om.scale' = params[['outcomeScale']]))
+    }
     if(modelType == 'node-split') {
       t1 <- params[['modelType']][['details']][['from']][['id']]
       t2 <- params[['modelType']][['details']][['to']][['id']]
-      model <- mtc.model(network, linearModel=linearModel, type="nodesplit", t1=t1, t2=t2, link=params[['link']], likelihood=params[['likelihood']])
-    } else {
-      model <- mtc.model(network, linearModel=linearModel, link=params[['link']], likelihood=params[['likelihood']])
+      mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
     }
+    model <- do.call(mtc.model, mtc.model.params)
     update(list(progress=0))
   })
 
@@ -299,6 +302,7 @@ gemtc <- function(params) {
   summary[['burnInIterations']] <- params[['burnInIterations']]
   summary[['inferenceIterations']] <- params[['inferenceIterations']]
   summary[['thinningFactor']] <- params[['thinningFactor']]
+  summary[['outcomeScale']] <- model[['om.scale']]
   if(modelType != 'node-split') {
     summary[['relativeEffects']] <- releffect
     summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
