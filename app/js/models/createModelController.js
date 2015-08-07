@@ -105,6 +105,7 @@ define(['lodash', 'moment'], function(_, moment) {
         !model.inferenceIterations ||
         !model.thinningFactor ||
         !isRunlengthDivisibleByThinningFactor() ||
+        estimatedRunLength > 300 ||
         !!$scope.isAddingModel ||
         !model.likelihoodLink ||
         model.likelihoodLink.compatibility === 'incompatible'||
