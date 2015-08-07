@@ -47,6 +47,7 @@ define(['lodash', 'moment'], function(_, moment) {
     $scope.checkRunLength = checkRunLength;
     $scope.modelTypeChange = modelTypeChange;
     $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
+    $scope.isNumber = isNumber;
 
     checkRunLength();
     $scope.$watch('model', function(newValue, oldValue) {
@@ -107,7 +108,12 @@ define(['lodash', 'moment'], function(_, moment) {
         !!$scope.isAddingModel ||
         !model.likelihoodLink ||
         model.likelihoodLink.compatibility === 'incompatible'||
-        $scope.model.outcomeScale.value < 0;
+        $scope.model.outcomeScale.value <= 0||
+        ($scope.model.outcomeScale.type === 'fixed' && !angular.isNumber($scope.model.outcomeScale.value));
+    }
+
+    function isNumber(value) {
+      return angular.isNumber(value);
     }
 
     function createModelBatch(modelBase) {
