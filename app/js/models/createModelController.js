@@ -33,6 +33,9 @@ define(['lodash', 'moment'], function(_, moment) {
       modelType: {
         mainType: 'network'
       },
+      outcomeScale: {
+        type: 'heuristically'
+      },
       burnInIterations: 5000,
       inferenceIterations: 20000,
       thinningFactor: 10
@@ -43,6 +46,7 @@ define(['lodash', 'moment'], function(_, moment) {
     $scope.isRunlengthDivisibleByThinningFactor = isRunlengthDivisibleByThinningFactor;
     $scope.checkRunLength = checkRunLength;
     $scope.modelTypeChange = modelTypeChange;
+    $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
 
     checkRunLength();
     $scope.$watch('model', function(newValue, oldValue) {
@@ -61,6 +65,14 @@ define(['lodash', 'moment'], function(_, moment) {
       }
       if (mainType === 'node-split') {
         $scope.model.modelType.subType = 'all-node-split';
+      }
+    }
+
+    function outcomeScaleTypeChange() {
+      if( $scope.model.outcomeScale.type === 'heuristically') {
+        $scope.model.outcomeScale.value = undefined;
+      } else {
+        $scope.model.outcomeScale.value = 5; // magic number: w to the power of 0 devided by 15 
       }
     }
 
@@ -94,7 +106,8 @@ define(['lodash', 'moment'], function(_, moment) {
         !isRunlengthDivisibleByThinningFactor() ||
         !!$scope.isAddingModel ||
         !model.likelihoodLink ||
-        model.likelihoodLink.compatibility === 'incompatible';
+        model.likelihoodLink.compatibility === 'incompatible'||
+        $scope.model.outcomeScale.value < 0;
     }
 
     function createModelBatch(modelBase) {
@@ -154,6 +167,11 @@ define(['lodash', 'moment'], function(_, moment) {
       model.modelType.type = frondEndModel.modelType.mainType;
       model.likelihood = frondEndModel.likelihoodLink.likelihood;
       model.link = frondEndModel.likelihoodLink.link;
+      if(frondEndModel.outcomeScale.type === 'heuristically') {
+        delete model.outcomeScale;
+      } else {
+        model.outcomeScale = frondEndModel.outcomeScale.value;
+      }
       model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink');
       return model;
     }

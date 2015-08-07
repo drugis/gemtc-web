@@ -20,23 +20,28 @@
               <h5><strong>Model settings</strong></h5>
               <table class="layout-table">
                 <tr>
-                  <td class="large-6 text-right"><strong>Model type</strong></td>
+                  <td class="large-6 text-right"><strong>model type</strong></td>
                   <td>{{::model.modelType.type}}</td>
                 </tr>
                 <tr ng-if="model.modelType.type === 'pairwise'">
-                  <td class="large-6 text-right"><strong>Pairwise comparison</strong></td>
+                  <td class="large-6 text-right"><strong>pairwise comparison</strong></td>
                   <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
                 </tr>
                 <tr ng-if="model.modelType.type === 'node-split'">
-                  <td class="large-6 text-right"><strong>Split comparison</strong></td>
+                  <td class="large-6 text-right"><strong>split comparison</strong></td>
                   <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
                 </tr>
                 <tr>
-                  <td class="large-6 text-right"><strong>Effects type</strong></td>
+                  <td class="large-6 text-right"><strong>effects type</strong></td>
                   <td>{{::result.results.linearModel}}</td>
                 </tr>
                 <tr>
-                  <td class="large-6 text-right"><strong>Likelihood / link</strong></td>
+                  <td class="large-6 text-right"><strong>outcome scale</strong></td>
+                  <td ng-if="model.outcomeScale">{{::model.outcomeScale}}</td>
+                  <td ng-if="!model.outcomeScale">{{::result.results.outcomeScale}} (imputed)</td>
+                </tr>
+                <tr>
+                  <td class="large-6 text-right"><strong>likelihood / link</strong></td>
                   <td>{{::result.results.likelihood}} / {{::result.results.link}}</td>
                 </tr>
                 <tr>

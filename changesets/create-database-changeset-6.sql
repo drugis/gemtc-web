@@ -10,4 +10,6 @@ UPDATE model SET likelihood = 'binom', link='logit' FROM analysis
 ALTER TABLE model ALTER likelihood SET NOT NULL;
 ALTER TABLE model ALTER link SET NOT NULL;
 
+ALTER TABLE model ADD COLUMN outcome_scale DOUBLE PRECISION;
+
 COMMIT;
