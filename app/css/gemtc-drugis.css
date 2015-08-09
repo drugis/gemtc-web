@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* line 347, ../drugis-css/foundation/components/_global.scss */
 meta.foundation-version {
   font-family: "/{{VERSION}}/";
@@ -9044,7 +9045,7 @@ th.hide-for-touch {
 }
 /* line 1, ../drugis-css/_drugis.scss */
 #hero {
-  background: #CC3333;
+  background: #F57C00;
   height: 420px;
   text-align: left;
   position: relative;
@@ -9074,7 +9075,7 @@ th.hide-for-touch {
 
 /* line 27, ../drugis-css/_drugis.scss */
 header {
-  background: #CC3333;
+  background: #F57C00;
   text-align: left;
   position: relative;
   padding: 25px 20px 35px 0px;
@@ -9273,7 +9274,7 @@ code {
 /* line 19, ../sass/gemtc-drugis.scss */
 .error-message {
   display: block;
-  color: #CC3333;
+  color: #F57C00;
 }
 
 /* line 24, ../sass/gemtc-drugis.scss */
@@ -9374,7 +9375,7 @@ table.layout-table td {
 
 /* line 107, ../sass/gemtc-drugis.scss */
 .color-stripe {
-  background: #CC3333;
+  background: #F57C00;
   height: 0.45rem;
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
@@ -9462,89 +9463,94 @@ div.row.bottom-button-bar {
 table {
   border-collapse: collapse;
 }
-/* line 197, ../sass/gemtc-drugis.scss */
+/* line 195, ../sass/gemtc-drugis.scss */
+table caption {
+  text-align: left;
+  font-weight: lighter;
+}
+/* line 201, ../sass/gemtc-drugis.scss */
 table tr:nth-of-type(even) {
   background-color: transparent;
 }
-/* line 200, ../sass/gemtc-drugis.scss */
+/* line 204, ../sass/gemtc-drugis.scss */
 table tr {
   height: 1rem;
 }
-/* line 202, ../sass/gemtc-drugis.scss */
+/* line 206, ../sass/gemtc-drugis.scss */
 table tr th, table tr .y-head {
   text-align: center;
   background-color: #F5F5F5;
 }
-/* line 206, ../sass/gemtc-drugis.scss */
+/* line 210, ../sass/gemtc-drugis.scss */
 table tr th.sortable {
   cursor: pointer;
 }
-/* line 209, ../sass/gemtc-drugis.scss */
+/* line 213, ../sass/gemtc-drugis.scss */
 table tr th, table tr td {
   border: solid 1px gainsboro;
 }
-/* line 211, ../sass/gemtc-drugis.scss */
+/* line 215, ../sass/gemtc-drugis.scss */
 table tr th a:hover, table tr td a:hover {
   text-decoration: underline;
 }
-/* line 215, ../sass/gemtc-drugis.scss */
+/* line 219, ../sass/gemtc-drugis.scss */
 table tr td.input-cell {
   padding: 0;
 }
-/* line 217, ../sass/gemtc-drugis.scss */
+/* line 221, ../sass/gemtc-drugis.scss */
 table tr td.input-cell select,
 table tr td.input-cell input[type="number"] {
   margin: 0;
   border: 0;
   text-align: center;
 }
-/* line 223, ../sass/gemtc-drugis.scss */
+/* line 227, ../sass/gemtc-drugis.scss */
 table tr td.input-cell select {
   padding-right: 1rem;
 }
-/* line 226, ../sass/gemtc-drugis.scss */
+/* line 230, ../sass/gemtc-drugis.scss */
 table tr td.input-cell input[type="number"].ng-invalid,
 table tr td.input-cell input[type="number"].ng-invalid-number,
 table tr td.input-cell input[type="number"].invalid-trialverse-number {
   background-color: #ed9090;
 }
 
-/* line 234, ../sass/gemtc-drugis.scss */
+/* line 238, ../sass/gemtc-drugis.scss */
 td.empty-cell {
   background-color: gainsboro;
 }
 
-/* line 238, ../sass/gemtc-drugis.scss */
+/* line 242, ../sass/gemtc-drugis.scss */
 tr.on-hover:hover {
   background: #e6e6e6;
   cursor: pointer;
   text-decoration: none;
 }
 
-/* line 244, ../sass/gemtc-drugis.scss */
+/* line 248, ../sass/gemtc-drugis.scss */
 tr.clickable td {
   color: #452F8C;
 }
 
-/* line 251, ../sass/gemtc-drugis.scss */
+/* line 255, ../sass/gemtc-drugis.scss */
 .cell-with-single-btn {
   display: inline;
 }
-/* line 253, ../sass/gemtc-drugis.scss */
+/* line 257, ../sass/gemtc-drugis.scss */
 .cell-with-single-btn select {
   width: 66%;
   margin: 0;
   margin-right: 1rem;
   padding-right: 1rem;
 }
-/* line 259, ../sass/gemtc-drugis.scss */
+/* line 263, ../sass/gemtc-drugis.scss */
 .cell-with-single-btn button {
   margin: 0;
   padding-top: 0.7rem;
   padding-bottom: 0.7rem;
 }
 
-/* line 269, ../sass/gemtc-drugis.scss */
+/* line 273, ../sass/gemtc-drugis.scss */
 .scrollable-wrapper {
   overflow-y: auto;
   margin-top: 1.5rem;

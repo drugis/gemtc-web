@@ -5,7 +5,7 @@ var analysisTitle = 'my title';
 var analysisOutcomeTitle = 'my outcome';
 
 module.exports = {
-  "gemtc login test": function(browser) {
+  "add json test": function(browser) {
     var analysesPage = new AnalysesPage(browser);
     login(browser, 'http://localhost:3001');
 
