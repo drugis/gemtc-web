@@ -4,6 +4,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       stateParamsMock, stateMock,
       problemDefer,
       pairwiseOptionsDefer,
+      modelSaveDefer,
+      modelSaveResultMock,
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['createPairwiseOptions', 'estimateRunLength']),
       problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get'])
@@ -82,7 +84,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           outcomeScale: {
             type: 'heuristically'
           }
-        }
+        };
 
       var cleanedModel = {
           linearModel: 'random',
@@ -95,7 +97,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           thinningFactor: 10,
           likelihood: 'likelihood',
           link: 'link'
-        }
+        };
 
         beforeEach(function() {
           modelResourceMock.save.calls.reset();
@@ -137,7 +139,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           outcomeScale: {
             type: 'heuristically'
           }
-        }
+        };
 
         var strippedModel = {
           linearModel: 'random',
@@ -160,7 +162,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           burnInIterations: 5000,
           inferenceIterations: 20000,
           thinningFactor: 10
-        }
+        };
 
         beforeEach(function() {
           modelResourceMock.save.calls.reset();
@@ -193,7 +195,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
             type: 'fixed',
             value: 123456
           }
-        }
+        };
 
         var cleanedModel = {
           linearModel: 'random',
@@ -207,7 +209,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           likelihood: 'likelihood',
           link: 'link',
           outcomeScale: 123456
-        }
+        };
 
         beforeEach(function() {
           modelResourceMock.save.calls.reset();
@@ -217,6 +219,45 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         it('should place the scale value on the model', function() {
           expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, cleanedModel, jasmine.any(Function));
         });
+      });
+    });
+
+    describe('isAddButtonDisabled', function() {
+
+      it('should return true if the estimateRunLength is greater than 300', function() {
+        var model = {
+          title: 'title',
+          burnInIterations: 1000,
+          inferenceIterations: 100,
+          thinningFactor: 10
+        };
+
+        scope.estimateRunLength = 301;
+
+        expect(scope.isAddButtonDisabled(model)).toBe(true);
+      });
+
+      it('should return false the model is ready to save', function() {
+        var model = {
+          title: 'title',
+          burnInIterations: 1000,
+          inferenceIterations: 100,
+          thinningFactor: 10
+        };
+
+        scope.estimateRunLength = 299;
+        scope.isAddingModel = false;
+        model.likelihoodLink = {
+          compatibility: 'compatibility'
+        };
+        model.outcomeScale = {
+          outcomeScale: {
+            value: 1,
+            type: 'fixed'
+          }
+        };
+
+        expect(scope.isAddButtonDisabled(model)).toBe(false);
       });
     });
 
