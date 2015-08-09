@@ -1,6 +1,16 @@
 library(RJSONIO)
 library(gemtc)
 library(base64enc)
+library(coda)
+
+# Workaround for CODA bug
+if (!exists("gelman.diag.fix", mode="function")) {
+  gelman.diag.old <- coda::gelman.diag
+  gelman.diag.fix <- function(x, confidence = 0.95, transform = FALSE, autoburnin = TRUE, multivariate = FALSE) {
+    gelman.diag.old(x, confidence, transform, autoburnin, multivariate)
+  }
+  assignInNamespace("gelman.diag", gelman.diag.fix, "coda")
+}
 
 # Not ready for inclusion in R package:
 #  - only works for arm-based data
@@ -103,14 +113,32 @@ predict.t <- function(network, n.adapt, n.iter, thin) {
     'forestplot'=0.1,
     'traceplot'=0.062 * n.saved * 0.001 * n.iter / thin,
     'psrfplot'=(0.04 + 0.007 * n.saved) * 0.001 * n.iter / thin,
+    'densityplot'=1, # FIXME
     'summary'=0.0075 * n.saved * 0.001 * n.iter / thin
   )
+}
+
+nsdensity <- function(x) {
+  par(mfrow=c(2,1))
+  vars <- c('d.direct','d.indirect')
+  ns <- x[['samples']][,vars]
+  densities <- lapply(vars, function(var) {
+    x <- as.matrix(ns[,var])
+    bw <- 1.06 * min(sd(x), IQR(x)/1.34) * length(x)^-0.2
+    density(x, bw=bw)
+  })
+  xlim <- c(min(sapply(densities, function(d) { min(d$x) })),
+            max(sapply(densities, function(d) { max(d$x) })))
+  ylim <- c(0,
+            max(sapply(densities, function(d) { max(d$y) })))
+  densplot(ns, ylim=ylim, xlim=xlim)
 }
 
 gemtc <- function(params) {
   iter.adapt <- params[['burnInIterations']]
   iter.infer <- params[['inferenceIterations']]
   thin <- params[['thinningFactor']]
+  modelType <- params[['modelType']][['type']]
   progress.start <- 0
   progress.jags <- NA
 
@@ -155,19 +183,28 @@ gemtc <- function(params) {
   times <- list()
 
   times$init <- system.time({
-  ## incoming information
-  #  entries
-  data.ab <- do.call(rbind, lapply(params[['entries']],
-    function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
-  # linear model or fixed?
-  linearModel <- if(is.null(params[['linearModel']])) 'random' else params[['linearModel']]
+    ## incoming information
+    #  entries
+    data.ab <- do.call(rbind, lapply(params[['entries']],
+      function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
+    # linear model or fixed?
+    linearModel <- if(is.null(params[['linearModel']])) 'random' else params[['linearModel']]
 
-  treatments <- do.call(rbind, lapply(params[['treatments']],
-    function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
+    treatments <- do.call(rbind, lapply(params[['treatments']],
+      function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
 
-  network <- mtc.network(data.ab=data.ab, treatments=treatments)
-  model <- mtc.model(network, linearModel=linearModel)
-  update(list(progress=0))
+    network <- mtc.network(data.ab=data.ab, treatments=treatments)
+    mtc.model.params <- list(network=network, linearModel=linearModel, link=params[['link']], likelihood=params[['likelihood']])
+    if (!is.null(params[['outcomeScale']])) {
+      mtc.model.params <- c(mtc.model.params, list('om.scale' = params[['outcomeScale']]))
+    }
+    if(modelType == 'node-split') {
+      t1 <- params[['modelType']][['details']][['from']][['id']]
+      t2 <- params[['modelType']][['details']][['to']][['id']]
+      mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
+    }
+    model <- do.call(mtc.model, mtc.model.params)
+    update(list(progress=0))
   })
 
   predicted <- predict.t(network, iter.adapt, iter.infer, thin)
@@ -185,24 +222,26 @@ gemtc <- function(params) {
   progress.jags <- unname(milestones[1])
 
   times$sample <- system.time({
-  result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer, thin=thin)
+    result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer, thin=thin)
   })
 
-  times$releffect <- system.time({
-  treatmentIds <- as.character(network[['treatments']][['id']])
-  comps <- combn(treatmentIds, 2)
-  t1 <- comps[1,]
-  t2 <- comps[2,]
-  releffect <- apply(comps, 2, function(comp) {
-    q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
-    report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
-    list(t1=comp[1], t2=comp[2], quantiles=q)
-  })
-  })
+  if(modelType != 'node-split') {
+    times$releffect <- system.time({
+      treatmentIds <- as.character(network[['treatments']][['id']])
+      comps <- combn(treatmentIds, 2)
+      t1 <- comps[1,]
+      t2 <- comps[2,]
+      releffect <- apply(comps, 2, function(comp) {
+        q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
+        report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
+        list(t1=comp[1], t2=comp[2], quantiles=q)
+      })
+    })
+  }
 
   times$relplot <- system.time({
   #create forest plot files for network analyses
-  if(params[['modelType']][['type']] == "network") {
+  if(modelType == "network") {
     forestPlots <- lapply(treatmentIds, function(treatmentId) {
       plotToSvg(function() {
         treatmentN <- which(treatmentIds == treatmentId)
@@ -215,36 +254,44 @@ gemtc <- function(params) {
   })
 
   times$forest <- system.time({
-  # create forest plot for pairwise analysis
-  if(params[['modelType']][['type']] == "pairwise") {
-    forestPlot <- plotToSvg(function() {
-      pwforest(result, t1, t2)
-    })
-  }
+    # create forest plot for pairwise analysis
+    if(modelType == "pairwise") {
+      forestPlot <- plotToSvg(function() {
+        pwforest(result, t1, t2)
+      })
+    }
   })
   report('forestplot', 1.0)
 
   times$traceplot <- system.time({
-  #create results plot
-  tracePlot <- plotToPng(function() {
-    plot(result, auto.layout=FALSE)
-  })
+    #create results plot
+    tracePlot <- plotToPng(function() {
+      plot(result, auto.layout=FALSE)
+    })
   })
   report('traceplot', 1.0)
 
   times$psrfplot <- system.time({
-  #create gelman plot
-  gelmanPlot <- plotToPng(function() {
-    gelman.plot(result, auto.layout=FALSE, ask=FALSE)
-  })
+    #create gelman plot
+    gelmanPlot <- plotToPng(function() {
+      gelman.plot(result, auto.layout=FALSE, ask=FALSE)
+    })
   })
   report('psrfplot', 1.0)
 
+  if(modelType == 'node-split') {
+    densityPlot <- plotToPng(function() {
+      nsdensity(result)
+    })
+  }
+  report('densityplot', 1.0)
+
   times$summary <- system.time({
-  summary <- summary(result)
+    summary <- summary(result)
   })
   report('summary', 1.0)
 
+  summary[['script-version']] <- 0.1
   summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
   summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
   summary[['logScale']] <- ll.call('scale.log', model)
@@ -255,14 +302,20 @@ gemtc <- function(params) {
   summary[['burnInIterations']] <- params[['burnInIterations']]
   summary[['inferenceIterations']] <- params[['inferenceIterations']]
   summary[['thinningFactor']] <- params[['thinningFactor']]
-  summary[['relativeEffects']] <- releffect
-  summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
+  summary[['outcomeScale']] <- model[['om.scale']]
+  if(modelType != 'node-split') {
+    summary[['relativeEffects']] <- releffect
+    summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
+  }
   summary[['alternatives']] <- names(summary[['rankProbabilities']])
-  if(params[['modelType']][['type']] == "network") {
+  if(modelType == "network") {
     summary[['relativeEffectPlots']] <- forestPlots
   }
-  if(params[['modelType']][['type']] == "pairwise") {
+  if(modelType == "pairwise") {
     summary[['studyForestPlot']] <- forestPlot
+  }
+  if(modelType == 'node-split') {
+    summary[['densityPlot']] <- densityPlot
   }
   summary[['tracePlot']] <- tracePlot
   summary[['gelmanPlot']] <- gelmanPlot

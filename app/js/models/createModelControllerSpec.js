@@ -1,12 +1,13 @@
 define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
-  describe('the add model controller', function() {
+  describe('the create model controller', function() {
     var scope, q,
       stateParamsMock, stateMock,
       problemDefer,
       pairwiseOptionsDefer,
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
-      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['createPairwiseOptions']),
-      problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get']);
+      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['createPairwiseOptions', 'estimateRunLength']),
+      problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get'])
+      ;
 
     beforeEach(module('gemtc.models'));
 
@@ -43,7 +44,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
       it('should place a basic model on the scope', function() {
         expect(scope.model.linearModel).toBe('random');
-        expect(scope.model.modelType.type).toBe('network');
+        expect(scope.model.modelType.mainType).toBe('network');
         expect(scope.model.burnInIterations).toBe(5000);
         expect(scope.model.inferenceIterations).toBe(20000);
         expect(scope.model.thinningFactor).toBe(10);
@@ -51,10 +52,6 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
       it('should get the problem', function() {
         expect(problemResourceMock.get).toHaveBeenCalled();
-      });
-
-      it('should create the pairwise options', function() {
-        expect(analysisServiceMock.createPairwiseOptions).toHaveBeenCalled();
       });
 
       it('should place createModel on the scope', function() {
@@ -72,12 +69,32 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         var model = {
           linearModel: 'random',
           modelType: {
+            mainType: 'network'
+          },
+          title: 'modelTitle',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10,
+          likelihoodLink: {
+            likelihood: 'likelihood',
+            link: 'link'
+          },
+          outcomeScale: {
+            type: 'heuristically'
+          }
+        }
+
+      var cleanedModel = {
+          linearModel: 'random',
+          modelType: {
             type: 'network'
           },
           title: 'modelTitle',
           burnInIterations: 5000,
           inferenceIterations: 20000,
-          thinningFactor: 10
+          thinningFactor: 10,
+          likelihood: 'likelihood',
+          link: 'link'
         }
 
         beforeEach(function() {
@@ -86,15 +103,124 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         });
 
         it('should save the model', function() {
-          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, model, jasmine.any(Function));
+          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, cleanedModel, jasmine.any(Function));
         });
         it('should set isAddingModel to true', function() {
           expect(scope.isAddingModel).toBe(true);
         });
       });
 
-      //FIXME: more tests
+      describe('when creating nodesplitting model', function() {
+        var frontendModel = {
+          linearModel: 'random',
+          modelType: {
+            mainType: 'node-split'
+          },
+          title: 'modelTitle nodesplit',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10,
+          likelihoodLink: {
+            likelihood: 'likelihood',
+            link: 'link'
+          },
+          nodeSplitComparison: {
+            from: {
+              id: 1,
+              name: 'fromName'
+            },
+            to: {
+              id: 2,
+              name: 'toName'
+            }
+          },
+          outcomeScale: {
+            type: 'heuristically'
+          }
+        }
+
+        var strippedModel = {
+          linearModel: 'random',
+          likelihood: 'likelihood',
+          link: 'link',
+          modelType: {
+            type: 'node-split',
+            details: {
+             from: {
+              id: 1,
+              name: 'fromName'
+            },
+            to: {
+              id: 2,
+              name: 'toName'
+            }
+            }
+          },
+          title: 'modelTitle nodesplit',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10
+        }
+
+        beforeEach(function() {
+          modelResourceMock.save.calls.reset();
+          scope.createModel(frontendModel);
+        });
+
+        it('should save the strippedModel model', function() {
+          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, strippedModel, jasmine.any(Function));
+        });
+        it('should set isAddingModel to true', function() {
+          expect(scope.isAddingModel).toBe(true);
+        });
+      });
+
+      describe('when creating model that has the outcome scale set', function() {
+        var frontendModel = {
+          linearModel: 'random',
+          modelType: {
+            mainType: 'network'
+          },
+          title: 'modelTitle',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10,
+          likelihoodLink: {
+            likelihood: 'likelihood',
+            link: 'link'
+          },
+          outcomeScale: {
+            type: 'fixed',
+            value: 123456
+          }
+        }
+
+        var cleanedModel = {
+          linearModel: 'random',
+          modelType: {
+            type: 'network'
+          },
+          title: 'modelTitle',
+          burnInIterations: 5000,
+          inferenceIterations: 20000,
+          thinningFactor: 10,
+          likelihood: 'likelihood',
+          link: 'link',
+          outcomeScale: 123456
+        }
+
+        beforeEach(function() {
+          modelResourceMock.save.calls.reset();
+          scope.createModel(frontendModel);
+        });
+
+        it('should place the scale value on the model', function() {
+          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, cleanedModel, jasmine.any(Function));
+        });
+      });
     });
+
+
 
   });
 });

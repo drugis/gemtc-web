@@ -35,7 +35,10 @@ $addis-grey-border : $crumb-border-color;
 
 label.form-item-header {
   font-size: 1.2rem;
+}
 
+.inline-form-item {
+ display: inline; 
 }
 
 a.next {
@@ -192,6 +195,10 @@ div.row.bottom-button-bar {
 
 //////// Tables /////////////////
 table {
+  caption {
+    text-align: left;
+    font-weight: lighter;
+  }
   border-collapse: collapse;
   //remove default foundation striping
   tr:nth-of-type(even) {
