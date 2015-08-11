@@ -16,6 +16,7 @@ define(['lodash'], function() {
     $scope.isConvergencePlotsShown = false;
     $scope.showConvergencePlots = showConvergencePlots;
     $scope.hideConvergencePlots = hideConvergencePlots;
+    $scope.selectedBaseline = undefined;
 
     $scope.model
       .$promise
@@ -60,6 +61,9 @@ define(['lodash'], function() {
       }).$promise.then(function(problem) {
         $scope.problem = problem;
         $scope.result = result;
+        if(problem.treatments && problem.treatments.length > 0) {
+          $scope.selectedBaseline = problem.treatments[0];
+        }
         var isLogScale = result.results.logScale;
         $scope.scaleName = AnalysisService.getScaleName($scope.model);
         $scope.gelmanDiagnostics = DiagnosticsService.labelDiagnostics(result.results.gelmanDiagnostics, $scope.problem.treatments)
