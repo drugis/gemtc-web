@@ -43,7 +43,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       };
       problemDeferred = $q.defer();
       mockProblem = {
-        $promise: problemDeferred.promise
+        $promise: problemDeferred.promise,
+        treatments: [1, 2, 3, 4]
       };
       pataviTaskIdDeferred = $q.defer();
       pataviTaskIdResult = {
@@ -161,6 +162,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
             it('the gelman diagnostics should be labelled', inject(function() {
               expect(diagnosticsService.labelDiagnostics).toHaveBeenCalled();
             }));
+
+            it('should use the firt treatment as the selectedBaseline', inject(function(){
+              expect(scope.selectedBaseline).toEqual(mockProblem.treatments[0]);
+            }))
           });
         });
       });

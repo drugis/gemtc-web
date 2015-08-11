@@ -184,13 +184,13 @@
           <div class="columns large-6 small-8">
             <p><strong>Relative effects plots</strong></p>
             <label>Select baseline:
-            <select ng-options="treatment.id as treatment.name for treatment in problem.treatments" ng-model="selectedBaseline"></select>
+            <select ng-options="treatment.name for treatment in problem.treatments" ng-model="selectedBaseline"></select>
           </label>
         </div>
       </div>
       <div class="row">
         <div class="columns center">
-        <paged-svg-plot pages="result.results.relativeEffectPlots[selectedBaseline]"></paged-svg-plot>
+        <paged-svg-plot pages="result.results.relativeEffectPlots[selectedBaseline.id]"></paged-svg-plot>
       </div>
     </div>
   </div>
