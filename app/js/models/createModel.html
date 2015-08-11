@@ -112,7 +112,7 @@
     <div class="columns large-8 medium-10 small-12" style="padding-left: 1.2rem;">
       <div  ng-show="model.outcomeScale.value <= 0 "><label class="alert">Outcome scale value can not zero or lower.</label></div>
       <div  ng-show="model.outcomeScale.type === 'fixed' && !isNumber(model.outcomeScale.value) "><label class="alert">Outcome scale value is not a valid number.</label></div>
-      <label style="margin-bottom:1rem;"><strong>Relative effect priors:</strong> N(0, (15 . <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)<sup>2</sup>)</label>
+      <label style="margin-bottom:1rem;"><strong>Relative effect priors:</strong> N(0, (15 &#8901; <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)<sup>2</sup>)</label>
       <label style="margin-bottom:1rem;"><strong>Random effects SD prior:</strong> U(0, <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)</label>
     </div>
   </div> <!-- end likelihood/link section -->
