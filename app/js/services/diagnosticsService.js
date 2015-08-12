@@ -30,11 +30,13 @@ define(['lodash'], function(_) {
       var treatmentsById = _.indexBy(treatments, 'id');
       var diagnosticsWithoutDeviance = _.omit(diagnostics, 'deviance');
       return _.reduce(diagnosticsWithoutDeviance, function(accum, diagnostic, key) {
-        accum[key] = _.extend(diagnostic, {
-          label: createLabel(diagnostic, key)
+        var diagnosticsWithLabel = _.extend(diagnostic, {
+          label: createLabel(diagnostic, key),
+          key: key
         });
+        accum.push(diagnosticsWithLabel);
         return accum;
-      }, {});
+      }, []);
     }
 
     return {
