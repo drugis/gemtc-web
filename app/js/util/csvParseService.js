@@ -51,6 +51,7 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
         skipEmptyLines: true,
         dynamicTyping: true
       });
+
       if(parseResult.errors.length > 0) {
         return {
           isValid: false,
@@ -105,13 +106,24 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
     function linesToProblem(lines) {
       var headerLine = lines[0];
       var dataLines = lines.slice(1, lines.length);
-      var treatmentMap = buildTreatmentMap(dataLines);
+
+      // sort datalines by treatment names
+      var sortedDataLines = dataLines.sort(function(a, b) {
+        if (a[1] > b[1]) {
+          return 1;
+        }
+        if (a[1] < b[1]) {
+          return -1;
+        }
+        return 0;
+      })
+      var treatmentMap = buildTreatmentMap(sortedDataLines);
 
       function convertStudyValueToString(entry) {
         return entry.study.toString();
       }
 
-      var entries = _.map(dataLines, function (line) {
+      var entries = _.map(sortedDataLines, function (line) {
         var entry = _.zipObject(headerLine, line);
         entry.study = convertStudyValueToString(entry);
         // substitute treatment name with its ID
