@@ -90,10 +90,10 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="(key, diagnostic) in gelmanDiagnostics| orderBy:'label'">
+                    <tr ng-repeat="diagnostic in gelmanDiagnostics| orderBy:'label'">
                       <td>{{diagnostic.label}}</td>
-                      <td>{{result.results.summaries.statistics[key].Mean}}</td>
-                      <td>{{result.results.summaries.statistics[key]['Time-series SE']}}</td>
+                      <td>{{result.results.summaries.statistics[diagnostic.key].Mean}}</td>
+                      <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
                       <td>{{diagnostic['Point est.']}}</td>
                       <td>{{diagnostic['Upper C.I.']}}</td>
                     </tr>
