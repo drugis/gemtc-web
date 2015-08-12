@@ -23,10 +23,10 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
           name: 'A'
         }, {
           id: 2,
-          name: 'C'
+          name: 'B'
         }, {
           id: 3,
-          name: 'B'
+          name: 'C'
         }];
         var expectedFirstEntry = {
           study: '1',
