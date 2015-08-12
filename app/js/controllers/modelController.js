@@ -17,6 +17,7 @@ define(['lodash'], function() {
     $scope.showConvergencePlots = showConvergencePlots;
     $scope.hideConvergencePlots = hideConvergencePlots;
     $scope.selectedBaseline = undefined;
+    $scope.stateParams = $stateParams;
 
     $scope.model
       .$promise
