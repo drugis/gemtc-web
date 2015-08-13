@@ -50,15 +50,14 @@ define(
           }
         };
 
-        $rootScope.$on('patavi.error', function(e, message) {
-          $rootScope.$safeApply($rootScope, function() {
-            $rootScope.error = _.extend(message, {
+        $rootScope.$on('error', function(e, error) {
+           console.log('on error')
+            $rootScope.error = _.extend(error, {
               close: function() {
-                delete $rootScope.errors;
+                console.log('clear error')
+                delete $rootScope.error;
               }
             });
-          });
-
         });
       }
     ]);
@@ -67,6 +66,7 @@ define(
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
       function($stateProvider, $urlRouterProvider, $httpProvider) {
 
+        $httpProvider.interceptors.push('errorInterceptor');
         $httpProvider.interceptors.push('sessionExpiredInterceptor');
 
         $stateProvider

@@ -24,8 +24,12 @@ define(['lodash'], function() {
       .then(getTaskId)
       .then(PataviService.run)
       .then(successCallback,
-        function(error) {
-          console.log('an error has occurred, error: ' + JSON.stringify(error));
+        function(pataviError) {
+          console.error('an error has occurred, error: ' + JSON.stringify(pataviError));
+          $scope.$emit('error', {
+            type: 'patavi',
+            message: pataviError.desc
+          });
         },
         function(update) {
           if (update && $.isNumeric(update.progress)) {
@@ -62,7 +66,7 @@ define(['lodash'], function() {
       }).$promise.then(function(problem) {
         $scope.problem = problem;
         $scope.result = result;
-        if(problem.treatments && problem.treatments.length > 0) {
+        if (problem.treatments && problem.treatments.length > 0) {
           $scope.selectedBaseline = problem.treatments[0];
         }
         var isLogScale = result.results.logScale;
