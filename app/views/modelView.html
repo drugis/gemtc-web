@@ -145,10 +145,10 @@
                 </tr>
               </thead>
               <tr>
-                <td><strong>Direct estimate</strong></td><td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}} - {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
+                <td><strong>Direct estimate</strong></td><td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
               </tr>
               <tr>
-                <td><strong>Indirect estimate</strong></td><td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}} - {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
+                <td><strong>Indirect estimate</strong></td><td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
               </tr>
             </table>
           </div>
