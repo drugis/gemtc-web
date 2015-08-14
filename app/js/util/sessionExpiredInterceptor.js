@@ -11,7 +11,6 @@ define(['angular'], function() {
           console.error('response error ' + JSON.stringify(response));
           // can't directly DI $state because it's circular.
           $injector.get('$state').go('error');
-
         }
       }
     }
