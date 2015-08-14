@@ -9297,7 +9297,12 @@ label.form-item-header {
   font-size: 1.2rem;
 }
 
-/* line 41, ../sass/gemtc-drugis.scss */
+/* line 40, ../sass/gemtc-drugis.scss */
+.inline-form-item {
+  display: inline;
+}
+
+/* line 44, ../sass/gemtc-drugis.scss */
 a.next {
   display: block;
   position: absolute;
@@ -9305,7 +9310,7 @@ a.next {
   left: 494pt;
 }
 
-/* line 48, ../sass/gemtc-drugis.scss */
+/* line 51, ../sass/gemtc-drugis.scss */
 a.previous {
   display: block;
   position: absolute;
@@ -9313,23 +9318,23 @@ a.previous {
   left: 10pt;
 }
 
-/* line 55, ../sass/gemtc-drugis.scss */
+/* line 58, ../sass/gemtc-drugis.scss */
 img.paged-png {
   position: relative;
   left: 60pt;
 }
 
-/* line 60, ../sass/gemtc-drugis.scss */
+/* line 63, ../sass/gemtc-drugis.scss */
 .indent-one {
   margin-left: 2rem;
 }
 
-/* line 64, ../sass/gemtc-drugis.scss */
+/* line 67, ../sass/gemtc-drugis.scss */
 .application-link a {
   text-decoration: underline;
 }
 
-/* line 69, ../sass/gemtc-drugis.scss */
+/* line 72, ../sass/gemtc-drugis.scss */
 input[type="number"],
 input[type="text"],
 select,
@@ -9337,28 +9342,28 @@ select option {
   line-height: 1.1rem;
 }
 
-/* line 76, ../sass/gemtc-drugis.scss */
+/* line 79, ../sass/gemtc-drugis.scss */
 table.layout-table {
   border: none;
 }
-/* line 78, ../sass/gemtc-drugis.scss */
+/* line 81, ../sass/gemtc-drugis.scss */
 table.layout-table td {
   border: none;
   background-color: #F3F0FA;
 }
 
-/* line 84, ../sass/gemtc-drugis.scss */
+/* line 87, ../sass/gemtc-drugis.scss */
 .main-category-header {
   color: #008CBA;
   font-weight: bold;
 }
 
-/* line 90, ../sass/gemtc-drugis.scss */
+/* line 93, ../sass/gemtc-drugis.scss */
 .top-bar-section .has-form {
   height: 44px;
 }
 
-/* line 94, ../sass/gemtc-drugis.scss */
+/* line 97, ../sass/gemtc-drugis.scss */
 .user-image {
   margin-top: -1px;
   margin-right: 4px;
@@ -9366,14 +9371,14 @@ table.layout-table td {
   border-radius: 15px;
 }
 
-/* line 101, ../sass/gemtc-drugis.scss */
+/* line 104, ../sass/gemtc-drugis.scss */
 .topbar-text {
   color: white;
   padding: 0;
   margin: 0;
 }
 
-/* line 107, ../sass/gemtc-drugis.scss */
+/* line 110, ../sass/gemtc-drugis.scss */
 .color-stripe {
   background: #F57C00;
   height: 0.45rem;
@@ -9383,23 +9388,23 @@ table.layout-table td {
   margin-botten: 1rem;
 }
 
-/* line 116, ../sass/gemtc-drugis.scss */
+/* line 119, ../sass/gemtc-drugis.scss */
 .top-bar-section ul.top-bar-content {
   padding-top: 5px;
   margin-left: 4rem;
 }
 
-/* line 121, ../sass/gemtc-drugis.scss */
+/* line 124, ../sass/gemtc-drugis.scss */
 body.f-topbar-fixed {
   padding-top: 4rem;
 }
 
-/* line 129, ../sass/gemtc-drugis.scss */
+/* line 132, ../sass/gemtc-drugis.scss */
 .side-nav .button {
   margin-bottom: 0.5rem;
 }
 
-/* line 133, ../sass/gemtc-drugis.scss */
+/* line 136, ../sass/gemtc-drugis.scss */
 .modified-warning {
   font-size: 14px;
   font-style: italic;
@@ -9407,14 +9412,14 @@ body.f-topbar-fixed {
   margin-bottom: 0.5rem;
 }
 
-/* line 140, ../sass/gemtc-drugis.scss */
+/* line 143, ../sass/gemtc-drugis.scss */
 ul.side-nav {
   margin-top: -20px;
   padding: 2rem 1rem;
   background-color: #f4f4f4;
 }
 
-/* line 146, ../sass/gemtc-drugis.scss */
+/* line 149, ../sass/gemtc-drugis.scss */
 ul.side-nav li.heading {
   color: #008CBA;
   font-size: 0.77778rem;
@@ -9422,12 +9427,12 @@ ul.side-nav li.heading {
   text-transform: uppercase;
 }
 
-/* line 155, ../sass/gemtc-drugis.scss */
+/* line 158, ../sass/gemtc-drugis.scss */
 .study-item {
   margin: 0 0 3rem 0;
 }
 
-/* line 159, ../sass/gemtc-drugis.scss */
+/* line 162, ../sass/gemtc-drugis.scss */
 .study-main-category-header {
   color: #008CBA;
   font-weight: bold;
@@ -9435,12 +9440,12 @@ ul.side-nav li.heading {
   text-transform: uppercase;
 }
 
-/* line 170, ../sass/gemtc-drugis.scss */
+/* line 173, ../sass/gemtc-drugis.scss */
 .form-input-group {
   padding-bottom: 16px;
 }
 
-/* line 174, ../sass/gemtc-drugis.scss */
+/* line 177, ../sass/gemtc-drugis.scss */
 ul.form-list li {
   font-size: 0.875rem;
   cursor: pointer;
@@ -9449,108 +9454,108 @@ ul.form-list li {
   margin-bottom: 0;
 }
 
-/* line 182, ../sass/gemtc-drugis.scss */
+/* line 185, ../sass/gemtc-drugis.scss */
 div.row.bottom-button-bar {
   margin-top: 2rem;
 }
 
-/* line 189, ../sass/gemtc-drugis.scss */
+/* line 192, ../sass/gemtc-drugis.scss */
 .y-head {
   font-weight: bold;
 }
 
-/* line 194, ../sass/gemtc-drugis.scss */
+/* line 197, ../sass/gemtc-drugis.scss */
 table {
   border-collapse: collapse;
 }
-/* line 195, ../sass/gemtc-drugis.scss */
+/* line 198, ../sass/gemtc-drugis.scss */
 table caption {
   text-align: left;
   font-weight: lighter;
 }
-/* line 201, ../sass/gemtc-drugis.scss */
+/* line 204, ../sass/gemtc-drugis.scss */
 table tr:nth-of-type(even) {
   background-color: transparent;
 }
-/* line 204, ../sass/gemtc-drugis.scss */
+/* line 207, ../sass/gemtc-drugis.scss */
 table tr {
   height: 1rem;
 }
-/* line 206, ../sass/gemtc-drugis.scss */
+/* line 209, ../sass/gemtc-drugis.scss */
 table tr th, table tr .y-head {
   text-align: center;
   background-color: #F5F5F5;
 }
-/* line 210, ../sass/gemtc-drugis.scss */
+/* line 213, ../sass/gemtc-drugis.scss */
 table tr th.sortable {
   cursor: pointer;
 }
-/* line 213, ../sass/gemtc-drugis.scss */
+/* line 216, ../sass/gemtc-drugis.scss */
 table tr th, table tr td {
   border: solid 1px gainsboro;
 }
-/* line 215, ../sass/gemtc-drugis.scss */
+/* line 218, ../sass/gemtc-drugis.scss */
 table tr th a:hover, table tr td a:hover {
   text-decoration: underline;
 }
-/* line 219, ../sass/gemtc-drugis.scss */
+/* line 222, ../sass/gemtc-drugis.scss */
 table tr td.input-cell {
   padding: 0;
 }
-/* line 221, ../sass/gemtc-drugis.scss */
+/* line 224, ../sass/gemtc-drugis.scss */
 table tr td.input-cell select,
 table tr td.input-cell input[type="number"] {
   margin: 0;
   border: 0;
   text-align: center;
 }
-/* line 227, ../sass/gemtc-drugis.scss */
+/* line 230, ../sass/gemtc-drugis.scss */
 table tr td.input-cell select {
   padding-right: 1rem;
 }
-/* line 230, ../sass/gemtc-drugis.scss */
+/* line 233, ../sass/gemtc-drugis.scss */
 table tr td.input-cell input[type="number"].ng-invalid,
 table tr td.input-cell input[type="number"].ng-invalid-number,
 table tr td.input-cell input[type="number"].invalid-trialverse-number {
   background-color: #ed9090;
 }
 
-/* line 238, ../sass/gemtc-drugis.scss */
+/* line 241, ../sass/gemtc-drugis.scss */
 td.empty-cell {
   background-color: gainsboro;
 }
 
-/* line 242, ../sass/gemtc-drugis.scss */
+/* line 245, ../sass/gemtc-drugis.scss */
 tr.on-hover:hover {
   background: #e6e6e6;
   cursor: pointer;
   text-decoration: none;
 }
 
-/* line 248, ../sass/gemtc-drugis.scss */
+/* line 251, ../sass/gemtc-drugis.scss */
 tr.clickable td {
   color: #452F8C;
 }
 
-/* line 255, ../sass/gemtc-drugis.scss */
+/* line 258, ../sass/gemtc-drugis.scss */
 .cell-with-single-btn {
   display: inline;
 }
-/* line 257, ../sass/gemtc-drugis.scss */
+/* line 260, ../sass/gemtc-drugis.scss */
 .cell-with-single-btn select {
   width: 66%;
   margin: 0;
   margin-right: 1rem;
   padding-right: 1rem;
 }
-/* line 263, ../sass/gemtc-drugis.scss */
+/* line 266, ../sass/gemtc-drugis.scss */
 .cell-with-single-btn button {
   margin: 0;
   padding-top: 0.7rem;
   padding-bottom: 0.7rem;
 }
 
-/* line 273, ../sass/gemtc-drugis.scss */
+/* line 276, ../sass/gemtc-drugis.scss */
 .scrollable-wrapper {
   overflow-y: auto;
   margin-top: 1.5rem;
