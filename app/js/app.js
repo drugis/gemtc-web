@@ -51,10 +51,8 @@ define(
         };
 
         $rootScope.$on('error', function(e, error) {
-           console.log('on error')
             $rootScope.error = _.extend(error, {
               close: function() {
-                console.log('clear error')
                 delete $rootScope.error;
               }
             });
