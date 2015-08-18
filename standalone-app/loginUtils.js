@@ -2,7 +2,7 @@ var crypto = require('crypto'),
   httpStatus = require('http-status-codes'),
   logger = require('./logger');
 
-// check if strartsWith is not a language feature
+// check if startsWith is not a language feature
 if (typeof String.prototype.startsWith != 'function') {
   String.prototype.startsWith = function(str) {
     return this.indexOf(str) === 0;
@@ -44,19 +44,20 @@ module.exports = {
     if (request.session.auth && request.session.auth.loggedIn) { // if loggedin your good
       logger.debug('loginUtils.loginCheckMiddleware your signed in, requestuest = ' + request.url);
       next();
-    } else if (request.method === 'GET' && // if not than you can get static content or go sign in
+    } else if (request.method === 'GET' && // if not then you can get static content or go sign in
       (request.url.startsWith('/css') ||
         request.url.startsWith('/js') ||
         request.url.startsWith('/views') ||
         request.url.startsWith('/img') ||
+        request.url === '/' ||
         request.url == '/signin.html' ||
         request.url.startsWith('/auth/google')
       )) {
       logger.debug('loginUtils.loginCheckMiddleware you request does not require login, request =  ' + request.url);
       next();
-    } else { // otherwhise you have to signin first
+    }  else { // otherwhise you have to signin first
       logger.debug('loginUtils.loginCheckMiddleware you need to signin first, request =  ' + request.url);
-      response.redirect('/signin.html');
+      response.sendStatus(403);
     }
   }
 };
