@@ -1,25 +1,7 @@
 @import "settings";
-@import "gemtc-settings";
 @import "foundation";
-@import "drugis";
 @import "mmfoundation-animations";
-
-$addis-grey : $crumb-bg;
-$addis-grey-border : $crumb-border-color;
- .alert {
-  color: $alert-color;
-}
-.warning {
-  color: $warning-color;
-}
-.info {
-  color: darken($info-color, 10%);
-}
-
-.error-message {
-  display: block;
-  color: $drugis-color;
-}
+@import "drugis";
 
 .row.application-link {
   margin: 1rem 0;
@@ -38,7 +20,7 @@ label.form-item-header {
 }
 
 .inline-form-item {
- display: inline; 
+ display: inline;
 }
 
 a.next {
@@ -94,26 +76,10 @@ table.layout-table {
   height: 44px;
 }
 
-.user-image {
-  margin-top: -1px;
-  margin-right: 4px;
-  height: 32px;
-  border-radius: 15px;
-}
-
 .topbar-text {
   color: white;
   padding: 0;
   margin: 0;
-}
-
-.color-stripe {
-  background: $drugis-color;
-  height: 0.45rem;
-  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  -moz-box-shadow:    0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  margin-botten: 1rem;
 }
 
 .top-bar-section ul.top-bar-content {
@@ -199,25 +165,11 @@ table {
     text-align: left;
     font-weight: lighter;
   }
-  border-collapse: collapse;
-  //remove default foundation striping
-  tr:nth-of-type(even) {
-    background-color: transparent;
-  }
   tr {
     height: 1rem;
     th, .y-head {
       text-align: center;
       background-color:#F5F5F5;
-    }
-    th.sortable {
-      cursor: pointer;
-    }
-    th, td {
-      border: solid 1px $addis-grey-border;
-      a:hover {
-        text-decoration: underline;
-      }
     }
     td.input-cell {
       padding: 0;
@@ -238,19 +190,7 @@ table {
     }
   }
 }
-td.empty-cell {
-  background-color: $addis-grey-border;
-}
 
-tr.on-hover:hover {
-  background: darken($secondary-color, 0.5%);
-  cursor: pointer;
-  text-decoration: none;
-}
-
-tr.clickable td {
-  color: $primary-color;
-}
 //////////////////////// end study results //
 
 /////////////////////// begin mapping tables //////////////////
