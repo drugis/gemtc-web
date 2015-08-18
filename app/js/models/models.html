@@ -16,7 +16,7 @@
   <div class="columns large-12">
     <em ng-show="models.length === 0">No models have been created</em>
     <ul ng-show="models.length > 0">
-      <li ng-repeat="model in models">
+      <li ng-repeat="model in models | orderBy:'title'"">
         <a ui-sref="model(modelParams(model))">{{model.title}}</a>
       </li>
     </ul>
