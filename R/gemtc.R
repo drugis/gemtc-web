@@ -135,10 +135,10 @@ nsdensity <- function(x) {
 }
 
 gemtc <- function(params) {
-  iter.adapt <- params[['burnInIterations']]
-  iter.infer <- params[['inferenceIterations']]
-  thin <- params[['thinningFactor']]
-  modelType <- params[['modelType']][['type']]
+  iter.adapt <- if(is.null(params[['burnInIterations']])) 5000 else params[['burnInIterations']]
+  iter.infer <- if(is.null(params[['inferenceIterations']])) 20000 else params[['inferenceIterations']]
+  thin <- if(is.null(params[['thinningFactor']])) 10 else params[['thinningFactor']]
+  modelType <-  if(is.null(params[['modelType']][['type']])) 'network' else params[['modelType']][['type']]
   progress.start <- 0
   progress.jags <- NA
 
@@ -194,7 +194,13 @@ gemtc <- function(params) {
       function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
 
     network <- mtc.network(data.ab=data.ab, treatments=treatments)
-    mtc.model.params <- list(network=network, linearModel=linearModel, link=params[['link']], likelihood=params[['likelihood']])
+    mtc.model.params <- list(network=network, linearModel=linearModel)
+    if(!is.null(params[['likelihood']])) {
+      mtc.model.params <- c(mtc.model.params, list('likelihood' = params[['likelihood']]))
+    }
+    if(!is.null(params[['link']])) {
+      mtc.model.params <- c(mtc.model.params, list('link' = params[['link']]))
+    }
     if (!is.null(params[['outcomeScale']])) {
       mtc.model.params <- c(mtc.model.params, list('om.scale' = params[['outcomeScale']]))
     }
