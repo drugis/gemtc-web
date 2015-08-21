@@ -3,7 +3,7 @@ define(['angular'], function() {
 	var dependencies = ['$q', '$rootScope'];
 	var ErrorInterceptor = function($q, $rootScope) {
 
-		function handelReaction(rejection) {
+		function handleReaction(rejection) {
 			var data, message;
 			if (rejection && rejection.data && rejection.data !== "") {
 				data = rejection.data;
@@ -23,10 +23,10 @@ define(['angular'], function() {
 
 		return {
 			'requestError': function(rejection) {
-				return handelReaction(rejection);
+				return handleReaction(rejection);
 			},
 			'responseError': function(rejection) {
-				return handelReaction(rejection);
+				return handleReaction(rejection);
 			}
 		};
 	};
