@@ -1,8 +1,13 @@
 module.exports = function(browser, url) {
   browser
     .url(url)
+
     .waitForElementVisible('button[type="submit"]', 50000)
     .click('button[type="submit"]')
+        .source(function (result){
+        // Source will be stored in result.value
+        console.log(result.value);
+    })
     .waitForElementVisible('body', 50000)
     .assert.containsText('h2', 'Sign in with your Google Account')
     .pause(1000)
