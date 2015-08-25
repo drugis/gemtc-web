@@ -1,7 +1,7 @@
 module.exports = function(browser, url) {
   browser
     .url(url)
-    .waitForElementVisible('body', 50000)
+    .waitForElementVisible('button[type="submit"]', 50000)
     .click('button[type="submit"]')
     .waitForElementVisible('body', 50000)
     .assert.containsText('h2', 'Sign in with your Google Account')
@@ -11,11 +11,11 @@ module.exports = function(browser, url) {
     .pause(1000)
     .setValue('input[type=password]', 'speciaalvoordejenkins')
     .click('#signIn')
-    .pause(3000) // wait for submit button to become active (thanks for keeping us safe google)
-  browser.isVisible('#submit_approve_access', function(result) {
-    if (result.value === true) {
+    .pause(3000); // wait for submit button to become active (thanks for keeping us safe google)
+
+    if (process.env.GEMTC_NIGHTWATCH_URL === 'http://localhost:3001') {
       browser.click('#submit_approve_access')
-    }
-  });
+    } 
+
   return browser;
 };
