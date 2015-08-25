@@ -12,6 +12,7 @@ AnalysesPage.prototype = {
   addAnalysis: function(title, outcome, filename) {
     this.browser
       .click('#add-analysis-btn')
+      .waitForElementVisible('h3', 10000)
       .setValue('#title-input', title)
       .setValue('#outcome-input', outcome)
       .click('#add-analysis-form button')

@@ -17,7 +17,7 @@ module.exports = {
     var inferenceIterations = 52; 
     var thinningFactor = 1;
     
-    login(browser, 'http://localhost:3001');
+    login(browser, process.env.GEMTC_NIGHTWATCH_URL);
 
     analysesPage.waitForPageToLoad();
     analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.json');
@@ -30,6 +30,7 @@ module.exports = {
     createModelPage.setTitle('Nightwatch model');
     createModelPage.setEffectsType('random');
     createModelPage.setModelMainType('network');
+    createModelPage.setLikelihoodAndLink();
     createModelPage.setRunLength(burnInIterations, inferenceIterations, thinningFactor);
     browser.pause(300)
     createModelPage.createModel();
