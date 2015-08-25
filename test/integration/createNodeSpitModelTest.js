@@ -12,7 +12,7 @@ module.exports = {
     var analysisOverviewPage = new AnalysisOverviewPage(browser);
     var createModelPage = new CreateModelPage(browser);
     
-    login(browser, 'http://localhost:3001');
+    login(browser, process.env.GEMTC_NIGHTWATCH_URL);
 
     analysesPage.waitForPageToLoad();
     analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.json');
@@ -26,6 +26,7 @@ module.exports = {
     createModelPage.setEffectsType('random');
     createModelPage.setModelMainType('node-split');
     createModelPage.setModelSubType('node-split-specific');
+    createModelPage.setLikelihoodAndLink();
     createModelPage.createModel();
     browser.pause(20000)
     createModelPage.end();
