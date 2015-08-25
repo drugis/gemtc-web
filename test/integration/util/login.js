@@ -1,9 +1,10 @@
 module.exports = function(browser, url) {
   browser
     .url(url)
-    .waitForElementVisible('button[type="submit"]', 50000)
+    .waitForElementVisible('button[type="submit"]', 5000)
     .click('button[type="submit"]')
-    .waitForElementVisible('body', 50000)
+    .pause(1000);
+    if (process.env.GEMTC_NIGHTWATCH_URL === 'http://localhost:3001') {
     .assert.containsText('h2', 'Sign in with your Google Account')
     .pause(1000)
     .setValue('input[type=email]', 'addistestuser1@gmail.com')
@@ -12,9 +13,7 @@ module.exports = function(browser, url) {
     .setValue('input[type=password]', 'speciaalvoordejenkins')
     .click('#signIn')
     .pause(3000); // wait for submit button to become active (thanks for keeping us safe google)
-
-    if (process.env.GEMTC_NIGHTWATCH_URL === 'http://localhost:3001') {
-      browser.click('#submit_approve_access')
+    .browser.click('#submit_approve_access')
     } 
 
   return browser;
