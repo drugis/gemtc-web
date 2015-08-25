@@ -1,15 +1,16 @@
 module.exports = function(browser, url) {
   browser
     .url(url)
-    .source(function (result){
-        // Source will be stored in result.value
+    .pause(3000)
+    .source(function(result) {
+      // Source will be stored in result.value
       console.log("jenkins nightwacht output")
-        console.log(result.value);
+      console.log(result.value);
     })
-    .waitForElementVisible('button[type="submit"]', 50000)
-    .click('button[type="submit"]')
   if (process.env.GEMTC_NIGHTWATCH_URL === 'http://localhost:3001') {
-    browser.waitForElementVisible('body', 50000)
+    browser.waitForElementVisible('button[type="submit"]', 50000)
+      .click('button[type="submit"]')
+      .waitForElementVisible('body', 50000)
       .assert.containsText('h2', 'Sign in with your Google Account')
       .pause(1000)
       .setValue('input[type=email]', 'addistestuser1@gmail.com')
@@ -18,7 +19,7 @@ module.exports = function(browser, url) {
       .setValue('input[type=password]', 'speciaalvoordejenkins')
       .click('#signIn')
       .pause(3000) // wait for submit button to become active (thanks for keeping us safe google)
-    .click('#submit_approve_access')
+      .click('#submit_approve_access')
   }
 
   return browser;
