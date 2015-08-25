@@ -15,8 +15,6 @@ var sessionOpts = {
   saveUninitialized: true
 };
 
-//everyauth.debug = true;
-
 everyauth.everymodule.findUserById(function(userId, callback) {
   logger.debug("gemtc.findUserById");
   callback(null);
