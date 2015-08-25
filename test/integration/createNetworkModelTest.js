@@ -17,7 +17,7 @@ module.exports = {
     var inferenceIterations = 52; 
     var thinningFactor = 1;
     
-    login(browser, 'http://localhost:3001');
+    login(browser, process.env.GEMTC_NIGHTWATCH_URL);
 
     analysesPage.waitForPageToLoad();
     analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.json');

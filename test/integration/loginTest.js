@@ -4,7 +4,7 @@ var login = require('./util/login.js');
 
 module.exports = {
   "gemtc login test" : function (browser) {
-    login(browser, 'http://localhost:3001')
+    login(browser, process.env.GEMTC_NIGHTWATCH_URL)
       .waitForElementVisible('#analyses-header', 15000)
       .assert.containsText('#analyses-header', 'Analyses')
       .end();

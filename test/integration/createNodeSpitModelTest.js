@@ -12,7 +12,7 @@ module.exports = {
     var analysisOverviewPage = new AnalysisOverviewPage(browser);
     var createModelPage = new CreateModelPage(browser);
     
-    login(browser, 'http://localhost:3001');
+    login(browser, process.env.GEMTC_NIGHTWATCH_URL);
 
     analysesPage.waitForPageToLoad();
     analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.json');

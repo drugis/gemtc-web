@@ -7,7 +7,7 @@ var analysisOutcomeTitle = 'my outcome';
 module.exports = {
   "add csv analysis test": function(browser) {
     var analysesPage = new AnalysesPage(browser);
-    login(browser, 'http://localhost:3001');
+    login(browser, process.env.GEMTC_NIGHTWATCH_URL);
 
     analysesPage.waitForPageToLoad();
     analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.json');
