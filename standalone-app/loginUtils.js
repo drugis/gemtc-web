@@ -44,18 +44,23 @@ module.exports = {
     if (request.session.auth && request.session.auth.loggedIn) { // if loggedin your good
       logger.debug('loginUtils.loginCheckMiddleware your signed in, requestuest = ' + request.url);
       next();
-    } else if (request.method === 'GET' && // if not then you can get static content or go sign in
+    }
+    else if (request.method === 'GET' &&  request.url === '/' ) {
+      logger.debug('loginUtils.loginCheckMiddleware request to "/", redirect to sign in page ');
+      response.redirect('/signin.html');
+    }
+    else if (request.method === 'GET' && // if not then you can get static content or go sign in
       (request.url.startsWith('/css') ||
         request.url.startsWith('/js') ||
         request.url.startsWith('/views') ||
         request.url.startsWith('/img') ||
-        request.url === '/' ||
         request.url == '/signin.html' ||
         request.url.startsWith('/auth/google')
       )) {
       logger.debug('loginUtils.loginCheckMiddleware you request does not require login, request =  ' + request.url);
       next();
-    }  else { // otherwhise you have to signin first
+    } 
+    else { // otherwhise you have to signin first
       logger.debug('loginUtils.loginCheckMiddleware you need to signin first, request =  ' + request.url);
       response.sendStatus(403);
     }

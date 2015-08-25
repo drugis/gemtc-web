@@ -19,8 +19,9 @@ describe('loginUtils', function() {
       request = {
         session: {}
       };
+      next = chai.spy(); 
       response = {};
-      next = chai.spy();
+      response.redirect = chai.spy();
     });
 
     it('should call next when logged in', function() {
@@ -91,13 +92,13 @@ describe('loginUtils', function() {
       expect(next).to.have.been.called();
     });
 
-    it('should call next when requesting the / path', function() {
+    it('should redirect to signin when requesting the / path', function() {
       request.session = {};
       request.url = '/';
       request.method = 'GET';
 
       loginUtils.securityMiddleware(request, response, next);
-      expect(next).to.have.been.called();
+      expect(response.redirect).to.have.been.called();
     });
   });
 

@@ -28,9 +28,12 @@
         "path" : ""
       },
       "desiredCapabilities": {
-        "browserName": "firefox",
+        "browserName": "chrome",
         "javascriptEnabled": true,
         "acceptSslCerts": true,
+        "chromeOptions" : {
+        "args" : ["--incognito"]
+        },
         "phantomjs.binary.path" : "/usr/bin/phantomjs"
       }
     },
@@ -39,7 +42,10 @@
       "desiredCapabilities": {
         "browserName": "chrome",
         "javascriptEnabled": true,
-        "acceptSslCerts": true
+        "acceptSslCerts": true,
+        "chromeOptions" : {
+        "args" : ["--incognito"]
+        }
       }
     }
   }
