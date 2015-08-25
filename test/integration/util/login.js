@@ -4,6 +4,10 @@ module.exports = function(browser, url) {
         .waitForElementVisible('button[type="submit"]', 5000)
         .click('button[type="submit"]')
         .pause(1000)
+        .source(function(result) {
+            // Source will be stored in result.value
+            console.log(result.value);
+        })
         .assert.containsText('h2', 'Sign in with your Google Account')
         .pause(1000)
         .setValue('input[type=email]', 'addistestuser1@gmail.com')
@@ -17,4 +21,4 @@ module.exports = function(browser, url) {
     }
 
     return browser;
-};
+};  
