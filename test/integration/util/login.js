@@ -1,6 +1,11 @@
 module.exports = function(browser, url) {
   browser
     .url(url)
+    .source(function (result){
+        // Source will be stored in result.value
+      console.log("jenkins nightwacht output")
+        console.log(result.value);
+    })
     .waitForElementVisible('button[type="submit"]', 50000)
     .click('button[type="submit"]')
   if (process.env.GEMTC_NIGHTWATCH_URL === 'http://localhost:3001') {
