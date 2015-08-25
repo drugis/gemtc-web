@@ -26,6 +26,7 @@ module.exports = {
     createModelPage.setEffectsType('random');
     createModelPage.setModelMainType('node-split');
     createModelPage.setModelSubType('node-split-specific');
+    createModelPage.setLikelihoodAndLink();
     createModelPage.createModel();
     browser.pause(20000)
     createModelPage.end();

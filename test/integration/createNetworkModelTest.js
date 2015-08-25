@@ -30,6 +30,7 @@ module.exports = {
     createModelPage.setTitle('Nightwatch model');
     createModelPage.setEffectsType('random');
     createModelPage.setModelMainType('network');
+    createModelPage.setLikelihoodAndLink();
     createModelPage.setRunLength(burnInIterations, inferenceIterations, thinningFactor);
     browser.pause(300)
     createModelPage.createModel();
