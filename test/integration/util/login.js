@@ -1,6 +1,6 @@
 module.exports = function(browser, url) {
   browser
-    .url(url)
+    .url('https://gemtc-test.drugis.org/#/analyses')
     .pause(3000)
     .source(function(result) {
       // Source will be stored in result.value
