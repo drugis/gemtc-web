@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$sce', 'gemtcRootPath'];
-  var PagedSvgDirective = function($sce, gemtcRootPath) {
+  var dependencies = ['gemtcRootPath'];
+  var PagedSvgDirective = function(gemtcRootPath) {
     return {
       scope: {
         pages: '='
@@ -25,9 +25,7 @@ define([], function() {
         }
 
         function trustPages(pages) {
-          return _.map(pages, function(page) {
-            return $sce.trustAsHtml(page);
-          });
+          return pages;
         }
         function selectNextPage() {
           ++scope.selectedPage;
