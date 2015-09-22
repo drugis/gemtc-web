@@ -79,7 +79,7 @@ plotToSvg <- function(plotFn) {
   # read & delete plot files
   filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
   lapply (filenames, function(filename) {
-    contents <- readFile(filename)
+    contents <- paste0("data:image/svg+xml;base64,", base64encode(filename))
     file.remove(filename)
     contents
   })
