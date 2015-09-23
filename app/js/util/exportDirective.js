@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(['lodash', 'd3'], function(_, d3) {
   var dependencies = ['gemtcRootPath', '$modal', '$compile'];
   var ExportDirective = function(gemtcRootPath, $modal, $compile) {
     return {
@@ -15,9 +15,9 @@ define([], function() {
             .append(btnElement);
           scope.exportElement = showCopyPasteMessage;
         } else if (element.find('img').length > 0) {
-          element.find('img').parent().css('position', 'relative')
-            .append(btnElement);
-          scope.exportElement = exportImage;
+          var image = element.find('img');
+          image.parent().css('position', 'relative').append(btnElement);
+          scope.exportElement = _.partial(exportImage, image[0], element.find('#exportCanvas')[0]);
         } else if (element.find('svg').length > 0) {
           element.find('svg').parent().parent().css('position', 'relative')
             .append(btnElement);
@@ -37,30 +37,43 @@ define([], function() {
           });
         }
 
-        function exportImage() {
-          console.log('export image');
+        function exportImage(sourceImage, canvasElement) {
+          var newImage = new Image;
+          newImage.src = sourceImage.src;
+          newImage.onload = _.partial(onImageLoad, element, canvasElement, newImage);
         }
 
         function exportSvg() {
           console.log('export svg');
         }
 
-        function binaryblob(canvas) {
-          var byteString = atob(canvas.toDataURL().replace(/^data:image\/(png|jpg|svg+xml);base64,/, ""));
-          var ab = new ArrayBuffer(byteString.length);
-          var ia = new Uint8Array(ab);
-          for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-          }
-          var dataView = new DataView(ab);
-          var blob = new Blob([dataView], {
-            type: "image/png"
-          });
-          var DOMURL = self.URL || self.webkitURL || self;
-          var newurl = DOMURL.createObjectURL(blob);
+        function onImageLoad(element, canvasElement, image) {
+          var context = canvasElement.getContext("2d")
+          context.drawImage(image, 0, 0);
 
-          return '<img src="' + newurl + '">';
+          var a = document.createElement("a");
+          a.download = "sample.png";
+          a.href = canvasElement.toDataURL("image/png");
+
+          a.click();
         }
+
+        // function blobUrl(canvas) {
+        //   var byteString = atob(canvas.toDataURL().replace(/^data:image\/(png|jpg|svg+xml);base64,/, ""));
+        //   var ab = new ArrayBuffer(byteString.length);
+        //   var ia = new Uint8Array(ab);
+        //   for (var i = 0; i < byteString.length; i++) {
+        //     ia[i] = byteString.charCodeAt(i);
+        //   }
+        //   var dataView = new DataView(ab);
+        //   var blob = new Blob([dataView], {
+        //     type: "image/png"
+        //   });
+        //   var DOMURL = self.URL || self.webkitURL || self;
+        //   var newurl = DOMURL.createObjectURL(blob);
+
+        //   return '<img src="' + newurl + '">';
+        // }
 
       }
     };
