@@ -4,6 +4,7 @@ define([], function() {
   var PagedPngPlotDirective = function(gemtcRootPath) {
     return {
       scope: {
+        fileName: '=',
         pages: '='
       },
       restrict: 'E',

@@ -104,13 +104,13 @@
             <div class="row" ng-show="isConvergencePlotsShown">
               <div class="columns large-6 medium-6 small-12">
                 <p><strong>Time series plots</strong></p>
-                <paged-png-plot pages="result.results.tracePlot"></paged-png-plot>
+                <paged-png-plot file-name="'tracePlot'" pages="result.results.tracePlot"></paged-png-plot>
               </div>
             </div>
             <div class="row" ng-show="isConvergencePlotsShown">
               <div class="columns large-6 medium-6 small-12">
                 <p><strong>PSRF plots</strong></p>
-                <paged-png-plot pages="result.results.gelmanPlot"></paged-png-plot>
+                <paged-png-plot file-name="'psrfPlot'" pages="result.results.gelmanPlot"></paged-png-plot>
               </div>
             </div>
           </div>
@@ -184,7 +184,7 @@
             </div>
             <div class="row">
               <div class="columns center">
-                <paged-svg-plot pages="result.results.relativeEffectPlots[selectedBaseline.id]"></paged-svg-plot>
+                <paged-svg-plot file-name="'relativeEffect'" pages="result.results.relativeEffectPlots[selectedBaseline.id]"></paged-svg-plot>
               </div>
             </div>
           </div>
@@ -194,7 +194,7 @@
             <div class="row">
               <div class="columns large-6 small-8">
                 <p><strong>Study effect forest plot</strong></p>
-                <paged-svg-plot pages="result.results.studyForestPlot"></paged-svg-plot>
+                <paged-svg-plot file-name="'forestPlot'" pages="result.results.studyForestPlot"></paged-svg-plot>
               </div>
             </div>
           </div>
@@ -204,13 +204,13 @@
             <div class="row">
               <div class="columns large-6 small-8">
                 <p><strong>Density plot</strong></p>
-                <paged-png-plot pages="result.results.densityPlot"></paged-png-plot>
+                <paged-png-plot file-name="'densityPlot'" pages="result.results.densityPlot"></paged-png-plot>
               </div>
             </div>
           </div>
         </div>
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-4" export>
+          <div class="columns large-4" export file-name="'rankPlot'">
             <div>
               <p><strong>Rank probabilities</strong></p>
             </div>

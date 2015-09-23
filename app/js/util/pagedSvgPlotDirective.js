@@ -4,7 +4,8 @@ define([], function() {
   var PagedSvgDirective = function(gemtcRootPath) {
     return {
       scope: {
-        pages: '='
+        pages: '=',
+        fileName: '='
       },
       restrict: 'E',
       // using template because loading teplateUrl irritating in submodule
