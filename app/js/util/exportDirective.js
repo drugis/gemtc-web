@@ -1,11 +1,13 @@
 'use strict';
-define(['lodash', 'd3'], function(_, d3) {
+define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
   var dependencies = ['gemtcRootPath', '$modal', '$compile'];
   var ExportDirective = function(gemtcRootPath, $modal, $compile) {
     return {
       restrict: 'A',
       templateUrl: gemtcRootPath + 'js/util/exportDirective.html',
-      scope: true,
+      scope: {
+        fileName: '='
+      },
       transclude: true,
       link: function(scope, element, attrs) {
         var btnElement = $compile('<button ng-click="exportElement()" class="export-button info small">Export</button>')(scope);
@@ -17,11 +19,12 @@ define(['lodash', 'd3'], function(_, d3) {
         } else if (element.find('img').length > 0) {
           var image = element.find('img');
           image.parent().css('position', 'relative').append(btnElement);
-          scope.exportElement = _.partial(exportImage, image[0], element.find('#exportCanvas')[0]);
+          scope.exportElement = _.partial(exportImage, scope.fileName, image[0]);
         } else if (element.find('svg').length > 0) {
-          element.find('svg').parent().parent().css('position', 'relative')
+          var svgElement = element.find('svg');
+          svgElement.parent().parent().css('position', 'relative')
             .append(btnElement);
-          scope.exportElement = exportSvg;
+          scope.exportElement = _.partial(exportSvg, scope.fileName, svgElement);
         }
 
         function showCopyPasteMessage() {
@@ -37,44 +40,65 @@ define(['lodash', 'd3'], function(_, d3) {
           });
         }
 
-        function exportImage(sourceImage, canvasElement) {
-          var newImage = new Image;
-          newImage.src = sourceImage.src;
-          newImage.onload = _.partial(onImageLoad, element, canvasElement, newImage);
-        }
-
-        function exportSvg() {
-          console.log('export svg');
-        }
-
-        function onImageLoad(element, canvasElement, image) {
-          var context = canvasElement.getContext("2d")
-          context.drawImage(image, 0, 0);
+        function exportImage(fileName, sourceImage) {
+          var $canvasElement = jQuery('<canvas/>')
+            .prop({
+              width: sourceImage.width,
+              height: sourceImage.height
+            });
+          var context = $canvasElement[0].getContext("2d")
+          context.drawImage(sourceImage, 0, 0);
 
           var a = document.createElement("a");
-          a.download = "sample.png";
-          a.href = canvasElement.toDataURL("image/png");
+          a.download = fileName + ".png";
+          a.href = $canvasElement[0].toDataURL("image/png");
 
           a.click();
         }
 
-        // function blobUrl(canvas) {
-        //   var byteString = atob(canvas.toDataURL().replace(/^data:image\/(png|jpg|svg+xml);base64,/, ""));
-        //   var ab = new ArrayBuffer(byteString.length);
-        //   var ia = new Uint8Array(ab);
-        //   for (var i = 0; i < byteString.length; i++) {
-        //     ia[i] = byteString.charCodeAt(i);
-        //   }
-        //   var dataView = new DataView(ab);
-        //   var blob = new Blob([dataView], {
-        //     type: "image/png"
-        //   });
-        //   var DOMURL = self.URL || self.webkitURL || self;
-        //   var newurl = DOMURL.createObjectURL(blob);
+        function getParentDimension(element) {
+          function parsePx(str) {
+            return parseInt(str.replace(/px/gi, ''));
+          }
 
-        //   return '<img src="' + newurl + '">';
-        // }
+          var width = parsePx($(element).css('width'));
+          var height = parsePx($(element).css('height'));
 
+          return {
+            width: width,
+            height: height
+          };
+        };
+
+        function exportSvg(fileName, $svgElement) {
+
+
+          var dim = getParentDimension($svgElement);
+
+          var html = $svgElement
+            .attr('height', $svgElement.height())
+            .attr('width', $svgElement.width())
+            .attr("version", 1.1)
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+            .parent()[0]
+            .innerHTML;
+
+          var imgsrc = 'data:image/svg+xml;base64,' + btoa(html);
+          var $img = jQuery('<img />', {
+            src: imgsrc,
+            id: 'yo-id'
+          });
+
+          $img.prop('height', dim.height);
+          $img.prop('width', dim.width);
+
+          $img.css('width', dim.width);
+          $img.css('height', dim.height);
+
+          element.append($img);
+
+          exportImage(fileName, $img[0]);
+        }
       }
     };
   };
