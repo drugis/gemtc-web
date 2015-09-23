@@ -48,12 +48,16 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
             });
           var context = $canvasElement[0].getContext("2d")
           context.drawImage(sourceImage, 0, 0);
-
+          var clickEvent = new MouseEvent("click", {
+            "view": window,
+            "bubbles": true,
+            "cancelable": false
+          });
           var a = document.createElement("a");
           a.download = fileName + ".png";
           a.href = $canvasElement[0].toDataURL("image/png");
 
-          a.click();
+          a.dispatchEvent(clickEvent);
         }
 
         function getParentDimension(element) {
