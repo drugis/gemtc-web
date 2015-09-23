@@ -209,19 +209,42 @@
             </div>
           </div>
         </div>
-        <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-4" export>
+
+        <div class="row" style="padding-top: 4rem;" ng-if="model.modelType.type !== 'node-split'">
+          <div class="columns large-12" export>
             <div>
               <p><strong>Rank probabilities</strong></p>
             </div>
-            <div class="addis-graph" style="height:400px;">
+            <table id="ranktable">
+              <caption>Rank probabilities table</caption>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th ng-repeat="rank in result.results.rankProbabilities">Rank {{::$index + 1}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="(key, treatments) in problem.treatments">
+                    <td>{{::treatments.name}}</td>
+                  <td ng-repeat="rank in result.results.rankProbabilities[treatments.name]">
+                    {{::rank | number}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
+          <div class="columns large-4" export>
+            <div class="addis-graph" style="height:450px;">
+              <caption>Rank probabilities plot</caption>
               <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true"></gemtc-rank-plot>
-              </gemtc-rank-plot>
             </div>
           </div>
         </div>
-        <div class="row" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-4">
+        <div class="row" style="padding-top: 2rem;" ng-if="model.modelType.type !== 'node-split'">
+          <div class="columns large-6 medium-10 small-12">
             <div class="panel callout">
               <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the highest outcome value.</p>
               <p>Ranks can be shown as grouped or stacked.</p>
