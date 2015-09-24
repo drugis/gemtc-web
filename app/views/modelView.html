@@ -233,9 +233,8 @@
             </table>
           </div>
         </div>
-
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-4" export>
+          <div class="columns large-4" export file-name="'rankProbabilities'">
             <div class="addis-graph" style="height:450px;">
               <caption>Rank probabilities plot</caption>
               <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true"></gemtc-rank-plot>

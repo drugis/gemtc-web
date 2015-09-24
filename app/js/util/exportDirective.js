@@ -48,37 +48,27 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
             });
           var context = $canvasElement[0].getContext("2d")
           context.drawImage(sourceImage, 0, 0);
+
+          var a = document.createElement("a");
+          a.download = fileName + ".png";
+          a.href = $canvasElement[0].toDataURL("image/png");
+
+          // work around firefox security feature that stop triggering click event from script
           var clickEvent = new MouseEvent("click", {
             "view": window,
             "bubbles": true,
             "cancelable": false
           });
-          var a = document.createElement("a");
-          a.download = fileName + ".png";
-          a.href = $canvasElement[0].toDataURL("image/png");
-
           a.dispatchEvent(clickEvent);
         }
 
-        function getParentDimension(element) {
-          function parsePx(str) {
-            return parseInt(str.replace(/px/gi, ''));
-          }
-
-          var width = parsePx($(element).css('width'));
-          var height = parsePx($(element).css('height'));
-
-          return {
-            width: width,
-            height: height
-          };
-        };
-
         function exportSvg(fileName, $svgElement) {
+          //can't set svg instructions as image src directly
+          var $image = createImage($svgElement);
+          $image.load(_.partial(exportImage, fileName, $image[0]));
+        }
 
-
-          var dim = getParentDimension($svgElement);
-
+        function createImage($svgElement) {
           var html = $svgElement
             .attr('height', $svgElement.height())
             .attr('width', $svgElement.width())
@@ -89,19 +79,9 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
 
           var imgsrc = 'data:image/svg+xml;base64,' + btoa(html);
           var $img = jQuery('<img />', {
-            src: imgsrc,
-            id: 'yo-id'
+            src: imgsrc 
           });
-
-          $img.prop('height', dim.height);
-          $img.prop('width', dim.width);
-
-          $img.css('width', dim.width);
-          $img.css('height', dim.height);
-
-          element.append($img);
-
-          exportImage(fileName, $img[0]);
+          return $img;
         }
       }
     };
