@@ -1,19 +1,20 @@
 var logger = require('./logger');
 var express = require('express');
 var status = require('http-status-codes');
+var _ = require('lodash');
 
 var analysisRepository = require('./analysisRepository');
 var modelRepository = require('./modelRepository');
 var pataviTaskRouter = require('./pataviTaskRouter');
+var pataviTaskRepository = require('./pataviTaskRepository');
 
 module.exports = express.Router({
-  mergeParams: true
-})
+    mergeParams: true
+  })
   .get('/', find)
   .post('/', createModel)
   .get('/:modelId', getModel)
-  .use('/:modelId/task', pataviTaskRouter)
-;
+  .use('/:modelId/task', pataviTaskRouter);
 
 function internalError(error, response) {
   logger.error(error);
@@ -21,14 +22,40 @@ function internalError(error, response) {
   response.end();
 }
 
+function decorateWithHasResults(modelsResult, pataviResult) {
+  var pataviTasks = _.indexBy(pataviResult, 'id');
+  return _.map(modelsResult, function(row) {
+    console.log('row ' + JSON.stringify(row));
+    return _.extend(row, {
+      hasResult: pataviTasks[row.taskId].hasresult
+    });
+  });
+}
+
 function find(request, response, next) {
   logger.debug('modelRouter.find');
   var analysisId = request.params.analysisId;
-  modelRepository.findByAnalysis(analysisId, function(error, result) {
+  modelRepository.findByAnalysis(analysisId, function(error, modelsResult) {
     if (error) {
       internalError(error, response);
     } else {
-      response.json(result);
+      var modelsWithTasks = _.filter(modelsResult, function(model) {
+        return model.taskId !== null;
+      });
+      var modelIdsWithTasks = _.map(modelsWithTasks, function(filteredModel) {
+        return {
+          id: filteredModel.id,
+          taskId: filteredModel.taskId
+        };
+      });
+      pataviTaskRepository.getPataviTasksStatus(_.map(modelIdsWithTasks, 'id'), function(error, pataviResult) {
+        if (error) {
+          internalError(error, response);
+        } else {
+          decoratedResult = decorateWithHasResults(modelIdsWithTasks, pataviResult);
+          response.json(decoratedResult);
+        }
+      });
     }
   });
 }
@@ -52,7 +79,9 @@ function createModel(request, response, next) {
           } else {
             response
               .location('/analyses/' + analysisId + '/models/' + createdId)
-              .json({id: createdId})
+              .json({
+                id: createdId
+              })
               .status(status.CREATED);
             next();
           }
