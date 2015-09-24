@@ -4,29 +4,22 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
   var ExportDirective = function(gemtcRootPath, $modal, $compile) {
     return {
       restrict: 'A',
-      templateUrl: gemtcRootPath + 'js/util/exportDirective.html',
       scope: {
         fileName: '='
       },
-      transclude: true,
       link: function(scope, element, attrs) {
+        
         var btnElement = $compile('<button ng-click="exportElement()" class="export-button info small">Export</button>')(scope);
+        element.after(btnElement);
 
-        if (element.find('table').length > 0) {
-          element.find('table').css('position', 'relative')
-            .append(btnElement);
+        if (element.is('table')) {
           scope.exportElement = showCopyPasteMessage;
-        } else if (element.find('img').length > 0) {
-          var image = element.find('img');
-          image.parent().css('position', 'relative').append(btnElement);
-          scope.exportElement = _.partial(exportImage, scope.fileName, image[0]);
+        } else if (element.is('img')) {
+          scope.exportElement = _.partial(exportImage, scope.fileName, element[0]);
         } else if (element.find('svg').length > 0) {
-          var svgElement = element.find('svg');
-          svgElement.parent().parent().css('position', 'relative')
-            .append(btnElement);
-          scope.exportElement = _.partial(exportSvg, scope.fileName, svgElement);
+          scope.exportElement = _.partial(exportSvg, scope.fileName, element.find('svg'));
         }
-
+        
         function showCopyPasteMessage() {
           $modal.open({
             templateUrl: './js/util/copyDialog.html',
