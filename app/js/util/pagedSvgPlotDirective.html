@@ -1,5 +1,5 @@
-<div export file-name="fileName">
-  <img ng-src="{{trustedPages[selectedPage]}}">
+<div >
+  <img ng-src="{{trustedPages[selectedPage]}}" export file-name="fileName">
   <a exclass="previous" ng-click="selectPreviousPage()"><i ng-if="selectedPage > 0" class="fa fa-caret-left" style="font-size:3em;"></i></a>
   <a class="next" ng-click="selectNextPage()"><i ng-if="selectedPage < pages.length - 1" class="fa fa-caret-right" style="font-size:3em;"></i></a>
 </div>

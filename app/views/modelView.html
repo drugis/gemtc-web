@@ -70,8 +70,8 @@
             </div>
             <div class="row">
               <div class="columns large-8 medium-6 small-12">
-                <div export>
-                  <table>
+                <div>
+                  <table export>
                     <caption>Per-parameter convergence diagnostics</caption>
                     <thead>
                       <tr>
@@ -155,8 +155,8 @@
               <span>{{::scaleName}}</span> (95% CrI).
               <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
             </div>
-            <div export>
-              <table>
+            <div >
+              <table export>
                 <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
                   <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
                     <span ng-switch-when="effect">
@@ -210,11 +210,11 @@
           </div>
         </div>
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-4" export file-name="'rankPlot'">
+          <div class="columns large-4" >
             <div>
               <p><strong>Rank probabilities</strong></p>
             </div>
-            <table id="ranktable">
+            <table id="ranktable" export>
               <caption>Rank probabilities table</caption>
                 <thead>
                   <tr>
@@ -234,8 +234,8 @@
           </div>
         </div>
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-4" export file-name="'rankProbabilities'">
-            <div class="addis-graph" style="height:450px;">
+          <div class="columns large-4" >
+            <div class="addis-graph" style="height:450px;" export file-name="'rankProbabilities'">
               <caption>Rank probabilities plot</caption>
               <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true"></gemtc-rank-plot>
             </div>
