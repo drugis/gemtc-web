@@ -48,11 +48,11 @@ function find(request, response, next) {
           taskId: filteredModel.taskId
         };
       });
-      pataviTaskRepository.getPataviTasksStatus(_.map(modelIdsWithTasks, 'id'), function(error, pataviResult) {
+      pataviTaskRepository.getPataviTasksStatus(_.map(modelIdsWithTasks, 'taskId'), function(error, pataviResult) {
         if (error) {
           internalError(error, response);
         } else {
-          decoratedResult = decorateWithHasResults(modelIdsWithTasks, pataviResult);
+          decoratedResult = decorateWithHasResults(modelsWithTasks, pataviResult);
           response.json(decoratedResult);
         }
       });

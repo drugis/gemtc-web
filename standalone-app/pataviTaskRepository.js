@@ -7,11 +7,11 @@ module.exports = {
   create: createPataviTask
 };
 
-function getPataviTasksStatus(modelIds, callback) {
-  var params = modelIds.map(function(item, idx) {
+function getPataviTasksStatus(taskIds, callback) {
+  var params = taskIds.map(function(item, idx) {
     return '$' + (idx+1);
   });
-  db.query('SELECT id, result IS NOT NULL as hasResult FROM patavitask WHERE id in (' + params.join(',') + ')', modelIds, function(error, result) {
+  db.query('SELECT id, result IS NOT NULL as hasResult FROM patavitask WHERE id in (' + params.join(',') + ')', taskIds, function(error, result) {
     if (error) {
       callback(error);
     } else {
