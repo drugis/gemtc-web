@@ -7,5 +7,4 @@ module.exports = express.Router()
   .get('/:analysisId', analysisHandlers.getAnalysis)
   .get('/:analysisId/problem', analysisHandlers.getProblem)
   .post('/', analysisHandlers.createAnalysis)
-  .use('/:analysisId/models', modelRouter)
 ;
