@@ -8,9 +8,7 @@ var modelRepository = require('./modelRepository');
 var pataviTaskRouter = require('./pataviTaskRouter');
 var pataviTaskRepository = require('./pataviTaskRepository');
 
-module.exports = express.Router({
-    mergeParams: true
-  })
+module.exports = express.Router({mergeParams:true})
   .get('/', find)
   .post('/', createModel)
   .get('/:modelId', getModel)
@@ -24,44 +22,46 @@ function internalError(error, response) {
 
 function decorateWithHasResults(modelsResult, pataviResult) {
   var pataviTasks = _.indexBy(pataviResult, 'id');
-  return _.map(modelsResult, function(row) {
-    console.log('row ' + JSON.stringify(row));
-    return _.extend(row, {
-      hasResult: pataviTasks[row.taskId].hasresult
+  return _.map(modelsResult, function(model) {
+    return _.extend(model, {
+      hasResult: pataviTasks[model.taskId].hasresult
     });
   });
 }
 
 function find(request, response, next) {
   logger.debug('modelRouter.find');
+  logger.debug('request.params.analysisId' + request.params.analysisId);
+
   var analysisId = request.params.analysisId;
+
   modelRepository.findByAnalysis(analysisId, function(error, modelsResult) {
     if (error) {
       internalError(error, response);
     } else {
       var modelsWithTasks = _.filter(modelsResult, function(model) {
-        return model.taskId !== null;
+        return model.taskId !== null && model.taskId !== undefined;
       });
-      var modelIdsWithTasks = _.map(modelsWithTasks, function(filteredModel) {
-        return {
-          id: filteredModel.id,
-          taskId: filteredModel.taskId
-        };
-      });
-      pataviTaskRepository.getPataviTasksStatus(_.map(modelIdsWithTasks, 'taskId'), function(error, pataviResult) {
-        if (error) {
-          internalError(error, response);
-        } else {
-          decoratedResult = decorateWithHasResults(modelsWithTasks, pataviResult);
-          response.json(decoratedResult);
-        }
-      });
+      if (modelsWithTasks.length) {
+        var taskIds = _.map(modelsWithTasks, 'taskId');
+        pataviTaskRepository.getPataviTasksStatus(taskIds, function(error, pataviResult) {
+          if (error) {
+            internalError(error, response);
+          } else {
+            decoratedResult = decorateWithHasResults(modelsWithTasks, pataviResult);
+            response.json(decoratedResult);
+          }
+        });
+      } else {
+        response.json(modelsResult);
+      }
     }
   });
 }
 
 function createModel(request, response, next) {
   logger.debug('create model.');
+  logger.debug('request.params.analysisId' + request.params.analysisId);
   var analysisId = request.params.analysisId;
   var userId = request.session.userId;
   analysisRepository.get(analysisId, function(error, analysis) {
