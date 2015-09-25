@@ -28,6 +28,10 @@ module.exports = {
     createModelPage.setModelSubType('node-split-specific');
     createModelPage.setLikelihoodAndLink();
     createModelPage.createModel();
+
+    modelResultPage.waitForPageToLoad();
+    modelResultPage.waitForResults();
+
     browser.pause(20000)
     createModelPage.end();
   }
