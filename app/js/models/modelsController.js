@@ -18,6 +18,10 @@ define(['lodash'], function(_) {
       $state.go('createModel', $stateParams);
     }
 
+    $scope.gotoModel = function(model) {
+      $state.go('model', $scope.modelParams(model));
+    }
+
   }
   return dependencies.concat(ModelsController);
 });
