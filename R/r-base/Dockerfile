@@ -14,5 +14,4 @@ RUN R -e 'install.packages("meta", repos="http://cran.rstudio.com/"); if (!requi
 RUN R -e 'install.packages("base64enc", repos="http://cran.rstudio.com/"); if (!require("meta")) quit(save="no", status=8)'
 RUN R -e 'install.packages("truncnorm", repos="http://cran.rstudio.com/"); if (!require("truncnorm")) quit(save="no", status=8)'
 
-COPY gemtc_0.7.tar.gz gemtc_0.7.tar.gz
 RUN R -e 'install.packages("gemtc", repos="http://cran.rstudio.com/"); if (!require("gemtc")) quit(save="no", status=8)'
