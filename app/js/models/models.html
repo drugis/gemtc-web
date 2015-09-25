@@ -27,7 +27,7 @@
         <tr class="on-hover clickable" ng-click="gotoModel(model)"ng-repeat="model in models | orderBy:'title'">
           <td>{{model.title}}</td>
           <td class="text-center">{{model.modelType.type}}</td>
-          <td class="text-center">yes</td>
+          <td class="text-center"><i class="fa fa-check" style="color:green;" ng-if="model.hasResult"></td>
         </tr>
       </tbody>
     </table>
