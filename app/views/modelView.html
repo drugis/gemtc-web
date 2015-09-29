@@ -244,7 +244,7 @@
         <div class="row" ng-if="model.modelType.type === 'pairwise'">
           <div class="columns">
             <div class="row">
-              <div class="columns large-6 small-8">
+              <div class="columns large-12 small-8">
                 <p><strong>Study effect forest plot</strong></p>
                 <paged-svg-plot file-name="'forestPlot'" pages="result.results.studyForestPlot"></paged-svg-plot>
               </div>
@@ -254,7 +254,7 @@
         <div class="row" ng-if="model.modelType.type === 'node-split'">
           <div class="columns">
             <div class="row">
-              <div class="columns large-6 small-8">
+              <div class="columns large-12 small-8">
                 <p><strong>Density plot</strong></p>
                 <paged-png-plot file-name="'densityPlot'" pages="result.results.densityPlot"></paged-png-plot>
               </div>
@@ -262,7 +262,7 @@
           </div>
         </div>
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-4">
+          <div class="columns large-12" >
             <div>
               <p><strong>Rank probabilities</strong></p>
             </div>
@@ -286,8 +286,8 @@
           </div>
         </div>
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-4">
-            <div class="addis-graph" style="height:450px;" export file-name="'rankProbabilities'">
+          <div class="columns large-12" >
+            <div class="addis-graph" style="width:450px; height:450px;" export file-name="'rankProbabilities'">
               <caption>Rank probabilities plot</caption>
               <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true"></gemtc-rank-plot>
             </div>
