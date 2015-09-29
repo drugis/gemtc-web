@@ -369,11 +369,12 @@ report('summary', 1.0)
     summary[['tracePlot']] <- tracePlot
     summary[['gelmanPlot']] <- gelmanPlot
     summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
+    deviance <- result[['deviance']]
+    # summary[['devianceStatistics']] <- deviance
     summary[['residualDeviance']] <- deviance[['Dbar']]
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
     summary[['deviancePlot']] <- deviancePlot
-    summary[['devianceStatistics']] <- result[['deviance']]
     print(times)
 
     update(list(progress=100))
