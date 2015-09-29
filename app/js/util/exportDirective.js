@@ -11,6 +11,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
         
         var btnElement = $compile('<button ng-click="exportElement()" class="export-button info small">Export</button>')(scope);
         element.after(btnElement);
+        element.css('float', 'left');
 
         if (element.is('table')) {
           scope.exportElement = showCopyPasteMessage;
