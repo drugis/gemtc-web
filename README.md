@@ -101,7 +101,7 @@ To run nightwatch integration tests:
 
     set env variable GEMTC_NIGHTWATCH_URL ( b.v. $GEMTC_HOST)
 
-    npm install -g nightwatch
+    sudo npm install -g nightwatch
     cd test/integration
     wget http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar
     node gemtc &

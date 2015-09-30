@@ -6,7 +6,7 @@ module.exports = function(browser, url) {
         .pause(1000)
         .source(function(result) {
             // Source will be stored in result.value
-            console.log(result.value);
+            // console.log(result.value);
         })
         .assert.containsText('h2', 'Sign in with your Google Account')
         .pause(1000)
@@ -21,4 +21,4 @@ module.exports = function(browser, url) {
     }
 
     return browser;
-};  
+};

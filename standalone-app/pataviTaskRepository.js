@@ -8,6 +8,9 @@ module.exports = {
 };
 
 function getPataviTasksStatus(taskIds, callback) {
+  if(taskIds.length === 0) {
+    callback(null, []);
+  }
   var params = taskIds.map(function(item, idx) {
     return '$' + (idx+1);
   });
