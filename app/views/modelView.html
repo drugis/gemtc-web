@@ -148,23 +148,6 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="columns large-6 medium-6 small-12">
-                <img export file-name="'residualDeviancePlot'" ng-src="{{result.results.deviancePlot[0]}}">
-              </div>
-            </div>
-            <div class="row" ng-show="isConvergencePlotsShown">
-              <div class="columns large-6 medium-6 small-12">
-                <p><strong>Time series plots</strong></p>
-                <paged-png-plot file-name="'tracePlot'" pages="result.results.tracePlot"></paged-png-plot>
-              </div>
-            </div>
-            <div class="row" ng-show="isConvergencePlotsShown">
-              <div class="columns large-6 medium-6 small-12">
-                <p><strong>PSRF plots</strong></p>
-                <paged-png-plot file-name="'psrfPlot'" pages="result.results.gelmanPlot"></paged-png-plot>
-              </div>
-            </div>
           </div>
         </div>
         <div class="row" style="padding-top: 1rem;">
