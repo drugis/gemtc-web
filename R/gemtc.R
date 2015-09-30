@@ -93,11 +93,11 @@ readFile <- function(fileName) {
   readChar(fileName, file.info(fileName)$size)
 }
 
-plotToFile <- function(plotFn, dataType, extension) {
+plotToFile <- function(plotFunction, dataType, extension, imageCreationFunction) {
   prefix <- tempfile()
-  imgName <- paste(prefix, '-%05d', extension, sep='')
-  svg(imgName)
-  plotFn()
+  imageName <- paste(prefix, '-%05d', extension, sep='')
+  imageCreationFunction(imageName)
+  plotFunction()
   dev.off()
 
   # read & delete plot files
@@ -109,12 +109,12 @@ plotToFile <- function(plotFn, dataType, extension) {
   })
 }
 
-plotToSvg <- function(plotFn) {
-  plotToFile(plotFn, 'svg+xml', '.svg')
+plotToSvg <- function(plotFunction) {
+  plotToFile(plotFunction, 'svg+xml', '.svg', svg)
 }
 
-plotToPng <- function(plotFn) {
-  plotToFile(plotFn, 'png', '.png')
+plotToPng <- function(plotFunction) {
+  plotToFile(plotFunction, 'png', '.png', png)
 }
 
 predict.t <- function(network, n.adapt, n.iter, thin) {
@@ -370,7 +370,8 @@ report('summary', 1.0)
     summary[['gelmanPlot']] <- gelmanPlot
     summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
     deviance <- result[['deviance']]
-    # summary[['devianceStatistics']] <- deviance
+    summary[['devianceStatistics']][['perArmDeviance']] <- wrap.matrix(deviance[['dev.ab']])
+    summary[['devianceStatistics']][['perArmLeverage']] <- wrap.matrix(deviance[['fit.ab']])
     summary[['residualDeviance']] <- deviance[['Dbar']]
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
