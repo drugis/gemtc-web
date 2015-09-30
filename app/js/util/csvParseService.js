@@ -1,6 +1,10 @@
 'use strict';
-define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
+define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
   var dependencies = [];
+
+  function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+  }
 
   /**
    Service to transform csv files to ADDIS problems.
@@ -34,32 +38,34 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
     }
   **/
 
-  var CSVParseService = function () {
+  var CSVParseService = function() {
 
     /**
-    * Takes a string in csv format
-    * returns an object
-    * {
-    *   isValid,  // is the csv valid?
-    *   message,  // if not valid, message contains reasons/feedback
-    *   problem   // if valid, an ADDIS problem corresponding to the .csv
-    * }
-    **/
+     * Takes a string in csv format
+     * returns an object
+     * {
+     *   isValid,  // is the csv valid?
+     *   message,  // if not valid, message contains reasons/feedback
+     *   problem   // if valid, an ADDIS problem corresponding to the .csv
+     * }
+     **/
     function parse(input) {
       var parseResult = papaparse.parse(input, {
-        delimiter: ',',
         skipEmptyLines: true,
         dynamicTyping: true
       });
 
-      if(parseResult.errors.length > 0) {
+      if (parseResult.errors.length > 0) {
         return {
           isValid: false,
-          message: _.reduce(parseResult.errors, function(accum, error){
+          message: _.reduce(parseResult.errors, function(accum, error) {
             return accum + error.message + ';'
           }, '')
         }
       } else {
+        if (parseResult.meta.delimiter === ';') {
+          parseResult.data = normaliseData(parseResult.data)
+        }
         return {
           isValid: true,
           message: '',
@@ -68,15 +74,30 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
       }
     }
 
-
+    function normaliseData(data) {
+      function stringToNumber(datum) {
+        if (isNumeric(datum)) {
+          return datum;
+        } else {
+          return parseFloat(datum.replace(',', '.'));
+        }
+      }
+      var header = data[0];
+      var normalisedRows = _.map(data.slice(1, data.length), function(dataLine) {
+        var studyAndTreatment = dataLine.slice(0, 2);
+        var numericalData = dataLine.slice(2, dataLine.length);
+        return studyAndTreatment.concat(_.map(numericalData, stringToNumber));
+      });
+      return [].concat([header], normalisedRows);
+    }
 
     /**
-    * build map of treatments name -> id
-    **/
+     * build map of treatments name -> id
+     **/
     function buildTreatmentMap(dataLines) {
       var treatmentMap = {};
 
-      _.forEach(dataLines, function (line) {
+      _.forEach(dataLines, function(line) {
         if (!treatmentMap[line[1]]) {
           // generate sequential ids for treatments
           treatmentMap[line[1]] = _.keys(treatmentMap).length + 1;
@@ -86,7 +107,7 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
     }
 
     function buildTreatments(treatmentMap) {
-      return _.map(treatmentMap, function (treatmentId, treatmentName) {
+      return _.map(treatmentMap, function(treatmentId, treatmentName) {
         return {
           id: treatmentId,
           name: treatmentName
@@ -95,14 +116,14 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
     }
 
     /**
-    * Takes an array of lines, expects the first line to contain column names
-    * produces an ADDIS problem, with a property 'entries' and a property 'treatments'
-    * Entries contains one object per line, with key:value pairs
-    * where the key is the name of the column and the value is the value in the
-    * data line. Treatments are referenced by ID
-    * The study column should contain string values.
-    * Treatments contains all the treatments, with and ID and name property
-    **/
+     * Takes an array of lines, expects the first line to contain column names
+     * produces an ADDIS problem, with a property 'entries' and a property 'treatments'
+     * Entries contains one object per line, with key:value pairs
+     * where the key is the name of the column and the value is the value in the
+     * data line. Treatments are referenced by ID
+     * The study column should contain string values.
+     * Treatments contains all the treatments, with and ID and name property
+     **/
     function linesToProblem(lines) {
       var headerLine = lines[0];
       var dataLines = lines.slice(1, lines.length);
@@ -123,7 +144,7 @@ define(['angular', 'lodash', 'papaparse'], function (angular, _, papaparse) {
         return entry.study.toString();
       }
 
-      var entries = _.map(sortedDataLines, function (line) {
+      var entries = _.map(sortedDataLines, function(line) {
         var entry = _.zipObject(headerLine, line);
         entry.study = convertStudyValueToString(entry);
         // substitute treatment name with its ID

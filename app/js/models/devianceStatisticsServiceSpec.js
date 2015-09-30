@@ -6,7 +6,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
     beforeEach(inject(function(DevianceStatisticsService) {
       devianceStatisticsService = DevianceStatisticsService;
     }));
-    fdescribe('buildTable function', function() {
+    describe('buildTable function', function() {
       it('should create one row per study arm', function() {
         var testProblem = {
           "entries": [{

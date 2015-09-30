@@ -35,7 +35,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
         .attr('height', width);
 
 
-      var circleData = [];
+      var circleDataMap = {};
 
       _.each(network.interventions, function(intervention, i) {
         var circleDatum = {
@@ -44,16 +44,16 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
           cx: originX - radius * Math.cos(angle * i),
           cy: originY + radius * Math.sin(angle * i)
         };
-        circleData[intervention.name] = circleDatum;
-        circleData.push(circleDatum);
+        circleDataMap[intervention.name] = circleDatum;
+
       });
 
       _.each(network.edges, function(edge) {
-        drawEdge(svg, edge.from.name, edge.to.name, edge.studies.length, circleData);
+        drawEdge(svg, edge.from.name, edge.to.name, edge.studies.length, circleDataMap);
       });
 
       var enter = svg.selectAll('g')
-        .data(circleData)
+        .data(_.values(circleDataMap))
         .enter()
         .append('g')
         .attr('transform', function(d) {
