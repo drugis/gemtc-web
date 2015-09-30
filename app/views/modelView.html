@@ -149,40 +149,31 @@
               </div>
             </div>
             <div class="row">
-<<<<<<< Updated upstream
-              <div class="columns large-6 medium-6 small-12">
-                <img ng-src="{{result.results.deviancePlot[0]}}">
-              </div>
-            </div>
-            <div class="row" ng-show="isConvergencePlotsShown">
-              <div class="columns large-6 medium-6 small-12">
-                <p><strong>Time series plots</strong></p>
-                <paged-png-plot file-name="'tracePlot'" pages="result.results.tracePlot"></paged-png-plot>
-              </div>
-            </div>
-            <div class="row" ng-show="isConvergencePlotsShown">
-              <div class="columns large-6 medium-6 small-12">
-                <p><strong>PSRF plots</strong></p>
-                <paged-png-plot file-name="'psrfPlot'" pages="result.results.gelmanPlot"></paged-png-plot>
-=======
               <div class="columns large-12 medium-12 small-12">
                 <img export file-name="'residualDeviancePlot'" ng-src="{{result.results.deviancePlot[0]}}">
               </div>
             </div>
             <div class="row">
               <div class="columns large-12 medium-12 small-12">
-                <table>
+                <table export>
                   <thead>
                     <caption>Residual deviance per arm per study</caption>
+                    <tr>
+                      <th>Study</th>
+                      <th>Arm</th>
+                      <th>Residual deviance</th>
+                      <th>Leverage</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="(studyName, arms) in result.results.devianceStatistics.perArmDeviance">
-                      <td>{{studyName}}</td>
-                      <td ng-repeat="arm in arms">{{arm}}</td>
+                    <tr ng-repeat="row in devianceStatisticsTable">
+                      <td ng-if="row.rowSpan" rowspan="{{row.rowSpan}}">{{row.studyName}}</td>
+                      <td>{{row.armName}}</td>
+                      <td>{{row.deviance}}</td>
+                      <td>{{row.leverage}}</td>
                     </tr>
                   </tbody>
                 </table>
->>>>>>> Stashed changes
               </div>
             </div>
           </div>
@@ -206,8 +197,8 @@
               <caption>Node splitting results</caption>
               <thead>
                 <tr>
-                  <td> </td>
-                  <td>Median (95% CrI)</td>
+                  <th> </th>
+                  <th>Median (95% CrI)</th>
                 </tr>
               </thead>
               <tr>
@@ -282,11 +273,7 @@
           </div>
         </div>
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-<<<<<<< Updated upstream
-          <div class="columns large-4">
-=======
           <div class="columns large-12">
->>>>>>> Stashed changes
             <div>
               <p><strong>Rank probabilities</strong></p>
             </div>
@@ -310,23 +297,20 @@
           </div>
         </div>
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-<<<<<<< Updated upstream
-          <div class="columns large-4">
-            <div class="addis-graph" style="height:450px;" export file-name="'rankProbabilities'">
-=======
-          <div class="columns large-12">
-            <div class="addis-graph" style="width:450px; height:450px;" export file-name="'rankProbabilities'">
->>>>>>> Stashed changes
-              <caption>Rank probabilities plot</caption>
-              <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true"></gemtc-rank-plot>
+          <div class="addis-graph" style="height:450px;" export file-name="'rankProbabilities'">
+            <div class="columns large-12">
+              <div class="addis-graph" style="width:450px; height:450px;" export file-name="'rankProbabilities'">
+                <caption>Rank probabilities plot</caption>
+                <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true"></gemtc-rank-plot>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row" style="padding-top: 2rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-6 medium-10 small-12">
-            <div class="panel callout">
-              <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the highest outcome value.</p>
-              <p>Ranks can be shown as grouped or stacked.</p>
+          <div class="row" style="padding-top: 2rem;" ng-if="model.modelType.type !== 'node-split'">
+            <div class="columns large-6 medium-10 small-12">
+              <div class="panel callout">
+                <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the highest outcome value.</p>
+                <p>Ranks can be shown as grouped or stacked.</p>
+              </div>
             </div>
           </div>
         </div>
