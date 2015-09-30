@@ -2,10 +2,11 @@
 define(['lodash'], function() {
   var dependencies = ['$scope', '$sce', '$stateParams', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
-    'DiagnosticsService', 'ModelService', 'AnalysisService'
+    'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService'
   ];
   var ModelController = function($scope, $sce, $stateParams, ModelResource, PataviService,
-    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, ModelService, AnalysisService) {
+    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, AnalysisService,
+    DevianceStatisticsService) {
 
     $scope.analysis = AnalysisResource.get($stateParams);
     $scope.progress = {
@@ -76,6 +77,7 @@ define(['lodash'], function() {
           var relativeEffects = result.results.relativeEffects;
           result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
           $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+          $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         }
       });
     }
