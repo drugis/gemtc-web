@@ -34,7 +34,6 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
         .attr('width', width)
         .attr('height', width);
 
-
       var circleDataMap = {};
 
       _.each(network.interventions, function(intervention, i) {
@@ -45,7 +44,6 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
           cy: originY + radius * Math.sin(angle * i)
         };
         circleDataMap[intervention.name] = circleDatum;
-
       });
 
       _.each(network.edges, function(edge) {
