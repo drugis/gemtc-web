@@ -9,6 +9,7 @@
       <div class="row section">
         <div class="large-4 small-12 columns">
           <label class="form-item-header">Title
+            <small>required</small>
             <input id="title-input" autofocus="true" type="text" ng-model="model.title">
           </label>
         </div>
@@ -30,22 +31,20 @@
       <div class="row section">
         <div class="large-6 small-12 columns">
           <label class="form-item-header">Model Type</label>
-
           <div class="stacked-radio">
             <input type="radio" value="network" ng-model="model.modelType.mainType" id="network-model-type-radio" ng-change="modelTypeChange()">
             <label for="network-model-type-radio">Network meta-analysis</label>
           </div>
-
           <div class="stacked-radio">
-            <input type="radio" value="pairwise" ng-model="model.modelType.mainType" id="pairwise-model-main-type-radio" ng-change="modelTypeChange()"  ng-disabled="comparisonOptions.length === 0">
+            <input type="radio" value="pairwise" ng-model="model.modelType.mainType" id="pairwise-model-main-type-radio" ng-change="modelTypeChange()" ng-disabled="comparisonOptions.length === 0">
             <label for="pairwise-model-main-type-radio">Pair-wise analysis <em ng-show="comparisonOptions.length === 0"> (Not possible for this analysis)</em></label>
           </div>
           <div class="indent-one" ng-show="model.modelType.mainType == 'pairwise'">
             <label for="comparison-select">Select comparison for which to perform pair-wise analysis</label>
-             <div class="stacked-radio">
-            <input type="radio" value="all-pairwise" ng-model="model.modelType.subType" id="all-pairwise-model-type-radio">
-            <label for="all-pairwise-model-type-radio">All pairwise meta-analyses (batch)</label>
-          </div>
+            <div class="stacked-radio">
+              <input type="radio" value="all-pairwise" ng-model="model.modelType.subType" id="all-pairwise-model-type-radio">
+              <label for="all-pairwise-model-type-radio">All pairwise meta-analyses (batch)</label>
+            </div>
             <div class="stacked-radio">
               <span>
                 <input type="radio" value="specific-pairwise" ng-model="model.modelType.subType" id="pairwise-specific-type-radio">
@@ -53,103 +52,104 @@
                 <select class="large-6" ng-options="comparison.label for comparison in comparisonOptions" ng-model="model.pairwiseComparison" id="comparison-select" ng-disabled="model.modelType.subType !== 'specific-pairwise'"></select>
               </span>
             </div>
-         </div>
-
-        <div class="stacked-radio">
-          <input type="radio" value="node-split" ng-model="model.modelType.mainType" id="node-split-model-main-type-radio" ng-change="modelTypeChange()" ng-disabled="nodeSplitOptions.length === 0">
-          <label for="node-split-model-main-type-radio">Node-splitting analysis <em ng-show="nodeSplitOptions.length === 0"> (Not possible for this analysis)</em></label>
-          
-        </div>
-        <div class="indent-one" ng-show="model.modelType.mainType == 'node-split'">
-          <label for="comparison-select">Select comparison for which to perform node-splitting analysis</label>
-          <div class="stacked-radio">
-            <input type="radio" value="all-node-split" ng-model="model.modelType.subType" id="all-node-split-model-type-radio">
-            <label for="all-node-split-model-type-radio">All models</label>
           </div>
           <div class="stacked-radio">
-            <span>
+            <input type="radio" value="node-split" ng-model="model.modelType.mainType" id="node-split-model-main-type-radio" ng-change="modelTypeChange()" ng-disabled="nodeSplitOptions.length === 0">
+            <label for="node-split-model-main-type-radio">Node-splitting analysis <em ng-show="nodeSplitOptions.length === 0"> (Not possible for this analysis)</em></label>
+          </div>
+          <div class="indent-one" ng-show="model.modelType.mainType == 'node-split'">
+            <label for="comparison-select">Select comparison for which to perform node-splitting analysis</label>
+            <div class="stacked-radio">
+              <input type="radio" value="all-node-split" ng-model="model.modelType.subType" id="all-node-split-model-type-radio">
+              <label for="all-node-split-model-type-radio">All models</label>
+            </div>
+            <div class="stacked-radio">
+              <span>
              <input type="radio" value="specific-node-split" ng-model="model.modelType.subType" id="node-split-specific-type-radio">
               <label for="node-split-specific-type-radio">Specific model</label>
               <select class="large-6" ng-options="nodeSplitOption.label for nodeSplitOption in nodeSplitOptions" ng-model="model.nodeSplitComparison" id="node-split-select" ng-disabled="model.modelType.subType !== 'specific-node-split'"></select>
             </span>
+            </div>
           </div>
         </div>
-
-    </div>
-  </div> <!-- end model type section -->
-
-  <div class="row section">
-    <div class="columns large-6 medium-6 small-12">
-      <label class="form-item-header">Likelihood/Link</label>
-      <label>Select a likelihood/link type <select class="large-8" ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions" ng-model="model.likelihoodLink" id="likelihood-link-select" ></select>
-      </label>
-    </div>
+      </div>
+      <!-- end model type section -->
+      <div class="row section">
+        <div class="columns large-6 medium-6 small-12">
+          <label class="form-item-header">Likelihood/Link</label>
+          <label>Select a likelihood/link type
+            <select class="large-8" ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions" ng-model="model.likelihoodLink" id="likelihood-link-select"></select>
+          </label>
+        </div>
+      </div>
+      <div class="row ">
+        <div class="columns large-8 medium-10 small-12">
+          <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel }}.</label>
+          <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'" style="margin-bottom:2.25rem"> </label>
+          <!-- spacer -->
+        </div>
+      </div>
+      <!-- end likelihood/link section -->
+      <div class="row section">
+        <div class="large-6 medium-8 small-12 columns">
+          <label class="form-item-header">Outcome scale</label>
+          <div class="stacked-radio">
+            <input type="radio" value="heuristically" ng-model="model.outcomeScale.type" id="heuristically-model-outcom-scale-type-radio" ng-change="outcomeScaleTypeChange()">
+            <label for="heuristically-model-outcom-scale-type-radio">Determine heuristically</label>
+          </div>
+          <div class="stacked-radio">
+            <input type="radio" value="fixed" ng-model="model.outcomeScale.type" id="fixed-model-outcom-scale-type-radio" ng-change="outcomeScaleTypeChange()">
+            <label for="fixed-model-outcom-scale-type-radio">Fixed value</label>
+            <input type="number" ng-model="model.outcomeScale.value" id="fixed-outcome-scale-input" ng-disabled="model.outcomeScale.type !== 'fixed'" ng-change="fixedOutcomeScaleValueChage()" style="display: inline; width:18%;">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="columns large-8 medium-10 small-12" style="padding-left: 1.2rem;">
+          <div ng-show="model.outcomeScale.value <= 0 ">
+            <label class="alert">Outcome scale value can not zero or lower.</label>
+          </div>
+          <div ng-show="model.outcomeScale.type === 'fixed' && !isNumber(model.outcomeScale.value) ">
+            <label class="alert">Outcome scale value is not a valid number.</label>
+          </div>
+          <label style="margin-bottom:1rem;"><strong>Relative effect priors:</strong> N(0, (15 &#8901; <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)<sup>2</sup>)</label>
+          <label style="margin-bottom:1rem;"><strong>Random effects SD prior:</strong> U(0, <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)</label>
+        </div>
+      </div>
+      <!-- end likelihood/link section -->
+      <!-- end outcome measure scale section -->
+      <div class="row section">
+        <div class="large-3 medium-6 small-12 columns">
+          <label class="form-item-header">Run-length parameters</label>
+          <label>Number of burn-in iterations
+            <input type="number" min="1" step="1" ng-model="model.burnInIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="burn-in-iterations">
+          </label>
+          <label>Number of inference iterations
+            <input type="number" min="1" step="1" ng-model="model.inferenceIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="inference-iterations">
+          </label>
+          <label>Thinning factor
+            <input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="thinning-factor">
+          </label>
+        </div>
+      </div>
+      <!-- end run-length parameters section -->
+      <div class="row">
+        <div class="columns large-6 medium-8 small-12">
+          <div>
+            <label class="form-item-header" ng-show="model.modelType.subType !== 'all-pairwise' && model.modelType.subType !== 'all-node-split'">Estimated run length</label>
+            <label class="form-item-header" ng-show="model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split'">Maximum run length for these models</label> {{estimatedRunLengthHumanized}}</div>
+          <div class="alert" ng-show='!isRunlengthDivisibleByThinningFactor()'>The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions. </div>
+          <div class="alert" ng-show='estimatedRunLength > 300'>This task will take too long (over 5 minutes). Please reduce the number of iterations or increase the thinning factor.</div>
+        </div>
+      </div>
+      <div class="row bottom-button-bar">
+        <div class="large-9 columns">
+          <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(model)">
+            Create Model(s)
+          </button>
+          <div class="alert" ng-show='!model.title'>Model title missing.</div>
+        </div>
+      </div>
+    </form>
   </div>
-  <div class="row ">
-    <div class="columns large-8 medium-10 small-12">
-      <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel }}.</label>
-      <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'"style="margin-bottom:2.25rem"> </label> <!-- spacer -->
-    </div>
-  </div> <!-- end likelihood/link section -->
-
-
-  <div class="row section">
-    <div class="large-6 medium-8 small-12 columns">
-      <label class="form-item-header">Outcome scale</label>
-      <div class="stacked-radio">
-        <input type="radio" value="heuristically" ng-model="model.outcomeScale.type" id="heuristically-model-outcom-scale-type-radio" ng-change="outcomeScaleTypeChange()">
-        <label for="heuristically-model-outcom-scale-type-radio">Determine heuristically</label>
-      </div>
-      <div class="stacked-radio">
-          <input type="radio" value="fixed" ng-model="model.outcomeScale.type" id="fixed-model-outcom-scale-type-radio" ng-change="outcomeScaleTypeChange()">
-          <label for="fixed-model-outcom-scale-type-radio" >Fixed value</label>
-          <input type="number" ng-model="model.outcomeScale.value" id="fixed-outcome-scale-input" ng-disabled="model.outcomeScale.type !== 'fixed'" ng-change="fixedOutcomeScaleValueChage()" style="display: inline; width:18%;">
-          
-      </div>  
-    </div>
-  </div>
-  <div class="row">
-    <div class="columns large-8 medium-10 small-12" style="padding-left: 1.2rem;">
-      <div  ng-show="model.outcomeScale.value <= 0 "><label class="alert">Outcome scale value can not zero or lower.</label></div>
-      <div  ng-show="model.outcomeScale.type === 'fixed' && !isNumber(model.outcomeScale.value) "><label class="alert">Outcome scale value is not a valid number.</label></div>
-      <label style="margin-bottom:1rem;"><strong>Relative effect priors:</strong> N(0, (15 &#8901; <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)<sup>2</sup>)</label>
-      <label style="margin-bottom:1rem;"><strong>Random effects SD prior:</strong> U(0, <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)</label>
-    </div>
-  </div> <!-- end likelihood/link section -->
- <!-- end outcome measure scale section -->
-
-  <div class="row section">
-    <div class="large-3 medium-6 small-12 columns">
-      <label class="form-item-header">Run-length parameters</label>
-      <label>Number of burn-in iterations
-        <input type="number" min="1" step="1" ng-model="model.burnInIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="burn-in-iterations">
-      </label>
-      <label>Number of inference iterations
-        <input type="number" min="1" step="1" ng-model="model.inferenceIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="inference-iterations">
-      </label>
-      <label>Thinning factor
-        <input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="thinning-factor">
-      </label>
-    </div>
-  </div> <!-- end run-length parameters section -->
-
-
-  <div class="row">
-    <div class="columns large-6 medium-8 small-12">
-      <div>
-        <label class="form-item-header" ng-show="model.modelType.subType !== 'all-pairwise' && model.modelType.subType !== 'all-node-split'">Estimated run length</label>
-        <label class="form-item-header" ng-show="model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split'">Maximum run length for these models</label> {{estimatedRunLengthHumanized}}</div>
-        <div class="alert" ng-show='!isRunlengthDivisibleByThinningFactor()'>The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions. </div>
-        <div class="alert" ng-show='estimatedRunLength > 300'>This task will take too long (over 5 minutes). Please reduce the number of iterations or increase the thinning factor.</div>
-      </div>
-    </div>
-    <div class="row bottom-button-bar">
-      <div class="large-9 columns">
-        <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(model)">
-        Create Model(s)
-        </button>
-      </div>
-    </div>
-  </form>
-</div>
 </div>
