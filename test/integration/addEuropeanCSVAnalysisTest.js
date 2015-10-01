@@ -5,12 +5,12 @@ var analysisTitle = 'my title';
 var analysisOutcomeTitle = 'my outcome';
 
 module.exports = {
-  "add csv analysis test": function(browser) {
+  "add European style csv analysis test": function(browser) {
     var analysesPage = new AnalysesPage(browser);
     login(browser, process.env.GEMTC_NIGHTWATCH_URL);
 
     analysesPage.waitForPageToLoad();
-    analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.csv');
+    analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/european-example.csv');
     browser
       .waitForElementVisible('#analysis-header', 10000)
       .assert.containsText('#analysisTitle', analysisTitle)
