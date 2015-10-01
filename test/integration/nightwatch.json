@@ -11,12 +11,12 @@
     "server_path" : "selenium-server-standalone-2.45.0.jar",
     "log_path" : "",
     "host" : "127.0.0.1",
-    "port" : 4444
+    "port" : 4477
   },
   "test_settings" : {
     "default" : {
       "launch_url" : "http://localhost",
-      "selenium_port"  : 4444,
+      "selenium_port"  : 4477,
       "selenium_host"  : "localhost",
       "silent": true,
       "screenshots" : {
