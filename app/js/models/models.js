@@ -9,6 +9,7 @@ define(function (require) {
   	.controller('ModelsController', require('models/modelsController'))
     .controller('StandAloneModelContainerController', require('models/standAloneModelContainerController'))
     .controller('CreateModelController', require('models/createModelController'))
+    .controller('ExtendRunLengthController', require('models/extendRunLengthController'))
 
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))

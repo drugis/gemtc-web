@@ -1,6 +1,7 @@
 var assert = require('assert'),
   proxyquire = require('proxyquire'),
   should = require('should'),
+  assert = require('assert'),
   status = require('http-status-codes'),
   sinon = require('sinon'),
   request = require('superagent');
@@ -14,12 +15,19 @@ var modelRouter = proxyquire('../standalone-app/modelRouter', {
   './modelRepository': modelRepository,
   './pataviTaskRepository': pataviTaskRepository
 });
-app.use('/analyses/:analysisId/models', modelRouter).listen(3999);
 
 
 describe('modelRouter', function() {
+  var server;
+  before(function() {
+    server = app.use('/analyses/:analysisId/models', modelRouter).listen(3999);
+  });
 
-  describe('request to /', function() {
+  after(function() {
+    server.close();
+  });
+
+  describe('GET request to /', function() {
     var taskId = 101;
     var taskId2 = 102;
 
@@ -47,7 +55,7 @@ describe('modelRouter', function() {
     sinon.stub(modelRepository, "findByAnalysis").onCall(0).yields(null, models);
     sinon.stub(pataviTaskRepository, "getPataviTasksStatus").onCall(0).yields(null, pataviTasks);
 
-    it('find all models', function(done) {
+    it('should find all models', function(done) {
 
       var expextedResult = [{
         id: 2,
@@ -68,6 +76,45 @@ describe('modelRouter', function() {
           done();
         });
 
+    });
+  });
+
+  describe('POST request to /', function() {
+    it('should create a model', function(done) {
+      var newModel = {};
+      request('POST', 'http://localhost/3999/analyses/1/models/', newModel)
+        .end(function(err, res) {
+          assert(undefined, err);
+          res.should.have.property('status', 201)
+          done();
+        });
+
+    });
+  });
+
+  describe('POST request to /something', function(done) {
+    request('POST', 'http://localhost/3999/analyses/1/models/2/something', {})
+      .end(function(err, res) {
+        assert(undefined, err);
+        res.should.have.property('status', 201)
+        done();
+      });
+  });
+
+  describe('POST request to /1/extendRunLength', function() {
+
+    it('should check the ownership', function(done) {
+      var runLengthSettings = {
+        burnInIterations: 3000,
+        inferenceIterations: 20000,
+        thinningFactor: 10
+      };
+      request('POST', 'http://localhost/3999/analyses/1/models/1/extendRunLength', runLengthSettings)
+        .end(function(err, res) {
+          assert(undefined, err);
+          res.should.have.property('status', 200)
+          done();
+        });
     });
   });
 });
