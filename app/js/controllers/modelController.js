@@ -1,10 +1,10 @@
 'use strict';
 define(['lodash'], function() {
-  var dependencies = ['$scope', '$sce', '$stateParams', 'ModelResource', 'PataviService',
+  var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService'
   ];
-  var ModelController = function($scope, $sce, $stateParams, ModelResource, PataviService,
+  var ModelController = function($scope, $modal, $state, $stateParams, ModelResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, AnalysisService,
     DevianceStatisticsService) {
 
@@ -17,6 +17,7 @@ define(['lodash'], function() {
     $scope.isConvergencePlotsShown = false;
     $scope.showConvergencePlots = showConvergencePlots;
     $scope.hideConvergencePlots = hideConvergencePlots;
+    $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
 
@@ -58,6 +59,28 @@ define(['lodash'], function() {
         memo[treatmentName] = pair[1];
         return memo;
       }, {});
+    }
+
+    function openRunLengthDialog() {
+      $modal.open({
+        templateUrl: './js/models/extendRunLength.html',
+        scope: $scope,
+        controller: 'ExtendRunLengthController',
+        resolve: {
+          runLengthSettings: function() {
+            return {
+              burnInIterations: $scope.model.burnInIterations,
+              inferenceIterations: $scope.model.inferenceIterations,
+              thinningFactor: $scope.model.thinningFactor
+            }
+          },
+          successCallback: function() {
+            return function() {
+              $state.go($state.current, {}, {reload: true});
+            }
+          }
+        }
+      });
     }
 
     function successCallback(result) {

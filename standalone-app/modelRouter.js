@@ -1,16 +1,24 @@
-var logger = require('./logger');
-var express = require('express');
-var status = require('http-status-codes');
-var _ = require('lodash');
+var logger = require('./logger'),
+  express = require('express'),
+  status = require('http-status-codes'),
+  _ = require('lodash'),
+  async = require('async'),
+  analysisRepository = require('./analysisRepository'),
+  modelRepository = require('./modelRepository'),
+  pataviTaskRouter = require('./pataviTaskRouter'),
+  pataviTaskRepository = require('./pataviTaskRepository');
 
-var analysisRepository = require('./analysisRepository');
-var modelRepository = require('./modelRepository');
-var pataviTaskRouter = require('./pataviTaskRouter');
-var pataviTaskRepository = require('./pataviTaskRepository');
-
-module.exports = express.Router({mergeParams:true})
-  .get('/', find)
+module.exports = express.Router({
+    mergeParams: true
+  })
   .post('/', createModel)
+  .post(':modelId/something', function(request, response, next) {
+    response.status(status.CREATED);
+    console.log('something!');
+    next();
+  })
+  .post('/:modelId/extendRunLength', extendRunLength)
+  .get('/', find)
   .get('/:modelId', getModel)
   .use('/:modelId/task', pataviTaskRouter);
 
@@ -88,6 +96,44 @@ function createModel(request, response, next) {
         });
       }
     }
+  });
+}
+
+function extendRunLength(request, response, next) {
+  logger.debug('extend model runlength.');
+  logger.debug('analysisId ' + request.params.analysisId);
+  var analysisId = request.params.analysisId;
+  var modelId = request.params.modelId;
+  var userId = request.session.userId;
+
+  var modelCache;
+
+  async.waterfall([
+    function(callback) {
+      analysisRepository.get(analysisId, callback);
+    },
+    function(analysis, callback) {
+      logger.debug('check owner with ownerId = ' + analysis.owner + ' and userId = ' + userId);
+      if (analysis.owner !== userId) {
+        response.sendStatus(status.FORBIDDEN);
+        response.end();
+        callback('attempt to extend model that is not owned');
+      } else {
+        callback();
+      }
+    },
+    function(callback) {
+      modelRepository.getModel(modelId, callback);
+    },
+    function(model, callback) {
+      modelCache = model;
+      pataviTaskRepository.deleteTask(model.taskId, callback);
+    }
+  ], function(error, result) {
+    if (error) {
+      internalError(error, response);
+    }
+    next();
   });
 }
 

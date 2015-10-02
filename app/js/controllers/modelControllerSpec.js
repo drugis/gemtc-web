@@ -22,7 +22,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       relativeEffectsTableService,
       devianceStatisticsServiceMock,
       diagnosticsService,
-      analysisServiceMock;
+      analysisServiceMock,
+      stateMock,
+      modalMock;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -73,11 +75,14 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildTable']);
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics']);
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName']);
-
+      stateMock = jasmine.createSpyObj('$state', ['reload']);
+      modalMock = jasmine.createSpyObj('$modal', ['open']);
 
       $controller('ModelController', {
         $scope: scope,
         $stateParams: mockStateParams,
+        $modal: modalMock,
+        $state: stateMock,
         ModelResource: modelResource,
         ProblemResource: problemResource,
         PataviService: pataviService,

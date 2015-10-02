@@ -6,6 +6,16 @@ define(['angular', 'angular-resource'], function(angular, angularResource) {
       projectId: '@projectId',
       analysisId: '@analysisId',
       modelId: '@id'
+    }, {
+      extendRunLength: {
+        method: 'post',
+        params: {
+          projectId: '@projectId',
+          analysisId: '@analysisId',
+          modelId: '@id'
+        },
+        url: '/projects/:projectId/analyses/:analysisId/models/:modelId/extendRunLength'
+      }
     });
   };
   return dependencies.concat(ModelResource);

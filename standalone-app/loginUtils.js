@@ -42,7 +42,7 @@ module.exports = {
     logger.debug('loginUtils.securityMiddleware; request.headers.host = ' + (request.headers ? request.headers.host : 'unknown host'));
 
     if (request.session.auth && request.session.auth.loggedIn) { // if loggedin your good
-      logger.debug('loginUtils.loginCheckMiddleware your signed in, requestuest = ' + request.url);
+      logger.debug('loginUtils.loginCheckMiddleware; you\'re signed in, request = ' + request.url);
       next();
     }
     else if (request.method === 'GET' &&  request.url === '/' ) {
@@ -59,7 +59,7 @@ module.exports = {
       )) {
       logger.debug('loginUtils.loginCheckMiddleware you request does not require login, request =  ' + request.url);
       next();
-    } 
+    }
     else { // otherwhise you have to signin first
       logger.debug('loginUtils.loginCheckMiddleware you need to signin first, request =  ' + request.url);
       response.sendStatus(403);
