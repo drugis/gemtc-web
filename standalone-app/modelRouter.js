@@ -5,22 +5,24 @@ var logger = require('./logger'),
   async = require('async'),
   analysisRepository = require('./analysisRepository'),
   modelRepository = require('./modelRepository'),
+  modelService = require('./modelService'),
   pataviTaskRouter = require('./pataviTaskRouter'),
   pataviTaskRepository = require('./pataviTaskRepository');
 
 module.exports = express.Router({
     mergeParams: true
   })
-  .post('/', createModel)
-  .post(':modelId/something', function(request, response, next) {
-    response.status(status.CREATED);
-    console.log('something!');
-    next();
-  })
-  .post('/:modelId/extendRunLength', extendRunLength)
   .get('/', find)
+  .post('/', createModel)
   .get('/:modelId', getModel)
+  .post('/:modelId', extendRunLength)
   .use('/:modelId/task', pataviTaskRouter);
+
+function errorHandler(error, result) {
+  if (error) {
+    internalError(error, response);
+  }
+}
 
 function internalError(error, response) {
   logger.error(error);
@@ -72,31 +74,39 @@ function createModel(request, response, next) {
   logger.debug('request.params.analysisId' + request.params.analysisId);
   var analysisId = request.params.analysisId;
   var userId = request.session.userId;
-  analysisRepository.get(analysisId, function(error, analysis) {
-    if (error) {
-      internalError(error, response);
-    } else {
-      logger.debug('check owner with ownerId = ' + analysis.owner + ' and userId = ' + userId);
-      if (analysis.owner !== userId) {
-        response.sendStatus(status.FORBIDDEN);
-        response.end();
-      } else {
-        modelRepository.create(userId, analysisId, request.body, function(error, createdId) {
-          if (error) {
-            internalError(error, response);
-          } else {
-            response
-              .location('/analyses/' + analysisId + '/models/' + createdId)
-              .json({
-                id: createdId
-              })
-              .status(status.CREATED);
-            next();
-          }
+  var modelCache;
+
+  async.waterfall([
+    function(callback) {
+      analysisRepository.get(analysisId, callback);
+    },
+    function(analysis, callback) {
+      checkOwnership(response, analysis.owner, userId, callback);
+    },
+    function(callback) {
+      modelRepository.create(userId, analysisId, request.body, callback);
+    },
+    function(createdId, callback) {
+      response
+        .location('/analyses/' + analysisId + '/models/' + createdId)
+        .status(status.CREATED)
+        .json({
+          id: createdId
         });
-      }
+      next();
     }
-  });
+  ], errorHandler);
+}
+
+function checkOwnership(response, owner, userId, callback) {
+  logger.debug('check owner with ownerId = ' + owner + ' and userId = ' + userId);
+  if (owner !== userId) {
+    response.sendStatus(status.FORBIDDEN);
+    response.end();
+    callback('attempt to modify model in analysis that is not owned');
+  } else {
+    callback();
+  }
 }
 
 function extendRunLength(request, response, next) {
@@ -107,34 +117,29 @@ function extendRunLength(request, response, next) {
   var userId = request.session.userId;
 
   var modelCache;
+  var newModel = request.body;
 
   async.waterfall([
     function(callback) {
       analysisRepository.get(analysisId, callback);
     },
     function(analysis, callback) {
-      logger.debug('check owner with ownerId = ' + analysis.owner + ' and userId = ' + userId);
-      if (analysis.owner !== userId) {
-        response.sendStatus(status.FORBIDDEN);
-        response.end();
-        callback('attempt to extend model that is not owned');
-      } else {
-        callback();
-      }
+      checkOwnership(response, analysis.owner, userId, callback);
     },
     function(callback) {
-      modelRepository.getModel(modelId, callback);
+      modelRepository.get(modelId, callback);
     },
     function(model, callback) {
       modelCache = model;
-      pataviTaskRepository.deleteTask(model.taskId, callback);
+      modelService.update(modelCache, newModel, callback);
+    },
+    function(callback) {
+      pataviTaskRepository.deleteTask(modelCache.taskId, callback);
+    },
+    function(callback) {
+      response.sendStatus(status.OK);
     }
-  ], function(error, result) {
-    if (error) {
-      internalError(error, response);
-    }
-    next();
-  });
+  ], errorHandler);
 }
 
 function getModel(request, response, next) {

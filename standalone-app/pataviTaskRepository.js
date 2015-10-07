@@ -4,7 +4,8 @@ var db = require('./db')(dbUtil.buildPataviDBUrl());
 
 module.exports = {
   getPataviTasksStatus: getPataviTasksStatus,
-  create: createPataviTask
+  create: createPataviTask,
+  deleteTask: deleteTask
 };
 
 function getPataviTasksStatus(taskIds, callback) {
@@ -34,4 +35,8 @@ function createPataviTask(problem, callback) {
       callback(null, result.rows[0].id);
     }
   });
+}
+
+function deleteTask(id, callback) {
+  callback(null);
 }

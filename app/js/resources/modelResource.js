@@ -14,7 +14,7 @@ define(['angular', 'angular-resource'], function(angular, angularResource) {
           analysisId: '@analysisId',
           modelId: '@id'
         },
-        url: '/projects/:projectId/analyses/:analysisId/models/:modelId/extendRunLength'
+        url: '/projects/:projectId/analyses/:analysisId/models/:modelId'
       }
     });
   };

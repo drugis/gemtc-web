@@ -1,7 +1,6 @@
 var assert = require('assert'),
   proxyquire = require('proxyquire'),
   should = require('should'),
-  assert = require('assert'),
   status = require('http-status-codes'),
   sinon = require('sinon'),
   session = require('express-session'),
@@ -17,12 +16,14 @@ var sessionOpts = {
 };
 var userId = 1;
 
-var modelRepository = {};
-var pataviTaskRepository = {};
-var analysisRepository = {};
+var modelRepository = {},
+  modelService = {},
+  pataviTaskRepository = {},
+  analysisRepository = {};
 
 var modelRouter = proxyquire('../standalone-app/modelRouter', {
   './modelRepository': modelRepository,
+  './modelService': modelService,
   './pataviTaskRepository': pataviTaskRepository,
   './analysisRepository': analysisRepository
 });
@@ -75,8 +76,8 @@ describe('modelRouter', function() {
     });
 
     afterEach(function() {
-      modelRepository.findByAnalysis.reset();
-      pataviTaskRepository.getPataviTasksStatus.reset();
+      modelRepository.findByAnalysis.restore();
+      pataviTaskRepository.getPataviTasksStatus.restore();
     });
 
     it('find all models', function(done) {
@@ -94,7 +95,7 @@ describe('modelRouter', function() {
 
       request('GET', BASE_PATH + '1/models/')
         .end(function(err, res) {
-          res.should.have.property('status', 200);
+          res.should.have.property('status', status.OK);
           assert.deepEqual(expectedResult[0], res.body[0]);
           done();
         });
@@ -120,7 +121,7 @@ describe('modelRouter', function() {
         .send(newModel)
         .end(function(err, res) {
           assert(err);
-          res.should.have.property('status', 403);
+          res.should.have.property('status', status.FORBIDDEN);
           done();
         });
     });
@@ -140,7 +141,7 @@ describe('modelRouter', function() {
       modelRepository.create.restore();
     });
 
-    it('should create the model and have status 201', function(done) {
+    it('should create the model and have status status.CREATED', function(done) {
       var newModel = {};
       var expectedBody = {
         id: createdId
@@ -150,7 +151,7 @@ describe('modelRouter', function() {
         .send(newModel)
         .end(function(err, res) {
           assert(!err);
-          res.should.have.property('status', 201);
+          res.should.have.property('status', status.CREATED);
           assert.equal('/analyses/1/models/' + createdId, res.headers['location'])
           assert.deepEqual(expectedBody, res.body);
           done();
@@ -166,15 +167,102 @@ describe('modelRouter', function() {
       sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
     });
     afterEach(function() {
-      modelRepository.get.reset();
+      modelRepository.get.restore();
     });
     it('should return the model with that ID', function(done) {
       request
         .get(BASE_PATH + '1/models/' + model.id)
-        .end(function(err, res){
+        .end(function(err, res) {
           assert(!err);
-          res.should.have.property('status', 200);
+          res.should.have.property('status', status.OK);
           assert.deepEqual(model, res.body);
+          done();
+        });
+    });
+  });
+  describe('POST request to /:modelId where the user is not the analysis owner', function() {
+    beforeEach(function() {
+      var analysis = {
+        owner: 399,
+      };
+      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
+    });
+    afterEach(function() {
+      analysisRepository.get.restore();
+    });
+    it('should return FORBIDDEN', function(done) {
+      var newModel = {};
+      request
+        .post(BASE_PATH + '1/models/1')
+        .send(newModel)
+        .end(function(err, res) {
+          assert(err);
+          res.should.have.property('status', status.FORBIDDEN);
+          done();
+        });
+    });
+  });
+
+  describe('POST request to /:modelId with owner that is the logged in user', function() {
+    var model = {
+      id: 2
+    };
+    beforeEach(function() {
+      var analysis = {
+        owner: userId,
+      };
+      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
+      sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
+      sinon.stub(modelService, 'update').onCall(0).yields(null);
+      sinon.stub(pataviTaskRepository, 'deleteTask').onCall(0).yields(null);
+    });
+    afterEach(function() {
+      analysisRepository.get.restore();
+      modelRepository.get.restore();
+      pataviTaskRepository.deleteTask.restore();
+      modelService.update.restore();
+    });
+
+    it('should delete the patavi task, update the model and have status status.OK', function(done) {
+      var runLengths = {};
+      request
+        .post(BASE_PATH + '1/models/2')
+        .send(runLengths)
+        .end(function(err, res) {
+          assert(!err);
+          res.should.have.property('status', status.OK);
+          done();
+        });
+    });
+  });
+  describe('POST request to /:modelId with owner that is the logged in user', function() {
+    var model = {
+      id: 2
+    };
+    beforeEach(function() {
+      var analysis = {
+        owner: userId,
+      };
+      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
+      sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
+      sinon.stub(modelService, 'update').onCall(0).yields('error');
+      sinon.stub(pataviTaskRepository, 'deleteTask').onCall(0).yields(null);
+    });
+    afterEach(function() {
+      analysisRepository.get.restore();
+      modelRepository.get.restore();
+      pataviTaskRepository.deleteTask.restore();
+      modelService.update.restore();
+    });
+
+    it('should delete the patavi task, update the model and have status status.OK', function(done) {
+      var runLengths = {};
+      request
+        .post(BASE_PATH + '1/models/2')
+        .send(runLengths)
+        .end(function(err, res) {
+          assert(!err);
+          res.should.have.property('status', status.OK);
           done();
         });
     });
