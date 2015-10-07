@@ -7,6 +7,7 @@ var
 module.exports = {
   create: createModel,
   get: getModel,
+  update: update,
   findByAnalysis: findByAnalysis,
   setTaskId: setTaskId
 };
@@ -91,4 +92,8 @@ function setTaskId(modelId, taskId, callback) {
       callback();
     }
   });
+}
+
+function update(newModel, runLengthSettings, callback) {
+
 }
