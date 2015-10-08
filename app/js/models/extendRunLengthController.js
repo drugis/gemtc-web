@@ -1,11 +1,15 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'ModelResource', 'runLengthSettings', 'successCallback'];
-  var ExtendRunLengthController = function($scope, $modalInstance, $stateParams, ModelResource, runLengthSettings, successCallback) {
+  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'ModelResource', 'model', 'successCallback'];
+  var ExtendRunLengthController = function($scope, $modalInstance, $stateParams, ModelResource, model, successCallback) {
 
-    $scope.runLengthSettings = runLengthSettings;
-    $scope.minBurnInIterations = runLengthSettings.burnInIterations;
-    $scope.minInferenceIterations = runLengthSettings.inferenceIterations;
+    $scope.runLengthSettings = {
+      burnInIterations: model.burnInIterations,
+      inferenceIterations: model.inferenceIterations,
+      thinningFactor: model.thinningFactor
+    };
+    $scope.minBurnInIterations = $scope.runLengthSettings.burnInIterations;
+    $scope.minInferenceIterations = $scope.runLengthSettings.inferenceIterations;
     $scope.isRunlengthDivisibleByThinningFactor = isRunlengthDivisibleByThinningFactor;
     $scope.isExtendButtonDisabled = isExtendButtonDisabled;
     $scope.isExtendingRunLength = false;

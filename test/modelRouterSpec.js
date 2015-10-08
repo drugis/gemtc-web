@@ -262,7 +262,7 @@ describe('modelRouter', function() {
         .send(runLengths)
         .end(function(err, res) {
           assert(err);
-          res.should.have.property('status', status.INTERNAL_ERROR);
+          res.should.have.property('status', status.SERVER_ERROR);
           done();
         });
     });
