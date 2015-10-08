@@ -21,7 +21,7 @@
     <div class="columns large-6 medium-8 small-12">
       <div>
         <label class="form-item-header">Estimated run length</label>{{estimatedRunLengthHumanized}}</div>
-      <div class="alert" ng-show='runLengthSettings.burnInIterations && runLengthSettings.inferenceIterations && !isRunlengthDivisibleByThinningFactor()'>The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions. </div>
+      <div class="alert" ng-show='runLengthSettings.burnInIterations && runLengthSettings.inferenceIterations && !isRunlengthDivisibleByThinningFactor(runLengthSettings)'>The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions. </div>
       <div class="alert" ng-show="runLengthSettings.inferenceIterations === undefined">The new inference iterations should be greater than the original number.</div>
       <div class="alert" ng-show="runLengthSettings.burnInIterations === undefined">The new burn-in iterations should be greater than the original number.</div>
       <div class="alert" ng-show='estimatedRunLength > 300'>This task will take too long (over 5 minutes). Please reduce the number of iterations or increase the thinning factor.</div>
