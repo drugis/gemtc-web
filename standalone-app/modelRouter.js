@@ -18,12 +18,6 @@ module.exports = express.Router({
   .post('/:modelId', extendRunLength)
   .use('/:modelId/task', pataviTaskRouter);
 
-function errorHandler(error, result) {
-  if (error) {
-    internalError(error, response);
-  }
-}
-
 function internalError(error, response) {
   logger.error(error);
   response.sendStatus(status.INTERNAL_SERVER_ERROR);
@@ -52,6 +46,9 @@ function find(request, response, next) {
       var modelsWithTasks = _.filter(modelsResult, function(model) {
         return model.taskId !== null && model.taskId !== undefined;
       });
+      var modelsWithoutTasks = _.filter(modelsResult, function(model) {
+        return model.taskId === null || model.taskId === undefined;
+      });
       if (modelsWithTasks.length) {
         var taskIds = _.map(modelsWithTasks, 'taskId');
         pataviTaskRepository.getPataviTasksStatus(taskIds, function(error, pataviResult) {
@@ -59,7 +56,7 @@ function find(request, response, next) {
             internalError(error, response);
           } else {
             decoratedResult = decorateWithHasResults(modelsWithTasks, pataviResult);
-            response.json(decoratedResult);
+            response.json(decoratedResult.concat(modelsWithoutTasks));
           }
         });
       } else {
@@ -95,7 +92,12 @@ function createModel(request, response, next) {
         });
       next();
     }
-  ], errorHandler);
+  ], function(error) {
+    if (error) {
+      internalError(error, response);
+    }
+    next();
+  });
 }
 
 function checkOwnership(response, owner, userId, callback) {
@@ -139,7 +141,13 @@ function extendRunLength(request, response, next) {
     function(callback) {
       response.sendStatus(status.OK);
     }
-  ], errorHandler);
+  ], function(error) {
+    if (error) {
+      console.log(error);
+      internalError(error, response);
+    }
+    next();
+  });
 }
 
 function getModel(request, response, next) {

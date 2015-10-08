@@ -235,7 +235,7 @@ describe('modelRouter', function() {
         });
     });
   });
-  describe('POST request to /:modelId with owner that is the logged in user', function() {
+  describe('POST request to /:modelId where the modelservice returns an error', function() {
     var model = {
       id: 2
     };
@@ -255,14 +255,14 @@ describe('modelRouter', function() {
       modelService.update.restore();
     });
 
-    it('should delete the patavi task, update the model and have status status.OK', function(done) {
+    it('should result in a 500 error', function(done) {
       var runLengths = {};
       request
         .post(BASE_PATH + '1/models/2')
         .send(runLengths)
         .end(function(err, res) {
-          assert(!err);
-          res.should.have.property('status', status.OK);
+          assert(err);
+          res.should.have.property('status', status.INTERNAL_ERROR);
           done();
         });
     });
