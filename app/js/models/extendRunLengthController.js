@@ -22,16 +22,15 @@ define(['lodash'], function(_) {
 
     function isExtendButtonDisabled(runLengthSettings) {
       // due to 'min' property on input fields, values are undefined if lower than that minimum value
-      return
-        !runLengthSettings.burnInIterations ||
+      return !runLengthSettings.burnInIterations ||
         !runLengthSettings.inferenceIterations ||
-        !isRunlengthDivisibleByThinningFactor()
-        !!isExtendingRunLength;
+        !isRunlengthDivisibleByThinningFactor() ||
+        !!$scope.isExtendingRunLength;
     }
 
     function extendRunLength(runLengthSettings) {
       $scope.isExtendingRunLength = true;
-      ModelResource.extendRunLength($stateParams, runLengthSettings).$promise.then(function() {
+      ModelResource.save($stateParams, _.extend(runLengthSettings, {id: $stateParams.modelId})).$promise.then(function() {
         successCallback();
         $modalInstance.close();
       });

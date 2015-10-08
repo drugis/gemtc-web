@@ -38,5 +38,12 @@ function createPataviTask(problem, callback) {
 }
 
 function deleteTask(id, callback) {
-  callback(null);
+  logger.debug('deleting patavi task');
+  db.query('DELETE FROM patavitask WHERE id=$1', [id], function(error, result){
+    if (error) {
+      callback(error);
+    } else {
+      callback();
+    }
+  });
 }
