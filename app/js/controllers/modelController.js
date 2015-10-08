@@ -67,12 +67,8 @@ define(['lodash'], function() {
         scope: $scope,
         controller: 'ExtendRunLengthController',
         resolve: {
-          runLengthSettings: function() {
-            return {
-              burnInIterations: $scope.model.burnInIterations,
-              inferenceIterations: $scope.model.inferenceIterations,
-              thinningFactor: $scope.model.thinningFactor
-            }
+          model: function() {
+            return $scope.model;
           },
           successCallback: function() {
             return function() {

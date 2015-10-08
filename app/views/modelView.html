@@ -70,7 +70,7 @@
             </div>
             <div class="row">
               <div class="columns large-8 medium-6 small-12">
-                <button ng-click="openRunLengthDialog()">Extend run-length</button>
+                <button ng-hide="isExtensionBlocked" ng-click="openRunLengthDialog()">Extend run-length</button>
                 <div>
                   <table export>
                     <caption>Per-parameter convergence diagnostics</caption>
