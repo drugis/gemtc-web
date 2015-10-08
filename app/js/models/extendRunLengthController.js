@@ -19,16 +19,16 @@ define(['lodash'], function(_) {
       $modalInstance.dismiss('cancel');
     };
 
-    function isRunlengthDivisibleByThinningFactor() {
-      return $scope.runLengthSettings.burnInIterations % $scope.runLengthSettings.thinningFactor === 0 &&
-        $scope.runLengthSettings.inferenceIterations % $scope.runLengthSettings.thinningFactor === 0;
+    function isRunlengthDivisibleByThinningFactor(runLengthSettings) {
+      return runLengthSettings.burnInIterations % runLengthSettings.thinningFactor === 0 &&
+        runLengthSettings.inferenceIterations % runLengthSettings.thinningFactor === 0;
     }
 
     function isExtendButtonDisabled(runLengthSettings) {
       // due to 'min' property on input fields, values are undefined if lower than that minimum value
       return !runLengthSettings.burnInIterations ||
         !runLengthSettings.inferenceIterations ||
-        !isRunlengthDivisibleByThinningFactor() ||
+        !isRunlengthDivisibleByThinningFactor(runLengthSettings) ||
         !!$scope.isExtendingRunLength;
     }
 
