@@ -6,12 +6,11 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       modelResourceMock,
       modalInstanceMock,
       modelMock = {
-          burnInIterations: 100,
-          inferenceIterations: 200,
-          thinningFactor: 10
-        },
-      successCallbackMock
-      ;
+        burnInIterations: 100,
+        inferenceIterations: 200,
+        thinningFactor: 10
+      },
+      successCallbackMock;
 
 
     beforeEach(module('gemtc.models'));
@@ -42,15 +41,29 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         it('should be on the scope', function() {
           expect(scope.isExtendButtonDisabled).toBeDefined();
         });
-        describe('for burnInIterations not divisible by the thinningFactor', function() {
-          it('should return true', function() {
-            var runLengthSettings = {
-              burnInIterations : 17,
-              inferenceIterations: 100,
-              thinningFactor: 10
-            };
-            expect(scope.isExtendButtonDisabled(runLengthSettings)).toBe(true);
-          });
+        it('should return true for burnInIterations not divisible by the thinningFactor', function() {
+          var runLengthSettings = {
+            burnInIterations: 17,
+            inferenceIterations: 100,
+            thinningFactor: 10
+          };
+          expect(scope.isExtendButtonDisabled(runLengthSettings)).toBe(true);
+        });
+        it('should return true for inferenceIterations not divisible by the thinningFactor', function() {
+          var runLengthSettings = {
+            burnInIterations: 20,
+            inferenceIterations: 107,
+            thinningFactor: 10
+          };
+          expect(scope.isExtendButtonDisabled(runLengthSettings)).toBe(true);
+        });
+        it('should return false for correct runLengthSettings', function() {
+          var runLengthSettings = {
+            burnInIterations: 30,
+            inferenceIterations: 100,
+            thinningFactor: 10
+          };
+          expect(scope.isExtendButtonDisabled(runLengthSettings)).toBe(false);
         });
       });
     });
