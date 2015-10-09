@@ -240,7 +240,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       var model = {
         linearModel: 'random',
         modelType: {
-          mainType: 'network'
+          type:  'network'
         },
         burnInIterations: 50000,
         inferenceIterations: 80000,
@@ -295,7 +295,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       var model = {
         linearModel: 'random',
         modelType: {
-          mainType: 'pairwise'
+          type: 'pairwise'
         },
         pairwiseComparison: {
           from: {
@@ -348,7 +348,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       var model = {
         linearModel: 'fixed',
         modelType: {
-          mainType: 'network'
+          type: 'network'
         },
         burnInIterations: 50000,
         inferenceIterations: 80000,

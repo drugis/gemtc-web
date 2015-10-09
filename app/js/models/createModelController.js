@@ -1,13 +1,13 @@
 'use strict';
 define(['lodash', 'moment'], function(_, moment) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state',
-    'ModelResource', 'AnalysisService', 'ProblemResource'
+    'ModelResource', 'ModelService', 'AnalysisService', 'ProblemResource'
   ];
   var CreateModelController = function($scope, $q, $stateParams, $state,
-    ModelResource, AnalysisService, ProblemResource) {
+    ModelResource, ModelService, AnalysisService, ProblemResource) {
 
-    var problemDefer = ProblemResource.get($stateParams);
-    problemDefer.$promise.then(function(problem) {
+    var problemPromise = ProblemResource.get($stateParams).$promise;
+    problemPromise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
       if ($scope.comparisonOptions.length > 0) {
         $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
@@ -79,16 +79,16 @@ define(['lodash', 'moment'], function(_, moment) {
     }
 
     function checkRunLength() {
-      problemDefer.$promise.then(function(problem) {
+      problemPromise.then(function(problem) {
         if (($scope.model.modelType.mainType === 'pairwise' && $scope.model.modelType.subType === 'all-pairwise') ||
           ($scope.model.modelType.mainType === 'node-split' && $scope.model.modelType.subType === 'all-node-split')
         ) {
           var modelBatch = createModelBatch($scope.model);
           $scope.estimatedRunLength = _.max(_.map(modelBatch, function(model) {
-            return AnalysisService.estimateRunLength(problem, model);
+            return AnalysisService.estimateRunLength(problem, ModelService.cleanModel(model));
           }));
         } else {
-          $scope.estimatedRunLength = AnalysisService.estimateRunLength(problem, $scope.model);
+          $scope.estimatedRunLength = AnalysisService.estimateRunLength(problem, ModelService.cleanModel($scope.model));
         }
         $scope.estimatedRunLengthHumanized = moment.duration($scope.estimatedRunLength, 'seconds').humanize();
       });
@@ -140,7 +140,7 @@ define(['lodash', 'moment'], function(_, moment) {
       $scope.isAddingModel = true;
       if (model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split') {
         var modelsToCreate = createModelBatch(model);
-        var cleanModels = _.map(modelsToCreate, cleanModel);
+        var cleanModels = _.map(modelsToCreate, ModelService.cleanModel);
         var creationPromises = _.map(modelsToCreate, function(modelToCreate) {
           return createAndPostModel(modelToCreate, function() {});
         });
@@ -158,34 +158,8 @@ define(['lodash', 'moment'], function(_, moment) {
       }
     }
 
-    function cleanModel(frondEndModel) {
-      var model = _.cloneDeep(frondEndModel);
-      if (frondEndModel.modelType.mainType === 'node-split')
-        model.modelType.details = {
-          from: _.omit(frondEndModel.nodeSplitComparison.from, 'sampleSize'),
-          to: _.omit(frondEndModel.nodeSplitComparison.to, 'sampleSize')
-        };
-      if (frondEndModel.modelType.mainType === 'pairwise') {
-        model.modelType.details = {
-          from: _.omit(frondEndModel.pairwiseComparison.from, 'sampleSize'),
-          to: _.omit(frondEndModel.pairwiseComparison.to, 'sampleSize')
-        };
-      }
-      model.modelType = _.omit(model.modelType, 'mainType', 'subType');
-      model.modelType.type = frondEndModel.modelType.mainType;
-      model.likelihood = frondEndModel.likelihoodLink.likelihood;
-      model.link = frondEndModel.likelihoodLink.link;
-      if(frondEndModel.outcomeScale.type === 'heuristically') {
-        delete model.outcomeScale;
-      } else {
-        model.outcomeScale = frondEndModel.outcomeScale.value;
-      }
-      model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink');
-      return model;
-    }
-
-    function createAndPostModel(frondEndModel, successFunction) {
-      var model = cleanModel(frondEndModel);
+    function createAndPostModel(frontEndModel, successFunction) {
+      var model = ModelService.cleanModel(frontEndModel);
       return ModelResource.save($stateParams, model, successFunction).$promise;
 
     }

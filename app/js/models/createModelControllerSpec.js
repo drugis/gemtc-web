@@ -9,6 +9,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       modelSaveDefer,
       problemMock,
       modelSaveResultMock,
+      modelServiceMock = jasmine.createSpyObj('ModelService', ['cleanModel']),
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', [
         'createPairwiseOptions',
@@ -36,7 +37,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       problemResourceMock.get.and.returnValue(problemMock);
       analysisServiceMock.createPairwiseOptions.and.returnValue(pairwiseOptionsMock);
       analysisServiceMock.createNodeSplitOptions.and.returnValue(nodeSplitOptionsMock);
-      analysisServiceMock.createLikelihoodLinkOptions.and.returnValue(likelihoodLinkOptionsMock);
+
       modelResourceMock.save.and.returnValue(modelSaveResultMock);
 
       $controller('CreateModelController', {
@@ -82,6 +83,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           name: 'option 2',
           compatibility: 'compatible'
         }];
+              analysisServiceMock.createLikelihoodLinkOptions.and.returnValue(likelihoodLinkOptionsMock);
         problemDefer.resolve(problemMock);
         scope.$apply();
       });

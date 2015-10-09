@@ -4,12 +4,14 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       q,
       stateParamsMock,
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
+      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['estimateRunLength']),
       modalInstanceMock,
       modelMock = {
         burnInIterations: 100,
         inferenceIterations: 200,
         thinningFactor: 10
       },
+      problemMock,
       successCallbackMock;
 
 
@@ -22,8 +24,10 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         $modalInstance: modalInstanceMock,
         $stateParams: stateParamsMock,
         model: modelMock,
+        problem: problemMock,
         successCallback: successCallbackMock,
-        ModelResource: modelResourceMock
+        ModelResource: modelResourceMock,
+        AnalysisService: analysisServiceMock
       });
     }));
 
@@ -36,46 +40,44 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         };
       });
       it('should place runlength settings on the scope', function() {
-        expect(scope.runLengthSettings.burnInIterations).toBe(modelMock.burnInIterations);
+        expect(scope.model.burnInIterations).toBe(modelMock.burnInIterations);
       });
       describe('isExtendButtonDisabled function on the scope', function() {
         it('should be on the scope', function() {
           expect(scope.isExtendButtonDisabled).toBeDefined();
         });
         it('should return true for burnInIterations not divisible by the thinningFactor', function() {
-          var runLengthSettings = {
+          var model = {
             burnInIterations: 17,
             inferenceIterations: 100,
             thinningFactor: 10
           };
-          expect(scope.isExtendButtonDisabled(runLengthSettings)).toBe(true);
+          expect(scope.isExtendButtonDisabled(model)).toBe(true);
         });
         it('should return true for inferenceIterations not divisible by the thinningFactor', function() {
-          var runLengthSettings = {
+          var model = {
             burnInIterations: 20,
             inferenceIterations: 107,
             thinningFactor: 10
           };
-          expect(scope.isExtendButtonDisabled(runLengthSettings)).toBe(true);
+          expect(scope.isExtendButtonDisabled(model)).toBe(true);
         });
-        it('should return false for correct runLengthSettings', function() {
-          var runLengthSettings = {
+        it('should return false for correct model', function() {
+          var model = {
             burnInIterations: 30,
             inferenceIterations: 100,
             thinningFactor: 10
           };
-          expect(scope.isExtendButtonDisabled(runLengthSettings)).toBe(false);
+          expect(scope.isExtendButtonDisabled(model)).toBe(false);
         });
       });
     });
 
     describe('extend button is pressed', function() {
       it('should save the model with new settings ', function() {
-        var runLengthSettings = {
-          burnInIterations: 20,
-          inferenceIterations: 107,
-          thinningFactor: 10
-        };
+        modelMock.burnInIterations = 20;
+        modelMock.inferenceIterations = 107;
+        modelMock.thinningFactor = 10;
 
         var saveResult = {
           $promise: {
@@ -84,11 +86,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         };
 
         modelResourceMock.save.and.returnValue(saveResult);
-        scope.extendRunLength(runLengthSettings);
+        scope.extendRunLength(modelMock);
         expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, modelMock);
-        expect(modelMock.burnInIterations).toEqual(runLengthSettings.burnInIterations);
-        expect(modelMock.inferenceIterations).toEqual(runLengthSettings.inferenceIterations);
-        expect(modelMock.thinningFactor).toEqual(runLengthSettings.thinningFactor);
       });
 
     });
