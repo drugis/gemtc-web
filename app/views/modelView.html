@@ -287,9 +287,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="(key, treatments) in problem.treatments">
-                  <td>{{::treatments.name}}</td>
-                  <td ng-repeat="rank in result.results.rankProbabilities[treatments.name]">
+                <tr ng-repeat="(treatment, rankValues) in result.results.rankProbabilities">
+                  <td>{{::treatment}}</td>
+                  <td ng-repeat="rank in rankValues">
                     {{::rank | number}}
                   </td>
                 </tr>
