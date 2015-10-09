@@ -5,5 +5,6 @@ define(function(require) {
     .controller('ModelController', require('gemtc-web/controllers/modelController'))
     .controller('CreateModelController', require('gemtc-web/models/createModelController'))
     .controller('ModelsController', require('gemtc-web/models/modelsController'))
+    .controller('ExtendRunLengthController', require('gemtc-web/models/extendRunLengthController'))
     ;
 });
