@@ -60,7 +60,6 @@ define(
       }
     ]);
 
-
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
       function($stateProvider, $urlRouterProvider, $httpProvider) {
 
