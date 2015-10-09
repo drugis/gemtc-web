@@ -3,7 +3,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
     var scope,
       q,
       stateParamsMock,
-      modelResourceMock,
+      modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       modalInstanceMock,
       modelMock = {
         burnInIterations: 100,
@@ -22,7 +22,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         $modalInstance: modalInstanceMock,
         $stateParams: stateParamsMock,
         model: modelMock,
-        successCallback: successCallbackMock
+        successCallback: successCallbackMock,
+        ModelResource: modelResourceMock
       });
     }));
 
@@ -66,6 +67,30 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           expect(scope.isExtendButtonDisabled(runLengthSettings)).toBe(false);
         });
       });
+    });
+
+    describe('extend button is pressed', function() {
+      it('should save the model with new settings ', function() {
+        var runLengthSettings = {
+          burnInIterations: 20,
+          inferenceIterations: 107,
+          thinningFactor: 10
+        };
+
+        var saveResult = {
+          $promise: {
+            then: function() {}
+          }
+        };
+
+        modelResourceMock.save.and.returnValue(saveResult);
+        scope.extendRunLength(runLengthSettings);
+        expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, modelMock);
+        expect(modelMock.burnInIterations).toEqual(runLengthSettings.burnInIterations);
+        expect(modelMock.inferenceIterations).toEqual(runLengthSettings.inferenceIterations);
+        expect(modelMock.thinningFactor).toEqual(runLengthSettings.thinningFactor);
+      });
+
     });
 
   });

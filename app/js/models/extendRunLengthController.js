@@ -36,7 +36,7 @@ define(['lodash'], function(_) {
       $scope.isExtendingRunLength = true;
       model.burnInIterations = runLengthSettings.burnInIterations;
       model.inferenceIterations = runLengthSettings.inferenceIterations;
-      model.thinningFactor = runLengthSettings.inferenceIterations;
+      model.thinningFactor = runLengthSettings.thinningFactor;
 
       ModelResource.save($stateParams, model).$promise.then(function() {
         successCallback();
