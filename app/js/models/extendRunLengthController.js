@@ -34,7 +34,11 @@ define(['lodash'], function(_) {
 
     function extendRunLength(runLengthSettings) {
       $scope.isExtendingRunLength = true;
-      ModelResource.save($stateParams, _.extend(runLengthSettings, {id: $stateParams.modelId})).$promise.then(function() {
+      model.burnInIterations = runLengthSettings.burnInIterations;
+      model.inferenceIterations = runLengthSettings.inferenceIterations;
+      model.thinningFactor = runLengthSettings.inferenceIterations;
+
+      ModelResource.save($stateParams, model).$promise.then(function() {
         successCallback();
         $modalInstance.close();
       });

@@ -91,7 +91,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         AnalysisResource: analysisResource,
         DiagnosticsService: diagnosticsService,
         AnalysisService: analysisServiceMock,
-        DevianceStatisticsService: devianceStatisticsServiceMock
+        DevianceStatisticsService: devianceStatisticsServiceMock,
+        gemtcRootPath: ''
       });
     }));
 
