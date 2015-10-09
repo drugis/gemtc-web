@@ -205,10 +205,12 @@ describe('modelRouter', function() {
 
   describe('POST request to /:modelId with owner that is the logged in user', function() {
     var model = {
+      analysisId: 1,
       id: 2
     };
     beforeEach(function() {
       var analysis = {
+        id: 1,
         owner: userId,
       };
       sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
@@ -235,14 +237,45 @@ describe('modelRouter', function() {
         });
     });
   });
-  describe('POST request to /:modelId where the modelservice returns an error', function() {
+  describe('POST request to /:modelId with inconsistent model.analysisID and analysisID', function() {
     var model = {
+      analysisId: 2,
       id: 2
     };
     beforeEach(function() {
       var analysis = {
+        id: 1,
         owner: userId,
       };
+      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
+      sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
+    });
+    afterEach(function() {
+      analysisRepository.get.restore();
+      modelRepository.get.restore();
+    });
+
+    it('should return a 404 status', function(done) {
+      var runLengths = {};
+      request
+        .post(BASE_PATH + '1/models/2')
+        .send(runLengths)
+        .end(function(err, res) {
+          assert(err);
+          res.should.have.property('status', status.NOT_FOUND);
+          done();
+        });
+    });
+  });  describe('POST request to /:modelId where the modelservice returns an error', function() {
+      var model = {
+        analysisId: 1,
+        id: 2
+      };
+      var analysis = {
+        id: 1,
+        owner: userId,
+      };
+    beforeEach(function() {
       sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
       sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
       sinon.stub(modelService, 'update').onCall(0).yields('error');
