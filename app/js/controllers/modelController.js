@@ -1,10 +1,10 @@
 'use strict';
 define(['lodash'], function() {
-  var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'ModelResource', 'PataviService',
+  var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService'
   ];
-  var ModelController = function($scope, $modal, $state, $stateParams, ModelResource, PataviService,
+  var ModelController = function($scope, $modal, $state, $stateParams, gemtcRootPath, ModelResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, AnalysisService,
     DevianceStatisticsService) {
 
@@ -63,7 +63,7 @@ define(['lodash'], function() {
 
     function openRunLengthDialog() {
       $modal.open({
-        templateUrl: './js/models/extendRunLength.html',
+        templateUrl: gemtcRootPath + 'js/models/extendRunLength.html',
         scope: $scope,
         controller: 'ExtendRunLengthController',
         resolve: {
