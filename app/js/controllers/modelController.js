@@ -72,6 +72,7 @@ define(['lodash'], function() {
           },
           successCallback: function() {
             return function() {
+              // reload page, with empty params object
               $state.go($state.current, {}, {reload: true});
             }
           }
