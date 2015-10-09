@@ -1,43 +1,43 @@
 'use strict';
-define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'ModelResource', 'model', 'successCallback'];
-  var ExtendRunLengthController = function($scope, $modalInstance, $stateParams, ModelResource, model, successCallback) {
+define(['lodash', 'moment'], function(_, moment) {
+  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'AnalysisService', 'ModelResource', 'problem', 'model', 'successCallback'];
+  var ExtendRunLengthController = function($scope, $modalInstance, $stateParams, AnalysisService, ModelResource, problem, model, successCallback) {
 
-    $scope.runLengthSettings = {
-      burnInIterations: model.burnInIterations,
-      inferenceIterations: model.inferenceIterations,
-      thinningFactor: model.thinningFactor
-    };
-    $scope.minBurnInIterations = $scope.runLengthSettings.burnInIterations;
-    $scope.minInferenceIterations = $scope.runLengthSettings.inferenceIterations;
+    $scope.model = model;
+
+    $scope.minBurnInIterations = $scope.model.burnInIterations;
+    $scope.minInferenceIterations = $scope.model.inferenceIterations;
     $scope.isRunlengthDivisibleByThinningFactor = isRunlengthDivisibleByThinningFactor;
     $scope.isExtendButtonDisabled = isExtendButtonDisabled;
     $scope.isExtendingRunLength = false;
     $scope.extendRunLength = extendRunLength;
+    $scope.estimatedRunLengthHumanized = estimateHumanizedRunLength();
+    $scope.$watch('model', estimateHumanizedRunLength, true); // deep watch
+
+    function estimateHumanizedRunLength() {
+      $scope.estimatedRunLength = AnalysisService.estimateRunLength(problem, $scope.model);
+      $scope.estimatedRunLengthHumanized = moment.duration($scope.estimatedRunLength, 'seconds').humanize();
+    }
 
     $scope.cancel = function() {
       $modalInstance.dismiss('cancel');
     };
 
-    function isRunlengthDivisibleByThinningFactor(runLengthSettings) {
-      return runLengthSettings.burnInIterations % runLengthSettings.thinningFactor === 0 &&
-        runLengthSettings.inferenceIterations % runLengthSettings.thinningFactor === 0;
+    function isRunlengthDivisibleByThinningFactor(model) {
+      return model.burnInIterations % model.thinningFactor === 0 &&
+        model.inferenceIterations % model.thinningFactor === 0;
     }
 
-    function isExtendButtonDisabled(runLengthSettings) {
+    function isExtendButtonDisabled(model) {
       // due to 'min' property on input fields, values are undefined if lower than that minimum value
-      return !runLengthSettings.burnInIterations ||
-        !runLengthSettings.inferenceIterations ||
-        !isRunlengthDivisibleByThinningFactor(runLengthSettings) ||
+      return !model.burnInIterations ||
+        !model.inferenceIterations ||
+        !isRunlengthDivisibleByThinningFactor(model) ||
         !!$scope.isExtendingRunLength;
     }
 
-    function extendRunLength(runLengthSettings) {
+    function extendRunLength(model) {
       $scope.isExtendingRunLength = true;
-      model.burnInIterations = runLengthSettings.burnInIterations;
-      model.inferenceIterations = runLengthSettings.inferenceIterations;
-      model.thinningFactor = runLengthSettings.thinningFactor;
-
       ModelResource.save($stateParams, model).$promise.then(function() {
         successCallback();
         $modalInstance.close();

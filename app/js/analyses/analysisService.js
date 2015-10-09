@@ -162,10 +162,10 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function estimateRunLength(problem, model) {
       var theProblem, nRandomEffects, nStochasticVariables, nMonitoredVariables,
-        modelMainType = model.modelType.mainType;
-      if (modelMainType === 'pairwise') {
+        modelType = model.modelType.type;
+      if (modelType === 'pairwise') {
         theProblem = reduceToPairwiseProblem(problem, model.pairwiseComparison);
-      } else if (modelMainType === 'network' || modelMainType === 'node-split') {
+      } else if (modelType === 'network' || modelType === 'node-split') {
         theProblem = problem;
       }
       var nTreatments = theProblem.treatments.length;
