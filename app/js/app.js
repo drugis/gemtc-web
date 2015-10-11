@@ -113,6 +113,19 @@ define(
             templateUrl: 'views/modelView.html',
             controller: 'ModelController'
           })
+          .state('nodeSplitOverview', {
+            parent: 'model',
+            url: '/nodeSplitOverview',
+            templateUrl: 'js/models/nodeSplitOverview.html',
+            controller: 'NodeSplitOverviewController',
+            resolve: {
+              models: ['$stateParams', 'ModelResource',
+                function($stateParams, ModelResource) {
+                  return ModelResource.query({analysisId: $stateParams.analysisId}).$promise;
+                }
+              ]
+            }
+          })
           .state('error', {
             url: '/error',
             // need to use template instead of url because we can't get new files from crashed server
