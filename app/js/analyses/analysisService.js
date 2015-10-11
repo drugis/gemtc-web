@@ -151,8 +151,8 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
-    function reduceToPairwiseProblem(problem, pairwiseComparison) {
-      var filteredTreatments = filterPairwiseTreatments(problem.treatments, pairwiseComparison.from.name, pairwiseComparison.to.name);
+    function reduceToPairwiseProblem(problem, from, to) {
+      var filteredTreatments = filterPairwiseTreatments(problem.treatments, from.name, to.name);
       var filteredEntries = filterPairwiseEntries(problem.entries, problem.treatments);
       return {
         treatments: filteredTreatments,
@@ -164,7 +164,7 @@ define(['angular', 'lodash'], function(angular, _) {
       var theProblem, nRandomEffects, nStochasticVariables, nMonitoredVariables,
         modelType = model.modelType.type;
       if (modelType === 'pairwise') {
-        theProblem = reduceToPairwiseProblem(problem, model.pairwiseComparison);
+        theProblem = reduceToPairwiseProblem(problem, model.modelType.details.from, model.modelType.details.to);
       } else if (modelType === 'network' || modelType === 'node-split') {
         theProblem = problem;
       }
