@@ -68,7 +68,7 @@ define(['lodash'], function() {
         controller: 'ExtendRunLengthController',
         resolve: {
           problem: function() {
-            return $scope.analysis.problem;
+            return $scope.problem;
           },
           model: function() {
             return angular.copy($scope.model);
