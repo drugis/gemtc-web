@@ -102,7 +102,7 @@
             <div class="row">
               <div class="columns large-8 medium-6 small-12">
                 <!-- gemtc stand-alone doas not set editMode-->
-                <button ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()" class="small">Extend run-length</button>
+                <button id="open-run-length-dialog-btn" ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()" class="small">Extend run-length</button>
                 <button id="show-convergence-diagnostics" ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()" class="small info">Show diagnostics plots</button>
                 <button id="hide-convergence-diagnostics" ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()" class="small info">Hide diagnostics plots</button>
               </div>
