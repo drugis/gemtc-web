@@ -1,4 +1,5 @@
-<div class="row">
+<div ui-view>
+  <div class="row">
   <div class="columns large-12" id="model-results-header">
     <h1><a ui-sref="networkMetaAnalysis(stateParams)">{{analysis.title}}</a></h1>
     <h5><strong>Outcome</strong></h5>
@@ -16,6 +17,9 @@
       <div ng-if="result.results" style="padding-top: 1rem;" id="model-results-results-header">
         <div class="row">
           <div class="columns columns large-6 medium-8 small-12">
+
+            <a ui-sref="nodeSplitOverview(stateParams)" ng-if="model.modelType.type === 'network' || model.modelType.type === 'node-split' " class="row">Go to node-split overview</a>
+
             <div class="panel callout">
               <h5><strong>Model settings</strong></h5>
               <table class="layout-table">
@@ -322,3 +326,4 @@
     </div>
   </div>
 </div>
+</div ui-view>
