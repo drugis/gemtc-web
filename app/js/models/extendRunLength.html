@@ -7,10 +7,10 @@
   <div class="row">
     <div class="large-9 columns">
       <label>Number of burn-in iterations
-        <input type="number" min="{{minBurnInIterations}}" step="1" ng-model="model.burnInIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="burn-in-iterations">
+        <input id="nr-burn-in-input" type="number" min="{{minBurnInIterations}}" step="1" ng-model="model.burnInIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="burn-in-iterations">
       </label>
       <label>Number of inference iterations
-        <input type="number" min="{{minInferenceIterations}}" step="1" ng-model="model.inferenceIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="inference-iterations">
+        <input id="nr-inference-input" type="number" min="{{minInferenceIterations}}" step="1" ng-model="model.inferenceIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="inference-iterations">
       </label>
       <label>Thinning factor
         <input type="number" min="1" step="1" ng-model="model.thinningFactor" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="thinning-factor">
