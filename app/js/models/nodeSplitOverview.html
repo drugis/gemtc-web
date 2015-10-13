@@ -1,35 +1,40 @@
 <div ui-view>
-	<div class="row">
-		<div class="columns large-12" id="model-split-overview-header">
-			<h1>Nodespit overview</h1>
-			<h5><strong>Analysis</strong></h5>
-			<h5><a ui-sref="networkMetaAnalysis(stateParams)">{{analysis.title}}</a></h5>
-			<h5><strong>Outcome</strong></h5>
-			<h5>{{analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></h5>
-			<h5><strong>Model</strong></h5>
-			<h5><a ui-sref="model(stateParams)">{{model.title}}</a></h5>
-		</div>
-	</div>
-	<div class="row">
-		<div class="columns large-12">
-			<table>
-				<caption>Models to compare</caption>
-				<thead>
-			        <tr>
-			          <td class="large-3 text-center">Title</td>
-			          <td class="large-1 text-center">Type</td>
-			          <td class="large-1 text-center">Model computed</td>
-			        </tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="splitModel in relevantSplitModels | orderBy:'title'">
-						<td><a ng-click="goToModel(splitModel.id)">{{splitModel.title}}</a></td>
-						<td class="text-center">{{splitModel.modelType.type}}</td>
-          				<td ng-if="splitModel.hasResult" class="text-center"><i class="fa fa-check" style="color:green;"></td>
-          				<td ng-if="!splitModel.hasResult" class="button-cell "><button ng-click="goToModel(splitModel.id)" class="tiny success">run model</button</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+  <div class="row">
+    <div class="columns large-12" id="model-split-overview-header">
+      <h1>Nodespit overview</h1>
+      <h5><strong>Analysis</strong></h5>
+      <h5><a ui-sref="networkMetaAnalysis(stateParams)">{{analysis.title}}</a></h5>
+      <h5><strong>Outcome</strong></h5>
+      <h5>{{analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></h5>
+      <h5><strong>Model</strong></h5>
+      <h5><a ui-sref="model(stateParams)">{{model.title}}</a></h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
+      <table>
+        <caption>Consistency/inconsistency comparisons</caption>
+        <thead>
+          <tr>
+            <td class="large-2 text-center">Model name</td>
+            <td class="large-2 text-center">Comparison</td>
+            <td class="large-1 text-center">DIC</td>
+            <td class="large-1 text-center">Random effects (Standard deviation)</td>
+            <td class="large-1 text-center">Forest plot</td>
+            <td class="large-1 text-center">Consistency estimate</td>
+            <td class="large-1 text-center">Direct effect estimate</td>
+            <td class="large-1 text-center">Indirect effect estimate</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="comparison in comparisons">
+            <td><a ng-click="goToModel(splitModel.id)">{{comparison.modelTitle}}</a></td>
+            <td class="text-center">{{comparison.label}}</td>
+            <td ng-if="comparison.modelResult" class="text-center"></td>
+            <td ng-if="!comparison.modelResult" colspan="6" class="button-cell "><button ng-click="goToModel(splitModel.id)" class="tiny success">run model</button</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
