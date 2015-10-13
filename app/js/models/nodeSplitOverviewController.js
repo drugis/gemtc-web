@@ -1,25 +1,34 @@
 'use strict';
-define([], function() {
-  var dependencies = ['$scope', '$stateParams', '$state', 'models'];
-  var NodeSplitOverviewController = function($scope, $stateParams, $state, models) {
+define(['angular', 'lodash'], function(angular, _) {
+  var dependencies = ['$scope', '$q', '$stateParams', '$state', 'models', 'problem', 'AnalysisService', 'ModelResource'];
+  var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, models, problem, AnalysisService, ModelResource) {
 
     $scope.models = models;
     $scope.goToModel = goToModel;
+    $scope.comparisons = _.map(AnalysisService.createNodeSplitOptions(problem), buildComparison);
 
-    $scope.model.$promise.then(function() {
-      $scope.relevantSplitModels = _.filter(models, _.partial(isRelevantComparison, $scope.model));
-    })
+    function buildComparison(comparison) {
+      var model = findModelForComparison(comparison, $scope.models);
+      var modelResult;
+      if (model) {
+        modelResult = ModelResource.getResult($stateParams);
+      }
 
+      return model ? {
+        modelTitle: model.title,
+        label: comparison.label,
+        result: modelResult
+      } : comparison;
+    }
 
-    function isRelevantComparison(base, candidate) {
-      return (candidate.id !== base.id && // filter self
-        (candidate.modelType.type === 'node-split' || candidate.modelType.type === 'network') &&
-        candidate.likelihood === base.likelihood &&
-        candidate.linearModel === base.linearModel &&
-        candidate.link === base.link);
-
-      //todo
-      // If multiple models match for a comparison, use the newest. need to store run dateTime
+    function findModelForComparison(comparison, models) {
+      return _.find(models, function(model) {
+        return (
+          model.modelType.type === 'node-split' &&
+          model.modelType.details.from.id === comparison.from.id &&
+          model.modelType.details.to.id === comparison.to.id
+        );
+      });
     }
 
     function goToModel(modelId) {
