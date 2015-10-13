@@ -371,7 +371,7 @@ report('summary', 1.0)
     summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
     deviance <- result[['deviance']]
     summary[['devianceStatistics']][['perArmDeviance']] <- wrap.matrix(deviance[['dev.ab']])
-    summary[['devianceStatistics']][['perArmLeverage']] <- wrap.matrix(deviance[['fit.ab']])
+    summary[['devianceStatistics']][['perArmLeverage']] <- wrap.matrix(deviance[['dev.ab']] - deviance[['fit.ab']])
     summary[['residualDeviance']] <- deviance[['Dbar']]
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
