@@ -16,6 +16,7 @@ module.exports = express.Router({
   .post('/', createModel)
   .get('/:modelId', getModel)
   .post('/:modelId', extendRunLength)
+  .get('/:modelId/result', getResult)
   .use('/:modelId/task', pataviTaskRouter);
 
 function decorateWithHasResults(modelsResult, pataviResult) {
@@ -35,7 +36,10 @@ function find(request, response, next) {
 
   modelRepository.findByAnalysis(analysisId, function(error, modelsResult) {
     if (error) {
-      next({statusCode: 500, message: error});
+      next({
+        statusCode: 500,
+        message: error
+      });
     } else {
       var modelsWithTasks = _.filter(modelsResult, function(model) {
         return model.taskId !== null && model.taskId !== undefined;
@@ -47,7 +51,10 @@ function find(request, response, next) {
         var taskIds = _.map(modelsWithTasks, 'taskId');
         pataviTaskRepository.getPataviTasksStatus(taskIds, function(error, pataviResult) {
           if (error) {
-            next({statusCode: 500, message: error});
+            next({
+              statusCode: 500,
+              message: error
+            });
           } else {
             decoratedResult = decorateWithHasResults(modelsWithTasks, pataviResult);
             response.json(decoratedResult.concat(modelsWithoutTasks));
@@ -58,6 +65,37 @@ function find(request, response, next) {
       }
     }
   });
+}
+
+function getResult(request, response, next) {
+  logger.debug('modelRouter.getResult');
+  logger.debug('request.params.analysisId' + request.params.analysisId);
+  var analysisId = request.params.analysisId;
+  var modelId = request.params.modelId;
+  var modelCache;
+
+  async.waterfall([
+      function(callback){
+        modelRepository.get(modelId, callback);
+      },
+      function(model, callback) {
+        console.log('check model taskId');
+        modelCache = model;
+        if(model.taskId === null || model.taskId === undefined) {
+          callback({
+            statusCode: 404,
+            message: 'attempt to get results of model with no task'
+          });
+        }
+        callback();
+      }, function(callback) {
+        console.log('get patavi task');
+        pataviTaskRepository.getResult(modelCache.taskId, callback);
+      }, function(pataviResult, callback) {
+        response.status(status.OK);
+        response.json(pataviResult);
+      }
+    ], next);
 }
 
 function createModel(request, response, next) {
@@ -85,13 +123,20 @@ function createModel(request, response, next) {
           id: createdId
         });
     }
-  ], next);
+  ], function(error) {
+    if(error) {
+      next(error);
+    }
+  });
 }
 
 function checkOwnership(owner, userId, callback) {
   logger.debug('check owner with ownerId = ' + owner + ' and userId = ' + userId);
   if (owner != userId) {
-    callback({statusCode: 403, message: 'attempt to modify model in not-owned analysis'});
+    callback({
+      statusCode: 403,
+      message: 'attempt to modify model in not-owned analysis'
+    });
   } else {
     callback();
   }
@@ -99,8 +144,11 @@ function checkOwnership(owner, userId, callback) {
 
 function checkCoordinates(analysisId, model, callback) {
   logger.debug('check analysisId = ' + analysisId + ' and model.analysisId = ' + model.analysisId);
-  if(analysisId != model.analysisId) {
-    callback({statusCode: 404, message: 'analysis/model combination not found'});
+  if (analysisId != model.analysisId) {
+    callback({
+      statusCode: 404,
+      message: 'analysis/model combination not found'
+    });
   } else {
     callback();
   }
@@ -146,7 +194,10 @@ function getModel(request, response, next) {
   var modelId = request.params.modelId;
   modelRepository.get(modelId, function(error, result) {
     if (error) {
-      next({statusCode: 404, message: error});
+      next({
+        statusCode: 404,
+        message: error
+      });
     } else {
       response.json(result);
     }
