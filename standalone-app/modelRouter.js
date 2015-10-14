@@ -79,7 +79,6 @@ function getResult(request, response, next) {
         modelRepository.get(modelId, callback);
       },
       function(model, callback) {
-        console.log('check model taskId');
         modelCache = model;
         if(model.taskId === null || model.taskId === undefined) {
           callback({
@@ -89,7 +88,6 @@ function getResult(request, response, next) {
         }
         callback();
       }, function(callback) {
-        console.log('get patavi task');
         pataviTaskRepository.getResult(modelCache.taskId, callback);
       }, function(pataviResult, callback) {
         response.status(status.OK);
