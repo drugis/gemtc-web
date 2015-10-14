@@ -10,8 +10,11 @@ define(['angular', 'lodash'], function(angular, _) {
     function buildComparison(comparison) {
       var model = findModelForComparison(comparison, $scope.models);
       var modelResult;
-      if (model) {
-        modelResult = ModelResource.getResult($stateParams);
+      if (model && model.taskId) {
+        modelResult = ModelResource.getResult({
+          analysisId: $stateParams.analysisId,
+          modelId: model.id
+        });
       }
 
       return model ? {

@@ -30,8 +30,8 @@
           <tr ng-repeat="comparison in comparisons">
             <td><a ng-click="goToModel(splitModel.id)">{{comparison.modelTitle}}</a></td>
             <td class="text-center">{{comparison.label}}</td>
-            <td ng-if="comparison.modelResult" class="text-center"></td>
-            <td ng-if="!comparison.modelResult" colspan="6" class="button-cell "><button ng-click="goToModel(splitModel.id)" class="tiny success">run model</button</td>
+            <td ng-if="comparison.result" class="text-center"></td>
+            <td ng-if="!comparison.result" colspan="6" class="button-cell "><button ng-click="goToModel(splitModel.id)" class="tiny success">run model</button</td>
           </tr>
         </tbody>
       </table>
