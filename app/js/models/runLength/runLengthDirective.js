@@ -8,6 +8,9 @@ define(['moment'], function(moment) {
       scope: {
         problem: '=',
         model: '=',
+        burnInIterations: '=',
+        inferenceIterations: '=',
+        thinningFactor: '=',
         isValidRunLength: '='
       },
       link: function($scope) {
@@ -41,16 +44,16 @@ define(['moment'], function(moment) {
           $scope.estimatedRunLengthHumanized = moment.duration($scope.estimatedRunLength, 'seconds').humanize();
         }
 
-        function isRunlengthDivisibleByThinningFactor(model) {
-          return model.burnInIterations % model.thinningFactor === 0 &&
-            model.inferenceIterations % model.thinningFactor === 0;
+        function isRunlengthDivisibleByThinningFactor() {
+          return $scope.burnInIterations % $scope.thinningFactor === 0 &&
+            $scope.inferenceIterations % $scope.thinningFactor === 0;
         }
 
-        function checkValidRunLength(model) {
+        function checkValidRunLength() {
           // due to 'min' property on input fields, values are undefined if lower than that minimum value
-          $scope.isValidRunLength = model.burnInIterations &&
-            model.inferenceIterations &&
-            isRunlengthDivisibleByThinningFactor(model) &&
+          $scope.isValidRunLength = $scope.burnInIterations &&
+            $scope.inferenceIterations &&
+            isRunlengthDivisibleByThinningFactor() &&
             $scope.estimatedRunLength <= 300;
         }
       }

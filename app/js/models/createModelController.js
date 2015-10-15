@@ -93,7 +93,7 @@ define(['lodash', 'moment'], function(_, moment) {
     function createModel(model) {
       $scope.isAddingModel = true;
       if (model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split') {
-        var modelsToCreate = createModelBatch(model, $scope.comparisonOptions, $scope.nodeSplitOptions);
+        var modelsToCreate = ModelServiceBatch.createModelBatch(model, $scope.comparisonOptions, $scope.nodeSplitOptions);
         var cleanModels = _.map(modelsToCreate, ModelService.cleanModel);
         var creationPromises = _.map(modelsToCreate, function(modelToCreate) {
           return createAndPostModel(modelToCreate, function() {});
@@ -115,7 +115,6 @@ define(['lodash', 'moment'], function(_, moment) {
     function createAndPostModel(frontEndModel, successFunction) {
       var model = ModelService.cleanModel(frontEndModel);
       return ModelResource.save($stateParams, model, successFunction).$promise;
-
     }
   };
 

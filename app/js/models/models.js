@@ -11,6 +11,7 @@ define(function (require) {
     .controller('CreateModelController', require('models/createModelController'))
     .controller('ExtendRunLengthController', require('models/extendRunLengthController'))
     .controller('NodeSplitOverviewController', require('models/nodeSplitOverviewController'))
+    .controller('CreateNodeSplitModelController', require('models/createNodeSplitModelController'))
 
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
