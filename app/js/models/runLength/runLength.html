@@ -1,0 +1,27 @@
+<div class="row ">
+  <div class="large-3 medium-6 small-12 columns">
+    <label class="form-item-header">Run-length parameters</label>
+    <label>Number of burn-in iterations
+      <input type="number" min="1" step="1" ng-model="model.burnInIterations" ng-model-options='{ debounce: 200 }' id="burn-in-iterations">
+    </label>
+    <label>Number of inference iterations
+      <input type="number" min="1" step="1" ng-model="model.inferenceIterations" ng-model-options='{ debounce: 200 }' id="inference-iterations">
+    </label>
+    <label>Thinning factor
+      <input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' id="thinning-factor">
+    </label>
+  </div>
+</div>
+<!-- end run-length parameters section -->
+<div class="row">
+  <div class="columns large-6 medium-8 small-12">
+    <label class="form-item-header" ng-show="model.modelType.subType !== 'all-pairwise' && model.modelType.subType !== 'all-node-split'">Estimated run length</label>
+    <label class="form-item-header" ng-show="model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split'">Maximum run length for these models</label> {{estimatedRunLengthHumanized}}
+    <div class="alert" ng-show='!isRunlengthDivisibleByThinningFactor(model)'>
+      The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions.
+    </div>
+    <div class="alert" ng-show='estimatedRunLength > 300'>
+      This task will take too long (over 5 minutes). Please reduce the number of iterations or increase the thinning factor.
+    </div>
+  </div>
+</div>

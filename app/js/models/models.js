@@ -23,5 +23,6 @@ define(function (require) {
     .factory('DevianceStatisticsService', require('models/devianceStatisticsService'))
 
     .directive('gemtcRankPlot',require('models/rankPlotDirective'))
+    .directive('runLength',require('models/runLength/runLengthDirective'))
     ;
 });

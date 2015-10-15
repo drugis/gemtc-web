@@ -8,5 +8,6 @@ define(function(require) {
     .directive('pagedSvgPlot', require('gemtc-web/util/pagedSvgPlotDirective'))
     .directive('pagedPngPlot', require('gemtc-web/util/pagedPngPlotDirective'))
     .directive('appAlert', require('gemtc-web/util/appAlertDirective'))
+    .directive('runLength', require('gemtc-web/models/runLength/runLengthDirective'))
   ;
 });
