@@ -78,9 +78,16 @@
           </thead>
           <tbody>
             <tr ng-repeat="comparison in comparisons">
-              <td><a ng-click="goToModel(splitModel.id)">{{comparison.modelTitle}}</a></td>
+              <td ng-show="!comparison.hasModel" class="button-cell">
+                <button class="tiny success" ng-click="openCreateNodeSplitDialog(comparison)">create model</button>
+              </td>
+              <td ng-show="comparison.hasModel">
+                <a ng-click="goToModel(splitModel.id)">{{comparison.modelTitle}}</a>
+              </td>
               <td class="text-center">{{comparison.label}}</td>
-              <td ng-if="!comparison.result" colspan="6" class="button-cell "><button ng-click="goToModel(splitModel.id)" class="tiny success">run model</button></td>
+              <td ng-if="!comparison.result && comparison.hasModel" colspan="6" class="button-cell ">
+                <button ng-click="goToModel(splitModel.id)" class="tiny success">run model</button>
+              </td>
               <td ng-if="comparison.result" class="text-center">{{comparison.result.DIC}}</td>
               <td ng-if="comparison.result && model.linearModel === 'random'" class="text-center">{{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} <br>({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</td>
               <td ng-if="comparison.result" class="text-center">forestplot</td>

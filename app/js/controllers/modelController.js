@@ -25,7 +25,7 @@ define(['lodash'], function() {
       .$promise
       .then(getTaskId)
       .then(PataviService.run)
-      .then(successCallback,
+      .then(pataviRunSuccessCallback,
         function(pataviError) {
           console.error('an error has occurred, error: ' + JSON.stringify(pataviError));
           $scope.$emit('error', {
@@ -83,7 +83,7 @@ define(['lodash'], function() {
       });
     }
 
-    function successCallback(result) {
+    function pataviRunSuccessCallback(result) {
       return ProblemResource.get({
         analysisId: $stateParams.analysisId,
         projectId: $stateParams.projectId
@@ -102,6 +102,7 @@ define(['lodash'], function() {
           $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
           $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         }
+        $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
       });
     }
 

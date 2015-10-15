@@ -1,10 +1,11 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = ['$scope', '$q', '$stateParams', '$state', 'models', 'problem', 'AnalysisService', 'ModelResource'];
-  var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, models, problem, AnalysisService, ModelResource) {
+  var dependencies = ['$scope', '$stateParams', '$state', '$modal', 'models', 'problem', 'AnalysisService', 'ModelResource'];
+  var NodeSplitOverviewController = function($scope, $stateParams, $state, $modal, models, problem, AnalysisService, ModelResource) {
 
     $scope.goToModel = goToModel;
     $scope.analysis.$promise.then(buildComparisons);
+    $scope.openCreateNodeSplitDialog = openCreateNodeSplitDialog;
 
     $scope.model.$promise.then(function() {
       if ($scope.model.modelType.type === 'node-split') {
@@ -23,6 +24,15 @@ define(['angular', 'lodash'], function(angular, _) {
         }
       });
     });
+
+    function openCreateNodeSplitDialog(comparison) {
+      $modal.open({
+        templateUrl: './js/models/createNodes.html',
+        scope: $scope,
+        controller: 'AddAnalysisController'
+      });
+    };
+
 
     function buildComparisons(analysis) {
       $scope.comparisons = _.map(AnalysisService.createNodeSplitOptions(analysis.problem), function(comparison) {
@@ -61,6 +71,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
       return {
         modelTitle: model.title,
+        hasModel: true,
         label: comparison.label,
         result: modelResult
       }

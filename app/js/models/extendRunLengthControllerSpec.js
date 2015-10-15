@@ -39,37 +39,19 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           thinningFactor: 10
         };
       });
-      it('should place runlength settings on the scope', function() {
-        expect(scope.model.burnInIterations).toBe(modelMock.burnInIterations);
+    });
+
+    describe('isRunLengthsAbovePrevious function on the scope', function() {
+      it('should be on the scope', function() {
+        expect(scope.isRunLengthsAbovePrevious).toBeDefined();
       });
-      describe('isExtendButtonDisabled function on the scope', function() {
-        it('should be on the scope', function() {
-          expect(scope.isExtendButtonDisabled).toBeDefined();
-        });
-        it('should return true for burnInIterations not divisible by the thinningFactor', function() {
-          var model = {
-            burnInIterations: 17,
-            inferenceIterations: 100,
-            thinningFactor: 10
-          };
-          expect(scope.isExtendButtonDisabled(model)).toBe(true);
-        });
-        it('should return true for inferenceIterations not divisible by the thinningFactor', function() {
-          var model = {
-            burnInIterations: 20,
-            inferenceIterations: 107,
-            thinningFactor: 10
-          };
-          expect(scope.isExtendButtonDisabled(model)).toBe(true);
-        });
-        it('should return false for correct model', function() {
-          var model = {
-            burnInIterations: 30,
-            inferenceIterations: 100,
-            thinningFactor: 10
-          };
-          expect(scope.isExtendButtonDisabled(model)).toBe(false);
-        });
+      it('should return true if the settings are higher', function() {
+        modelMock.burnInIterations = modelMock.burnInIterations + 1
+        expect(scope.isRunLengthsAbovePrevious()).toBe(true);
+      });
+      it('should return false if the settings are lower', function() {
+        modelMock.burnInIterations = modelMock.burnInIterations - 1
+        expect(scope.isRunLengthsAbovePrevious()).toBe(false);
       });
     });
 

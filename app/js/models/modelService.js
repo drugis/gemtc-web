@@ -29,8 +29,28 @@ define(['angular', 'lodash'], function(angular, _) {
       model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink');
       return model;
     }
+
+    function createModelBatch(modelBase, comparisonOptions, nodeSplitOptions) {
+      if (modelBase.modelType.mainType == 'pairwise') {
+        return _.map(comparisonOptions, function(comparisonOption) {
+          var newModel = _.cloneDeep(modelBase);
+          newModel.title = modelBase.title + ' (' + comparisonOption.from.name + ' - ' + comparisonOption.to.name + ')';
+          newModel.pairwiseComparison = comparisonOption;
+          return newModel;
+        });
+      } else if (modelBase.modelType.mainType == 'node-split') {
+        return _.map(nodeSplitOptions, function(nodeSplitOption) {
+          var newModel = _.cloneDeep(modelBase);
+          newModel.title = modelBase.title + ' (' + nodeSplitOption.from.name + ' - ' + nodeSplitOption.to.name + ')';
+          newModel.nodeSplitComparison = nodeSplitOption;
+          return newModel;
+        });
+      }
+    }
+
     return {
-      cleanModel: cleanModel
+      cleanModel: cleanModel,
+      createModelBatch: createModelBatch
     };
   };
 
