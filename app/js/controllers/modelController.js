@@ -63,6 +63,7 @@ define(['lodash'], function() {
 
     function openRunLengthDialog() {
       $modal.open({
+        windowClass: 'small',
         templateUrl: gemtcRootPath + 'js/models/extendRunLength.html',
         scope: $scope,
         controller: 'ExtendRunLengthController',

@@ -4,7 +4,13 @@
       <h3>Extend model run length</h3>
     </div>
   </div>
-  <run-length model="model" problem="problem" is-valid-run-length="isValidRunLength"></run-length>
+  <run-length 
+    model="model" 
+    problem="problem"
+    burn-in-iterations="model.burnInIterations"
+    inference-iterations="model.inferenceIterations"
+    thinning-factor="model.thinningFactor"
+    is-valid-run-length="isValidRunLength"></run-length>
   <div class="row modal-bottom-button-bar">
     <div class="large-9 columns">
       <div class="alert" ng-show="!isRunLengthsAbovePrevious()">The new burn-in and inference iterations should not be lower than the original number.</div>

@@ -117,7 +117,13 @@
         </div>
       </div>
       <!-- end outcome measure scale section -->
-      <run-length class="section" problem="problem" model="cleanModel" is-valid-run-length="isValidRunLength"></run-length>
+      <run-length 
+        problem="problem"
+        model="cleanModel"
+        burn-in-iterations="model.burnInIterations"
+        inference-iterations="model.inferenceIterations"
+        thinning-factor="model.thinningFactor"
+        is-valid-run-length="isValidRunLength"></run-length>
       <div class="row bottom-button-bar">
         <div class="large-9 columns">
           <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="!isValidRunLength || isAddButtonDisabled(model)">

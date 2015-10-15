@@ -1,7 +1,7 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = ['$scope', '$stateParams', '$state', '$modal', 'models', 'problem', 'AnalysisService', 'ModelResource'];
-  var NodeSplitOverviewController = function($scope, $stateParams, $state, $modal, models, problem, AnalysisService, ModelResource) {
+  var dependencies = ['$scope', '$stateParams', '$state', '$modal', 'gemtcRootPath', 'models', 'problem', 'AnalysisService', 'ModelResource'];
+  var NodeSplitOverviewController = function($scope, $stateParams, $state, $modal, gemtcRootPath, models, problem, AnalysisService, ModelResource) {
 
     $scope.goToModel = goToModel;
     $scope.analysis.$promise.then(buildComparisons);
@@ -27,9 +27,29 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function openCreateNodeSplitDialog(comparison) {
       $modal.open({
-        templateUrl: './js/models/createNodes.html',
+        windowClass: 'small',
+        templateUrl: gemtcRootPath + 'js/models/createNodeSplitModel.html',
         scope: $scope,
-        controller: 'AddAnalysisController'
+        controller: 'CreateNodeSplitModelController',
+        resolve: {
+          baseModel: function() {
+            return angular.copy($scope.model);
+          },
+          problem: function() {
+            return problem;
+          },
+          comparison: function() {
+            return comparison;
+          },
+          successCallback: function() {
+            return function() {
+              // reload page, with empty params object
+              $state.go($state.current, {}, {
+                reload: true
+              });
+            }
+          }
+        }
       });
     };
 
@@ -56,8 +76,10 @@ define(['angular', 'lodash'], function(angular, _) {
         model1.likelihood === model2.likelihood &&
         model1.link === model2.link &&
         model1.linearModel === model2.linearModel &&
-        model1.outcomeScale.type === model2.outcomeScale.type &&
-        model1.outcomeScale.value === model2.outcomeScale.value
+        ( (model1.outcomeScale === undefined && model2.outcomeScale === undefined) ||
+          (model1.outcomeScale.type === model2.outcomeScale.type &&
+            model1.outcomeScale.value === model2.outcomeScale.value)
+        )
       );
     }
 
@@ -71,6 +93,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
       return {
         modelTitle: model.title,
+        modelId: model.id,
         hasModel: true,
         label: comparison.label,
         result: modelResult
