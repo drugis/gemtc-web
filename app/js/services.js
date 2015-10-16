@@ -10,5 +10,6 @@ define(function(require) {
     .factory('NetworkPlotService', require('gemtc-web/analyses/networkPlotService'))
     .factory('AnalysisService', require('gemtc-web/analyses/analysisService'))
     .factory('DiagnosticsService', require('gemtc-web/services/diagnosticsService'))
+    .factory('NodeSplitOverviewService', require('gemtc-web/models/nodeSplitOverviewService'))
     ;
 });

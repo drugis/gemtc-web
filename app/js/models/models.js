@@ -22,8 +22,10 @@ define(function (require) {
     .factory('ModelService', require('models/modelService'))
     .factory('AnalysisService', require('analyses/analysisService'))
     .factory('DevianceStatisticsService', require('models/devianceStatisticsService'))
+    .factory('NodeSplitOverviewService', require('models/nodeSplitOverviewService'))
 
     .directive('gemtcRankPlot',require('models/rankPlotDirective'))
     .directive('runLength',require('models/runLength/runLengthDirective'))
+
     ;
 });
