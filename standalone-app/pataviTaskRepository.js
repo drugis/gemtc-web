@@ -14,7 +14,7 @@ function getResult(taskId, callback) {
     if(error) {
       callback(error);
     } else {
-      callback(null, result.rows[0]);
+      callback(null, JSON.parse(result.rows[0].result).results);
     }
   });
 }
