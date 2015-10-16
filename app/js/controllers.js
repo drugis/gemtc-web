@@ -6,5 +6,8 @@ define(function(require) {
     .controller('CreateModelController', require('gemtc-web/models/createModelController'))
     .controller('ModelsController', require('gemtc-web/models/modelsController'))
     .controller('ExtendRunLengthController', require('gemtc-web/models/extendRunLengthController'))
+    .controller('NodeSplitOverviewController', require('gemtc-web/models/nodeSplitOverviewController'))
+    .controller('CreateNodeSplitModelController', require('gemtc-web/models/createNodeSplitModelController'))
+    .controller('CreateNetworkModelController', require('gemtc-web/models/createNetworkModelController'))
     ;
 });

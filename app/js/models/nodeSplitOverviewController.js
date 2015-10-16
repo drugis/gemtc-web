@@ -5,19 +5,21 @@ define(['angular', 'lodash'], function(angular, _) {
 
     $scope.goToModel = goToModel;
     $scope.openCreateNodeSplitDialog = openCreateNodeSplitDialog;
+    $scope.openCreateNetworkDialog = openCreateNetworkDialog;
     $scope.networkModelResultsDefer = $q.defer();
-    $scope.analysis.$promise.then(buildComparisons);
-
+    
     $scope.model.$promise.then(function() {
+      $scope.analysis.$promise.then(buildComparisons);
       if ($scope.model.modelType.type === 'node-split') {
         var networkModel = findNetworkModelForModel($scope.model, models);
         if (networkModel) {
-          var getParams = $stateParams;
-          getParams.modelId = networkModel.id
-          $scope.networkModel = ModelResource.get(getParams);
+          $scope.networkStateParams = _.omit($stateParams, 'modelid');
+          $scope.networkStateParams.modelId = networkModel.id;
+          $scope.networkModel = ModelResource.get($scope.networkStateParams);
         }
       } else {
         $scope.networkModel = $scope.model;
+        $scope.networkStateParams = $stateParams;
       }
 
       if ($scope.networkModel) {
@@ -58,11 +60,8 @@ define(['angular', 'lodash'], function(angular, _) {
         model1.likelihood === model2.likelihood &&
         model1.link === model2.link &&
         model1.linearModel === model2.linearModel &&
-        ((model1.outcomeScale === undefined && model2.outcomeScale === undefined) ||
-          (model1.outcomeScale.type === model2.outcomeScale.type &&
-            model1.outcomeScale.value === model2.outcomeScale.value)
-        )
-      );
+        model1.outcomeScale === model2.outcomeScale
+        );
     }
 
     function buildComparisonTableRow(comparison, model) {
@@ -99,7 +98,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function findModelForComparison(comparison, models) {
       return _.find(models, function(model) {
         // todo: model settings should be equal.
-        return (
+        return isSameModelSettings(model, $scope.model) && (
           model.modelType.type === 'node-split' &&
           model.modelType.details.from.id === comparison.from.id &&
           model.modelType.details.to.id === comparison.to.id
@@ -113,10 +112,36 @@ define(['angular', 'lodash'], function(angular, _) {
       $state.go('model', goToModelParams);
     }
 
+    function openCreateNetworkDialog() {
+      $modal.open({
+        windowClass: 'small',
+        templateUrl: gemtcRootPath + 'js/models/createModelFromBase.html',
+        scope: $scope,
+        controller: 'CreateNetworkModelController',
+        resolve: {
+          baseModel: function() {
+            return angular.copy($scope.model);
+          },
+          problem: function() {
+            return problem;
+          },
+          successCallback: function() {
+            return function() {
+              // reload page, with empty params object
+              $state.go($state.current, {}, {
+                reload: true
+              });
+            }
+          }
+        }
+      });
+    };
+
+
     function openCreateNodeSplitDialog(comparison) {
       $modal.open({
         windowClass: 'small',
-        templateUrl: gemtcRootPath + 'js/models/createNodeSplitModel.html',
+        templateUrl: gemtcRootPath + 'js/models/createModelFromBase.html',
         scope: $scope,
         controller: 'CreateNodeSplitModelController',
         resolve: {

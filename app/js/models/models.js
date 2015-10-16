@@ -12,6 +12,7 @@ define(function (require) {
     .controller('ExtendRunLengthController', require('models/extendRunLengthController'))
     .controller('NodeSplitOverviewController', require('models/nodeSplitOverviewController'))
     .controller('CreateNodeSplitModelController', require('models/createNodeSplitModelController'))
+    .controller('CreateNetworkModelController', require('models/createNetworkModelController'))
 
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
