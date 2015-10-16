@@ -88,18 +88,15 @@
                 <button ng-show="!comparison.hasModel" class="tiny success" ng-click="openCreateNodeSplitDialog(comparison)">create model</button>
                 <a ng-show="comparison.hasModel" ng-click="goToModel(comparison.modelId)">{{comparison.modelTitle}}</a>
               </td>
-
-          <!--     <td ng-if="!comparison.result && comparison.hasModel" colspan="6" class="button-cell ">
-                <button ng-click="goToModel(comparison.modelId)" class="tiny success">run model</button>
-              </td>
-            -->   
-              <td class="text-center button-cell" ng-attr-colspan="{{ hideEstimates ? '6' : '1' }}">
+        
+              <td class="text-center button-cell" colspan="{{comparison.colSpan}}">
                 <span ng-if="comparison.result">
                   {{comparison.result.DIC}}
                 </span>
-                <span ng-if="comparison.hasModel && !comparison.hasResults">
-                   <button ng-click="goToModel(comparison.modelId)" class="tiny success">run model</button>
-                </span>
+                <button ng-if="comparison.hasModel && !comparison.result" 
+                ng-click="goToModel(comparison.modelId)" 
+                class="tiny success">run model
+              </button>
               </td>
               
               <td ng-if="model.linearModel === 'random'" class="text-center">
@@ -110,31 +107,25 @@
                 </span>
               </td>
 
-              <td class="text-center">forestplot</td>
+              <td class="text-center" ng-show="comparison.result">forestplot</td>
               
-              <td class="text-center">
-                con
-                <span ng-if="networkModel.result && comparison.result">
+              <td class="text-center" ng-show="comparison.result">
+                <span ng-if="networkModel.result">
                   {{comparison.consistencyEstimate.mean | number: 3}} <br>
                   ({{comparison.consistencyEstimate.lower | number: 3}},
                   {{comparison.consistencyEstimate.upper | number: 3}})
                 </span>
               </td>
-              <td class="text-center">
-                dir
-                <span ng-if="comparison.result">
+              <td class="text-center" ng-show="comparison.result">
                   {{comparison.directEffectEstimate.mean | number: 3}} <br>
                   ({{comparison.directEffectEstimate.lower | number: 3}},
                   {{comparison.directEffectEstimate.upper | number: 3}})
-                </span>
               </td>
               
-              <td  class="text-center">
-                indir
-                <span ng-if="comparison.result">{{comparison.inDirectEffectEstimate.mean | number: 3}} <br>
+              <td class="text-center" ng-show="comparison.result">
+                  {{comparison.inDirectEffectEstimate.mean | number: 3}} <br>
                   ({{comparison.inDirectEffectEstimate.lower | number: 3}},
                   {{comparison.inDirectEffectEstimate.upper | number: 3}})
-                </span>
               </td>
 
             </tr>
