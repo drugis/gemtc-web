@@ -28,16 +28,24 @@ Use psql to create the db to store data
     CREATE USER gemtc WITH PASSWORD 'develop';
     CREATE DATABASE gemtc ENCODING 'utf-8' OWNER gemtc;
 
+    CREATE USER patavitask WITH PASSWORD 'develop';
+    CREATE DATABASE patavitask ENCODING 'utf-8' OWNER patavitask;
+
 Create a .pgpass in the user home to store the database password
 the file should contain a line with the following format hostname:port:database:username:password
 
     localhost:5432:gemtc:gemtc:develop
+    localhost:5432:patavitask:patavitask:develop
 
 Create the schema
 
     psql -U gemtc -d gemtc -f changesets/create-database-changeset-1.sql
     psql -U gemtc -d gemtc -f changesets/create-database-changeset-2.sql
     psql -U gemtc -d gemtc -f changesets/create-database-changeset-3.sql
+    psql -U gemtc -d gemtc -f changesets/create-database-changeset-4.sql
+    psql -U gemtc -d gemtc -f changesets/create-database-changeset-6.sql
+
+    psql -U patavitask -d patavitask -f changesets/create-database-patavitask-changeset-1.sql
 
 Setup environment variables
 
