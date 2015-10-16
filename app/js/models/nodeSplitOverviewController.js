@@ -1,13 +1,15 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = ['$scope', '$q', '$stateParams', '$state', '$modal', 'gemtcRootPath', 'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService'];
-  var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, $modal, gemtcRootPath, models, problem, AnalysisService, ModelResource, NodeSplitOverviewService) {
+  var dependencies = ['$scope', '$q', '$stateParams', '$state', '$modal', 'gemtcRootPath',
+  'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService'];
+  var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, $modal, gemtcRootPath,
+    models, problem, AnalysisService, ModelResource, NodeSplitOverviewService) {
 
     $scope.goToModel = goToModel;
     $scope.openCreateNodeSplitDialog = openCreateNodeSplitDialog;
     $scope.openCreateNetworkDialog = openCreateNetworkDialog;
     $scope.networkModelResultsDefer = $q.defer();
-    
+
     $scope.model.$promise.then(function() {
       $scope.analysis.$promise.then(buildComparisons);
       if ($scope.model.modelType.type === 'node-split') {
