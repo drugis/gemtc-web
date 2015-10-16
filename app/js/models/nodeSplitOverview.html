@@ -39,7 +39,7 @@
   </div>
   <div class="row">
     <div class="columns large-7  medium-8 small-12">
-      <h5 ng-if="!networkModel"><button class="success" ng-click="createNetworkModel(model)">Create consistency model</button></h5>
+      <h5 ng-if="!networkModel"><button class="success" ng-click="openCreateNetworkDialog()">Create consistency model</button></h5>
       <div ng-if="networkModel "  class="panel callout">
         <h5><strong>Consistency Model</strong></h5>
         <table class="layout-table">
@@ -47,86 +47,99 @@
             <td class="large-6 text-right"><strong>Title</strong></td>
             <td><a ui-sref="model(networkStateParams)">{{networkModel.title}}</a></td>
           </tr>
-          <tr ng-show="model.linearModel === 'random'">
+          <tr ng-show="networkModel.result && model.linearModel === 'random'">
             <td class="large-6 text-right"><strong>Random effects standard deviation</strong></td>
             <td >{{networkModel.result.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{networkModel.result.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{networkModel.result.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</td>
             
           </tr>
-          <tr>
+          <tr ng-show="networkModel.result">
             <td class="large-6 text-right"><strong>DIC</strong></td>
             <td>{{::networkModel.result.DIC}} </td>
           </tr>
+          <tr ng-show="!networkModel.result">
+            <td colspan="2"><button class="small success" ng-click="gotoModel(networkModel.id)">Run network model</button>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-12">
+        <table>
+          <caption>Consistency/inconsistency comparisons</caption>
+          <thead>
+            <tr>
+              <td class="large-2 text-center">Comparison</td>
+              <td class="large-2 text-center">Model name</td>
+              <td class="large-1 text-center">DIC</td>
+              <td ng-if="model.linearModel === 'random'" class="large-1 text-center">Random effects (Standard deviation)</td>
+              <td class="large-1 text-center">Forest plot</td>
+              <td class="large-1 text-center">Consistency estimate</td>
+              <td class="large-1 text-center">Direct effect estimate</td>
+              <td class="large-1 text-center">Indirect effect estimate</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="comparison in comparisons">
+
+              <td class="text-center">{{comparison.label}}</td>
+
+              <td class="button-cell" class="text-center">
+                <button ng-show="!comparison.hasModel" class="tiny success" ng-click="openCreateNodeSplitDialog(comparison)">create model</button>
+                <a ng-show="comparison.hasModel" ng-click="goToModel(comparison.modelId)">{{comparison.modelTitle}}</a>
+              </td>
+
+          <!--     <td ng-if="!comparison.result && comparison.hasModel" colspan="6" class="button-cell ">
+                <button ng-click="goToModel(comparison.modelId)" class="tiny success">run model</button>
+              </td>
+            -->   
+              <td class="text-center button-cell" ng-attr-colspan="{{ hideEstimates ? '6' : '1' }}">
+                <span ng-if="comparison.result">
+                  {{comparison.result.DIC}}
+                </span>
+                <span ng-if="comparison.hasModel && !comparison.hasResults">
+                   <button ng-click="goToModel(comparison.modelId)" class="tiny success">run model</button>
+                </span>
+              </td>
+              
+              <td ng-if="model.linearModel === 'random'" class="text-center">
+                <span ng-if="comparison.hasResults">
+                  {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} <br>
+                  ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}},
+                  {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})
+                </span>
+              </td>
+
+              <td class="text-center">forestplot</td>
+              
+              <td class="text-center">
+                con
+                <span ng-if="networkModel.result && comparison.result">
+                  {{comparison.consistencyEstimate.mean | number: 3}} <br>
+                  ({{comparison.consistencyEstimate.lower | number: 3}},
+                  {{comparison.consistencyEstimate.upper | number: 3}})
+                </span>
+              </td>
+              <td class="text-center">
+                dir
+                <span ng-if="comparison.result">
+                  {{comparison.directEffectEstimate.mean | number: 3}} <br>
+                  ({{comparison.directEffectEstimate.lower | number: 3}},
+                  {{comparison.directEffectEstimate.upper | number: 3}})
+                </span>
+              </td>
+              
+              <td  class="text-center">
+                indir
+                <span ng-if="comparison.result">{{comparison.inDirectEffectEstimate.mean | number: 3}} <br>
+                  ({{comparison.inDirectEffectEstimate.lower | number: 3}},
+                  {{comparison.inDirectEffectEstimate.upper | number: 3}})
+                </span>
+              </td>
+
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-12">
-      <table>
-        <caption>Consistency/inconsistency comparisons</caption>
-        <thead>
-          <tr>
-            <td class="large-2 text-center">Comparison</td>
-            <td class="large-2 text-center">Model name</td>
-            <td class="large-1 text-center">DIC</td>
-            <td ng-if="model.linearModel === 'random'" class="large-1 text-center">Random effects (Standard deviation)</td>
-            <td class="large-1 text-center">Forest plot</td>
-            <td class="large-1 text-center">Consistency estimate</td>
-            <td class="large-1 text-center">Direct effect estimate</td>
-            <td class="large-1 text-center">Indirect effect estimate</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="comparison in comparisons">
-            <td class="text-center">{{comparison.label}}</td>
-            <td ng-show="!comparison.hasModel" class="button-cell">
-              <button class="tiny success" ng-click="openCreateNodeSplitDialog(comparison)">create model</button>
-            </td>
-            <td ng-show="comparison.hasModel" class="text-center">
-              <a ng-click="goToModel(comparison.modelId)">{{comparison.modelTitle}}</a>
-            </td>
-
-            <td ng-if="!comparison.result && comparison.hasModel" colspan="6" class="button-cell ">
-              <button ng-click="goToModel(comparison.modelId)" class="tiny success">run model</button>
-            </td>
-
-            <td ng-if="comparison.result" class="text-center">{{comparison.result.DIC}}</td>
-            <td ng-if="!comparison.hasModel" class="text-center"></td>
-
-
-            <td ng-if="comparison.result && model.linearModel === 'random'" class="text-center">
-              {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} <br>
-              ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}},
-              {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})
-            </td>
-            <td ng-if="!comparison.hasModel && model.linearModel === 'random'" class="text-center"></td>
-
-            <td ng-if="comparison.result" class="text-center">forestplot</td>
-            <td ng-if="!comparison.hasModel" class="text-center"></td>
-
-            <td ng-if="networkModel.result" class="text-center">
-              {{comparison.consistencyEstimate.mean | number: 3}} <br>
-              ({{comparison.consistencyEstimate.lower | number: 3}},
-              {{comparison.consistencyEstimate.upper | number: 3}})
-            </td>
-            <td ng-if="!networkModel.result && (comparison.result || !comparison.hasModel) " class="text-center"></td>
-
-            <td ng-if="comparison.result" class="text-center">
-              {{comparison.directEffectEstimate.mean | number: 3}} <br>
-              ({{comparison.directEffectEstimate.lower | number: 3}},
-              {{comparison.directEffectEstimate.upper | number: 3}})
-            </td>
-            <td ng-if="!comparison.hasModel" class="text-center"></td>
-
-            <td ng-if="comparison.result" class="text-center">
-              {{comparison.inDirectEffectEstimate.mean | number: 3}} <br>
-              ({{comparison.inDirectEffectEstimate.lower | number: 3}},
-              {{comparison.inDirectEffectEstimate.upper | number: 3}})
-            </td>
-            <td ng-if="!comparison.hasModel" class="text-center"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
