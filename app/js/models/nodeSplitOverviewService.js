@@ -7,6 +7,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function buildDirectEffectEstimates(result) {
       var quantiles = result.summaries.quantiles;
       return {
+        label: 'Direct',
         mean: quantiles['d.direct']['50%'],
         lower: quantiles['d.direct']['2.5%'],
         upper: quantiles['d.direct']['97.5%']
@@ -17,6 +18,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function buildIndirectEffectEstimates(result) {
       var quantiles = result.summaries.quantiles;
       return {
+        label: 'Indirect',
         mean: quantiles['d.indirect']['50%'],
         lower: quantiles['d.indirect']['2.5%'],
         upper: quantiles['d.indirect']['97.5%']
@@ -30,6 +32,7 @@ define(['angular', 'lodash'], function(angular, _) {
       });
 
       return {
+        label: 'Consistency',
         mean: relativeEffectCosistancyEstimate.quantiles['50%'],
         lower: relativeEffectCosistancyEstimate.quantiles['2.5%'],
         upper: relativeEffectCosistancyEstimate.quantiles['97.5%']

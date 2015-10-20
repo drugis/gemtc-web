@@ -25,8 +25,9 @@ define(function (require) {
     .factory('DevianceStatisticsService', require('models/devianceStatisticsService'))
     .factory('NodeSplitOverviewService', require('models/nodeSplitOverviewService'))
 
+    //directives
     .directive('gemtcRankPlot',require('models/rankPlotDirective'))
     .directive('runLength',require('models/runLength/runLengthDirective'))
-
+    .directive('nodesplitForestPlot',require('models/nodesplitForestPlot/nodesplitForestPlotDirective'))
     ;
 });
