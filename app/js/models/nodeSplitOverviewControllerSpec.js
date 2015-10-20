@@ -1,5 +1,5 @@
 define(['angular', 'angular-mocks', 'models/models'], function() {
-  fdescribe('the nodesplit overview controller', function() {
+  describe('the nodesplit overview controller', function() {
     var scope,
       q,
       stateParamsMock = {
@@ -68,6 +68,9 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         expect(scope.openCreateNetworkDialog).toBeDefined();
         scope.openCreateNetworkDialog();
         expect(modalMock.open).toHaveBeenCalled();
+      });
+      it('should make networkModelResultsDefer available', function() {
+        expect(scope.networkModelResultsDefer).toBeDefined();
       });
     });
   });
