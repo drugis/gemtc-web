@@ -11,7 +11,7 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.networkModelResultsDefer = $q.defer();
 
     $scope.model.$promise.then(function() {
-      $scope.analysis.$promise.then(buildComparisons);
+      $scope.analysis.$promise.then(buildComparisonRows);
       if ($scope.model.modelType.type === 'node-split') {
         var networkModel = findNetworkModelForModel($scope.model, models);
         if (networkModel) {
@@ -34,18 +34,33 @@ define(['angular', 'lodash'], function(angular, _) {
       }
     });
 
-    function buildComparisons(analysis) {
+    function buildComparisonRows(analysis) {
       $scope.comparisons = _.map(AnalysisService.createNodeSplitOptions(analysis.problem), function(comparison) {
         var row = comparison;
+        row.colSpan = 6;
+        row.label = comparison.label;
+        row.from = comparison.from;
+        row.to = comparison.to;
         var model = findModelForComparison(comparison, models);
 
         if (model) {
-          row = buildComparisonTableRow(comparison, model);
-        }
+          row.modelTitle = model.title;
+          row.modelId = model.id;
+          row.hasModel = true;
+          if (model.taskId) {
+            row.result = getModelResult(model.id);
 
-        $scope.networkModelResultsDefer.promise.then(function(result) {
-          fillConsistencyCell(row, result);
-        });
+            row.result.$promise.then(function(result) {
+              row.directEffectEstimate = NodeSplitOverviewService.buildDirectEffectEstimates(result);
+              row.inDirectEffectEstimate = NodeSplitOverviewService.buildIndirectEffectEstimates(result);
+              row.colSpan = 1;
+            });
+            
+            $scope.networkModelResultsDefer.promise.then(function(result) {
+              row.consistencyEstimate = NodeSplitOverviewService.buildConsistencyEstimates(result, row);
+            });
+          }
+        }
 
         return row;
       });
@@ -63,32 +78,7 @@ define(['angular', 'lodash'], function(angular, _) {
         model1.link === model2.link &&
         model1.linearModel === model2.linearModel &&
         model1.outcomeScale === model2.outcomeScale
-        );
-    }
-
-    function buildComparisonTableRow(comparison, model) {
-      var row = {
-        label: comparison.label,
-        from: comparison.from,
-        to: comparison.to,
-        modelTitle: model.title,
-        modelId: model.id,
-        hasModel: true
-      };
-
-      if (model.taskId) {
-        row.result = getModelResult(model.id);
-        row.result.$promise.then(function(result) {
-          row.directEffectEstimate = NodeSplitOverviewService.buildDirectEffectEstimates(result);
-          row.inDirectEffectEstimate = NodeSplitOverviewService.buildIndirectEffectEstimates(result);
-        });
-      }
-
-      return row;
-    }
-
-    function fillConsistencyCell(row, result) {
-      row.consistencyEstimate = NodeSplitOverviewService.buildConsistencyEstimates(result, row);
+      );
     }
 
     function getModelResult(modelId) {
