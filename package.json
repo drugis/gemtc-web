@@ -1,6 +1,6 @@
 {
   "name": "gemtc-web",
-  "version": "0.1.4",
+  "version": "0.2.2",
   "description": "gemtc",
   "main": "gemtc.js",
   "scripts": {
@@ -47,6 +47,8 @@
     "phantomjs": "^1.9.17",
     "proxyquire": "^1.5.0",
     "requirejs": "^2.1.18",
+    "should": "^7.1.0",
+    "sinon": "^1.17.0",
     "superagent": "^1.2.0",
     "supertest": "^1.0.1"
   }

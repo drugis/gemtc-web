@@ -43,8 +43,12 @@ Setup environment variables
 
     export GEMTC_GOOGLE_KEY=100331616436-dgi00c0mjg8tbc06psuhluf9a2lo6c3i.apps.googleusercontent.com
     export GEMTC_GOOGLE_SECRET=9ROcvzLDuRbITbqj-m-W5C0I
-    export GEMTC_DB_URL=postgres://gemtc:develop@localhost/gemtc
-    export GEMTC_PATAVI_TASK_DB_URL=postgres://patavitask:develop@localhost/patavitask
+    export DB_HOST=localhost
+    export GEMTC_DB=gemtc
+    export GEMTC_DB_USERNAME=gemtc
+    export GEMTC_DB_PASSWORD=develop
+    export PATAVI_TASK_DB_USERNAME=patavitask
+    export PATAVI_TASK_DB_PASSWORD=develop
     export GEMTC_HOST=http://localhost:3001
     export PATAVI_URI=ws://localhost:3000/ws/staged/
 
@@ -95,7 +99,9 @@ To run nodebackend unit tests:
 
 To run nightwatch integration tests:
 
-    npm install -g nightwatch
+    set env variable GEMTC_NIGHTWATCH_URL ( b.v. $GEMTC_HOST)
+
+    sudo npm install -g nightwatch
     cd test/integration
     wget http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar
     node gemtc &

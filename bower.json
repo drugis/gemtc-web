@@ -1,6 +1,6 @@
 {
   "name": "gemtc-web",
-  "version": "0.1.4",
+  "version": "0.2.2",
   "homepage": "http://drugis.org/software/addis2/",
   "authors": [
     "Connor Stroomberg <c.stroomberg@gmail.com>",
@@ -38,6 +38,7 @@
     "font-awesome": "~4.0.3",
     "jquery": "2.0.3",
     "lodash": "~3.9.3",
+    "modernizr": "~2.8.0",
     "moment": "~2.10.0",
     "nvd3": "1.8.1",
     "papaparse": "~4.1.1",

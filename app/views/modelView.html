@@ -58,68 +58,127 @@
             </div>
           </div>
         </div>
-
-
         <div class="row">
           <div class="columns">
-
-        <div class="row" style="padding-top: 1rem;">
-          <div class="columns large-3">
-            <h3 class="main-category-header">Convergence diagnostics</h3>
-          </div>
-          <div class="columns large-8 end">
-            <hr>
-          </div>
-        </div>
-
+            <div class="row" style="padding-top: 1rem;">
+              <div class="columns large-3">
+                <h3 class="main-category-header">Convergence diagnostics</h3>
+              </div>
+              <div class="columns large-8 end">
+                <hr>
+              </div>
+            </div>
             <div class="row">
               <div class="columns large-8 medium-6 small-12">
-                <table>
-                  <caption>Per-parameter convergence diagnostics</caption>
-                  <thead>
-                    <tr>
-                      <td colspan="3"></td>
-                      <td colspan="2">Potential scale reduction factor (PSRF)</td>
-                    </tr>
-                    <tr>
-                      <td>Parameter</td>
-                      <td>Mean</td>
-                      <td>Time-series S.E.</td>
-                      <td>Point estimate</td>
-                      <td>97.5% quantile</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="diagnostic in gelmanDiagnostics| orderBy:'label'">
-                      <td>{{diagnostic.label}}</td>
-                      <td>{{result.results.summaries.statistics[diagnostic.key].Mean}}</td>
-                      <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
-                      <td>{{diagnostic['Point est.']}}</td>
-                      <td>{{diagnostic['Upper C.I.']}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()">Show diagnostics plots</button>
-                <button ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()">Hide diagnostics plots</button>
+                <button ng-hide="isExtensionBlocked" ng-click="openRunLengthDialog()">Extend run-length</button>
+                <div>
+                  <table export>
+                    <caption>Per-parameter convergence diagnostics</caption>
+                    <thead>
+                      <tr>
+                        <td colspan="3"></td>
+                        <td colspan="2">Potential scale reduction factor (PSRF)</td>
+                      </tr>
+                      <tr>
+                        <td>Parameter</td>
+                        <td>Mean</td>
+                        <td>Time-series S.E.</td>
+                        <td>Point estimate</td>
+                        <td>97.5% quantile</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="diagnostic in gelmanDiagnostics| orderBy:'label'">
+                        <td>{{diagnostic.label}}</td>
+                        <td>{{result.results.summaries.statistics[diagnostic.key].Mean}}</td>
+                        <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
+                        <td>{{diagnostic['Point est.']}}</td>
+                        <td>{{diagnostic['Upper C.I.']}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <button id="show-convergence-diagnostics" ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()">Show diagnostics plots</button>
+                <button id="hide-convergence-diagnostics" ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()">Hide diagnostics plots</button>
               </div>
             </div>
             <div class="row" ng-show="isConvergencePlotsShown">
               <div class="columns large-6 medium-6 small-12">
                 <p><strong>Time series plots</strong></p>
-                <paged-png-plot pages="result.results.tracePlot"></paged-png-plot>
+                <paged-png-plot file-name="'tracePlot'" pages="result.results.tracePlot"></paged-png-plot>
+              </div>
+            </div>
+            <div class="row" ng-show="isConvergencePlotsShown">
+              <div class="columns large-6 medium-6 small-12">
+                <p><strong>PSRF plots</strong></p>
+                <paged-png-plot file-name="'psrfPlot'" pages="result.results.gelmanPlot"></paged-png-plot>
+              </div>
             </div>
           </div>
-          <div class="row"  ng-show="isConvergencePlotsShown">
-            <div class="columns large-6 medium-6 small-12">
-              <p><strong>PSRF plots</strong></p>
-              <paged-png-plot pages="result.results.gelmanPlot"></paged-png-plot>
+        </div>
+        <div class="row">
+          <div class="columns">
+            <div class="row" style="padding-top: 1rem;">
+              <div class="columns large-3">
+                <h3 class="main-category-header">Model fit</h3>
+              </div>
+              <div class="columns large-8 end">
+                <hr>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns large-8 medium-6 small-12">
+                <div>
+                  <table export>
+                    <caption>Model fit statistics</caption>
+                    <tbody>
+                      <tr>
+                        <td>Residual deviance (<span style="text-decoration: overline;">D</span><sub>res</sub>)</td>
+                        <td>{{result.results.residualDeviance}}</td>
+                      </tr>
+                      <tr>
+                        <td>Leverage (p<sub>D</fsub>)</td>
+                        <td>{{result.results.leverage}}</td>
+                      </tr>
+                      <tr>
+                        <td>DIC</td>
+                        <td>{{result.results.DIC}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns large-12 medium-12 small-12">
+                <img export file-name="'residualDeviancePlot'" ng-src="{{result.results.deviancePlot[0]}}">
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns large-12 medium-12 small-12">
+                <table export>
+                  <thead>
+                    <caption>Residual deviance per arm per study</caption>
+                    <tr>
+                      <th>Study</th>
+                      <th>Arm</th>
+                      <th>Residual deviance</th>
+                      <th>Leverage</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="row in devianceStatisticsTable">
+                      <td ng-if="row.rowSpan" rowspan="{{row.rowSpan}}" style="vertical-align: top;">{{::row.studyName}}</td>
+                      <td>{{::row.armName}}</td>
+                      <td  class="text-center">{{::row.deviance | number}}</td>
+                      <td  class="text-center">{{::row.leverage | number}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-      </div>
-    </div>
-
-
-
+        </div>
         <div class="row" style="padding-top: 1rem;">
           <div class="columns large-1">
             <h3 class="main-category-header">Results</h3>
@@ -128,108 +187,133 @@
             <hr>
           </div>
         </div>
-
         <div class="row" ng-show="model.linearModel === 'random'" style="padding-top: 1rem;">
           <div class="columns large-12">
             <p><strong>Random effects standard deviation </strong> {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</p>
           </div>
         </div>
-
         <div class="row" ng-if="model.modelType.type === 'node-split'">
           <div class="column large-12">
             <table>
               <caption>Node splitting results</caption>
               <thead>
                 <tr>
-                  <td> </td><td>Median (95% CrI)</td>
+                  <th> </th>
+                  <th>Median (95% CrI)</th>
                 </tr>
               </thead>
               <tr>
-                <td><strong>Direct estimate</strong></td><td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}} - {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
+                <td><strong>Direct estimate</strong></td>
+                <td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
               </tr>
               <tr>
-                <td><strong>Indirect estimate</strong></td><td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}} - {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
+                <td><strong>Indirect estimate</strong></td>
+                <td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
               </tr>
             </table>
           </div>
         </div>
-
-
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
           <div class="columns large-12">
             <div class="table-title">Relative effects table comparing the included interventions:
-              <span>{{::scaleName}}</span>
-              (95% CrI).
+              <span>{{::scaleName}}</span> (95% CrI).
               <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
             </div>
-            <table>
-              <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
-                <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
-                  <span ng-switch-when="effect">
-                    {{relativeEffectsCell.mean | number: 3}} ({{relativeEffectsCell.lowerBound | number: 3}}, {{relativeEffectsCell.upperBound | number: 3}})
-                  </span>
-                  <span ng-switch-when="label" class="table-cell-label">
-                    {{relativeEffectsCell.label}}
-                  </span>
-                  <span ng-switch-when="empty"></span>
-                </td>
-              </tr>
+            <div>
+              <table export>
+                <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
+                  <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
+                    <span ng-switch-when="effect">
+                      {{relativeEffectsCell.mean | number: 3}} ({{relativeEffectsCell.lowerBound | number: 3}}, {{relativeEffectsCell.upperBound | number: 3}})
+                    </span>
+                    <span ng-switch-when="label" class="table-cell-label">
+                      {{relativeEffectsCell.label}}
+                    </span>
+                    <span ng-switch-when="empty"></span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-if="model.modelType.type === 'network'">
+          <div class="columns">
+            <div class="row">
+              <div class="columns large-6 small-8">
+                <p><strong>Relative effects plots</strong></p>
+                <label>Select baseline:
+                  <select ng-options="treatment.name for treatment in problem.treatments" ng-model="selectedBaseline"></select>
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns center">
+                <paged-svg-plot file-name="'relativeEffect'" pages="result.results.relativeEffectPlots[selectedBaseline.id]"></paged-svg-plot>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-if="model.modelType.type === 'pairwise'">
+          <div class="columns">
+            <div class="row">
+              <div class="columns large-12 small-8">
+                <p><strong>Study effect forest plot</strong></p>
+                <paged-svg-plot file-name="'forestPlot'" pages="result.results.studyForestPlot"></paged-svg-plot>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-if="model.modelType.type === 'node-split'">
+          <div class="columns">
+            <div class="row">
+              <div class="columns large-12 small-8">
+                <p><strong>Density plot</strong></p>
+                <paged-png-plot file-name="'densityPlot'" pages="result.results.densityPlot"></paged-png-plot>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
+          <div class="columns large-12">
+            <div>
+              <p><strong>Rank probabilities</strong></p>
+            </div>
+            <table export>
+              <caption>Rank probabilities table</caption>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th ng-repeat="rank in result.results.rankProbabilities">Rank {{::$index + 1}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="(key, treatments) in problem.treatments">
+                  <td>{{::treatments.name}}</td>
+                  <td ng-repeat="rank in result.results.rankProbabilities[treatments.name]">
+                    {{::rank | number}}
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
-
-    <div class="row" ng-if="model.modelType.type === 'network'">
-      <div class="columns">
-        <div class="row">
-          <div class="columns large-6 small-8">
-            <p><strong>Relative effects plots</strong></p>
-            <label>Select baseline:
-            <select ng-options="treatment.name for treatment in problem.treatments" ng-model="selectedBaseline"></select>
-          </label>
+        <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
+          <div class="columns large-12">
+            <div class="addis-graph" style="width:450px; height:450px;" export file-name="'rankProbabilities'">
+              <caption>Rank probabilities plot</caption>
+              <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true"></gemtc-rank-plot>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding-top: 2rem;" ng-if="model.modelType.type !== 'node-split'">
+          <div class="columns large-6 medium-10 small-12">
+            <div class="panel callout">
+              <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the highest outcome value.</p>
+              <p>Ranks can be shown as grouped or stacked.</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="columns center">
-        <paged-svg-plot pages="result.results.relativeEffectPlots[selectedBaseline.id]"></paged-svg-plot>
-      </div>
     </div>
   </div>
-</div>
-<div class="row" ng-if="model.modelType.type === 'pairwise'">
-  <div class="columns">
-    <div class="row">
-      <div class="columns large-6 small-8">
-        <p><strong>Study effect forest plot</strong></p>
-      <paged-svg-plot pages="result.results.studyForestPlot"></paged-svg-plot>
-    </div>
-  </div>
-</div>
-</div>
-<div class="row" ng-if="model.modelType.type === 'node-split'">
-<div class="columns">
-  <div class="row">
-    <div class="columns large-6 small-8">
-      <p><strong>Density plot</strong></p>
-    <paged-png-plot pages="result.results.densityPlot"></paged-png-plot>
-  </div>
-</div>
-</div>
-</div>
-<div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-<div class="columns large-4">
-<div>
-  <p><strong>Rank probabilities</strong></p>
-</div>
-<div class="addis-graph" style="height:400px;">
-  <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true">
-  </div>
-</div>
-<div class="graph-legend columns large-4 end panel callout">
-  <p>The rank probability plot shows how likely it is that each intervention has a particular rank, with rank 1 being the highest outcome value.</p>
-  <p>Ranks can be shown as grouped or stacked.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
 </div>

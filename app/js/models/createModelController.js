@@ -15,16 +15,17 @@ define(['lodash', 'moment'], function(_, moment) {
       $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
       if ($scope.nodeSplitOptions.length > 0) {
         $scope.model.nodeSplitComparison = $scope.nodeSplitOptions[0];
-      } else {}
+      }
 
       $scope.likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
-      var compatible = $scope.likelihoodLinkOptions.filter(function(e) {
-        return e.compatibility === "compatible"
+      var compatible = $scope.likelihoodLinkOptions.filter(function(option) {
+        return option.compatibility === "compatible"
       });
-      var incompatible = $scope.likelihoodLinkOptions.filter(function(e) {
-        return e.compatibility === "incompatible"
+      var incompatible = $scope.likelihoodLinkOptions.filter(function(option) {
+        return option.compatibility === "incompatible"
       });
       $scope.likelihoodLinkOptions = compatible.concat(incompatible);
+      $scope.model.likelihoodLink = compatible[0];
       return problem;
     });
 
@@ -73,7 +74,7 @@ define(['lodash', 'moment'], function(_, moment) {
       if( $scope.model.outcomeScale.type === 'heuristically') {
         $scope.model.outcomeScale.value = undefined;
       } else {
-        $scope.model.outcomeScale.value = 5; // magic number: w to the power of 0 devided by 15 
+        $scope.model.outcomeScale.value = 5; // magic number: w to the power of 0 devided by 15
       }
     }
 

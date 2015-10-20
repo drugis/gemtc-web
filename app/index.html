@@ -15,6 +15,13 @@
 <body class="f-topbar-fixed">
   <navbar-directive>
   </navbar-directive>
+
+  <div ng-if="error" class="row" ng-cloak>
+    <div class="columns">
+      <app-alert type="alert" close="error.close()" error="error"></span></app-alert>
+    </div>
+  </div>
+
   <div ui-view></div>
   <div class="push"></div>
 </body>

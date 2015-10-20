@@ -23,7 +23,7 @@ pwforest <- function(result, t1, t2, ...) {
   studies <- gemtc:::mtc.studies.list(network)$values
   studies <- studies[sapply(studies, function(study) {
     t1 %in% gemtc:::mtc.study.design(network, study) &&
-      t2 %in% gemtc:::mtc.study.design(network, study)
+    t2 %in% gemtc:::mtc.study.design(network, study)
   })]
 
 
@@ -56,6 +56,30 @@ pwforest <- function(result, t1, t2, ...) {
     log.scale=log.scale, xlim=xlim, ...)
 }
 
+plotDeviance <- function(result) {
+  model <- result$model
+  fit.ab <- apply(result$deviance$fit.ab, 1, sum, na.rm=TRUE)
+  dev.ab <- apply(result$deviance$dev.ab, 1, sum, na.rm=TRUE)
+  lev.ab <- dev.ab - fit.ab
+  fit.re <- result$deviance$fit.re
+  dev.re <- result$deviance$dev.re
+  lev.re <- dev.re - fit.re
+  nd <- model$data$na
+  nd[-(1:model$data$ns.a)] <- nd[-(1:model$data$ns.a)] - 1
+  w <- sqrt(c(dev.ab, dev.re) / nd)
+  lev <- c(lev.ab, lev.re) / nd
+
+  plot(w, lev, xlim=c(0, max(c(w, 2.5))), ylim=c(0, max(c(lev, 4))),
+   xlab="Square root of residual deviance", ylab="Leverage",
+   main="Leverage versus residual deviance")
+  mtext("Per-study mean per-datapoint contribution")
+
+  x <- seq(from=0, to=3, by=0.05)
+  for (c in 1:4) {
+    lines(x, c - x^2)
+  }
+}
+
 # Stolen from mcda-web, ensures the row-names of a matrix are preserved
 wrap.matrix <- function(m) {
   l <- lapply(rownames(m), function(name) { m[name,] })
@@ -69,36 +93,28 @@ readFile <- function(fileName) {
   readChar(fileName, file.info(fileName)$size)
 }
 
-plotToSvg <- function(plotFn) {
+plotToFile <- function(plotFunction, dataType, extension, imageCreationFunction) {
   prefix <- tempfile()
-  svgName <- paste(prefix, '-%05d.svg', sep='')
-  svg(svgName)
-  plotFn()
+  imageName <- paste(prefix, '-%05d', extension, sep='')
+  imageCreationFunction(imageName)
+  plotFunction()
   dev.off()
 
   # read & delete plot files
   filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
   lapply (filenames, function(filename) {
-    contents <- readFile(filename)
+    contents <- paste0("data:image/", dataType, ";base64,", base64encode(filename))
     file.remove(filename)
     contents
   })
 }
 
-plotToPng <- function(plotFn) {
-  prefix <- tempfile()
-  pngName <- paste(prefix, '-%05d.png', sep='')
-  png(pngName)
-  plotFn()
-  dev.off()
+plotToSvg <- function(plotFunction) {
+  plotToFile(plotFunction, 'svg+xml', '.svg', svg)
+}
 
-  # read & delete plot files
-  filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
-  lapply (filenames, function(filename) {
-    contents <- paste0("data:image/png;base64,", base64encode(filename))
-    file.remove(filename)
-    contents
-  })
+plotToPng <- function(plotFunction) {
+  plotToFile(plotFunction, 'png', '.png', png)
 }
 
 predict.t <- function(network, n.adapt, n.iter, thin) {
@@ -114,6 +130,7 @@ predict.t <- function(network, n.adapt, n.iter, thin) {
     'traceplot'=0.062 * n.saved * 0.001 * n.iter / thin,
     'psrfplot'=(0.04 + 0.007 * n.saved) * 0.001 * n.iter / thin,
     'densityplot'=1, # FIXME
+    'deviancePlot'=1, #FIXME
     'summary'=0.0075 * n.saved * 0.001 * n.iter / thin
   )
 }
@@ -128,17 +145,23 @@ nsdensity <- function(x) {
     density(x, bw=bw)
   })
   xlim <- c(min(sapply(densities, function(d) { min(d$x) })),
-            max(sapply(densities, function(d) { max(d$x) })))
+    max(sapply(densities, function(d) {
+      max(d$x)
+    }))
+  )
   ylim <- c(0,
-            max(sapply(densities, function(d) { max(d$y) })))
+    max(sapply(densities, function(d) {
+     max(d$y)
+    }))
+  )
   densplot(ns, ylim=ylim, xlim=xlim)
 }
 
 gemtc <- function(params) {
-  iter.adapt <- params[['burnInIterations']]
-  iter.infer <- params[['inferenceIterations']]
-  thin <- params[['thinningFactor']]
-  modelType <- params[['modelType']][['type']]
+  iter.adapt <- if(is.null(params[['burnInIterations']])) 5000 else params[['burnInIterations']]
+  iter.infer <- if(is.null(params[['inferenceIterations']])) 20000 else params[['inferenceIterations']]
+  thin <- if(is.null(params[['thinningFactor']])) 10 else params[['thinningFactor']]
+  modelType <-  if(is.null(params[['modelType']][['type']])) 'network' else params[['modelType']][['type']]
   progress.start <- 0
   progress.jags <- NA
 
@@ -194,7 +217,13 @@ gemtc <- function(params) {
       function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
 
     network <- mtc.network(data.ab=data.ab, treatments=treatments)
-    mtc.model.params <- list(network=network, linearModel=linearModel, link=params[['link']], likelihood=params[['likelihood']])
+    mtc.model.params <- list(network=network, linearModel=linearModel)
+    if(!is.null(params[['likelihood']])) {
+      mtc.model.params <- c(mtc.model.params, list('likelihood' = params[['likelihood']]))
+    }
+    if(!is.null(params[['link']])) {
+      mtc.model.params <- c(mtc.model.params, list('link' = params[['link']]))
+    }
     if (!is.null(params[['outcomeScale']])) {
       mtc.model.params <- c(mtc.model.params, list('om.scale' = params[['outcomeScale']]))
     }
@@ -207,39 +236,39 @@ gemtc <- function(params) {
     update(list(progress=0))
   })
 
-  predicted <- predict.t(network, iter.adapt, iter.infer, thin)
-  milestones <- cumsum(predicted)
-  milestones <- milestones / milestones[length(milestones)] * 99
-  report <- function(milestone, x) {
-    print(paste(milestone, x))
-    i <- which(names(milestones) == milestone)
-    base <- if (i == 0) 0 else milestones[i - 1]
-    goal <- milestones[i]
-    dist <- goal - base
-    update(list(progress = unname(base + x * dist)))
-  }
+predicted <- predict.t(network, iter.adapt, iter.infer, thin)
+milestones <- cumsum(predicted)
+milestones <- milestones / milestones[length(milestones)] * 99
+report <- function(milestone, x) {
+  print(paste(milestone, x))
+  i <- which(names(milestones) == milestone)
+  base <- if (i == 0) 0 else milestones[i - 1]
+  goal <- milestones[i]
+  dist <- goal - base
+  update(list(progress = unname(base + x * dist)))
+}
 
-  progress.jags <- unname(milestones[1])
+progress.jags <- unname(milestones[1])
 
-  times$sample <- system.time({
-    result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer, thin=thin)
-  })
+times$sample <- system.time({
+  result <- mtc.run(model, n.adapt=iter.adapt, n.iter=iter.infer, thin=thin)
+})
 
-  if(modelType != 'node-split') {
-    times$releffect <- system.time({
-      treatmentIds <- as.character(network[['treatments']][['id']])
-      comps <- combn(treatmentIds, 2)
-      t1 <- comps[1,]
-      t2 <- comps[2,]
-      releffect <- apply(comps, 2, function(comp) {
-        q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
-        report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
-        list(t1=comp[1], t2=comp[2], quantiles=q)
-      })
+if(modelType != 'node-split') {
+  times$releffect <- system.time({
+    treatmentIds <- as.character(network[['treatments']][['id']])
+    comps <- combn(treatmentIds, 2)
+    t1 <- comps[1,]
+    t2 <- comps[2,]
+    releffect <- apply(comps, 2, function(comp) {
+      q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
+      report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
+      list(t1=comp[1], t2=comp[2], quantiles=q)
     })
-  }
+  })
+}
 
-  times$relplot <- system.time({
+times$relplot <- system.time({
   #create forest plot files for network analyses
   if(modelType == "network") {
     forestPlots <- lapply(treatmentIds, function(treatmentId) {
@@ -251,78 +280,105 @@ gemtc <- function(params) {
     })
     names(forestPlots) <- treatmentIds
   }
-  })
+})
 
-  times$forest <- system.time({
+times$forest <- system.time({
     # create forest plot for pairwise analysis
     if(modelType == "pairwise") {
       forestPlot <- plotToSvg(function() {
         pwforest(result, t1, t2)
       })
     }
-  })
-  report('forestplot', 1.0)
+})
+report('forestplot', 1.0)
 
-  times$traceplot <- system.time({
+times$traceplot <- system.time({
     #create results plot
     tracePlot <- plotToPng(function() {
       plot(result, auto.layout=FALSE)
     })
-  })
-  report('traceplot', 1.0)
+})
+report('traceplot', 1.0)
 
-  times$psrfplot <- system.time({
+times$psrfplot <- system.time({
     #create gelman plot
     gelmanPlot <- plotToPng(function() {
       gelman.plot(result, auto.layout=FALSE, ask=FALSE)
     })
-  })
-  report('psrfplot', 1.0)
+})
+report('psrfplot', 1.0)
 
-  if(modelType == 'node-split') {
-    densityPlot <- plotToPng(function() {
-      nsdensity(result)
+times$deviancePlot <- system.time({
+    #create deviance plot
+    deviancePlot <- plotToSvg(function() {
+      plotDeviance(result)
     })
-  }
-  report('densityplot', 1.0)
+})
+report('deviancePlot', 1.0)
 
-  times$summary <- system.time({
-    summary <- summary(result)
+if(modelType == 'node-split') {
+  densityPlot <- plotToPng(function() {
+    nsdensity(result)
   })
-  report('summary', 1.0)
-
-  summary[['script-version']] <- 0.1
-  summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
-  summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
-  summary[['logScale']] <- ll.call('scale.log', model)
-  summary[['link']] <- model[['link']]
-  summary[['likelihood']] <- model[['likelihood']]
-  summary[['type']] <- model[['type']]
-  summary[['linearModel']] <- model[['linearModel']]
-  summary[['burnInIterations']] <- params[['burnInIterations']]
-  summary[['inferenceIterations']] <- params[['inferenceIterations']]
-  summary[['thinningFactor']] <- params[['thinningFactor']]
-  summary[['outcomeScale']] <- model[['om.scale']]
-  if(modelType != 'node-split') {
-    summary[['relativeEffects']] <- releffect
-    summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
-  }
-  summary[['alternatives']] <- names(summary[['rankProbabilities']])
-  if(modelType == "network") {
-    summary[['relativeEffectPlots']] <- forestPlots
-  }
-  if(modelType == "pairwise") {
-    summary[['studyForestPlot']] <- forestPlot
-  }
-  if(modelType == 'node-split') {
-    summary[['densityPlot']] <- densityPlot
-  }
-  summary[['tracePlot']] <- tracePlot
-  summary[['gelmanPlot']] <- gelmanPlot
-  summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
-
-  print(times)
-
-  update(list(progress=100))
-  summary
 }
+report('densityplot', 1.0)
+
+times$summary <- system.time({
+  summary <- summary(result)
+})
+report('summary', 1.0)
+
+    # In the model fit section, display a table containing mean residual deviance (\bar{D_res}),
+    # the leverage (p_D), and the DIC, as defined by page 609-610 and Table 4 of [mdm-es-2].
+
+
+
+    # Generate the required information (overall mean residual deviance, leverage,
+    # and DIC, and per-arm residual deviance and leverage), and return it as part of the
+    # results object. The deviance statistics are returned as result$deviance, and the gemtc
+    # repository contains deviance-example.R with plotting code. NB only last plot call is relevant.
+
+    # Call the new plot routine to generate the deviance/residuals plot and return it as an embedded SVG or PNG image in the results object.
+
+    summary[['script-version']] <- 0.1
+    summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
+    summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
+    summary[['logScale']] <- ll.call('scale.log', model)
+    summary[['link']] <- model[['link']]
+    summary[['likelihood']] <- model[['likelihood']]
+    summary[['type']] <- model[['type']]
+    summary[['linearModel']] <- model[['linearModel']]
+    summary[['burnInIterations']] <- params[['burnInIterations']]
+    summary[['inferenceIterations']] <- params[['inferenceIterations']]
+    summary[['thinningFactor']] <- params[['thinningFactor']]
+    summary[['outcomeScale']] <- model[['om.scale']]
+    if(modelType != 'node-split') {
+      summary[['relativeEffects']] <- releffect
+      summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
+    }
+    summary[['alternatives']] <- names(summary[['rankProbabilities']])
+    if(modelType == "network") {
+      summary[['relativeEffectPlots']] <- forestPlots
+    }
+    if(modelType == "pairwise") {
+      summary[['studyForestPlot']] <- forestPlot
+    }
+    if(modelType == 'node-split') {
+      summary[['densityPlot']] <- densityPlot
+    }
+    summary[['tracePlot']] <- tracePlot
+    summary[['gelmanPlot']] <- gelmanPlot
+    summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
+    deviance <- result[['deviance']]
+    summary[['devianceStatistics']][['perArmDeviance']] <- wrap.matrix(deviance[['dev.ab']])
+    summary[['devianceStatistics']][['perArmLeverage']] <- wrap.matrix(deviance[['dev.ab']] - deviance[['fit.ab']])
+    summary[['residualDeviance']] <- deviance[['Dbar']]
+    summary[['leverage']] <- deviance[['pD']]
+    summary[['DIC']] <- deviance[['DIC']]
+    summary[['deviancePlot']] <- deviancePlot
+    print(times)
+
+    update(list(progress=100))
+    summary
+}
+

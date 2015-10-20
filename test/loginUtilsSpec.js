@@ -13,14 +13,15 @@ describe('loginUtils', function() {
 
   describe('securityMiddleware', function() {
 
-    var request, resonse, session, next;
+    var request, response, session, next;
 
     beforeEach(function() {
       request = {
         session: {}
       };
-      resonse = {};
-      next = chai.spy();
+      next = chai.spy(); 
+      response = {};
+      response.redirect = chai.spy();
     });
 
     it('should call next when logged in', function() {
@@ -32,18 +33,18 @@ describe('loginUtils', function() {
       };
       request.url = '/secure-me';
 
-      loginUtils.securityMiddleware(request, resonse, next);
+      loginUtils.securityMiddleware(request, response, next);
       expect(next).to.have.been.called();
     });
 
-    it('should redirect to signin if no user signed in on a serure url', function() {
-      resonse = chai.spy.object(['redirect']);
+    it('should redirect to signin if no user signed in on a secure url', function() {
+      response = chai.spy.object(['sendStatus']);
       request.session = {};
       request.url = '/secure-me';
       next;
 
-      loginUtils.securityMiddleware(request, resonse, next);
-      expect(resonse.redirect).to.have.been.called();
+      loginUtils.securityMiddleware(request, response, next);
+      expect(response.sendStatus).to.have.been.called.with(403);
     });
 
     it('should call next when requesting the signin page', function() {
@@ -51,45 +52,54 @@ describe('loginUtils', function() {
       request.url = '/signin.html';
       request.method = 'GET';
 
-      loginUtils.securityMiddleware(request, resonse, next);
+      loginUtils.securityMiddleware(request, response, next);
       expect(next).to.have.been.called();
-    });    
+    });
 
     it('should call next when requesting the google auth', function() {
       request.session = {};
       request.url = '/auth/google/some stuff ';
       request.method = 'GET';
 
-      loginUtils.securityMiddleware(request, resonse, next);
+      loginUtils.securityMiddleware(request, response, next);
       expect(next).to.have.been.called();
-    });  
+    });
 
     it('should call next when requesting a file from the /css path', function() {
       request.session = {};
       request.url = '/css/some/path/to/some/file.css';
       request.method = 'GET';
 
-      loginUtils.securityMiddleware(request, resonse, next);
+      loginUtils.securityMiddleware(request, response, next);
       expect(next).to.have.been.called();
-    });  
+    });
 
     it('should call next when requesting a file from the /js path', function() {
       request.session = {};
       request.url = '/js/some/path/to/some/file.js';
       request.method = 'GET';
 
-      loginUtils.securityMiddleware(request, resonse, next);
+      loginUtils.securityMiddleware(request, response, next);
       expect(next).to.have.been.called();
-    });  
+    });
 
     it('should call next when requesting a file from the /img path', function() {
       request.session = {};
       request.url = '/img/favi.ico';
       request.method = 'GET';
 
-      loginUtils.securityMiddleware(request, resonse, next);
+      loginUtils.securityMiddleware(request, response, next);
       expect(next).to.have.been.called();
-    }); 
+    });
+
+    it('should redirect to signin when requesting the / path', function() {
+      request.session = {};
+      request.url = '/';
+      request.method = 'GET';
+
+      loginUtils.securityMiddleware(request, response, next);
+      expect(response.redirect).to.have.been.called();
+    });
   });
 
   describe('emailHashMiddleware', function() {
@@ -109,14 +119,14 @@ describe('loginUtils', function() {
           }
         }
       };
-      var resonse = chai.spy.object(['json']);
+      var response = chai.spy.object(['json']);
 
-      it('should place on the resonse an object with the md5 hashed email' +
+      it('should place on the response an object with the md5 hashed email' +
         'of the google-logged-in user and call next',
         function() {
-          loginUtils.emailHashMiddleware(request, resonse, next);
+          loginUtils.emailHashMiddleware(request, response, next);
           expect(next).to.have.been.called();
-          expect(resonse.json).to.have.been.called.with({
+          expect(response.json).to.have.been.called.with({
             name: request.session.auth.google.user.name,
             md5Hash: '6a6c19fea4a3676970167ce51f39e6ee'
           });
@@ -125,7 +135,7 @@ describe('loginUtils', function() {
 
     describe('if the user is not logged in', function() {
 
-      var resonse = chai.spy.object(['json']);
+      var response = chai.spy.object(['json']);
       var request = {
         session: {}
       };
@@ -133,8 +143,8 @@ describe('loginUtils', function() {
 
 
       it('should return a 403 FORBIDDEN.', function() {
-        loginUtils.emailHashMiddleware(request, resonse, next);
-        expect(resonse.status).to.equal(status.FORBIDDEN);
+        loginUtils.emailHashMiddleware(request, response, next);
+        expect(response.status).to.equal(status.FORBIDDEN);
         expect(next).to.have.been.called();
       });
     });
@@ -189,11 +199,11 @@ describe('loginUtils', function() {
           return token;
         }
       };
-      resonse = chai.spy.object(['cookie']);
+      response = chai.spy.object(['cookie']);
       next = chai.spy();
 
-      loginUtils.setXSRFTokenMiddleware(request, resonse, next);
-      expect(resonse.cookie).to.have.been.called.with('XSRF-TOKEN', token);
+      loginUtils.setXSRFTokenMiddleware(request, response, next);
+      expect(response.cookie).to.have.been.called.with('XSRF-TOKEN', token);
       expect(next).to.have.been.called();
     });
   });

@@ -46,6 +46,11 @@ CreateModelPage.prototype = {
         .keys(['\uE015', '\uE004']); //down then tab
     }
   },
+  setLikelihoodAndLink: function() {
+      this.browser
+        .click('#likelihood-link-select')
+        .keys(['\uE015', '\uE004']); //down then tab
+  },
   setRunLength: function(burnInIterations, inferenceIterations, thinningFactor) {
     this.browser
       .clearValue('#burn-in-iterations')
