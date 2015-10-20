@@ -14,7 +14,7 @@
       <h5 ng-if="model !== networkModel"><a ui-sref="model(stateParams)">{{model.title}}</a></h5>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="columns large-5 medium-6 small-12">
       <div class="panel callout">
@@ -45,12 +45,12 @@
         <table class="layout-table">
           <tr>
             <td class="large-6 text-right"><strong>Title</strong></td>
-            <td><a ui-sref="model(networkStateParams)">{{networkModel.title}}</a></td>
+            <td><a ui-sref="model(networkStateParams)" ui-sref-opts="{reload:true}">{{networkModel.title}}</a></td>
           </tr>
           <tr ng-show="networkModel.result && model.linearModel === 'random'">
             <td class="large-6 text-right"><strong>Random effects standard deviation</strong></td>
             <td >{{networkModel.result.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{networkModel.result.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{networkModel.result.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</td>
-            
+
           </tr>
           <tr ng-show="networkModel.result">
             <td class="large-6 text-right"><strong>DIC</strong></td>
@@ -73,10 +73,7 @@
               <td class="large-2 text-center">Model name</td>
               <td class="large-1 text-center">DIC</td>
               <td ng-if="model.linearModel === 'random'" class="large-1 text-center">Random effects (Standard deviation)</td>
-              <td class="large-1 text-center">Forest plot</td>
-              <td class="large-1 text-center">Consistency estimate</td>
-              <td class="large-1 text-center">Direct effect estimate</td>
-              <td class="large-1 text-center">Indirect effect estimate</td>
+              <td class="large-1 text-center">Effect estimates</td>
             </tr>
           </thead>
           <tbody>
@@ -88,17 +85,17 @@
                 <button ng-show="!comparison.hasModel" class="tiny success" ng-click="openCreateNodeSplitDialog(comparison)">create model</button>
                 <a ng-show="comparison.hasModel" ng-click="goToModel(comparison.modelId)">{{comparison.modelTitle}}</a>
               </td>
-        
+
               <td class="text-center button-cell" colspan="{{comparison.colSpan}}">
                 <span ng-if="comparison.result">
                   {{comparison.result.DIC}}
                 </span>
-                <button ng-if="comparison.hasModel && !comparison.result" 
-                ng-click="goToModel(comparison.modelId)" 
+                <button ng-if="comparison.hasModel && !comparison.result"
+                ng-click="goToModel(comparison.modelId)"
                 class="tiny success">run model
               </button>
               </td>
-              
+
               <td ng-if="model.linearModel === 'random'" class="text-center">
                 <span ng-if="comparison.hasResults">
                   {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} <br>
@@ -107,26 +104,12 @@
                 </span>
               </td>
 
-              <td class="text-center" ng-show="comparison.result">forestplot</td>
-              
               <td class="text-center" ng-show="comparison.result">
-                <span ng-if="networkModel.result">
-                  {{comparison.consistencyEstimate.mean | number: 3}} <br>
-                  ({{comparison.consistencyEstimate.lower | number: 3}},
-                  {{comparison.consistencyEstimate.upper | number: 3}})
-                </span>
-              </td>
-              <td class="text-center" ng-show="comparison.result">
-                  {{comparison.directEffectEstimate.mean | number: 3}} <br>
-                  ({{comparison.directEffectEstimate.lower | number: 3}},
-                  {{comparison.directEffectEstimate.upper | number: 3}})
-              </td>
-              
-              <td class="text-center" ng-show="comparison.result">
-                  {{comparison.inDirectEffectEstimate.mean | number: 3}} <br>
-                  ({{comparison.inDirectEffectEstimate.lower | number: 3}},
-                  {{comparison.inDirectEffectEstimate.upper | number: 3}})
-              </td>
+                <nodesplit-forest-plot
+                  consistency-estimate="comparison.consistencyEstimate"
+                  direct-estimate="comparison.directEffectEstimate"
+                  indirect-estimate="comparison.inDirectEffectEstimate"
+                ></nodesplit-forest-plot></td>
 
             </tr>
           </tbody>
