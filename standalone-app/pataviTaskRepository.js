@@ -3,16 +3,23 @@ var dbUtil = require('./dbUtil');
 var db = require('./db')(dbUtil.buildPataviDBUrl());
 
 module.exports = {
-  get: getPataviTask,
-  create: createPataviTask
+  getPataviTasksStatus: getPataviTasksStatus,
+  create: createPataviTask,
+  deleteTask: deleteTask
 };
 
-function getPataviTask(modelId, callback) {
-  db.query('SELECT * FROM patavitask WHERE modelId=$1', [modelId], function(error, result) {
+function getPataviTasksStatus(taskIds, callback) {
+  if(taskIds.length === 0) {
+    callback(null, []);
+  }
+  var params = taskIds.map(function(item, idx) {
+    return '$' + (idx+1);
+  });
+  db.query('SELECT id, result IS NOT NULL as hasResult FROM patavitask WHERE id in (' + params.join(',') + ')', taskIds, function(error, result) {
     if (error) {
       callback(error);
     } else {
-      callback(null, result.rows[0]);
+      callback(null, result.rows);
     }
   });
 }
@@ -26,6 +33,17 @@ function createPataviTask(problem, callback) {
       callback(error);
     } else {
       callback(null, result.rows[0].id);
+    }
+  });
+}
+
+function deleteTask(id, callback) {
+  logger.debug('deleting patavi task');
+  db.query('DELETE FROM patavitask WHERE id=$1', [id], function(error, result){
+    if (error) {
+      callback(error);
+    } else {
+      callback();
     }
   });
 }

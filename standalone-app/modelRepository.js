@@ -7,6 +7,7 @@ var
 module.exports = {
   create: createModel,
   get: getModel,
+  update: update,
   findByAnalysis: findByAnalysis,
   setTaskId: setTaskId
 };
@@ -26,7 +27,7 @@ function mapModelRow(modelRow) {
     link: modelRow.link,
   };
 
-  if(modelRow.outcome_scale) {
+  if (modelRow.outcome_scale) {
     model.outcomeScale = modelRow.outcome_scale;
   }
 
@@ -76,7 +77,7 @@ function getModel(modelId, callback) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);
     } else {
-      logger.debug('ModelRepository.getModel return model = ' +  JSON.stringify(result.rows[0]));
+      logger.debug('ModelRepository.getModel return model = ' + JSON.stringify(result.rows[0]));
       callback(error, mapModelRow(result.rows[0]));
     }
   });
@@ -84,6 +85,22 @@ function getModel(modelId, callback) {
 
 function setTaskId(modelId, taskId, callback) {
   db.query('UPDATE model SET taskId=$2 WHERE id = $1', [modelId, taskId], function(error, result) {
+    if (error) {
+      logger.error('error retrieving model, error: ' + error);
+      callback(error);
+    } else {
+      callback();
+    }
+  });
+}
+
+function update(newModel, callback) {
+  db.query('UPDATE model SET burn_in_iterations=$2, inference_iterations=$3, thinning_factor=$4, taskid=NULL where id = $1', [
+    newModel.id,
+    newModel.burnInIterations,
+    newModel.inferenceIterations,
+    newModel.thinningFactor
+  ], function(error, result) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);

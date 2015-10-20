@@ -3,13 +3,20 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
     var scope, q,
       stateParamsMock, stateMock,
       problemDefer,
-      pairwiseOptionsDefer,
+      pairwiseOptionsMock = ['pairwise 1'],
+      nodeSplitOptionsMock = ['nodesplit 1'],
+      likelihoodLinkOptionsMock = [],
       modelSaveDefer,
+      problemMock,
       modelSaveResultMock,
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
-      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['createPairwiseOptions', 'estimateRunLength']),
-      problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get'])
-      ;
+      analysisServiceMock = jasmine.createSpyObj('AnalysisService', [
+        'createPairwiseOptions',
+        'createNodeSplitOptions',
+        'createLikelihoodLinkOptions',
+        'estimateRunLength',
+      ]),
+      problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get']);
 
     beforeEach(module('gemtc.models'));
 
@@ -17,18 +24,19 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       scope = $rootScope;
       q = $q;
       problemDefer = q.defer();
-      pairwiseOptionsDefer = q.defer();
       modelSaveDefer = q.defer();
       modelSaveResultMock = {
         $promise: modelSaveDefer.promise
       };
 
-      var problemMock = {
+      problemMock = {
         $promise: problemDefer.promise
       };
 
       problemResourceMock.get.and.returnValue(problemMock);
-      analysisServiceMock.createPairwiseOptions.and.returnValue(pairwiseOptionsDefer.promise);
+      analysisServiceMock.createPairwiseOptions.and.returnValue(pairwiseOptionsMock);
+      analysisServiceMock.createNodeSplitOptions.and.returnValue(nodeSplitOptionsMock);
+      analysisServiceMock.createLikelihoodLinkOptions.and.returnValue(likelihoodLinkOptionsMock);
       modelResourceMock.save.and.returnValue(modelSaveResultMock);
 
       $controller('CreateModelController', {
@@ -65,6 +73,32 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       });
     });
 
+    describe('once the problem is loaded', function() {
+      beforeEach(function() {
+        likelihoodLinkOptionsMock = [{
+          name: 'option 1',
+          compatibility: 'incompatible'
+        }, {
+          name: 'option 2',
+          compatibility: 'compatible'
+        }];
+        problemDefer.resolve(problemMock);
+        scope.$apply();
+      });
+      it('should retrieve pairwise options', function() {
+        expect(analysisServiceMock.createPairwiseOptions).toHaveBeenCalledWith(problemMock);
+      });
+      it('should retrieve nodesplitting options', function() {
+        expect(analysisServiceMock.createNodeSplitOptions).toHaveBeenCalledWith(problemMock);
+      });
+      it('should retrieve likelihood link options and place them on the scope, and set the model ll/link function to be the first compatible one' , function() {
+        expect(analysisServiceMock.createLikelihoodLinkOptions).toHaveBeenCalledWith(problemMock);
+        expect(scope.likelihoodLinkOptions[0]).toEqual(likelihoodLinkOptionsMock[1]);
+        expect(scope.likelihoodLinkOptions[1]).toEqual(likelihoodLinkOptionsMock[0]);
+        expect(scope.model.likelihoodLink).toEqual(likelihoodLinkOptionsMock[1]);
+      });
+    });
+
     describe('createModel', function() {
 
       describe('when creating a random network model', function() {
@@ -86,7 +120,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           }
         };
 
-      var cleanedModel = {
+        var cleanedModel = {
           linearModel: 'random',
           modelType: {
             type: 'network'
@@ -148,14 +182,14 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           modelType: {
             type: 'node-split',
             details: {
-             from: {
-              id: 1,
-              name: 'fromName'
-            },
-            to: {
-              id: 2,
-              name: 'toName'
-            }
+              from: {
+                id: 1,
+                name: 'fromName'
+              },
+              to: {
+                id: 2,
+                name: 'toName'
+              }
             }
           },
           title: 'modelTitle nodesplit',

@@ -1,11 +1,12 @@
 'use strict';
 define(['lodash'], function() {
-  var dependencies = ['$scope', '$sce', '$stateParams', 'ModelResource', 'PataviService',
+  var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
-    'DiagnosticsService', 'ModelService', 'AnalysisService'
+    'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService'
   ];
-  var ModelController = function($scope, $sce, $stateParams, ModelResource, PataviService,
-    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, ModelService, AnalysisService) {
+  var ModelController = function($scope, $modal, $state, $stateParams, ModelResource, PataviService,
+    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, AnalysisService,
+    DevianceStatisticsService) {
 
     $scope.analysis = AnalysisResource.get($stateParams);
     $scope.progress = {
@@ -16,6 +17,7 @@ define(['lodash'], function() {
     $scope.isConvergencePlotsShown = false;
     $scope.showConvergencePlots = showConvergencePlots;
     $scope.hideConvergencePlots = hideConvergencePlots;
+    $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
 
@@ -24,8 +26,12 @@ define(['lodash'], function() {
       .then(getTaskId)
       .then(PataviService.run)
       .then(successCallback,
-        function(error) {
-          console.log('an error has occurred, error: ' + JSON.stringify(error));
+        function(pataviError) {
+          console.error('an error has occurred, error: ' + JSON.stringify(pataviError));
+          $scope.$emit('error', {
+            type: 'patavi',
+            message: pataviError.desc
+          });
         },
         function(update) {
           if (update && $.isNumeric(update.progress)) {
@@ -55,6 +61,24 @@ define(['lodash'], function() {
       }, {});
     }
 
+    function openRunLengthDialog() {
+      $modal.open({
+        templateUrl: './js/models/extendRunLength.html',
+        scope: $scope,
+        controller: 'ExtendRunLengthController',
+        resolve: {
+          model: function() {
+            return $scope.model;
+          },
+          successCallback: function() {
+            return function() {
+              $state.go($state.current, {}, {reload: true});
+            }
+          }
+        }
+      });
+    }
+
     function successCallback(result) {
       return ProblemResource.get({
         analysisId: $stateParams.analysisId,
@@ -62,7 +86,7 @@ define(['lodash'], function() {
       }).$promise.then(function(problem) {
         $scope.problem = problem;
         $scope.result = result;
-        if(problem.treatments && problem.treatments.length > 0) {
+        if (problem.treatments && problem.treatments.length > 0) {
           $scope.selectedBaseline = problem.treatments[0];
         }
         var isLogScale = result.results.logScale;
@@ -72,6 +96,7 @@ define(['lodash'], function() {
           var relativeEffects = result.results.relativeEffects;
           result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
           $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+          $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         }
       });
     }

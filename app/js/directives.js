@@ -7,5 +7,6 @@ define(function(require) {
     .directive('gemtcRankPlot', require('gemtc-web/models/rankPlotDirective'))
     .directive('pagedSvgPlot', require('gemtc-web/util/pagedSvgPlotDirective'))
     .directive('pagedPngPlot', require('gemtc-web/util/pagedPngPlotDirective'))
+    .directive('appAlert', require('gemtc-web/util/appAlertDirective'))
   ;
 });

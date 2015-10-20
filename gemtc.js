@@ -6,6 +6,7 @@ var express = require('express'),
   loginUtils = require('./standalone-app/loginUtils'),
   userRepository = require('./standalone-app/userRepository'),
   analysisRouter = require('./standalone-app/analysisRouter'),
+  modelRouter = require('./standalone-app/modelRouter'),
   logger = require('./standalone-app/logger');
 
 
@@ -14,8 +15,6 @@ var sessionOpts = {
   resave: false,
   saveUninitialized: true
 };
-
-//everyauth.debug = true;
 
 everyauth.everymodule.findUserById(function(userId, callback) {
   logger.debug("gemtc.findUserById");
@@ -32,7 +31,7 @@ everyauth.google
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
   .handleAuthCallbackError(function(req, res) {
     logger.debug('gemtc.handleAuthCallbackError');
-  //todo redirect to error page
+    //todo redirect to error page
   })
   .redirectPath('/')
   .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata, data) {
@@ -68,7 +67,7 @@ logger.info('Start Gemtc stand-alone app');
 module.exports = app
   .use(session(sessionOpts))
 
-  .use(csrf({
+.use(csrf({
     value: loginUtils.csrfValue
   }))
   .use(bodyparser.json())
@@ -76,6 +75,7 @@ module.exports = app
   .all('*', loginUtils.securityMiddleware)
   .get('/user', loginUtils.emailHashMiddleware)
   .use('/analyses', analysisRouter)
+  .use('/analyses/:analysisId/models', modelRouter)
   .use(express.static('app'))
   .use(everyauth.middleware())
   .listen(3001);

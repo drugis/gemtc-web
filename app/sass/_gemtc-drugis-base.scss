@@ -1,0 +1,53 @@
+.export-button {
+  margin-left: 1rem;
+}
+
+.inline {
+  display: inline;
+}
+
+label.form-item-header {
+  font-size: 1.2rem;
+}
+
+a.next {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 494pt;
+}
+
+a.previous {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 10pt;
+}
+
+img.paged-png {
+  position: relative;
+  left:60pt;
+}
+
+.indent-one {
+  margin-left:2rem;
+}
+
+table.layout-table {
+  border: none;
+  td {
+    border: none;
+    background-color: #F3F0FA;
+  }
+}
+
+.main-category-header {
+  color: #008CBA;
+  font-weight: bold;
+}
+
+
+.top-bar-section ul.top-bar-content {
+  padding-top: 5px;
+  margin-left: 4rem;
+}

@@ -8,12 +8,10 @@ define(['angular'], function() {
           // sessionExpired i guess ?
           $window.location = '/signin.html';
         } else {
-          console.log('response error ' + JSON.stringify(response));
+          console.error('response error ' + JSON.stringify(response));
           // can't directly DI $state because it's circular.
           $injector.get('$state').go('error');
-
         }
-        return $q.reject(response);
       }
     }
   };

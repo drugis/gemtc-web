@@ -20,9 +20,11 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviResultDeferred,
       pataviService,
       relativeEffectsTableService,
+      devianceStatisticsServiceMock,
       diagnosticsService,
-      modelServiceMock,
-      analysisServiceMock;
+      analysisServiceMock,
+      stateMock,
+      modalMock;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -70,14 +72,17 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService = jasmine.createSpyObj('PataviService', ['run']);
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
+      devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildTable']);
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics']);
-      modelServiceMock = jasmine.createSpyObj('ModelService', ['enrich']);
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName']);
-
+      stateMock = jasmine.createSpyObj('$state', ['reload']);
+      modalMock = jasmine.createSpyObj('$modal', ['open']);
 
       $controller('ModelController', {
         $scope: scope,
         $stateParams: mockStateParams,
+        $modal: modalMock,
+        $state: stateMock,
         ModelResource: modelResource,
         ProblemResource: problemResource,
         PataviService: pataviService,
@@ -85,8 +90,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         RelativeEffectsTableService: relativeEffectsTableService,
         AnalysisResource: analysisResource,
         DiagnosticsService: diagnosticsService,
-        ModelService: modelServiceMock,
-        AnalysisService: analysisServiceMock
+        AnalysisService: analysisServiceMock,
+        DevianceStatisticsService: devianceStatisticsServiceMock
       });
     }));
 
@@ -118,7 +123,6 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         scope.model.modelType = {
           type: 'network'
         };
-        modelServiceMock.enrich.and.returnValue(scope.model);
         modelDeferred.resolve(mockModel);
         scope.$apply();
       });
@@ -176,7 +180,6 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         scope.model.modelType = {
           type: 'node-split'
         };
-        modelServiceMock.enrich.and.returnValue(scope.model);
         modelDeferred.resolve(mockModel);
         pataviTaskIdDeferred.resolve(mockPataviTaskId);
         pataviResultDeferred.resolve(pataviResult);

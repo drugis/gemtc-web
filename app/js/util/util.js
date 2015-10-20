@@ -14,8 +14,11 @@ define(function (require) {
     .directive('fileReader', require('util/fileReaderDirective'))
     .directive('pagedSvgPlot', require('util/pagedSvgPlotDirective'))
     .directive('pagedPngPlot', require('util/pagedPngPlotDirective'))
+    .directive('appAlert', require('util/appAlertDirective'))
+    .directive('export', require('util/exportDirective'))
 
     // interseptors
+    .factory('errorInterceptor', require('util/errorInterceptor'))
     .factory('sessionExpiredInterceptor', require('util/sessionExpiredInterceptor'))
 
     // services

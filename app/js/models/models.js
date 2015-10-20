@@ -9,6 +9,7 @@ define(function (require) {
   	.controller('ModelsController', require('models/modelsController'))
     .controller('StandAloneModelContainerController', require('models/standAloneModelContainerController'))
     .controller('CreateModelController', require('models/createModelController'))
+    .controller('ExtendRunLengthController', require('models/extendRunLengthController'))
 
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
@@ -16,8 +17,8 @@ define(function (require) {
     .factory('AnalysisResource', require('analyses/analysisResource'))
 
     //services
-    .factory('ModelService', require('models/modelService'))
     .factory('AnalysisService', require('analyses/analysisService'))
+    .factory('DevianceStatisticsService', require('models/devianceStatisticsService'))
 
     .directive('gemtcRankPlot',require('models/rankPlotDirective'))
     ;
