@@ -30,7 +30,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
       if ($scope.networkModel) {
         if ($scope.networkModel.taskId) {
-          $scope.networkModel.result = getModelResult(networkModel.id);
+          $scope.networkModel.result = getModelResult($scope.networkModel.id);
           $scope.networkModel.result.$promise.then($scope.networkModelResultsDefer.resolve);
         }
       }
