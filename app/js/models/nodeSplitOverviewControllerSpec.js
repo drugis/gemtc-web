@@ -48,9 +48,25 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         modelType: {
           type: 'network'
         }
+      }, {
+        id: 5,
+        likelihood: 'binom',
+        modelType: {
+          type: 'node-split',
+          details: {
+            from: {
+              id: 1
+            },
+            to: {
+              id: 2
+            }
+          }
+        }
       }],
       modelDefer,
-      modelMock = {},
+      modelMock = {
+        id: 2
+      },
       analysisDefer,
       analysisMock = {},
       problemMock,
@@ -198,6 +214,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         expect(matchedComparisonWithResult.hasResults).toBeTruthy();
         expect(matchedComparisonWithResult.directEffectEstimate).toBe(directEffects);
         expect(matchedComparisonWithResult.inDirectEffectEstimate).toBe(indirectEffects);
+        expect(matchedComparisonWithResult.colSpan).toBe(1);
       });
       it('should find the matching network model', function() {
         expect(scope.networkModel).toBe(modelsMock[3]);
@@ -208,6 +225,36 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
           analysisId: stateParamsMock.analysisId
         });
       });
+      it('should set baseModelNotShown to false', function() {
+        expect(scope.baseModelNotShown).toBeFalsy();
+      });
+    });
+
+    describe('when the scope.model resolves with a nodesplit model that does not get selected from the models', function() {
+      beforeEach(function() {
+        modelMock.modelType = {
+          type: 'node-split',
+        };
+        modelMock.likelihood = 'binom';
+        modelMock.id = 5;
+
+        analysisMock.problem = {
+          entries: []
+        };
+        var resultDefer = q.defer();
+        var resultMock = {
+          $promise: resultDefer.promise
+        };
+
+        modelDefer.resolve(modelMock);
+        analysisDefer.resolve(analysisMock);
+        resultDefer.resolve(resultMock);
+        scope.$apply();
+      });
+
+      it('baseModelNotShown should be true', function() {
+        expect(scope.baseModelNotShown).toBeTruthy();
+      })
     });
 
   });
