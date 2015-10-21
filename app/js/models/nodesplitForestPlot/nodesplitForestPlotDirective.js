@@ -4,7 +4,6 @@ define(['d3'], function(d3) {
   var NodesplitForestPlot = function($window, gemtcRootPath) {
     return {
       restrict: 'E',
-      templateUrl: gemtcRootPath + 'js/models/nodesplitForestPlot/nodesplitForestPlot.html',
       scope: {
         consistencyEstimate: '=',
         directEstimate: '=',
