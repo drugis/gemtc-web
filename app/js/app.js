@@ -3,6 +3,7 @@ define(
   ['angular',
     'require',
     'jQuery',
+    'lodash',
     'mmfoundation',
     'foundation',
     'angular-ui-router',
@@ -16,7 +17,7 @@ define(
     'util/util',
     'patavi/patavi'
   ],
-  function(angular, require, $, Config) {
+  function(angular, require, $, _) {
 
     var dependencies = [
       'ui.router',
@@ -51,15 +52,14 @@ define(
         };
 
         $rootScope.$on('error', function(e, error) {
-            $rootScope.error = _.extend(error, {
-              close: function() {
-                delete $rootScope.error;
-              }
-            });
+          $rootScope.error = _.extend(error, {
+            close: function() {
+              delete $rootScope.error;
+            }
+          });
         });
       }
     ]);
-
 
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
       function($stateProvider, $urlRouterProvider, $httpProvider) {
@@ -113,6 +113,29 @@ define(
             url: '/analyses/:analysisId/models/:modelId',
             templateUrl: 'views/modelView.html',
             controller: 'ModelController'
+          })
+          .state('nodeSplitOverview', {
+            parent: 'model',
+            url: '/nodeSplitOverview',
+            templateUrl: 'js/models/nodeSplitOverview.html',
+            controller: 'NodeSplitOverviewController',
+            resolve: {
+              models: ['$stateParams', 'ModelResource',
+                function($stateParams, ModelResource) {
+                  return ModelResource.query({
+                    analysisId: $stateParams.analysisId
+                  }).$promise;
+                }
+              ],
+              problem: ['$stateParams', 'ProblemResource',
+                function($stateParams, ProblemResource) {
+                  return ProblemResource.get({
+                    analysisId: $stateParams.analysisId
+                  }).$promise;
+                }
+              ]
+
+            }
           })
           .state('error', {
             url: '/error',

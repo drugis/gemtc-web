@@ -5,7 +5,8 @@ var assert = require('assert'),
   sinon = require('sinon'),
   session = require('express-session'),
   request = require('superagent'),
-  express = require('express');
+  express = require('express'),
+  errorHandler = require('../standalone-app/errorHandler');
 
 var app = express();
 var BASE_PATH = 'http://localhost:3999/analyses/';
@@ -39,6 +40,7 @@ describe('modelRouter', function() {
         next();
       })
       .use('/analyses/:analysisId/models', modelRouter)
+      .use(errorHandler)
       .listen(3999);
   });
   after(function() {
@@ -158,7 +160,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('GET request to /:modelID', function() {
     var model = {
       id: 2
@@ -176,6 +177,53 @@ describe('modelRouter', function() {
           assert(!err);
           res.should.have.property('status', status.OK);
           assert.deepEqual(model, res.body);
+          done();
+        });
+    });
+  });
+  describe('GET request to /:modelID/result', function() {
+    var model = {
+      id: 2,
+      taskId: 3
+    };
+    var result = {
+      results: 'something'
+    };
+    beforeEach(function() {
+      sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
+      sinon.stub(pataviTaskRepository, 'getResult').onCall(0).yields(null, result);
+    });
+    afterEach(function() {
+      modelRepository.get.restore();
+      pataviTaskRepository.getResult.restore();
+    });
+    it('should return the result for the model with that ID', function(done) {
+      request
+        .get(BASE_PATH + '1/models/' + model.id + '/result')
+        .end(function(err, res) {
+          assert(!err);
+          res.should.have.property('status', status.OK);
+          assert.deepEqual(result, res.body);
+          done();
+        });
+    });
+  });
+  describe('GET request to /:modelID/result for model with no taskId', function() {
+    var model = {
+      id: 2
+    };
+    beforeEach(function() {
+      sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
+    });
+    afterEach(function() {
+      modelRepository.get.restore();
+    });
+    it('should return a 404', function(done) {
+      request
+        .get(BASE_PATH + '1/models/' + model.id + '/result')
+        .end(function(err, res) {
+          assert(err);
+          res.should.have.property('status', status.NOT_FOUND);
           done();
         });
     });
@@ -202,13 +250,14 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('POST request to /:modelId with owner that is the logged in user', function() {
     var model = {
+      analysisId: 1,
       id: 2
     };
     beforeEach(function() {
       var analysis = {
+        id: 1,
         owner: userId,
       };
       sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
@@ -229,23 +278,59 @@ describe('modelRouter', function() {
         .post(BASE_PATH + '1/models/2')
         .send(runLengths)
         .end(function(err, res) {
+          console.log(JSON.stringify(err))
           assert(!err);
           res.should.have.property('status', status.OK);
           done();
         });
     });
   });
-  describe('POST request to /:modelId where the modelservice returns an error', function() {
+  describe('POST request to /:modelId with inconsistent model.analysisID and analysisID', function() {
     var model = {
+      analysisId: 2,
       id: 2
     };
     beforeEach(function() {
       var analysis = {
+        id: 1,
         owner: userId,
       };
       sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
       sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
-      sinon.stub(modelService, 'update').onCall(0).yields('error');
+    });
+    afterEach(function() {
+      analysisRepository.get.restore();
+      modelRepository.get.restore();
+    });
+
+    it('should return a 404 status', function(done) {
+      var runLengths = {};
+      request
+        .post(BASE_PATH + '1/models/2')
+        .send(runLengths)
+        .end(function(err, res) {
+          assert(err);
+          res.should.have.property('status', status.NOT_FOUND);
+          done();
+        });
+    });
+  });
+  describe('POST request to /:modelId where the modelservice returns an error', function() {
+    var model = {
+      analysisId: 1,
+      id: 2
+    };
+    var analysis = {
+      id: 1,
+      owner: userId,
+    };
+    beforeEach(function() {
+      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
+      sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
+      sinon.stub(modelService, 'update').onCall(0).yields({
+        statusCode: 500,
+        message: 'error'
+      });
       sinon.stub(pataviTaskRepository, 'deleteTask').onCall(0).yields(null);
     });
     afterEach(function() {
