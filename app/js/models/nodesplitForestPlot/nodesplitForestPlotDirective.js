@@ -1,49 +1,39 @@
 'use strict';
 define(['d3'], function(d3) {
-  var dependencies = ['$window', 'gemtcRootPath'];
-  var NodesplitForestPlot = function($window, gemtcRootPath) {
+  var dependencies = ['gemtcRootPath'];
+  var NodesplitForestPlot = function(gemtcRootPath) {
     return {
       restrict: 'E',
       scope: {
-        consistencyEstimate: '=',
-        directEstimate: '=',
-        indirectEstimate: '='
+        estimates: '='
       },
       link: function(scope, element, attrs) {
         var margin = 10,
-            topMargin = 10,
-            rowHeight = 14,
-            labelWidth = 75,
-            estimateWidth = 140,
-            totalWidth = 350,
-        svg = d3.select(element[0])
-          .append("svg")
-          .style('width', totalWidth + 'px')
-          .style('height', '50px')
-          .style('stroke', 'black');
+          topMargin = 10,
+          rowHeight = 14,
+          labelWidth = 75,
+          estimateWidth = 140,
+          totalWidth = 350,
+          svg = d3.select(element[0])
+            .append("svg")
+            .style('width', totalWidth + 'px')
+            .style('height', '50px')
+            .style('stroke', 'black');
 
-        // Browser onresize event
-        $window.onresize = function() {
-          scope.$apply();
-        };
-
-        // Watch for resize event
-        scope.$watch(function() {
-          return angular.element($window)[0].innerWidth;
-        }, render);
-
-        scope.$watch('consistencyEstimate', render);
+        scope.$watch('estimates', render);
 
         function render() {
-          // clear up after resize
-          svg.selectAll('*').remove();
 
-          if (!scope.consistencyEstimate || !scope.directEstimate || !scope.indirectEstimate) {
+          if (scope.estimates.some(function(item) {
+              return item === undefined;
+            })) {
             return;
           }
 
-          var
-            estimates = [scope.consistencyEstimate, scope.directEstimate, scope.indirectEstimate],
+          // clear up after resize
+          svg.selectAll('*').remove();
+
+          var estimates = scope.estimates,
             width = d3.select(element[0]).node().offsetWidth - margin,
             minLower = d3.min(estimates, function(d) {
               return d.lower;
