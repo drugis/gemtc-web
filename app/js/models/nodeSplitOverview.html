@@ -12,6 +12,7 @@
       <h5>{{analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></h5>
       <h5 ng-if="model !== networkModel"><strong>Base Model</strong></h5>
       <h5 ng-if="model !== networkModel"><a ui-sref="model(stateParams)">{{model.title}}</a></h5>
+      <div class="alert" ng-if="baseModelNotShown">The base model is not included in the comparison because another model with identical settings was selected instead. Please archive that model if you wish to use the base model for comparison.</div>
     </div>
   </div>
 
@@ -96,7 +97,7 @@
               </button>
               </td>
 
-              <td ng-if="model.linearModel === 'random'" class="text-center">
+              <td ng-if="model.linearModel === 'random' && comparison.hasModel && comparison.hasResults" class="text-center">
                 <span ng-if="comparison.hasResults">
                   {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} <br>
                   ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}},
@@ -104,11 +105,11 @@
                 </span>
               </td>
 
-              <td class="text-center" ng-show="comparison.result">
+              <td class="text-center" ng-if="comparison.result">
+                <span ng-if="!networkModel">No consistency model found.</span>
+                <span ng-if="networkModel && !networkModel.result">Consistency model not yet run.</span>
                 <nodesplit-forest-plot
-                  consistency-estimate="comparison.consistencyEstimate"
-                  direct-estimate="comparison.directEffectEstimate"
-                  indirect-estimate="comparison.inDirectEffectEstimate"
+                  estimates= "[comparison.consistencyEstimate, comparison.directEffectEstimate, comparison.inDirectEffectEstimate]"
                 ></nodesplit-forest-plot></td>
 
             </tr>

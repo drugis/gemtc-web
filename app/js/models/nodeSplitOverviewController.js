@@ -1,7 +1,7 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state', '$modal', 'gemtcRootPath',
-  'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService'];
+    'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService'];
   var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, $modal, gemtcRootPath,
     models, problem, AnalysisService, ModelResource, NodeSplitOverviewService) {
 
@@ -9,15 +9,19 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.openCreateNodeSplitDialog = openCreateNodeSplitDialog;
     $scope.openCreateNetworkDialog = openCreateNetworkDialog;
     $scope.networkModelResultsDefer = $q.defer();
+    $scope.baseModelNotShown = false;
 
     $scope.model.$promise.then(function() {
-      $scope.analysis.$promise.then(buildComparisonRows);
+      var networkModel;
+      $scope.analysis.$promise.then(buildComparisonRows).then(function() {
+        $scope.baseModelNotShown = $scope.model.modelType.type === 'node-split' && !_.some($scope.comparisons, 'modelId', $scope.model.id);
+      });
       if ($scope.model.modelType.type === 'node-split') {
-        var networkModel = findNetworkModelForModel($scope.model, models);
+        networkModel = findNetworkModelForModel($scope.model, models);
         if (networkModel) {
           $scope.networkStateParams = _.omit($stateParams, 'modelid');
           $scope.networkStateParams.modelId = networkModel.id;
-          $scope.networkModel = ModelResource.get($scope.networkStateParams);
+          $scope.networkModel = networkModel;
         }
       } else {
         $scope.networkModel = $scope.model;
@@ -25,12 +29,10 @@ define(['angular', 'lodash'], function(angular, _) {
       }
 
       if ($scope.networkModel) {
-        $scope.networkModel.$promise.then(function(networkModel) {
-          if (networkModel.taskId) {
-            $scope.networkModel.result = getModelResult(networkModel.id);
-            $scope.networkModel.result.$promise.then($scope.networkModelResultsDefer.resolve);
-          }
-        });
+        if ($scope.networkModel.taskId) {
+          $scope.networkModel.result = getModelResult(networkModel.id);
+          $scope.networkModel.result.$promise.then($scope.networkModelResultsDefer.resolve);
+        }
       }
     });
 
@@ -54,8 +56,9 @@ define(['angular', 'lodash'], function(angular, _) {
               row.directEffectEstimate = NodeSplitOverviewService.buildDirectEffectEstimates(result);
               row.inDirectEffectEstimate = NodeSplitOverviewService.buildIndirectEffectEstimates(result);
               row.colSpan = 1;
+              row.hasResults = true;
             });
-            
+
             $scope.networkModelResultsDefer.promise.then(function(result) {
               row.consistencyEstimate = NodeSplitOverviewService.buildConsistencyEstimates(result, row);
             });
@@ -94,7 +97,7 @@ define(['angular', 'lodash'], function(angular, _) {
           model.modelType.type === 'node-split' &&
           model.modelType.details.from.id === comparison.from.id &&
           model.modelType.details.to.id === comparison.to.id
-        );
+          );
       });
     }
 
@@ -127,7 +130,8 @@ define(['angular', 'lodash'], function(angular, _) {
           }
         }
       });
-    };
+    }
+    ;
 
 
     function openCreateNodeSplitDialog(comparison) {
@@ -156,7 +160,8 @@ define(['angular', 'lodash'], function(angular, _) {
           }
         }
       });
-    };
+    }
+    ;
 
 
   };
