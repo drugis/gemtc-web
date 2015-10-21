@@ -1,40 +1,31 @@
 'use strict';
-define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'ModelResource', 'model', 'successCallback'];
-  var ExtendRunLengthController = function($scope, $modalInstance, $stateParams, ModelResource, model, successCallback) {
+define([], function() {
+  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'ModelResource', 'problem', 'model', 'successCallback'];
+  var ExtendRunLengthController = function($scope, $modalInstance, $stateParams, ModelResource, problem, model, successCallback) {
 
-    $scope.runLengthSettings = {
-      burnInIterations: model.burnInIterations,
-      inferenceIterations: model.inferenceIterations,
-      thinningFactor: model.thinningFactor
-    };
-    $scope.minBurnInIterations = $scope.runLengthSettings.burnInIterations;
-    $scope.minInferenceIterations = $scope.runLengthSettings.inferenceIterations;
-    $scope.isRunlengthDivisibleByThinningFactor = isRunlengthDivisibleByThinningFactor;
-    $scope.isExtendButtonDisabled = isExtendButtonDisabled;
-    $scope.isExtendingRunLength = false;
+    $scope.model = model;
     $scope.extendRunLength = extendRunLength;
+    $scope.isExtendingRunLength = false;
+    $scope.isRunLengthsAbovePrevious = isRunLengthsAbovePrevious;
+
+    var
+      minBurnInIterations = $scope.model.burnInIterations,
+      minInferenceIterations = $scope.model.inferenceIterations;
+
+    $scope.$watch('model', isRunLengthsAbovePrevious, true);
+
+    function isRunLengthsAbovePrevious() {
+      return $scope.model.burnInIterations >= minBurnInIterations &&
+        $scope.model.inferenceIterations >= minInferenceIterations;
+    }
 
     $scope.cancel = function() {
       $modalInstance.dismiss('cancel');
     };
 
-    function isRunlengthDivisibleByThinningFactor(runLengthSettings) {
-      return runLengthSettings.burnInIterations % runLengthSettings.thinningFactor === 0 &&
-        runLengthSettings.inferenceIterations % runLengthSettings.thinningFactor === 0;
-    }
-
-    function isExtendButtonDisabled(runLengthSettings) {
-      // due to 'min' property on input fields, values are undefined if lower than that minimum value
-      return !runLengthSettings.burnInIterations ||
-        !runLengthSettings.inferenceIterations ||
-        !isRunlengthDivisibleByThinningFactor(runLengthSettings) ||
-        !!$scope.isExtendingRunLength;
-    }
-
-    function extendRunLength(runLengthSettings) {
+    function extendRunLength(model) {
       $scope.isExtendingRunLength = true;
-      ModelResource.save($stateParams, _.extend(runLengthSettings, {id: $stateParams.modelId})).$promise.then(function() {
+      ModelResource.save($stateParams, model).$promise.then(function() {
         successCallback();
         $modalInstance.close();
       });

@@ -151,8 +151,8 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
-    function reduceToPairwiseProblem(problem, pairwiseComparison) {
-      var filteredTreatments = filterPairwiseTreatments(problem.treatments, pairwiseComparison.from.name, pairwiseComparison.to.name);
+    function reduceToPairwiseProblem(problem, from, to) {
+      var filteredTreatments = filterPairwiseTreatments(problem.treatments, from.name, to.name);
       var filteredEntries = filterPairwiseEntries(problem.entries, problem.treatments);
       return {
         treatments: filteredTreatments,
@@ -162,10 +162,10 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function estimateRunLength(problem, model) {
       var theProblem, nRandomEffects, nStochasticVariables, nMonitoredVariables,
-        modelMainType = model.modelType.mainType;
-      if (modelMainType === 'pairwise') {
-        theProblem = reduceToPairwiseProblem(problem, model.pairwiseComparison);
-      } else if (modelMainType === 'network' || modelMainType === 'node-split') {
+        modelType = model.modelType.type;
+      if (modelType === 'pairwise') {
+        theProblem = reduceToPairwiseProblem(problem, model.modelType.details.from, model.modelType.details.to);
+      } else if (modelType === 'network' || modelType === 'node-split') {
         theProblem = problem;
       }
       var nTreatments = theProblem.treatments.length;

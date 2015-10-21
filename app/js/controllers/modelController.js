@@ -1,10 +1,10 @@
 'use strict';
 define(['lodash'], function() {
-  var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'ModelResource', 'PataviService',
+  var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService'
   ];
-  var ModelController = function($scope, $modal, $state, $stateParams, ModelResource, PataviService,
+  var ModelController = function($scope, $modal, $state, $stateParams, gemtcRootPath, ModelResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, AnalysisService,
     DevianceStatisticsService) {
 
@@ -25,7 +25,7 @@ define(['lodash'], function() {
       .$promise
       .then(getTaskId)
       .then(PataviService.run)
-      .then(successCallback,
+      .then(pataviRunSuccessCallback,
         function(pataviError) {
           console.error('an error has occurred, error: ' + JSON.stringify(pataviError));
           $scope.$emit('error', {
@@ -63,15 +63,20 @@ define(['lodash'], function() {
 
     function openRunLengthDialog() {
       $modal.open({
-        templateUrl: './js/models/extendRunLength.html',
+        windowClass: 'small',
+        templateUrl: gemtcRootPath + 'js/models/extendRunLength.html',
         scope: $scope,
         controller: 'ExtendRunLengthController',
         resolve: {
+          problem: function() {
+            return $scope.problem;
+          },
           model: function() {
-            return $scope.model;
+            return angular.copy($scope.model);
           },
           successCallback: function() {
             return function() {
+              // reload page, with empty params object
               $state.go($state.current, {}, {reload: true});
             }
           }
@@ -79,7 +84,7 @@ define(['lodash'], function() {
       });
     }
 
-    function successCallback(result) {
+    function pataviRunSuccessCallback(result) {
       return ProblemResource.get({
         analysisId: $stateParams.analysisId,
         projectId: $stateParams.projectId
@@ -98,6 +103,7 @@ define(['lodash'], function() {
           $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
           $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         }
+        $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
       });
     }
 

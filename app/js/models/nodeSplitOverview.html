@@ -1,0 +1,120 @@
+<div ui-view>
+  <div class="row">
+    <div class="columns large-12" id="model-split-overview-header">
+      <h1>Nodespit overview</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-8 medium-6 small-12">
+      <h5><strong>Analysis</strong></h5>
+      <h5><a ui-sref="networkMetaAnalysis(stateParams)">{{analysis.title}}</a></h5>
+      <h5><strong>Outcome</strong></h5>
+      <h5>{{analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></h5>
+      <h5 ng-if="model !== networkModel"><strong>Base Model</strong></h5>
+      <h5 ng-if="model !== networkModel"><a ui-sref="model(stateParams)">{{model.title}}</a></h5>
+      <div class="alert" ng-if="baseModelNotShown">The base model is not included in the comparison because another model with identical settings was selected instead. Please archive that model if you wish to use the base model for comparison.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="columns large-5 medium-6 small-12">
+      <div class="panel callout">
+        <h5><strong>Model settings</strong></h5>
+        <table class="layout-table">
+          <tr>
+            <td class="large-6 text-right"><strong>effects type</strong></td>
+            <td>{{::result.results.linearModel}}</td>
+          </tr>
+          <tr>
+            <td class="large-6 text-right"><strong>outcome scale</strong></td>
+            <td ng-if="model.outcomeScale">{{::model.outcomeScale}}</td>
+            <td ng-if="!model.outcomeScale">{{::result.results.outcomeScale}} (imputed)</td>
+          </tr>
+          <tr>
+            <td class="large-6 text-right"><strong>likelihood / link</strong></td>
+            <td>{{::result.results.likelihood}} / {{::result.results.link}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-7  medium-8 small-12">
+      <h5 ng-if="!networkModel"><button class="success" ng-click="openCreateNetworkDialog()">Create consistency model</button></h5>
+      <div ng-if="networkModel "  class="panel callout">
+        <h5><strong>Consistency Model</strong></h5>
+        <table class="layout-table">
+          <tr>
+            <td class="large-6 text-right"><strong>Title</strong></td>
+            <td><a ui-sref="model(networkStateParams)" ui-sref-opts="{reload:true}">{{networkModel.title}}</a></td>
+          </tr>
+          <tr ng-show="networkModel.result && model.linearModel === 'random'">
+            <td class="large-6 text-right"><strong>Random effects standard deviation</strong></td>
+            <td >{{networkModel.result.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{networkModel.result.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{networkModel.result.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</td>
+
+          </tr>
+          <tr ng-show="networkModel.result">
+            <td class="large-6 text-right"><strong>DIC</strong></td>
+            <td>{{::networkModel.result.DIC}} </td>
+          </tr>
+          <tr ng-show="!networkModel.result">
+            <td colspan="2"><button class="small success" ng-click="gotoModel(networkModel.id)">Run network model</button>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-12">
+        <table>
+          <caption>Consistency/inconsistency comparisons</caption>
+          <thead>
+            <tr>
+              <td class="large-2 text-center">Comparison</td>
+              <td class="large-2 text-center">Model name</td>
+              <td class="large-1 text-center">DIC</td>
+              <td ng-if="model.linearModel === 'random'" class="large-1 text-center">Random effects (Standard deviation)</td>
+              <td class="large-1 text-center">Effect estimates</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="comparison in comparisons">
+
+              <td class="text-center">{{comparison.label}}</td>
+
+              <td class="button-cell" class="text-center">
+                <button ng-show="!comparison.hasModel" class="tiny success" ng-click="openCreateNodeSplitDialog(comparison)">create model</button>
+                <a ng-show="comparison.hasModel" ng-click="goToModel(comparison.modelId)">{{comparison.modelTitle}}</a>
+              </td>
+
+              <td class="text-center button-cell" colspan="{{comparison.colSpan}}">
+                <span ng-if="comparison.result">
+                  {{comparison.result.DIC}}
+                </span>
+                <button ng-if="comparison.hasModel && !comparison.result"
+                ng-click="goToModel(comparison.modelId)"
+                class="tiny success">run model
+              </button>
+              </td>
+
+              <td ng-if="model.linearModel === 'random' && comparison.hasModel && comparison.hasResults" class="text-center">
+                <span ng-if="comparison.hasResults">
+                  {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} <br>
+                  ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}},
+                  {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})
+                </span>
+              </td>
+
+              <td class="text-center" ng-if="comparison.result">
+                <span ng-if="!networkModel">No consistency model found.</span>
+                <span ng-if="networkModel && !networkModel.result">Consistency model not yet run.</span>
+                <nodesplit-forest-plot
+                  estimates= "[comparison.consistencyEstimate, comparison.directEffectEstimate, comparison.inDirectEffectEstimate]"
+                ></nodesplit-forest-plot></td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

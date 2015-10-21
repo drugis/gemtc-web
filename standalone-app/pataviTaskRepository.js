@@ -3,10 +3,21 @@ var dbUtil = require('./dbUtil');
 var db = require('./db')(dbUtil.buildPataviDBUrl());
 
 module.exports = {
+  getResult: getResult,
   getPataviTasksStatus: getPataviTasksStatus,
   create: createPataviTask,
   deleteTask: deleteTask
 };
+
+function getResult(taskId, callback) {
+  db.query('SELECT result FROM patavitask WHERE id = $1', [taskId], function(error, result) {
+    if(error) {
+      callback(error);
+    } else {
+      callback(null, JSON.parse(result.rows[0].result).results);
+    }
+  });
+}
 
 function getPataviTasksStatus(taskIds, callback) {
   if(taskIds.length === 0) {
