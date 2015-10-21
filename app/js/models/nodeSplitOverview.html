@@ -1,7 +1,7 @@
 <div ui-view>
   <div class="row">
     <div class="columns large-12" id="model-split-overview-header">
-      <h1>Nodespit overview</h1>
+      <h1>Nodesplitting overview</h1>
     </div>
   </div>
   <div class="row">
@@ -58,7 +58,7 @@
             <td>{{::networkModel.result.DIC}} </td>
           </tr>
           <tr ng-show="!networkModel.result">
-            <td colspan="2"><button class="small success" ng-click="gotoModel(networkModel.id)">Run network model</button>
+            <td colspan="2"><button class="small success" ng-click="goToModel(networkModel.id)">Run network model</button>
             </tr>
           </table>
         </div>
@@ -99,9 +99,9 @@
 
               <td ng-if="model.linearModel === 'random' && comparison.hasModel && comparison.hasResults" class="text-center">
                 <span ng-if="comparison.hasResults">
-                  {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} <br>
-                  ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}},
-                  {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})
+                  {{comparison.result.summaries.quantiles["sd.d"]["50%"] | number: 3}} <br>
+                  ({{comparison.result.summaries.quantiles["sd.d"]["2.5%"] | number: 3}},
+                  {{comparison.result.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})
                 </span>
               </td>
 
@@ -109,7 +109,7 @@
                 <span ng-if="!networkModel">No consistency model found.</span>
                 <span ng-if="networkModel && !networkModel.result">Consistency model not yet run.</span>
                 <nodesplit-forest-plot
-                  estimates= "[comparison.consistencyEstimate, comparison.directEffectEstimate, comparison.inDirectEffectEstimate]"
+                  estimates= "[comparison.directEffectEstimate, comparison.inDirectEffectEstimate, comparison.consistencyEstimate]"
                 ></nodesplit-forest-plot></td>
 
             </tr>
