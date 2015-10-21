@@ -6,7 +6,34 @@ define(['lodash', 'moment'], function(_, moment) {
   var CreateModelController = function($scope, $q, $stateParams, $state,
     ModelResource, ModelService, AnalysisService, ProblemResource) {
 
+    var modelDefer = $q.defer();
+    modelDefer.$promise = modelDefer.promise;
+
+    $scope.model = {
+      linearModel: 'random',
+      modelType: {
+        mainType: 'network'
+      },
+      outcomeScale: {
+        type: 'heuristically'
+      },
+      burnInIterations: 5000,
+      inferenceIterations: 20000,
+      thinningFactor: 10,
+      heterogeneityPrior: {
+        type: 'automatic'
+      }
+    };
+    $scope.isTaskTooLong = false;
+    $scope.createModel = createModel;
+    $scope.isAddButtonDisabled = isAddButtonDisabled;
+    $scope.modelTypeChange = modelTypeChange;
+    $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
+    $scope.heterogeneityPriorTypechange = heterogeneityPriorTypechange;
+    $scope.isNumber = isNumber;
+    $scope.cleanModel = modelDefer;
     $scope.problem = ProblemResource.get($stateParams);
+
     $scope.problem.$promise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
       if ($scope.comparisonOptions.length > 0) {
@@ -30,28 +57,7 @@ define(['lodash', 'moment'], function(_, moment) {
       return problem;
     });
 
-    var modelDefer = $q.defer();
-    modelDefer.$promise = modelDefer.promise;
-    
-    $scope.model = {
-      linearModel: 'random',
-      modelType: {
-        mainType: 'network'
-      },
-      outcomeScale: {
-        type: 'heuristically'
-      },
-      burnInIterations: 5000,
-      inferenceIterations: 20000,
-      thinningFactor: 10,
-    };
-    $scope.isTaskTooLong = false;
-    $scope.createModel = createModel;
-    $scope.isAddButtonDisabled = isAddButtonDisabled;
-    $scope.modelTypeChange = modelTypeChange;
-    $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
-    $scope.isNumber = isNumber;
-    $scope.cleanModel = modelDefer;
+
 
     function modelTypeChange() {
       var mainType = $scope.model.modelType.mainType,
@@ -74,6 +80,10 @@ define(['lodash', 'moment'], function(_, moment) {
       } else {
         $scope.model.outcomeScale.value = 5; // magic number: w to the power of 0 devided by 15
       }
+    }
+
+    function heterogeneityPriorTypechange() {
+      $scope.model.heterogeneityPrior.values = undefined;
     }
 
     function isAddButtonDisabled(model) {
