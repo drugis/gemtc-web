@@ -157,11 +157,17 @@ nsdensity <- function(x) {
   densplot(ns, ylim=ylim, xlim=xlim)
 }
 
+nullCheckWithDefault <- function(value, default) {
+  if(is.null(value)) default else value
+}
+
 gemtc <- function(params) {
-  iter.adapt <- if(is.null(params[['burnInIterations']])) 5000 else params[['burnInIterations']]
-  iter.infer <- if(is.null(params[['inferenceIterations']])) 20000 else params[['inferenceIterations']]
-  thin <- if(is.null(params[['thinningFactor']])) 10 else params[['thinningFactor']]
-  modelType <-  if(is.null(params[['modelType']][['type']])) 'network' else params[['modelType']][['type']]
+  iter.adapt <- nullCheckWithDefault(params[['burnInIterations']], 5000)
+  iter.infer <- nullCheckWithDefault(params[['inferenceIterations']], 20000)
+  thin <- nullCheckWithDefault(params[['thinningFactor']], 10)
+  modelType <-  nullCheckWithDefault(params[['modelType']][['type']], 'network')
+  heterogeneityPriorType <- nullCheckWithDefault(params[['heterogeneityPrior']][['type']], 'automatic')
+
   progress.start <- 0
   progress.jags <- NA
 
@@ -211,7 +217,7 @@ gemtc <- function(params) {
     data.ab <- do.call(rbind, lapply(params[['entries']],
       function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
     # linear model or fixed?
-    linearModel <- if(is.null(params[['linearModel']])) 'random' else params[['linearModel']]
+    linearModel <- nullCheckWithDefault(params[['linearModel']], 'random')
 
     treatments <- do.call(rbind, lapply(params[['treatments']],
       function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
@@ -232,7 +238,21 @@ gemtc <- function(params) {
       t2 <- params[['modelType']][['details']][['to']][['id']]
       mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
     }
+    if(heterogeneityPriorType == 'uniform') {
+      hy.prior <- mtc.hy.prior('std.dev', 'dunif', params[['heterogeneityPrior']][['params']][['lower']], params[['heterogeneityPrior']][['params']][['lower']])
+      mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+    }
+    if(heterogeneityPriorType == 'variance') {
+      hy.prior <- mtc.hy.prior('var', 'dlnorm', params[['heterogeneityPrior']][['params']][['mean']], params[['heterogeneityPrior']][['params']][['stdDev']])
+      mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+    }
+    if(heterogeneityPriorType == 'precision') {
+      hy.prior <- mtc.hy.prior('prec', 'dgamma', params[['heterogeneityPrior']][['params']][['rate']], params[['heterogeneityPrior']][['params']][['shape']])
+      mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+    }
+    print(params[['heterogeneityPrior']])
     model <- do.call(mtc.model, mtc.model.params)
+    print('calling model')
     update(list(progress=0))
   })
 
@@ -376,6 +396,7 @@ report('summary', 1.0)
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
     summary[['deviancePlot']] <- deviancePlot
+    summary[['heterogeneityPrior']] <- params[['heterogeneityPrior']]
     print(times)
 
     update(list(progress=100))
