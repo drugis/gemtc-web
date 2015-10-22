@@ -4,7 +4,7 @@
 	"thinningFactor": 1,
 	"heterogeneityPrior": {
 		"type": "variance",
-		"params": {
+		"values": {
 			"mean" : 2.3,
 			"stdDev": 0.2
 		}

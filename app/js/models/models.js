@@ -29,5 +29,6 @@ define(function (require) {
     .directive('gemtcRankPlot',require('models/rankPlotDirective'))
     .directive('runLength',require('models/runLength/runLengthDirective'))
     .directive('nodesplitForestPlot',require('models/nodesplitForestPlot/nodesplitForestPlotDirective'))
+    .directive('heterogeneityPrior', require('models/heterogeneityPrior/heterogeneityPriorDirective'))
     ;
 });
