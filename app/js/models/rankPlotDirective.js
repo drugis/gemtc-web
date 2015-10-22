@@ -14,6 +14,10 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
           .attr("height", "100%")
           .style('font-size', '12px');
 
+        scope.$on('$locationChangeStart', function(event) {
+          window.onresize = null;
+        });
+
         function parsePx(str) {
           return parseInt(str.replace(/px/gi, ''));
         }
@@ -37,9 +41,9 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
             var values = el[1];
             for (var i = 0; i < values.length; i++) {
               var obj = result[i] || {
-                key: "Rank " + (i + 1),
-                values: []
-              };
+                  key: "Rank " + (i + 1),
+                  values: []
+                };
               obj.values.push({
                 x: key,
                 y: values[i]
