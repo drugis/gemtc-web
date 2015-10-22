@@ -239,20 +239,18 @@ gemtc <- function(params) {
       mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
     }
     if(heterogeneityPriorType == 'uniform') {
-      hy.prior <- mtc.hy.prior('std.dev', 'dunif', params[['heterogeneityPrior']][['params']][['lower']], params[['heterogeneityPrior']][['params']][['lower']])
+      hy.prior <- mtc.hy.prior('std.dev', 'dunif', params[['heterogeneityPrior']][['values']][['lower']], params[['heterogeneityPrior']][['values']][['lower']])
       mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
     }
     if(heterogeneityPriorType == 'variance') {
-      hy.prior <- mtc.hy.prior('var', 'dlnorm', params[['heterogeneityPrior']][['params']][['mean']], params[['heterogeneityPrior']][['params']][['stdDev']])
+      hy.prior <- mtc.hy.prior('var', 'dlnorm', params[['heterogeneityPrior']][['values']][['mean']], params[['heterogeneityPrior']][['values']][['stdDev']])
       mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
     }
     if(heterogeneityPriorType == 'precision') {
-      hy.prior <- mtc.hy.prior('prec', 'dgamma', params[['heterogeneityPrior']][['params']][['rate']], params[['heterogeneityPrior']][['params']][['shape']])
+      hy.prior <- mtc.hy.prior('prec', 'dgamma', params[['heterogeneityPrior']][['values']][['rate']], params[['heterogeneityPrior']][['values']][['shape']])
       mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
     }
-    print(params[['heterogeneityPrior']])
     model <- do.call(mtc.model, mtc.model.params)
-    print('calling model')
     update(list(progress=0))
   })
 
@@ -347,20 +345,7 @@ times$summary <- system.time({
   summary <- summary(result)
 })
 report('summary', 1.0)
-
-    # In the model fit section, display a table containing mean residual deviance (\bar{D_res}),
-    # the leverage (p_D), and the DIC, as defined by page 609-610 and Table 4 of [mdm-es-2].
-
-
-
-    # Generate the required information (overall mean residual deviance, leverage,
-    # and DIC, and per-arm residual deviance and leverage), and return it as part of the
-    # results object. The deviance statistics are returned as result$deviance, and the gemtc
-    # repository contains deviance-example.R with plotting code. NB only last plot call is relevant.
-
-    # Call the new plot routine to generate the deviance/residuals plot and return it as an embedded SVG or PNG image in the results object.
-
-    summary[['script-version']] <- 0.1
+    summary[['script-version']] <- 0.2
     summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
     summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
     summary[['logScale']] <- ll.call('scale.log', model)
@@ -396,7 +381,9 @@ report('summary', 1.0)
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
     summary[['deviancePlot']] <- deviancePlot
-    summary[['heterogeneityPrior']] <- params[['heterogeneityPrior']]
+    heterogeneityPrior <- model[['hy.prior']]
+    heterogeneityPrior[['args']] <- sapply(heterogeneityPrior[['args']], function(arg) { if (arg == 'om.scale') model[['om.scale']] else arg })
+    summary[['heterogeneityPrior']] <- heterogeneityPrior
     print(times)
 
     update(list(progress=100))
