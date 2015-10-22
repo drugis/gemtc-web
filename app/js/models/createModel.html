@@ -138,12 +138,12 @@
           <label for="heterogeneity-prior-variance-radio">Log-N for variance</label>
         </div>
         <div class="columns large-2 text-right">
-          std.dev:
-          <input type="number" ng-model="model.heterogeneityPrior.values.stdDev" id="heterogeneity-log-n-parameter2-input" ng-disabled="model.heterogeneityPrior.type !== 'variance'" ng-change="heterogeneityParamsChange()" style="display: inline; width:40%;">
-        </div>
-        <div class="columns large-2 text-right end">
           mean:
           <input type="number" ng-model="model.heterogeneityPrior.values.mean" id="heterogeneity-log-n-parameter1-input" ng-disabled="model.heterogeneityPrior.type !== 'variance'" ng-change="heterogeneityParamsChange()" style="display: inline; width:40%;">
+        </div>
+        <div class="columns large-2 text-right end">
+          std.dev:
+          <input type="number" ng-model="model.heterogeneityPrior.values.stdDev" id="heterogeneity-log-n-parameter2-input" ng-disabled="model.heterogeneityPrior.type !== 'variance'" ng-change="heterogeneityParamsChange()" style="display: inline; width:40%;">
         </div>
       </div>
       <div class="row">

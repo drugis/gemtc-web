@@ -49,6 +49,11 @@
                   <td>{{::result.results.likelihood}} / {{::result.results.link}}</td>
                 </tr>
                 <tr>
+                  <td class="large-6 text-right"><strong>heterogeneity prior</strong></td>
+                  <td>{{::model.heterogeneityPrior.type}} <span ng-if="model.heterogeneityPrior.type !== 'automatic'">({{::model.heterogeneityPrior.values.lower}}{{::model.heterogeneityPrior.values.mean}}{{::model.heterogeneityPrior.values.rate}},
+                  {{::model.heterogeneityPrior.values.upper}}{{::model.heterogeneityPrior.values.stdDev}}{{::model.heterogeneityPrior.values.shape}})</span></td>
+                </tr>
+                <tr>
                   <td class="large-6 text-right" style="vertical-align:top;"><strong>run-length</strong></td>
                   <td>
                     <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
