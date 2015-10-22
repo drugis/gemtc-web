@@ -1,5 +1,14 @@
 {
 	"burnInIterations": 100,
+	"inferenceIterations": 2000,
+	"thinningFactor": 1,
+	"heterogeneityPrior": {
+		"type": "variance",
+		"params": {
+			"mean" : 2.3,
+			"stdDev": 0.2
+		}
+	},
 	"entries": [{
 		"study": "Rudolph and Feiger, 1999",
 		"treatment": 4,
