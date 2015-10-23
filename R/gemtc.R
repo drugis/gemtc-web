@@ -238,17 +238,19 @@ gemtc <- function(params) {
       t2 <- params[['modelType']][['details']][['to']][['id']]
       mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
     }
-    if(heterogeneityPriorType == 'uniform') {
-      hy.prior <- mtc.hy.prior('std.dev', 'dunif', params[['heterogeneityPrior']][['values']][['lower']], params[['heterogeneityPrior']][['values']][['lower']])
-      mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
-    }
-    if(heterogeneityPriorType == 'variance') {
-      hy.prior <- mtc.hy.prior('var', 'dlnorm', params[['heterogeneityPrior']][['values']][['mean']], params[['heterogeneityPrior']][['values']][['stdDev']])
-      mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
-    }
-    if(heterogeneityPriorType == 'precision') {
-      hy.prior <- mtc.hy.prior('prec', 'dgamma', params[['heterogeneityPrior']][['values']][['rate']], params[['heterogeneityPrior']][['values']][['shape']])
-      mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+    if(linearModel == 'random') {
+      if(heterogeneityPriorType == 'uniform') {
+        hy.prior <- mtc.hy.prior('std.dev', 'dunif', params[['heterogeneityPrior']][['values']][['lower']], params[['heterogeneityPrior']][['values']][['lower']])
+        mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+      }
+      if(heterogeneityPriorType == 'variance') {
+        hy.prior <- mtc.hy.prior('var', 'dlnorm', params[['heterogeneityPrior']][['values']][['mean']], params[['heterogeneityPrior']][['values']][['stdDev']])
+        mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+      }
+      if(heterogeneityPriorType == 'precision') {
+        hy.prior <- mtc.hy.prior('prec', 'dgamma', params[['heterogeneityPrior']][['values']][['rate']], params[['heterogeneityPrior']][['values']][['shape']])
+        mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+      }
     }
     model <- do.call(mtc.model, mtc.model.params)
     update(list(progress=0))
