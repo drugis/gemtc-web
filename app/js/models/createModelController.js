@@ -25,11 +25,13 @@ define(['lodash', 'moment'], function(_, moment) {
       }
     };
     $scope.isTaskTooLong = false;
+    $scope.isValidHeterogeneityPrior = true;
     $scope.createModel = createModel;
     $scope.isAddButtonDisabled = isAddButtonDisabled;
     $scope.modelTypeChange = modelTypeChange;
     $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
     $scope.heterogeneityPriorTypechange = heterogeneityPriorTypechange;
+    $scope.heterogeneityValuesChange = heterogeneityValuesChange;
     $scope.isNumber = isNumber;
     $scope.cleanModel = modelDefer;
     $scope.problem = ProblemResource.get($stateParams);
@@ -75,7 +77,7 @@ define(['lodash', 'moment'], function(_, moment) {
     }
 
     function outcomeScaleTypeChange() {
-      if( $scope.model.outcomeScale.type === 'heuristically') {
+      if ($scope.model.outcomeScale.type === 'heuristically') {
         $scope.model.outcomeScale.value = undefined;
       } else {
         $scope.model.outcomeScale.value = 5; // magic number: w to the power of 0 devided by 15
@@ -86,13 +88,26 @@ define(['lodash', 'moment'], function(_, moment) {
       $scope.model.heterogeneityPrior.values = undefined;
     }
 
+    function heterogeneityParamsChange() {
+      var values = $scope.model.heterogeneityPrior.values;
+      if ($scope.model.heterogeneityPrior.type === 'standard-deviation') {
+        $scope.isValidHeterogeneityPrior = (values.lower >= 0 && values.upper >= 0);
+      } else if ($scope.model.heterogeneityPrior.type === 'variance') {
+        $scope.isValidHeterogeneityPrior = (values.stdDev >= 0)
+      } else if ($scope.model.heterogeneityPrior.type === 'precision') {
+        $scope.isValidHeterogeneityPrior = (values.rate >= 0 && values.shape >= 0)
+      } else {
+        $scope.isValidHeterogeneityPrior = true;
+      }
+    }
+
     function isAddButtonDisabled(model) {
       return !model ||
         !model.title ||
         !!$scope.isAddingModel ||
         !model.likelihoodLink ||
-        model.likelihoodLink.compatibility === 'incompatible'||
-        $scope.model.outcomeScale.value <= 0||
+        model.likelihoodLink.compatibility === 'incompatible' ||
+        $scope.model.outcomeScale.value <= 0 ||
         ($scope.model.outcomeScale.type === 'fixed' && !angular.isNumber($scope.model.outcomeScale.value));
     }
 
