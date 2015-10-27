@@ -86,19 +86,22 @@ define(['lodash', 'moment'], function(_, moment) {
 
     function heterogeneityPriorTypechange() {
       $scope.model.heterogeneityPrior.values = undefined;
+      heterogeneityParamsChange();
     }
 
     function heterogeneityParamsChange() {
       var values = $scope.model.heterogeneityPrior.values;
-      if ($scope.model.heterogeneityPrior.type === 'standard-deviation') {
+      if($scope.model.heterogeneityPrior.type === 'automatic') {
+        $scope.isValidHeterogeneityPrior = true;        
+      } else if (values === undefined) {
+        $scope.isValidHeterogeneityPrior = false;
+      } else if ($scope.model.heterogeneityPrior.type === 'standard-deviation') {
         $scope.isValidHeterogeneityPrior = (values.lower >= 0 && values.upper >= 0);
       } else if ($scope.model.heterogeneityPrior.type === 'variance') {
         $scope.isValidHeterogeneityPrior = (values.stdDev >= 0)
       } else if ($scope.model.heterogeneityPrior.type === 'precision') {
         $scope.isValidHeterogeneityPrior = (values.rate >= 0 && values.shape >= 0)
-      } else {
-        $scope.isValidHeterogeneityPrior = true;
-      }
+      } 
     }
 
     function isAddButtonDisabled(model) {
