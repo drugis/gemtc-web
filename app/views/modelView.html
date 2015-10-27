@@ -16,7 +16,7 @@
       </span>
       <div ng-if="result.results" style="padding-top: 1rem;" id="model-results-results-header">
         <div class="row">
-          <div class="columns columns large-6 medium-8 small-12">
+          <div class="columns columns large-7 medium-8 small-12">
 
             <a ui-sref="nodeSplitOverview(stateParams)" ng-if="model.modelType.type === 'network' || model.modelType.type === 'node-split' " class="row">Go to node-split overview</a>
 
@@ -48,7 +48,7 @@
                   <td class="large-6 text-right"><strong>likelihood / link</strong></td>
                   <td>{{::result.results.likelihood}} / {{::result.results.link}}</td>
                 </tr>
-                <tr>
+                <tr ng-if="model.linearModel === 'random'" >
                   <td class="large-6 text-right"><strong>heterogeneity prior</strong></td>
                   <td><heterogeneity-prior prior="result.results.heterogeneityPrior"></heterogeneity-prior></td>
                 </tr>

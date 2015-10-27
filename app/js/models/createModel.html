@@ -18,7 +18,7 @@
         <div class="large-4 small-12 columns">
           <label class="form-item-header">Fixed/Random effect(s)
             <div class="stacked-radio">
-              <input type="radio" value="random" ng-model="model.linearModel " id="random-effect-radio">
+              <input type="radio" value="random" ng-model="model.linearModel" ng-change="effectsTypeChange()" id="random-effect-radio">
               <label for="random-effect-radio">Random effects</label>
             </div>
             <div class="stacked-radio">

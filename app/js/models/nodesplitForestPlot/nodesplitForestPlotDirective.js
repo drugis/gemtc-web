@@ -30,7 +30,7 @@ define(['d3'], function(d3) {
             return;
           }
 
-          // clear up after resize
+          // clear up when redrawing
           svg.selectAll('*').remove();
 
           var estimates = scope.estimates,
@@ -63,10 +63,6 @@ define(['d3'], function(d3) {
             })
             .attr('stroke-width', '1')
           ;
-
-          svg.selectAll('text')
-            .data(estimates)
-            .enter();
 
           var texts = svg.selectAll('text')
             .data(estimates)

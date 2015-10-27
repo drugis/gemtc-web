@@ -28,6 +28,7 @@ define(['lodash', 'moment'], function(_, moment) {
     $scope.isValidHeterogeneityPrior = true;
     $scope.createModel = createModel;
     $scope.isAddButtonDisabled = isAddButtonDisabled;
+    $scope.effectsTypeChange = effectsTypeChange;
     $scope.modelTypeChange = modelTypeChange;
     $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
     $scope.heterogeneityPriorTypechange = heterogeneityPriorTypechange;
@@ -59,7 +60,15 @@ define(['lodash', 'moment'], function(_, moment) {
       return problem;
     });
 
-
+    function effectsTypeChange() {
+      if ($scope.model.linearModel === 'fixed') {
+        $scope.model.heterogeneityPrior = undefined;
+      } else {
+        $scope.model.heterogeneityPrior = {
+          type: 'automatic'
+        }
+      }
+    }
 
     function modelTypeChange() {
       var mainType = $scope.model.modelType.mainType,
