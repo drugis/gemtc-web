@@ -239,8 +239,8 @@ gemtc <- function(params) {
       mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
     }
     if(linearModel == 'random') {
-      if(heterogeneityPriorType == 'uniform') {
-        hy.prior <- mtc.hy.prior('std.dev', 'dunif', params[['heterogeneityPrior']][['values']][['lower']], params[['heterogeneityPrior']][['values']][['lower']])
+      if(heterogeneityPriorType == 'standard-deviation') {
+        hy.prior <- mtc.hy.prior('std.dev', 'dunif', params[['heterogeneityPrior']][['values']][['lower']], params[['heterogeneityPrior']][['values']][['upper']])
         mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
       }
       if(heterogeneityPriorType == 'variance') {
