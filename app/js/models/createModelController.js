@@ -31,7 +31,7 @@ define(['lodash', 'moment'], function(_, moment) {
     $scope.modelTypeChange = modelTypeChange;
     $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
     $scope.heterogeneityPriorTypechange = heterogeneityPriorTypechange;
-    $scope.heterogeneityValuesChange = heterogeneityValuesChange;
+    $scope.heterogeneityParamsChange = heterogeneityParamsChange;
     $scope.isNumber = isNumber;
     $scope.cleanModel = modelDefer;
     $scope.problem = ProblemResource.get($stateParams);

@@ -117,50 +117,66 @@
             <label for="heterogeneity-prior-automatic-radio">Automatic (heuristic uniform) ~ U(0, <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)</label>
           </div>
         </div>
+
         <div class="row">
-          <div class="columns large-3 stacked-radio">
+          <div class="columns large-6 stacked-radio">
             <input type="radio" value="standard-deviation" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-standard-deviation-radio" ng-change="heterogeneityPriorTypechange()">
             <label for="heterogeneity-prior-standard-deviation-radio">Uniform for standard deviation</label>
+              
+              <div class="row" ng-show="model.heterogeneityPrior.type === 'standard-deviation'">
+                <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
+                <label>lower
+                <input type="number" ng-model="model.heterogeneityPrior.values.lower" id="heterogeneity-uniform-parameter1-input" ng-change="heterogeneityParamsChange()">
+                </label>
+                </div>
+                <div class="columns large-2 medium-3 small-6 end">
+              <label>upper
+                <input type="number" ng-model="model.heterogeneityPrior.values.upper" id="heterogeneity-uniform-parameter2-input" ng-change="heterogeneityParamsChange()">
+              </label>
+              </div>
+            </div>
+
           </div>
-          <div class="columns large-2 text-right">
-            lower:
-            <input type="number" ng-model="model.heterogeneityPrior.values.lower" id="heterogeneity-uniform-parameter1-input" ng-disabled="model.heterogeneityPrior.type !== 'standard-deviation'" ng-change="heterogeneityParamsChange()" style="display: inline; width:40%;">
-          </div>
-          <div class="columns large-2 text-right end">
-            <div>
-              upper:
-              <input type="number" ng-model="model.heterogeneityPrior.values.upper" id="heterogeneity-uniform-parameter2-input" ng-disabled="model.heterogeneityPrior.type !== 'standard-deviation'" ng-change="heterogeneityParamsChange()" style="display: inline; width:40%;">
+        </div>
+
+        <div class="row">
+          <div class="columns large-6 stacked-radio">
+            <input type="radio" value="variance" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-variance-radio" ng-change="heterogeneityPriorTypechange()">
+            <label for="heterogeneity-prior-variance-radio">Log-N for variance</label>
+            <div class="row" ng-show="model.heterogeneityPrior.type === 'variance'">
+              <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
+                <label>mean
+                  <input type="number" ng-model="model.heterogeneityPrior.values.mean" id="heterogeneity-log-n-parameter1-input"ng-change="heterogeneityParamsChange()">
+                </label>
+              </div>
+              <div class="columns large-2 medium-3 small-6 end">
+                <label>std.dev
+                  <input type="number" ng-model="model.heterogeneityPrior.values.stdDev" id="heterogeneity-log-n-parameter2-input" ng-change="heterogeneityParamsChange()">
+                </label>
+             </div>
             </div>
           </div>
         </div>
+
         <div class="row">
-          <div class="columns large-3 stacked-radio">
-            <input type="radio" value="variance" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-variance-radio" ng-change="heterogeneityPriorTypechange()">
-            <label for="heterogeneity-prior-variance-radio">Log-N for variance</label>
-          </div>
-          <div class="columns large-2 text-right">
-            mean:
-            <input type="number" ng-model="model.heterogeneityPrior.values.mean" id="heterogeneity-log-n-parameter1-input" ng-disabled="model.heterogeneityPrior.type !== 'variance'" ng-change="heterogeneityParamsChange()" style="display: inline; width:40%;">
-          </div>
-          <div class="columns large-2 text-right end">
-            std.dev:
-            <input type="number" ng-model="model.heterogeneityPrior.values.stdDev" id="heterogeneity-log-n-parameter2-input" ng-disabled="model.heterogeneityPrior.type !== 'variance'" ng-change="heterogeneityParamsChange()" style="display: inline; width:40%;">
-          </div>
-        </div>
-        <div class="row">
-          <div class="columns large-3 stacked-radio">
+          <div class="columns large-6 stacked-radio">
             <input type="radio" value="precision" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-precision-radio" ng-change="heterogeneityPriorTypechange()">
             <label for="heterogeneity-prior-precision-radio">Gamma for precision</label>
-          </div>
-          <div class="columns large-2 text-right">
-            rate:
-            <input type="number" ng-model="model.heterogeneityPrior.values.rate" id="heterogeneity-gamma-parameter1-input" ng-disabled="model.heterogeneityPrior.type !== 'precision'" ng-change="heterogeneityParamsChange()" style="display: inline; width:40%;">
-          </div>
-          <div class="columns large-2 text-right end">
-            shape:
-            <input type="number" ng-model="model.heterogeneityPrior.values.shape" id="heterogeneity-gamma-parameter2-input" ng-disabled="model.heterogeneityPrior.type !== 'precision'" ng-change="heterogeneityParamsChange()" style="display: inline; width:40%;">
+          <div  class="row" ng-show="model.heterogeneityPrior.type === 'precision'">
+            <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
+            <label>rate
+            <input type="number" ng-model="model.heterogeneityPrior.values.rate" id="heterogeneity-gamma-parameter1-input" ng-change="heterogeneityParamsChange()">
+          </label>
+           </div>
+             <div class="columns large-2 medium-3 small-6 end">
+            <label>shape
+            <input type="number" ng-model="model.heterogeneityPrior.values.shape" id="heterogeneity-gamma-parameter2-input" ng-change="heterogeneityParamsChange()">
+          </label>
+        </div>
           </div>
         </div>
+      </div>
+
       </div>
     </div>
   </div>
