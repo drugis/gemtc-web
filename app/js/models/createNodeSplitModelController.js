@@ -5,7 +5,10 @@ define(['lodash'], function(_) {
 
     var modelCopy = angular.copy(baseModel);
     modelCopy.title = 'Nodesplit model (' + comparison.label + ')';
-    modelCopy.id = null;
+    delete modelCopy.id;
+    delete modelCopy.result;
+    delete modelCopy.taskId;
+    delete modelCopy.analysisId;
 
     $scope.model = modelCopy;
     $scope.isCreatingModel = false;
@@ -17,7 +20,6 @@ define(['lodash'], function(_) {
 
     function createNodeSplitModel(model) {
       $scope.isCreatingModel = true;
-      delete model.result;
       model.modelType.type = 'node-split';
       model.modelType.details = {
         from: _.omit(comparison.from, 'sampleSize'),

@@ -1,5 +1,5 @@
 define(['angular', 'angular-mocks', 'models/models'], function() {
-  fdescribe('the nodesplit overview controller', function() {
+  describe('the nodesplit overview controller', function() {
     var scope,
       q,
       stateParamsMock = {
@@ -201,7 +201,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         scope.$apply();
       });
       it('should build a row per nodesplit comparison, matching the model where possible', function() {
-        expect(analysisServiceMock.createNodeSplitOptions).toHaveBeenCalledWith(analysisMock.problem);
+        expect(analysisServiceMock.createNodeSplitOptions).toHaveBeenCalledWith(problemMock);
         expect(scope.comparisons.length).toBe(optionsMock.length);
         var matchedComparisonNoResults = scope.comparisons[0];
         var unmatchedComparison = scope.comparisons[1];

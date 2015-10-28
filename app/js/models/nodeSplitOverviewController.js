@@ -36,8 +36,8 @@ define(['angular', 'lodash'], function(angular, _) {
       }
     });
 
-    function buildComparisonRows(analysis) {
-      $scope.comparisons = _.map(AnalysisService.createNodeSplitOptions(analysis.problem), function(comparison) {
+    function buildComparisonRows() {
+      $scope.comparisons = _.map(AnalysisService.createNodeSplitOptions(problem), function(comparison) {
         var row = comparison;
         row.colSpan = 6;
         row.label = comparison.label;
