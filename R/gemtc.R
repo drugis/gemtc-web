@@ -157,11 +157,17 @@ nsdensity <- function(x) {
   densplot(ns, ylim=ylim, xlim=xlim)
 }
 
+nullCheckWithDefault <- function(value, default) {
+  if(is.null(value)) default else value
+}
+
 gemtc <- function(params) {
-  iter.adapt <- if(is.null(params[['burnInIterations']])) 5000 else params[['burnInIterations']]
-  iter.infer <- if(is.null(params[['inferenceIterations']])) 20000 else params[['inferenceIterations']]
-  thin <- if(is.null(params[['thinningFactor']])) 10 else params[['thinningFactor']]
-  modelType <-  if(is.null(params[['modelType']][['type']])) 'network' else params[['modelType']][['type']]
+  iter.adapt <- nullCheckWithDefault(params[['burnInIterations']], 5000)
+  iter.infer <- nullCheckWithDefault(params[['inferenceIterations']], 20000)
+  thin <- nullCheckWithDefault(params[['thinningFactor']], 10)
+  modelType <-  nullCheckWithDefault(params[['modelType']][['type']], 'network')
+  heterogeneityPriorType <- nullCheckWithDefault(params[['heterogeneityPrior']][['type']], 'automatic')
+
   progress.start <- 0
   progress.jags <- NA
 
@@ -211,7 +217,7 @@ gemtc <- function(params) {
     data.ab <- do.call(rbind, lapply(params[['entries']],
       function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
     # linear model or fixed?
-    linearModel <- if(is.null(params[['linearModel']])) 'random' else params[['linearModel']]
+    linearModel <- nullCheckWithDefault(params[['linearModel']], 'random')
 
     treatments <- do.call(rbind, lapply(params[['treatments']],
       function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
@@ -231,6 +237,20 @@ gemtc <- function(params) {
       t1 <- params[['modelType']][['details']][['from']][['id']]
       t2 <- params[['modelType']][['details']][['to']][['id']]
       mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
+    }
+    if(linearModel == 'random') {
+      if(heterogeneityPriorType == 'standard-deviation') {
+        hy.prior <- mtc.hy.prior('std.dev', 'dunif', params[['heterogeneityPrior']][['values']][['lower']], params[['heterogeneityPrior']][['values']][['upper']])
+        mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+      }
+      if(heterogeneityPriorType == 'variance') {
+        hy.prior <- mtc.hy.prior('var', 'dlnorm', params[['heterogeneityPrior']][['values']][['mean']], params[['heterogeneityPrior']][['values']][['stdDev']])
+        mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+      }
+      if(heterogeneityPriorType == 'precision') {
+        hy.prior <- mtc.hy.prior('prec', 'dgamma', params[['heterogeneityPrior']][['values']][['rate']], params[['heterogeneityPrior']][['values']][['shape']])
+        mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
+      }
     }
     model <- do.call(mtc.model, mtc.model.params)
     update(list(progress=0))
@@ -327,20 +347,7 @@ times$summary <- system.time({
   summary <- summary(result)
 })
 report('summary', 1.0)
-
-    # In the model fit section, display a table containing mean residual deviance (\bar{D_res}),
-    # the leverage (p_D), and the DIC, as defined by page 609-610 and Table 4 of [mdm-es-2].
-
-
-
-    # Generate the required information (overall mean residual deviance, leverage,
-    # and DIC, and per-arm residual deviance and leverage), and return it as part of the
-    # results object. The deviance statistics are returned as result$deviance, and the gemtc
-    # repository contains deviance-example.R with plotting code. NB only last plot call is relevant.
-
-    # Call the new plot routine to generate the deviance/residuals plot and return it as an embedded SVG or PNG image in the results object.
-
-    summary[['script-version']] <- 0.1
+    summary[['script-version']] <- 0.2
     summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
     summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
     summary[['logScale']] <- ll.call('scale.log', model)
@@ -376,6 +383,9 @@ report('summary', 1.0)
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
     summary[['deviancePlot']] <- deviancePlot
+    heterogeneityPrior <- model[['hy.prior']]
+    heterogeneityPrior[['args']] <- sapply(heterogeneityPrior[['args']], function(arg) { if (arg == 'om.scale') model[['om.scale']] else arg })
+    summary[['heterogeneityPrior']] <- heterogeneityPrior
     print(times)
 
     update(list(progress=100))

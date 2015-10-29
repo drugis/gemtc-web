@@ -16,13 +16,8 @@ module.exports = express.Router({
   .post('/', createModel)
   .get('/:modelId', getModel)
   .post('/:modelId', extendRunLength)
+  .get('/:modelId/result', getResult)
   .use('/:modelId/task', pataviTaskRouter);
-
-function internalError(error, response) {
-  logger.error(error);
-  response.sendStatus(status.INTERNAL_SERVER_ERROR);
-  response.end();
-}
 
 function decorateWithHasResults(modelsResult, pataviResult) {
   var pataviTasks = _.indexBy(pataviResult, 'id');
@@ -41,7 +36,10 @@ function find(request, response, next) {
 
   modelRepository.findByAnalysis(analysisId, function(error, modelsResult) {
     if (error) {
-      internalError(error, response);
+      next({
+        statusCode: 500,
+        message: error
+      });
     } else {
       var modelsWithTasks = _.filter(modelsResult, function(model) {
         return model.taskId !== null && model.taskId !== undefined;
@@ -53,7 +51,10 @@ function find(request, response, next) {
         var taskIds = _.map(modelsWithTasks, 'taskId');
         pataviTaskRepository.getPataviTasksStatus(taskIds, function(error, pataviResult) {
           if (error) {
-            internalError(error, response);
+            next({
+              statusCode: 500,
+              message: error
+            });
           } else {
             decoratedResult = decorateWithHasResults(modelsWithTasks, pataviResult);
             response.json(decoratedResult.concat(modelsWithoutTasks));
@@ -64,6 +65,35 @@ function find(request, response, next) {
       }
     }
   });
+}
+
+function getResult(request, response, next) {
+  logger.debug('modelRouter.getResult');
+  logger.debug('request.params.analysisId' + request.params.analysisId);
+  var analysisId = request.params.analysisId;
+  var modelId = request.params.modelId;
+  var modelCache;
+
+  async.waterfall([
+      function(callback){
+        modelRepository.get(modelId, callback);
+      },
+      function(model, callback) {
+        modelCache = model;
+        if(model.taskId === null || model.taskId === undefined) {
+          callback({
+            statusCode: 404,
+            message: 'attempt to get results of model with no task'
+          });
+        }
+        callback();
+      }, function(callback) {
+        pataviTaskRepository.getResult(modelCache.taskId, callback);
+      }, function(pataviResult, callback) {
+        response.status(status.OK);
+        response.json(pataviResult);
+      }
+    ], next);
 }
 
 function createModel(request, response, next) {
@@ -78,7 +108,7 @@ function createModel(request, response, next) {
       analysisRepository.get(analysisId, callback);
     },
     function(analysis, callback) {
-      checkOwnership(response, analysis.owner, userId, callback);
+      checkOwnership(analysis.owner, userId, callback);
     },
     function(callback) {
       modelRepository.create(userId, analysisId, request.body, callback);
@@ -90,22 +120,33 @@ function createModel(request, response, next) {
         .json({
           id: createdId
         });
-      next();
     }
   ], function(error) {
-    if (error) {
-      internalError(error, response);
+    if(error) {
+      next(error);
     }
-    next();
   });
 }
 
-function checkOwnership(response, owner, userId, callback) {
+function checkOwnership(owner, userId, callback) {
   logger.debug('check owner with ownerId = ' + owner + ' and userId = ' + userId);
-  if (owner !== userId) {
-    response.sendStatus(status.FORBIDDEN);
-    response.end();
-    callback('attempt to modify model in analysis that is not owned');
+  if (owner != userId) {
+    callback({
+      statusCode: 403,
+      message: 'attempt to modify model in not-owned analysis'
+    });
+  } else {
+    callback();
+  }
+}
+
+function checkCoordinates(analysisId, model, callback) {
+  logger.debug('check analysisId = ' + analysisId + ' and model.analysisId = ' + model.analysisId);
+  if (analysisId != model.analysisId) {
+    callback({
+      statusCode: 404,
+      message: 'analysis/model combination not found'
+    });
   } else {
     callback();
   }
@@ -126,13 +167,16 @@ function extendRunLength(request, response, next) {
       analysisRepository.get(analysisId, callback);
     },
     function(analysis, callback) {
-      checkOwnership(response, analysis.owner, userId, callback);
+      checkOwnership(analysis.owner, userId, callback);
     },
     function(callback) {
       modelRepository.get(modelId, callback);
     },
     function(model, callback) {
       modelCache = model;
+      checkCoordinates(analysisId, modelCache, callback);
+    },
+    function(callback) {
       modelService.update(modelCache, newModel, callback);
     },
     function(callback) {
@@ -141,20 +185,17 @@ function extendRunLength(request, response, next) {
     function(callback) {
       response.sendStatus(status.OK);
     }
-  ], function(error) {
-    if (error) {
-      console.log(error);
-      internalError(error, response);
-    }
-    next();
-  });
+  ], next);
 }
 
 function getModel(request, response, next) {
   var modelId = request.params.modelId;
   modelRepository.get(modelId, function(error, result) {
     if (error) {
-      internalError(error, response);
+      next({
+        statusCode: 404,
+        message: error
+      });
     } else {
       response.json(result);
     }

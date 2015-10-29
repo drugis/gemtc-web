@@ -6,6 +6,11 @@ define(['angular', 'angular-resource'], function(angular, angularResource) {
       projectId: '@projectId',
       analysisId: '@analysisId',
       modelId: '@id'
+    }, {
+      getResult: {
+        url: '/projects/:projectId/analyses/:analysisId/models/:modelId/result',
+        method: 'GET'
+      }
     });
   };
   return dependencies.concat(ModelResource);
