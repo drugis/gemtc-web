@@ -77,7 +77,9 @@ define(['lodash'], function() {
           successCallback: function() {
             return function() {
               // reload page, with empty params object
-              $state.go($state.current, {}, {reload: true});
+              $state.go($state.current, {}, {
+                reload: true
+              });
             }
           }
         }
@@ -90,6 +92,7 @@ define(['lodash'], function() {
         projectId: $stateParams.projectId
       }).$promise.then(function(problem) {
         $scope.problem = problem;
+        $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
         $scope.result = result;
         if (problem.treatments && problem.treatments.length > 0) {
           $scope.selectedBaseline = problem.treatments[0];
@@ -101,8 +104,8 @@ define(['lodash'], function() {
           var relativeEffects = result.results.relativeEffects;
           result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
           $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
-          $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         }
+        $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
       });
     }

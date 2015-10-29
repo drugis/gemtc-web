@@ -1,15 +1,11 @@
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('The analysis service', function() {
 
-    var q,
-      analysisService;
-
+    var analysisService;
 
     beforeEach(module('gemtc.analyses'));
 
-    beforeEach(inject(function($rootScope, $q, AnalysisService) {
-      rootScope = $rootScope;
-      q = $q;
+    beforeEach(inject(function(AnalysisService) {
       analysisService = AnalysisService;
     }));
 
