@@ -33,10 +33,10 @@ pwforest <- function(result, t1, t2, ...) {
     ll.call('mtc.rel.mle', model, as.matrix(data[data$study == study & (data$treatment == t1 | data$treatment == t2), columns]), correction.force=FALSE, correction.type="reciprocal", correction.magnitude=0.1)
   })
 
-  pooled.effect <- summary(relative.effect(result, t1=t1, t2=t2))$summaries$statistics[1,1:2]
+  pooled.effect <- as.matrix(relative.effect(result, t1=t1, t2=t2, preserve.extra=FALSE))
 
-  m <- c(sapply(study.effect, function(x) { x['mean'] }), pooled.effect['Mean'])
-  e <- c(sapply(study.effect, function(x) { x['sd'] }), pooled.effect['SD'])
+  m <- c(sapply(study.effect, function(x) { x['mean'] }), apply(pooled.effect, 2, mean))
+  e <- c(sapply(study.effect, function(x) { x['sd'] }), apply(pooled.effect, 2, sd))
 
   fdata <- data.frame(
     id=c(studies, "Pooled"),
@@ -306,6 +306,8 @@ times$forest <- system.time({
     # create forest plot for pairwise analysis
     if(modelType == "pairwise") {
       forestPlot <- plotToSvg(function() {
+        t1 <- params[['modelType']][['details']][['from']][['id']]
+        t2 <- params[['modelType']][['details']][['to']][['id']]
         pwforest(result, t1, t2)
       })
     }
