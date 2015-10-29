@@ -33,10 +33,12 @@ pwforest <- function(result, t1, t2, ...) {
     ll.call('mtc.rel.mle', model, as.matrix(data[data$study == study & (data$treatment == t1 | data$treatment == t2), columns]), correction.force=FALSE, correction.type="reciprocal", correction.magnitude=0.1)
   })
 
-  pooled.effect <- as.matrix(relative.effect(result, t1=t1, t2=t2, preserve.extra=FALSE))
+  pooled.effect <- as.matrix(as.mcmc.list(relative.effect(result, t1=t1, t2=t2, preserve.extra=FALSE)))
 
-  m <- c(sapply(study.effect, function(x) { x['mean'] }), apply(pooled.effect, 2, mean))
-  e <- c(sapply(study.effect, function(x) { x['sd'] }), apply(pooled.effect, 2, sd))
+  pooledMean <- apply(pooled.effect, 2, mean)
+  pooledSD <- apply(pooled.effect, 2, sd)
+  m <- c(sapply(study.effect, function(x) { x['mean'] }), pooledMean)
+  e <- c(sapply(study.effect, function(x) { x['sd'] }), pooledSD)
 
   fdata <- data.frame(
     id=c(studies, "Pooled"),
@@ -48,7 +50,7 @@ pwforest <- function(result, t1, t2, ...) {
   log.scale <- ll.call("scale.log", model)
 
   # auto-scale xlim
-  xlim <- pooled.effect['Mean'] + c(-20, 20) * pooled.effect['SD']
+  xlim <- pooledMean + c(-20, 20) * pooledSD
   xlim <- c(max(xlim[1], min(fdata$ci.l)), min(xlim[2], max(fdata$ci.u)))
   xlim <- c(min(gemtc:::nice.value(xlim[1], floor, log.scale), 0), max(gemtc:::nice.value(xlim[2], ceiling, log.scale), 0))
 
