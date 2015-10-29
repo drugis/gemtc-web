@@ -26,6 +26,9 @@ define(['angular', 'lodash'], function(angular, _) {
       } else {
         model.outcomeScale = frontEndModel.outcomeScale.value;
       }
+      if(model.heterogeneityPrior && model.heterogeneityPrior.type === 'automatic') {
+        delete model.heterogeneityPrior;
+      }
       model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink');
       return model;
     }

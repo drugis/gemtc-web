@@ -9,7 +9,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       modelSaveDefer,
       problemMock,
       modelSaveResultMock,
-      modelServiceMock = jasmine.createSpyObj('ModelService', ['cleanModel']),
+      modelServiceMock = jasmine.createSpyObj('ModelService', ['cleanModel', 'createModelBatch']),
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', [
         'createPairwiseOptions',
@@ -45,6 +45,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         $q: q,
         $stateParams: stateParamsMock,
         $state: stateMock,
+        ModelService: modelServiceMock,
         ModelResource: modelResourceMock,
         AnalysisService: analysisServiceMock,
         ProblemResource: problemResourceMock
@@ -83,7 +84,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           name: 'option 2',
           compatibility: 'compatible'
         }];
-              analysisServiceMock.createLikelihoodLinkOptions.and.returnValue(likelihoodLinkOptionsMock);
+        analysisServiceMock.createLikelihoodLinkOptions.and.returnValue(likelihoodLinkOptionsMock);
         problemDefer.resolve(problemMock);
         scope.$apply();
       });
@@ -93,7 +94,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       it('should retrieve nodesplitting options', function() {
         expect(analysisServiceMock.createNodeSplitOptions).toHaveBeenCalledWith(problemMock);
       });
-      it('should retrieve likelihood link options and place them on the scope, and set the model ll/link function to be the first compatible one' , function() {
+      it('should retrieve likelihood link options and place them on the scope, and set the model ll/link function to be the first compatible one', function() {
         expect(analysisServiceMock.createLikelihoodLinkOptions).toHaveBeenCalledWith(problemMock);
         expect(scope.likelihoodLinkOptions[0]).toEqual(likelihoodLinkOptionsMock[1]);
         expect(scope.likelihoodLinkOptions[1]).toEqual(likelihoodLinkOptionsMock[0]);
@@ -122,18 +123,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           }
         };
 
-        var cleanedModel = {
-          linearModel: 'random',
-          modelType: {
-            type: 'network'
-          },
-          title: 'modelTitle',
-          burnInIterations: 5000,
-          inferenceIterations: 20000,
-          thinningFactor: 10,
-          likelihood: 'likelihood',
-          link: 'link'
-        };
+        var cleanedModel = {};
+        modelServiceMock.cleanModel.and.returnValue(cleanedModel);
 
         beforeEach(function() {
           modelResourceMock.save.calls.reset();
@@ -177,36 +168,17 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           }
         };
 
-        var strippedModel = {
-          linearModel: 'random',
-          likelihood: 'likelihood',
-          link: 'link',
-          modelType: {
-            type: 'node-split',
-            details: {
-              from: {
-                id: 1,
-                name: 'fromName'
-              },
-              to: {
-                id: 2,
-                name: 'toName'
-              }
-            }
-          },
-          title: 'modelTitle nodesplit',
-          burnInIterations: 5000,
-          inferenceIterations: 20000,
-          thinningFactor: 10
-        };
+        var cleanedModel = {};
+
+        modelServiceMock.cleanModel.and.returnValue(cleanedModel);
 
         beforeEach(function() {
           modelResourceMock.save.calls.reset();
           scope.createModel(frontendModel);
         });
 
-        it('should save the strippedModel model', function() {
-          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, strippedModel, jasmine.any(Function));
+        it('should save the cleanedModel model', function() {
+          expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, cleanedModel, jasmine.any(Function));
         });
         it('should set isAddingModel to true', function() {
           expect(scope.isAddingModel).toBe(true);
@@ -233,19 +205,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           }
         };
 
-        var cleanedModel = {
-          linearModel: 'random',
-          modelType: {
-            type: 'network'
-          },
-          title: 'modelTitle',
-          burnInIterations: 5000,
-          inferenceIterations: 20000,
-          thinningFactor: 10,
-          likelihood: 'likelihood',
-          link: 'link',
-          outcomeScale: 123456
-        };
+        var cleanedModel = {};
+        modelServiceMock.cleanModel.and.returnValue(cleanedModel);
 
         beforeEach(function() {
           modelResourceMock.save.calls.reset();
@@ -256,6 +217,26 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, cleanedModel, jasmine.any(Function));
         });
       });
+
+      describe('when creating a batch of pairwise models', function() {
+        it('should call the modelService createModelBatch', function() {
+          var modelBatch = [{
+            id: 1
+          }, {
+            id: 2
+          }];
+          modelServiceMock.createModelBatch.and.returnValue(modelBatch);
+          var model = {
+            linearModel: 'random',
+            modelType: {
+              subType: 'all-pairwise'
+            }
+          };
+          scope.createModel(model);
+          expect(modelServiceMock.createModelBatch).toHaveBeenCalledWith(model, scope.comparisonOptions, scope.nodeSplitOptions);
+        });
+      });
+
     });
 
     describe('isAddButtonDisabled', function() {
