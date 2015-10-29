@@ -244,7 +244,7 @@ gemtc <- function(params) {
         mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
       }
       if(heterogeneityPriorType == 'variance') {
-        hy.prior <- mtc.hy.prior('var', 'dlnorm', params[['heterogeneityPrior']][['values']][['mean']], params[['heterogeneityPrior']][['values']][['stdDev']])
+        hy.prior <- mtc.hy.prior('var', 'dlnorm', params[['heterogeneityPrior']][['values']][['mean']], params[['heterogeneityPrior']][['values']][['stdDev']]^-2)
         mtc.model.params <- c(mtc.model.params, list('hy.prior' = hy.prior))
       }
       if(heterogeneityPriorType == 'precision') {
@@ -349,7 +349,7 @@ times$summary <- system.time({
   summary <- summary(result)
 })
 report('summary', 1.0)
-    summary[['script-version']] <- 0.2
+    summary[['script-version']] <- 0.3
     summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
     summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
     summary[['logScale']] <- ll.call('scale.log', model)
@@ -387,6 +387,9 @@ report('summary', 1.0)
     summary[['deviancePlot']] <- deviancePlot
     heterogeneityPrior <- model[['hy.prior']]
     heterogeneityPrior[['args']] <- sapply(heterogeneityPrior[['args']], function(arg) { if (arg == 'om.scale') model[['om.scale']] else arg })
+    if(heterogeneityPrior[['distr']] == 'dlnorm') {
+      heterogeneityPrior[['args']][2] <- heterogeneityPrior[['args']][2]^-0.5
+    }
     summary[['heterogeneityPrior']] <- heterogeneityPrior
     print(times)
 
