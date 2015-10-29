@@ -8,5 +8,8 @@ define(function(require) {
     .directive('pagedSvgPlot', require('gemtc-web/util/pagedSvgPlotDirective'))
     .directive('pagedPngPlot', require('gemtc-web/util/pagedPngPlotDirective'))
     .directive('appAlert', require('gemtc-web/util/appAlertDirective'))
+    .directive('runLength', require('gemtc-web/models/runLength/runLengthDirective'))
+    .directive('nodesplitForestPlot',require('gemtc-web/models/nodesplitForestPlot/nodesplitForestPlotDirective'))
+    .directive('heterogeneityPrior', require('gemtc-web/models/heterogeneityPrior/heterogeneityPriorDirective'))
   ;
 });

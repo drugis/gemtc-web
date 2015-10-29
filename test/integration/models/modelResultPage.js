@@ -14,6 +14,13 @@ ModelResultPage.prototype = {
   waitForResults: function() {
     browser.waitForElementVisible('#model-results-results-header', 80000);
   },
+  extendRunLength: function () {
+    browser
+      .click('#open-run-length-dialog-btn')
+      .setValue('#nr-burn-in-input', '110')
+      .setValue('#nr-inference-input', '60')
+      .click('#submit-extend-run-length-btn');
+  },
   showConvergenceDiagnostics: function() {
     browser.click('#show-convergence-diagnostics');
   },

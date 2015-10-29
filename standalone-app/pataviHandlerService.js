@@ -14,7 +14,8 @@ var modelSettings = [
   'thinningFactor',
   'likelihood',
   'link',
-  'outcomeScale'];
+  'outcomeScale',
+  'heterogeneityPrior'];
 
 function createPataviTask(analysis, model, callback) {
   var problemPlusModelSettings = _.extend(analysis.problem, _.pick(model, modelSettings));

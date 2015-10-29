@@ -1,11 +1,11 @@
-<div class="row">
-  <div class="large-12 columns">
-    <h3 id="create-model-header">Create new model</h3>
+<form id="add-model-form" novalidate ng-submit="createModel(model)">
+  <div class="row">
+    <div class="large-12 columns">
+      <h3 id="create-model-header">Create new model</h3>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="large-12 columns">
-    <form id="add-model-form" novalidate ng-submit="createModel(model)">
+  <div class="row">
+    <div class="large-12 columns">
       <div class="row section">
         <div class="large-4 small-12 columns">
           <label class="form-item-header">Title
@@ -18,7 +18,7 @@
         <div class="large-4 small-12 columns">
           <label class="form-item-header">Fixed/Random effect(s)
             <div class="stacked-radio">
-              <input type="radio" value="random" ng-model="model.linearModel " id="random-effect-radio">
+              <input type="radio" value="random" ng-model="model.linearModel" ng-change="effectsTypeChange()" id="random-effect-radio">
               <label for="random-effect-radio">Random effects</label>
             </div>
             <div class="stacked-radio">
@@ -90,6 +90,7 @@
         </div>
       </div>
       <!-- end likelihood/link section -->
+
       <div class="row section">
         <div class="large-6 medium-8 small-12 columns">
           <label class="form-item-header">Outcome scale</label>
@@ -106,50 +107,120 @@
       </div>
       <div class="row">
         <div class="columns large-8 medium-10 small-12" style="padding-left: 1.2rem;">
-          <div ng-show="model.outcomeScale.value <= 0 ">
-            <label class="alert">Outcome scale value can not zero or lower.</label>
+          <div ng-show="model.outcomeScale.value !== null && model.outcomeScale.value <= 0 ">
+            <label class="alert">Outcome scale value can not be zero or lower.</label>
           </div>
           <div ng-show="model.outcomeScale.type === 'fixed' && !isNumber(model.outcomeScale.value) ">
             <label class="alert">Outcome scale value is not a valid number.</label>
           </div>
           <label style="margin-bottom:1rem;"><strong>Relative effect priors:</strong> N(0, (15 &#8901; <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)<sup>2</sup>)</label>
-          <label style="margin-bottom:1rem;"><strong>Random effects SD prior:</strong> U(0, <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)</label>
         </div>
       </div>
-      <!-- end likelihood/link section -->
-      <!-- end outcome measure scale section -->
-      <div class="row section">
-        <div class="large-3 medium-6 small-12 columns">
-          <label class="form-item-header">Run-length parameters</label>
-          <label>Number of burn-in iterations
-            <input type="number" min="1" step="1" ng-model="model.burnInIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="burn-in-iterations">
-          </label>
-          <label>Number of inference iterations
-            <input type="number" min="1" step="1" ng-model="model.inferenceIterations" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="inference-iterations">
-          </label>
-          <label>Thinning factor
-            <input type="number" min="1" step="1" ng-model="model.thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' ng-change="checkRunLength()" id="thinning-factor">
-          </label>
+      <!-- end outcome scale section -->
+
+      <div ng-show="model.linearModel === 'random'">
+        <div class="row section">
+          <div class="large-6 medium-8 small-12 columns">
+            <label class="form-item-header">Heterogeneity prior</label>
+          </div>
         </div>
-      </div>
-      <!-- end run-length parameters section -->
-      <div class="row">
-        <div class="columns large-6 medium-8 small-12">
-          <div>
-            <label class="form-item-header" ng-show="model.modelType.subType !== 'all-pairwise' && model.modelType.subType !== 'all-node-split'">Estimated run length</label>
-            <label class="form-item-header" ng-show="model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split'">Maximum run length for these models</label> {{estimatedRunLengthHumanized}}</div>
-          <div class="alert" ng-show='!isRunlengthDivisibleByThinningFactor()'>The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions. </div>
-          <div class="alert" ng-show='estimatedRunLength > 300'>This task will take too long (over 5 minutes). Please reduce the number of iterations or increase the thinning factor.</div>
+        <div class="row">
+          <div class="columns large-6 stacked-radio">
+            <input type="radio" value="automatic" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-automatic-radio" ng-change="heterogeneityPriorTypechange()">
+            <label for="heterogeneity-prior-automatic-radio">Automatic (heuristic uniform) ~ U(0, <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)</label>
+          </div>
         </div>
-      </div>
-      <div class="row bottom-button-bar">
-        <div class="large-9 columns">
-          <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(model)">
-            Create Model(s)
-          </button>
-          <div class="alert" ng-show='!model.title'>Model title missing.</div>
+
+        <div class="row">
+          <div class="columns large-6 stacked-radio">
+            <input type="radio" value="standard-deviation" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-standard-deviation-radio" ng-change="heterogeneityPriorTypechange()">
+            <label for="heterogeneity-prior-standard-deviation-radio">Uniform for standard deviation</label>
+              
+              <div ng-show="model.heterogeneityPrior.type === 'standard-deviation'">
+                <div class="row">
+                  <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
+                    <label>lower
+                      <input type="number" ng-model="model.heterogeneityPrior.values.lower" id="heterogeneity-uniform-parameter1-input" ng-change="heterogeneityParamsChange()">
+                    </label>
+                  </div>
+                  <div class="columns large-2 medium-3 small-6 end">
+                    <label>upper
+                      <input type="number" ng-model="model.heterogeneityPrior.values.upper" id="heterogeneity-uniform-parameter2-input" ng-change="heterogeneityParamsChange()">
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="colums large-offset-1 medium-offset-1 large-11">
+                    <label class="alert" ng-show="model.heterogeneityPrior.values.lower < 0 || model.heterogeneityPrior.values.upper < 0">Values may not be below 0</label>
+                  </div>
+                </div>
+              </div>
+
+          </div>
         </div>
+
+        <div class="row">
+          <div class="columns large-6 stacked-radio">
+            <input type="radio" value="variance" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-variance-radio" ng-change="heterogeneityPriorTypechange()">
+            <label for="heterogeneity-prior-variance-radio">Log-N for variance</label>
+            <div class="row" ng-show="model.heterogeneityPrior.type === 'variance'">
+              <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
+                <label>mean
+                  <input type="number" ng-model="model.heterogeneityPrior.values.mean" id="heterogeneity-log-n-parameter1-input"ng-change="heterogeneityParamsChange()">
+                </label>
+              </div>
+              <div class="columns large-2 medium-3 small-6 end">
+                <label>std.dev
+                  <input type="number" ng-model="model.heterogeneityPrior.values.stdDev" id="heterogeneity-log-n-parameter2-input" ng-change="heterogeneityParamsChange()">
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="colums large-offset-1 medium-offset-1 large-11">
+                <label class="alert" ng-show="model.heterogeneityPrior.values.stdDev < 0">Standard deviation may not be below 0</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="columns large-6 stacked-radio">
+            <input type="radio" value="precision" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-precision-radio" ng-change="heterogeneityPriorTypechange()">
+            <label for="heterogeneity-prior-precision-radio">Gamma for precision</label>
+            <div  class="row" ng-show="model.heterogeneityPrior.type === 'precision'">
+              <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
+                <label>rate
+                  <input type="number" ng-model="model.heterogeneityPrior.values.rate" id="heterogeneity-gamma-parameter1-input" ng-change="heterogeneityParamsChange()">
+                </label>
+              </div>
+              <div class="columns large-2 medium-3 small-6 end">
+                <label>shape
+                  <input type="number" ng-model="model.heterogeneityPrior.values.shape" id="heterogeneity-gamma-parameter2-input" ng-change="heterogeneityParamsChange()">
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="colums large-offset-1 medium-offset-1 large-11">
+                <label class="alert" ng-show="model.heterogeneityPrior.values.rate < 0 || model.heterogeneityPrior.values.shape < 0">Values may not be below 0</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-    </form>
+    </div>
   </div>
-</div>
+  <!-- end heterogeneity prior section -->
+
+  <run-length problem="problem" model="cleanModel" burn-in-iterations="model.burnInIterations" inference-iterations="model.inferenceIterations" thinning-factor="model.thinningFactor" is-valid-run-length="isValidRunLength"></run-length>
+
+  <div class="row bottom-button-bar">
+    <div class="large-9 columns">
+      <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="!isValidRunLength || !isValidHeterogeneityPrior || isAddButtonDisabled(model)">
+        Create Model(s)
+      </button>
+      <div class="alert" ng-show='!model.title'>Model title missing.</div>
+    </div>
+  </div>
+
+</form>

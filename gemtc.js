@@ -7,6 +7,7 @@ var express = require('express'),
   userRepository = require('./standalone-app/userRepository'),
   analysisRouter = require('./standalone-app/analysisRouter'),
   modelRouter = require('./standalone-app/modelRouter'),
+  errorHandler = require('./standalone-app/errorHandler'),
   logger = require('./standalone-app/logger');
 
 
@@ -59,7 +60,6 @@ everyauth.google
     return promise;
   });
 
-
 var app = express();
 
 logger.info('Start Gemtc stand-alone app');
@@ -78,4 +78,5 @@ module.exports = app
   .use('/analyses/:analysisId/models', modelRouter)
   .use(express.static('app'))
   .use(everyauth.middleware())
+  .use(errorHandler)
   .listen(3001);

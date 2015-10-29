@@ -10,6 +10,9 @@ define(function (require) {
     .controller('StandAloneModelContainerController', require('models/standAloneModelContainerController'))
     .controller('CreateModelController', require('models/createModelController'))
     .controller('ExtendRunLengthController', require('models/extendRunLengthController'))
+    .controller('NodeSplitOverviewController', require('models/nodeSplitOverviewController'))
+    .controller('CreateNodeSplitModelController', require('models/createNodeSplitModelController'))
+    .controller('CreateNetworkModelController', require('models/createNetworkModelController'))
 
     // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
@@ -17,9 +20,15 @@ define(function (require) {
     .factory('AnalysisResource', require('analyses/analysisResource'))
 
     //services
+    .factory('ModelService', require('models/modelService'))
     .factory('AnalysisService', require('analyses/analysisService'))
     .factory('DevianceStatisticsService', require('models/devianceStatisticsService'))
+    .factory('NodeSplitOverviewService', require('models/nodeSplitOverviewService'))
 
+    //directives
     .directive('gemtcRankPlot',require('models/rankPlotDirective'))
+    .directive('runLength',require('models/runLength/runLengthDirective'))
+    .directive('nodesplitForestPlot',require('models/nodesplitForestPlot/nodesplitForestPlotDirective'))
+    .directive('heterogeneityPrior', require('models/heterogeneityPrior/heterogeneityPriorDirective'))
     ;
 });

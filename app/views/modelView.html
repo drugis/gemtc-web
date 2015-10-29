@@ -1,4 +1,5 @@
-<div class="row">
+<div ui-view>
+  <div class="row">
   <div class="columns large-12" id="model-results-header">
     <h1><a ui-sref="networkMetaAnalysis(stateParams)">{{analysis.title}}</a></h1>
     <h5><strong>Outcome</strong></h5>
@@ -15,7 +16,10 @@
       </span>
       <div ng-if="result.results" style="padding-top: 1rem;" id="model-results-results-header">
         <div class="row">
-          <div class="columns columns large-6 medium-8 small-12">
+          <div class="columns columns large-7 medium-8 small-12">
+
+            <a ui-sref="nodeSplitOverview(stateParams)" ng-if="model.modelType.type === 'network' || model.modelType.type === 'node-split' " class="row">Go to node-split overview</a>
+
             <div class="panel callout">
               <h5><strong>Model settings</strong></h5>
               <table class="layout-table">
@@ -44,6 +48,10 @@
                   <td class="large-6 text-right"><strong>likelihood / link</strong></td>
                   <td>{{::result.results.likelihood}} / {{::result.results.link}}</td>
                 </tr>
+                <tr ng-if="model.linearModel === 'random'" >
+                  <td class="large-6 text-right"><strong>heterogeneity prior</strong></td>
+                  <td><heterogeneity-prior prior="result.results.heterogeneityPrior"></heterogeneity-prior></td>
+                </tr>
                 <tr>
                   <td class="large-6 text-right" style="vertical-align:top;"><strong>run-length</strong></td>
                   <td>
@@ -70,7 +78,6 @@
             </div>
             <div class="row">
               <div class="columns large-8 medium-6 small-12">
-                <button ng-hide="isExtensionBlocked" ng-click="openRunLengthDialog()">Extend run-length</button>
                 <div>
                   <table export>
                     <caption>Per-parameter convergence diagnostics</caption>
@@ -98,8 +105,14 @@
                     </tbody>
                   </table>
                 </div>
-                <button id="show-convergence-diagnostics" ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()">Show diagnostics plots</button>
-                <button id="hide-convergence-diagnostics" ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()">Hide diagnostics plots</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns large-8 medium-6 small-12">
+                <!-- gemtc stand-alone doas not set editMode-->
+                <button id="open-run-length-dialog-btn" ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()" class="small">Extend run-length</button>
+                <button id="show-convergence-diagnostics" ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()" class="small info">Show diagnostics plots</button>
+                <button id="hide-convergence-diagnostics" ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()" class="small info">Hide diagnostics plots</button>
               </div>
             </div>
             <div class="row" ng-show="isConvergencePlotsShown">
@@ -119,7 +132,7 @@
         <div class="row">
           <div class="columns">
             <div class="row" style="padding-top: 1rem;">
-              <div class="columns large-3">
+              <div class="columns large-2">
                 <h3 class="main-category-header">Model fit</h3>
               </div>
               <div class="columns large-8 end">
@@ -287,9 +300,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="(key, treatments) in problem.treatments">
-                  <td>{{::treatments.name}}</td>
-                  <td ng-repeat="rank in result.results.rankProbabilities[treatments.name]">
+                <tr ng-repeat="(treatment, rankValues) in result.results.rankProbabilities">
+                  <td>{{::treatment}}</td>
+                  <td ng-repeat="rank in rankValues track by $index">
                     {{::rank | number}}
                   </td>
                 </tr>
@@ -317,3 +330,4 @@
     </div>
   </div>
 </div>
+</div ui-view>
