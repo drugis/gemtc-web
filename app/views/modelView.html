@@ -18,7 +18,7 @@
         <div class="row">
           <div class="columns columns large-7 medium-8 small-12">
 
-            <a ui-sref="nodeSplitOverview(stateParams)" ng-if="model.modelType.type === 'network' || model.modelType.type === 'node-split' " class="row">Go to node-split overview</a>
+            <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 " class="row">Go to node-split overview</a>
 
             <div class="panel callout">
               <h5><strong>Model settings</strong></h5>
