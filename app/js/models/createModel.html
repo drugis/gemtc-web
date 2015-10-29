@@ -22,7 +22,7 @@
               <label for="random-effect-radio">Random effects</label>
             </div>
             <div class="stacked-radio">
-              <input type="radio" value="fixed" ng-model="model.linearModel" id="fixed-effect-radio">
+              <input type="radio" value="fixed" ng-model="model.linearModel" ng-change="effectsTypeChange()" id="fixed-effect-radio">
               <label for="fixed-effect-radio">Fixed effect</label>
             </div>
           </label>

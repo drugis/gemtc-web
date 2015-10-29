@@ -62,7 +62,7 @@ define(['lodash', 'moment'], function(_, moment) {
 
     function effectsTypeChange() {
       if ($scope.model.linearModel === 'fixed') {
-        $scope.model.heterogeneityPrior = undefined;
+        delete $scope.model.heterogeneityPrior;
       } else {
         $scope.model.heterogeneityPrior = {
           type: 'automatic'
@@ -130,7 +130,7 @@ define(['lodash', 'moment'], function(_, moment) {
     function createModel(model) {
       $scope.isAddingModel = true;
       if (model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split') {
-        var modelsToCreate = ModelServiceBatch.createModelBatch(model, $scope.comparisonOptions, $scope.nodeSplitOptions);
+        var modelsToCreate = ModelService.createModelBatch(model, $scope.comparisonOptions, $scope.nodeSplitOptions);
         var cleanModels = _.map(modelsToCreate, ModelService.cleanModel);
         var creationPromises = _.map(modelsToCreate, function(modelToCreate) {
           return createAndPostModel(modelToCreate, function() {});
