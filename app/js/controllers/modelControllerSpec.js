@@ -74,7 +74,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
       devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildTable']);
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics']);
-      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName']);
+      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
       stateMock = jasmine.createSpyObj('$state', ['reload']);
       modalMock = jasmine.createSpyObj('$modal', ['open']);
 
