@@ -2,13 +2,13 @@
   <div class="large-8 columns">
     <label class="form-item-header">Run-length parameters</label>
     <label>Number of burn-in iterations
-      <input type="number" min="1" step="1" ng-model="burnInIterations" ng-model-options='{ debounce: 200 }' id="burn-in-iterations">
+      <input type="number" min="1" step="1" ng-model="burnInIterations" ng-model-options='{ debounce: 200 }' id="nr-burn-in-input">
     </label>
     <label>Number of inference iterations
-      <input type="number" min="1" step="1" ng-model="inferenceIterations" ng-model-options='{ debounce: 200 }' id="inference-iterations">
+      <input type="number" min="1" step="1" ng-model="inferenceIterations" ng-model-options='{ debounce: 200 }' id="nr-inference-input">
     </label>
     <label>Thinning factor
-      <input type="number" min="1" step="1" ng-model="thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' id="thinning-factor">
+      <input type="number" min="1" step="1" ng-model="thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' id="nr-thinning-factor-input">
     </label>
   </div>
 </div>
