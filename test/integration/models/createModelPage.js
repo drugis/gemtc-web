@@ -53,12 +53,12 @@ CreateModelPage.prototype = {
   },
   setRunLength: function(burnInIterations, inferenceIterations, thinningFactor) {
     this.browser
-      .clearValue('#burn-in-iterations')
-      .setValue('#burn-in-iterations', burnInIterations)
-      .clearValue('#inference-iterations')
-      .setValue('#inference-iterations', inferenceIterations)
-      .clearValue('#thinning-factor')
-      .setValue('#thinning-factor', thinningFactor);
+      .clearValue('#nr-burn-in-input')
+      .setValue('#nr-burn-in-input', burnInIterations)
+      .clearValue('#nr-inference-input')
+      .setValue('#nr-inference-input', inferenceIterations)
+      .clearValue('#nr-thinning-factor-input')
+      .setValue('#nr-thinning-factor-input', thinningFactor);
     console.log('set run length completed');
   },
   createModel: function() {

@@ -17,7 +17,10 @@ ModelResultPage.prototype = {
   extendRunLength: function () {
     browser
       .click('#open-run-length-dialog-btn')
+      .waitForElementVisible('.reveal-modal', 500)
+      .clearValue('#nr-burn-in-input')
       .setValue('#nr-burn-in-input', '110')
+      .clearValue('#nr-inference-input')
       .setValue('#nr-inference-input', '60')
       .click('#submit-extend-run-length-btn');
   },
