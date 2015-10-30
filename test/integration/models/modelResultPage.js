@@ -28,9 +28,11 @@ ModelResultPage.prototype = {
     browser.click('#hide-convergence-diagnostics');
   },
   assertDirectiveImagesRendered: function(directiveName) {
+   
     browser.elements('tag name', directiveName, function(result) {
       result.value.map(function(v) {
-        browser.elementIdElement(v.ELEMENT, 'tag name', 'img', function(imgResult) {
+        // this stopeped working for some reason 
+          browser.elementIdElement(v.ELEMENT, 'tag name', 'img', function(imgResult) {
           browser.elementIdSize(imgResult.value.ELEMENT, function(sizeResult) {
             assert(sizeResult.value.height > 0);
             assert(sizeResult.value.width > 0);
