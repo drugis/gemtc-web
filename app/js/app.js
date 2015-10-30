@@ -15,7 +15,8 @@ define(
     'analyses/analyses',
     'models/models',
     'util/util',
-    'patavi/patavi'
+    'patavi/patavi',
+    'help-popup'
   ],
   function(angular, require, $, _) {
 
@@ -30,13 +31,14 @@ define(
       'gemtc.analyses',
       'gemtc.models',
       'gemtc.util',
-      'gemtc.patavi'
+      'gemtc.patavi',
+      'help-directive'
     ];
 
     var app = angular.module('gemtc', dependencies);
 
-    app.run(['$rootScope', '$window', '$http',
-      function($rootScope, $window, $http) {
+    app.run(['$rootScope', '$window', '$http', 'HelpPopupService',
+      function($rootScope, $window, $http, HelpPopupService) {
 
         $rootScope.$on('$viewContentLoaded', function() {
           $(document).foundation();
@@ -58,6 +60,14 @@ define(
             }
           });
         });
+
+        HelpPopupService.loadLexicon({
+        analysis: {
+          title: 'Analysis',
+          text: 'In GeMTC, an analysis consists of a dataset and any number of models constructed over that dataset. Typically, an analysis will aim to answer a single question, but it may be necessary to create multiple models to answer sub-questions, e.g. whether the model is consistent.',
+          link: 'http://drugis.org'
+        }
+      });
       }
     ]);
 
