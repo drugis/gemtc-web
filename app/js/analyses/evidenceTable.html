@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="columns large-12">
 		<table class="network-meta-analysis-table">
-		<caption>Evidence table</caption>
+		<caption>Evidence table<inline-help help-key="evidence-table"></inline-help></caption>
 			<thead>
 				<tr>
 					<th class="large-3">Study</th>
@@ -20,16 +20,16 @@
 					<td >
 						{{treatment.treatmentTitle}}
 					</td>
-					<td ng-show="outcomeType === 'dichotomous'">
+					<td class="text-center" ng-show="outcomeType === 'dichotomous'">
 						{{treatment.evidence.responders}}
 					</td>
-					<td ng-show="outcomeType === 'continuous'">
+					<td class="text-center" ng-show="outcomeType === 'continuous'">
 						{{treatment.evidence.mean}}
-					</td>
+					</td class="text-center">
 					<td ng-show="outcomeType === 'continuous'">
 						{{treatment.evidence.stdDev}}
 					</td>
-					<td >
+					<td class="text-center" >
 						{{treatment.evidence.sampleSize}}
 					</td>
 
