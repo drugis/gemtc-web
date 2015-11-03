@@ -14,11 +14,9 @@ module.exports = {
 
     analysesPage.waitForPageToLoad();
     analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.json');
-    browser.waitForElementVisible('#analysis-header', 10000);
-
     analysisOverviewPage.waitForPageToLoad();
     analysisOverviewPage.addModel();
-    browser.waitForElementVisible('#create-model-header', 50000);
+    analysisOverviewPage.waitForPageToLoad();
     analysisOverviewPage.end();
   }
 };
