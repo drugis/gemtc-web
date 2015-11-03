@@ -9357,6 +9357,11 @@ inline-help {
   color: #008CBA;
 }
 
+/* line 270, ../drugis-css/_drugis.scss */
+body .joyride-tip-guide {
+  z-index: 1006;
+}
+
 /* -------- end inline help directive---------*/
 /**
  * Animations from mmfoundation
