@@ -15,7 +15,8 @@ define(
     'analyses/analyses',
     'models/models',
     'util/util',
-    'patavi/patavi'
+    'patavi/patavi',
+    'help-popup'
   ],
   function(angular, require, $, _) {
 
@@ -30,13 +31,14 @@ define(
       'gemtc.analyses',
       'gemtc.models',
       'gemtc.util',
-      'gemtc.patavi'
+      'gemtc.patavi',
+      'help-directive'
     ];
 
     var app = angular.module('gemtc', dependencies);
 
-    app.run(['$rootScope', '$window', '$http',
-      function($rootScope, $window, $http) {
+    app.run(['$rootScope', '$window', '$http', 'HelpPopupService',
+      function($rootScope, $window, $http, HelpPopupService) {
 
         $rootScope.$on('$viewContentLoaded', function() {
           $(document).foundation();
@@ -57,6 +59,16 @@ define(
               delete $rootScope.error;
             }
           });
+        });
+
+        $http.get('lexicon.json').success(function(data) {
+          if (data) {
+            HelpPopupService.loadLexicon(data);
+          } else {
+            // log error and continue
+            console.error("Failed to load gemtc-lexicon json data");
+          }
+
         });
       }
     ]);

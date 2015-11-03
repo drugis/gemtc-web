@@ -14,10 +14,12 @@ require.config({
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/build/nv.d3.min',
     'moment': 'bower_components/moment/min/moment.min',
-    'mmfoundation': 'bower_components/angular-foundation/mm-foundation-tpls',
+    'mmfoundation': 'bower_components/angular-foundation/dist/mm-foundation-tpls-0.9.0-SNAPSHOT',
     'angularanimate': 'bower_components/angular-animate/angular-animate.min',
     'ngSanitize': 'bower_components/angular-sanitize/angular-sanitize.min',
-    'papaparse': 'bower_components/papaparse/papaparse.min'
+    'papaparse': 'bower_components/papaparse/papaparse.min',
+    'help-popup': 'bower_components/help-popup/help-directive',
+    'lexicon': 'gemtc-lexicon.json'
   },
   shim: {
     'jQuery': {
@@ -31,6 +33,9 @@ require.config({
       deps: ['angular']
     },
     'mmfoundation': {
+      deps: ['angular']
+    },
+    'help-popup': {
       deps: ['angular']
     },
     'angular-resource': {
