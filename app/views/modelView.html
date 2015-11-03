@@ -154,7 +154,7 @@
                         <td>{{result.results.leverage}}</td>
                       </tr>
                       <tr>
-                        <td>DIC</td>
+                        <td>DIC<inline-help help-key="deviance-information-criterion"></inline-help></td>
                         <td>{{result.results.DIC}}</td>
                       </tr>
                     </tbody>
@@ -216,11 +216,11 @@
                 </tr>
               </thead>
               <tr>
-                <td><strong>Direct estimate</strong></td>
+                <td><strong>Direct estimate</strong><inline-help help-key="direct-estimate"></inline-help></td>
                 <td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
               </tr>
               <tr>
-                <td><strong>Indirect estimate</strong></td>
+                <td><strong>Indirect estimate</strong><inline-help help-key="indirect-estimate"></inline-help></td>
                 <td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
               </tr>
             </table>
@@ -280,7 +280,7 @@
           <div class="columns">
             <div class="row">
               <div class="columns large-12 small-8">
-                <p><strong>Density plot</strong></p>
+                <p><strong>Density plot</strong><inline-help help-key="density-plot"></inline-help></p>
                 <paged-png-plot file-name="'densityPlot'" pages="result.results.densityPlot"></paged-png-plot>
               </div>
             </div>

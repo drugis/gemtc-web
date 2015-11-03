@@ -18,7 +18,8 @@ require.config({
     'angularanimate': 'bower_components/angular-animate/angular-animate.min',
     'ngSanitize': 'bower_components/angular-sanitize/angular-sanitize.min',
     'papaparse': 'bower_components/papaparse/papaparse.min',
-    'help-popup': 'bower_components/help-popup/help-directive'
+    'help-popup': 'bower_components/help-popup/help-directive',
+    'lexicon': 'gemtc-lexicon.json'
   },
   shim: {
     'jQuery': {

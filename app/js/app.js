@@ -61,13 +61,15 @@ define(
           });
         });
 
-        HelpPopupService.loadLexicon({
-        analysis: {
-          title: 'Analysis',
-          text: 'In GeMTC, an analysis consists of a dataset and any number of models constructed over that dataset. Typically, an analysis will aim to answer a single question, but it may be necessary to create multiple models to answer sub-questions, e.g. whether the model is consistent.',
-          link: 'http://drugis.org'
-        }
-      });
+        $http.get('lexicon.json').success(function(data) {
+          if (data) {
+            HelpPopupService.loadLexicon(data);
+          } else {
+            // log error and continue
+            console.error("Failed to load gemtc-lexicon json data");
+          }
+
+        });
       }
     ]);
 

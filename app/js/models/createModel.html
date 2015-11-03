@@ -16,7 +16,7 @@
       </div>
       <div class="row section">
         <div class="large-4 small-12 columns">
-          <label class="form-item-header">Fixed/Random effect(s)
+          <label class="form-item-header">Fixed/Random effect(s)<inline-help help-key="effects-type"></inline-help>
             <div class="stacked-radio">
               <input type="radio" value="random" ng-model="model.linearModel" ng-change="effectsTypeChange()" id="random-effect-radio">
               <label for="random-effect-radio">Random effects</label>
@@ -30,7 +30,7 @@
       </div>
       <div class="row section">
         <div class="large-6 small-12 columns">
-          <label class="form-item-header">Model Type</label>
+          <label class="form-item-header">Model Type<inline-help help-key="model-type"></inline-help></label>
           <div class="stacked-radio">
             <input type="radio" value="network" ng-model="model.modelType.mainType" id="network-model-type-radio" ng-change="modelTypeChange()">
             <label for="network-model-type-radio">Network meta-analysis</label>
@@ -55,7 +55,7 @@
           </div>
           <div class="stacked-radio">
             <input type="radio" value="node-split" ng-model="model.modelType.mainType" id="node-split-model-main-type-radio" ng-change="modelTypeChange()" ng-disabled="nodeSplitOptions.length === 0">
-            <label for="node-split-model-main-type-radio">Node-splitting analysis <em ng-show="nodeSplitOptions.length === 0"> (Not possible for this analysis)</em></label>
+            <label for="node-split-model-main-type-radio">Node-splitting analysis <inline-help help-key="node-splitting-model"></inline-help><em ng-show="nodeSplitOptions.length === 0"> (Not possible for this analysis)</em></label>
           </div>
           <div class="indent-one" ng-show="model.modelType.mainType == 'node-split'">
             <label for="comparison-select">Select comparison for which to perform node-splitting analysis</label>
@@ -76,7 +76,7 @@
       <!-- end model type section -->
       <div class="row section">
         <div class="columns large-6 medium-6 small-12">
-          <label class="form-item-header">Likelihood/Link</label>
+          <label class="form-item-header">Likelihood/Link<inline-help help-key="likelihood-link"></inline-help></label>
           <label>Select a likelihood/link type
             <select class="large-8" ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions" ng-model="model.likelihoodLink" id="likelihood-link-select"></select>
           </label>
@@ -93,7 +93,7 @@
 
       <div class="row section">
         <div class="large-6 medium-8 small-12 columns">
-          <label class="form-item-header">Outcome scale</label>
+          <label class="form-item-header">Outcome scale<inline-help help-key="outcome-scale"></inline-help></label>
           <div class="stacked-radio">
             <input type="radio" value="heuristically" ng-model="model.outcomeScale.type" id="heuristically-model-outcom-scale-type-radio" ng-change="outcomeScaleTypeChange()">
             <label for="heuristically-model-outcom-scale-type-radio">Determine heuristically</label>
@@ -113,7 +113,7 @@
           <div ng-show="model.outcomeScale.type === 'fixed' && !isNumber(model.outcomeScale.value) ">
             <label class="alert">Outcome scale value is not a valid number.</label>
           </div>
-          <label style="margin-bottom:1rem;"><strong>Relative effect priors:</strong> N(0, (15 &#8901; <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)<sup>2</sup>)</label>
+          <label style="margin-bottom:1rem;"><strong>Relative effect priors:</strong> N(0, (15 &#8901; <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)<sup>2</sup>)<inline-help help-key="relative-effect-prior-distributions"></inline-help></label>
         </div>
       </div>
       <!-- end outcome scale section -->
@@ -121,7 +121,7 @@
       <div ng-show="model.linearModel === 'random'">
         <div class="row section">
           <div class="large-6 medium-8 small-12 columns">
-            <label class="form-item-header">Heterogeneity prior</label>
+            <label class="form-item-header">Heterogeneity prior<inline-help help-key="heterogeneity-prior-distribution"></inline-help></label>
           </div>
         </div>
         <div class="row">
