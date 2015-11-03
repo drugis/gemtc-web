@@ -7,7 +7,7 @@
     <label>Number of inference iterations
       <input type="number" min="1" step="1" ng-model="inferenceIterations" ng-model-options='{ debounce: 200 }' id="nr-inference-input">
     </label>
-    <label>Thinning factor
+    <label>Thinning factor<inline-help help-key="thinning-factor"></inline-help>
       <input type="number" min="1" step="1" ng-model="thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' id="nr-thinning-factor-input">
     </label>
   </div>

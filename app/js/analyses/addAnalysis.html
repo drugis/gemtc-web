@@ -13,7 +13,7 @@
     </div>
     <div class="row">
         <div class="large-9 columns">
-            <label>Outcome
+            <label>Outcome<inline-help help-key="outcome"></inline-help>
                 <input id="outcome-input" type="text" ng-model="analysis.outcome.name">
             </label>
         </div>
@@ -21,7 +21,7 @@
     <div class="row">
         <div class="large-9 columns" ng-model="showInfo">
             <span style="line-height: 2.5em">
-                <label style="display: inline;">Problem file<inline-help help-key="dataset-file"></inline-help></label>
+                <label style="display: inline;">Dataset file<inline-help help-key="dataset-file"></inline-help></label>
             </span>
 
             <file-reader model="problemFile" accept-types="'.json,.csv'"></file-reader>

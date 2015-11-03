@@ -8,7 +8,7 @@
     <div class="columns large-8 medium-6 small-12">
       <h5><strong>Analysis</strong></h5>
       <h5><a ui-sref="networkMetaAnalysis(stateParams)">{{analysis.title}}</a></h5>
-      <h5><strong>Outcome</strong></h5>
+      <h5><strong>Outcome</strong><inline-help help-key="outcome"></inline-help></h5>
       <h5>{{analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></h5>
       <h5 ng-if="model !== networkModel"><strong>Base Model</strong></h5>
       <h5 ng-if="model !== networkModel"><a ui-sref="model(stateParams)">{{model.title}}</a></h5>
@@ -55,7 +55,7 @@
           </tr>
           <tr ng-show="networkModel.result">
             <td class="large-6 text-right"><strong>DIC</strong></td>
-            <td>{{::networkModel.result.DIC}} </td>
+            <td>{{::networkModel.result.DIC}} <inline-help help-key="deviance-information-criterion"></inline-help></td>
           </tr>
           <tr ng-show="!networkModel.result">
             <td colspan="2"><button class="small success" ng-click="goToModel(networkModel.id)">Run network model</button>
@@ -72,8 +72,8 @@
             <tr>
               <td class="large-2 text-center">Comparison</td>
               <td class="large-2 text-center">Model name</td>
-              <td class="large-1 text-center">DIC</td>
-              <td ng-if="model.linearModel === 'random'" class="large-1 text-center">Random effects (Standard deviation)</td>
+              <td class="large-1 text-center">DIC<inline-help help-key="deviance-information-criterion"></inline-help></td>
+              <td ng-if="model.linearModel === 'random'" class="large-1 text-center">Random effects standard deviation</td>
               <td class="large-1 text-center">Effect estimates</td>
             </tr>
           </thead>

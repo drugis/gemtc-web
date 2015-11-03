@@ -2,7 +2,7 @@
   <div class="row">
   <div class="columns large-12" id="model-results-header">
     <h1><a ui-sref="networkMetaAnalysis(stateParams)">{{analysis.title}}</a></h1>
-    <h5><strong>Outcome</strong></h5>
+    <h5><strong>Outcome</strong><inline-help help-key="outcome"></inline-help></h5>
     <h5>{{analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></h5>
     <h5><strong>Model</strong></h5>
     <h5>{{model.title}}</h5>
@@ -89,7 +89,7 @@
                       <tr>
                         <td>Parameter</td>
                         <td>Mean</td>
-                        <td>Time-series S.E.</td>
+                        <td>Time-series S.E.<inline-help help-key="time-series-standard-error"></td>
                         <td>Point estimate</td>
                         <td>97.5% quantile</td>
                       </tr>
@@ -117,13 +117,13 @@
             </div>
             <div class="row" ng-show="isConvergencePlotsShown">
               <div class="columns large-6 medium-6 small-12">
-                <p><strong>Time series plots</strong></p>
+                <p><strong>Time series plots</strong><inline-help help-key="trace-plot"></p>
                 <paged-png-plot file-name="'tracePlot'" pages="result.results.tracePlot"></paged-png-plot>
               </div>
             </div>
             <div class="row" ng-show="isConvergencePlotsShown">
               <div class="columns large-6 medium-6 small-12">
-                <p><strong>PSRF plots</strong></p>
+                <p><strong>PSRF plots</strong><inline-help help-key="potential-scale-reduction-factor"></inline-help></p>
                 <paged-png-plot file-name="'psrfPlot'" pages="result.results.gelmanPlot"></paged-png-plot>
               </div>
             </div>
@@ -146,11 +146,11 @@
                     <caption>Model fit statistics</caption>
                     <tbody>
                       <tr>
-                        <td>Residual deviance (<span style="text-decoration: overline;">D</span><sub>res</sub>)</td>
+                        <td>Residual deviance (<span style="text-decoration: overline;">D</span><sub>res</sub>)<inline-help help-key="residual-deviance"></inline-help></td>
                         <td>{{result.results.residualDeviance}}</td>
                       </tr>
                       <tr>
-                        <td>Leverage (p<sub>D</fsub>)</td>
+                        <td>Leverage (p<sub>D</sub>)</td>
                         <td>{{result.results.leverage}}</td>
                       </tr>
                       <tr>
@@ -205,6 +205,7 @@
             <p><strong>Random effects standard deviation </strong> {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</p>
           </div>
         </div>
+
         <div class="row" ng-if="model.modelType.type === 'node-split'">
           <div class="column large-12">
             <table>
@@ -226,14 +227,12 @@
             </table>
           </div>
         </div>
+
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
           <div class="columns large-12">
-            <div class="table-title">Relative effects table comparing the included interventions:
-              <span>{{::scaleName}}</span> (95% CrI).
-              <br>Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
-            </div>
-            <div>
               <table export>
+                <caption>Relative effects table comparing the included interventions: {{::scaleName}} (95% CrI). Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.<inline-help help-key="relative-effects"></inline-help>
+                </caption>
                 <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
                   <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
                     <span ng-switch-when="effect">
@@ -246,9 +245,9 @@
                   </td>
                 </tr>
               </table>
-            </div>
           </div>
         </div>
+
         <div class="row" ng-if="model.modelType.type === 'network'">
           <div class="columns">
             <div class="row">
@@ -266,6 +265,7 @@
             </div>
           </div>
         </div>
+
         <div class="row" ng-if="model.modelType.type === 'pairwise'">
           <div class="columns">
             <div class="row">
@@ -276,6 +276,7 @@
             </div>
           </div>
         </div>
+
         <div class="row" ng-if="model.modelType.type === 'node-split'">
           <div class="columns">
             <div class="row">
@@ -286,10 +287,11 @@
             </div>
           </div>
         </div>
+
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
           <div class="columns large-12">
             <div>
-              <p><strong>Rank probabilities</strong></p>
+              <p><strong>Rank probabilities</strong><inline-help help-key="rank-probabilities"></inline-help></p>
             </div>
             <table export>
               <caption>Rank probabilities table</caption>
