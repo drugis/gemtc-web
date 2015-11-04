@@ -55,6 +55,7 @@ module.exports = {
         request.url.startsWith('/views') ||
         request.url.startsWith('/img') ||
         request.url == '/signin.html' ||
+        request.url == '/manual.html' ||
         request.url.startsWith('/auth/google')
       )) {
       logger.debug('loginUtils.loginCheckMiddleware you request does not require login, request =  ' + request.url);

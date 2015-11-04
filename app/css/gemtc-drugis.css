@@ -9482,3 +9482,8 @@ inline-help a {
 inline-help a:hover {
   color: #676767;
 }
+
+/* line 64, ../sass/_gemtc-drugis-base.scss */
+navbar-directive ul li > a.manual:hover {
+  text-decoration: underline;
+}
