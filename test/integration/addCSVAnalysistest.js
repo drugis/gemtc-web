@@ -12,6 +12,7 @@ module.exports = {
     analysesPage.waitForPageToLoad();
     analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.csv');
     browser
+      .waitForElementVisible('#analysis-header', 10000)
       .assert.containsText('#analysisTitle', analysisTitle)
       .assert.containsText('#analysisOutcome', analysisOutcomeTitle);
     analysesPage.end();

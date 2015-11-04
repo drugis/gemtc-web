@@ -6,3 +6,5 @@ karma-test-results.xml
 .sass-cache/
 node_modules/
 target
+.idea
+
