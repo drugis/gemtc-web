@@ -52,15 +52,3 @@ table.layout-table {
   padding-top: 5px;
   margin-left: 4rem;
 }
-
-inline-help a {
-  color: grey;
-}
-
-inline-help a:hover {
-  color: darken(grey, 10%);
-}
-
-navbar-directive ul li > a.manual:hover{
-  text-decoration: underline;
-}
