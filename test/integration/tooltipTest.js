@@ -5,15 +5,18 @@ var analysisTitle = 'my title';
 var analysisOutcomeTitle = 'my outcome';
 
 module.exports = {
-  "add csv analysis test": function(browser) {
+  "ask for inline help": function(browser) {
     var analysesPage = new AnalysesPage(browser);
     login(browser, process.env.GEMTC_NIGHTWATCH_URL);
 
     analysesPage.waitForPageToLoad();
-    analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.csv');
     browser
-      .assert.containsText('#analysisTitle', analysisTitle)
-      .assert.containsText('#analysisOutcome', analysisOutcomeTitle);
+      .assert.visible("inline-help")
+      .assert.elementNotPresent(".joyride-tip-guide")
+      .click('inline-help')
+      .pause(500)
+      .assert.visible(".joyride-tip-guide");
+
     analysesPage.end();
   }
 };
