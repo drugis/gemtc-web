@@ -32,8 +32,6 @@ module.exports = {
 
     modelResultPage.waitForPageToLoad();
     modelResultPage.waitForResults();
-
-    browser.pause(20000)
     createModelPage.end();
   }
 };

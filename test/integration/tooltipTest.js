@@ -13,8 +13,7 @@ module.exports = {
     browser
       .assert.visible("inline-help")
       .assert.elementNotPresent(".joyride-tip-guide")
-      .click('inline-help')
-      .pause(500)
+      .click('inline-help a')
       .assert.visible(".joyride-tip-guide");
 
     analysesPage.end();
