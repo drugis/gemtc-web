@@ -61,15 +61,7 @@ define(
           });
         });
 
-        $http.get('lexicon.json').success(function(data) {
-          if (data) {
-            HelpPopupService.loadLexicon(data);
-          } else {
-            // log error and continue
-            console.error("Failed to load gemtc-lexicon json data");
-          }
-
-        });
+        HelpPopupService.loadLexicon($http.get('lexicon.json'));
       }
     ]);
 
