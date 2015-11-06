@@ -5,7 +5,7 @@
 
     <h5 class="subheader inline">Title: </h5><h5 id="model-label" class="inline">{{::model.title}}<h5>
 
-    <h5 class="subheader inline">Analysis: </h5><a ui-sref="networkMetaAnalysis(stateParams)"><h5 id="model-view-analysis" class="inline">{{::analysis.title}}</a><inline-help help-key="outcome"></inline-help><h5>
+    <h5 class="subheader inline">Analysis: </h5><a ui-sref="networkMetaAnalysis(stateParams)"><h5 id="model-view-analysis" class="inline">{{::analysis.title}}</a><inline-help help-key="analysis"></inline-help><h5>
 
     <h5 class="subheader inline">Outcome: </h5><h5 id="model-view-outcome" class="inline">{{::analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span><inline-help help-key="outcome"></inline-help><h5>
 
@@ -68,7 +68,7 @@
                 </tr>
                 <tr ng-if="model.linearModel === 'random'" >
                   <td class="large-6 text-right"><strong>heterogeneity prior</strong></td>
-                  <td><heterogeneity-prior prior="result.results.heterogeneityPrior"></heterogeneity-prior></td>
+                  <td><heterogeneity-prior prior="result.results.heterogeneityPrior"></heterogeneity-prior><inline-help help-key="heterogeneity-prior-distribution"></inline-help></td>
                 </tr>
                 <tr>
                   <td class="large-6 text-right" style="vertical-align:top;"><strong>run-length</strong></td>
@@ -257,8 +257,9 @@
 
         <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
           <div class="columns large-12">
+            <p><strong>Relative effects table<inline-help help-key="relative-effects"></inline-help></strong></p>
               <table export>
-                <caption>Relative effects table comparing the included interventions: {{::scaleName}} (95% CrI). Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.<inline-help help-key="relative-effects"></inline-help>
+                <caption>Comparison of the included interventions: {{::scaleName}} (95% CrI). Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
                 </caption>
                 <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
                   <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
@@ -279,7 +280,7 @@
           <div class="columns">
             <div class="row">
               <div class="columns large-6 small-8">
-                <p><strong>Relative effects plots</strong></p>
+                <p><strong>Relative effects plots</strong><inline-help help-key="relative-effects"></inline-help></p>
                 <label>Select baseline:
                   <select ng-options="treatment.name for treatment in problem.treatments" ng-model="selectedBaseline"></select>
                 </label>
@@ -297,7 +298,7 @@
           <div class="columns">
             <div class="row">
               <div class="columns large-12 small-8">
-                <p><strong>Study effect forest plot</strong></p>
+                <p><strong>Study effect forest plot</strong><inline-help help-key="forest-plot"></inline-help></p>
                 <paged-svg-plot file-name="'forestPlot'" pages="result.results.studyForestPlot"></paged-svg-plot>
               </div>
             </div>
