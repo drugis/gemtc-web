@@ -31,7 +31,7 @@
 	},
 	"direct-estimate": {
 		"title": "Direct estimate",
-		"text": "An estimate of the relative effect of one treatment compared to another, based solely on studies that include both treatments. One output of a node-splitting model. Manual: node-splitting analysis of inconsistency.",
+		"text": "An estimate of the relative effect of one treatment compared to another, based solely on studies that include both treatments. One output of a node-splitting model.",
 		"link": "/manual.html"
 	},
 	"effects-type": {
@@ -47,6 +47,11 @@
 	"evidence-table": {
 		"title": "Evidence table",
 		"text": "Evidence table A table summarizing all studies and study arms in the dataset, as well as the observed outcomes in each arm.",
+		"link": "/manual.html"
+	},
+	"forest-plot": {
+		"title": "Forest plot",
+		"text": "A plot showing the treatment effect for each study.",
 		"link": "/manual.html"
 	},
 	"inconsistency": {
