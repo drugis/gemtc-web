@@ -35,8 +35,9 @@
       <div class="row">
         <div class="columns large-offset-2 large-8 medium-12">
           <h1>GeMTC Manual</h1>
-        </h1>
-      </div>
+
+          <p style="margin-top: 30px; color: white;">Gert van Valkenhoef, Sylwia Bujkiewicz, Orestis Efthimiou, Daan Reid, and Connor Stroomberg</p>
+        </div>
       </div>
     </section>
 
@@ -45,23 +46,140 @@
     		<div class="columns large-offset-2 large-8 medium-12">
         <h2>Introduction</h2>
 
-        <p>TODO: small introductory text, including a short discussion of the terminology used around heterogeneity and inconsistency. References to introductory texts about meta-analysis and network meta-analysis.</p>
+        <p>
+        This is the manual for the GeMTC user interface for network meta-analysis.
+        It starts with a brief introduction to network meta-analysis in the Bayesian framework, including issues such as model fit and convergence.
+        This is followed by a guide to the GeMTC user interface itself.
+        Terminology in the GeMTC user interface tends to be marked with a question mark icon, which when clicked will show a brief explanation of the term as well as a link to futher information in this manual.
+        </p>
+
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/glossary_popover.png" alt="glossary popover" style=" padding: 5px; border: 1px solid gray;">
+        </div>
+
+        <p>
+        GeMTC is available as a stand-alone package at <a href="https://gemtc.drugis.org">gemtc.drugis.org</a>, and is also part of the <a href="https://addis.drugis.org">ADDIS</a> decision support system for evidence based medicine, developed at <a href="https://drugis.org">drugis.org</a>.
+        The functionality in the GeMTC user interface is supported by the <a href="http://drugis.org/software/r-packages/gemtc">GeMTC R package</a>.
+        All <a href="https://drugis.org">drugis.org</a> software is open source, and source code is available on <a href="https://github.com/drugis/">github.com/drugis</a>.
+        </p>
 
         <h2>Bayesian meta-analysis</h2>
 
-        <p>TODO</p>
-
+        <p>
+        This section introduces the Bayesian models for meta-analysis used by GeMTC, starting with models for pair-wise meta-analysis and then moving on to network meta-analysis as an extension.
+        The related issues of heterogeneity and inconsistency are discussed subsequently.
+        We follow up with general techniques and considerations for Bayesian analysis as they apply within GeMTC: likelihood/link, prior distributions, model fit, and run-length and convergence.
+        </p>
 
         <h3>General model structure</h3>
 
-        <p>TODO: basic model for the relative effects, both fixed effect and random effects models.</p>
+        <p>TODO: Sylwia's text.</p>
+
+        <h3>Heterogeneity and inconsistency</h3>
+
+        <p>
+        In any meta-analysis, a key worry is whether the trials are similar enough in terms of potential <em>effect modifying covariates</em> to warrant the assumption that the true underlying trial effects are either identical (fixed effect) or exchangeable (random effects).
+        Importantly, because the models synthesize treatment contrasts (relative effects), only covariates that differentially impact the different treatments are relevant.
+        If a covariate (e.g. age at baseline) adversely affects the outcome irrespective of the intervention, it is not an effect modifier in the meta-analysis, assuming that the studies were properly randomized.
+        </p>
+
+        <p>
+        In a pair-wise meta-analysis, a lack of similarity between trials can only manifest as heterogeneity, i.e. between-trials differences in the underlying treatment effects within a comparison.
+        In network meta-analysis, it can also manifest as inconsistency, i.e. between-trial differences in the underlying treatment effects between comparisons.
+        Although both share a common cause, inconsistency is more concerning as can be more difficult or even impossible to detect.
+        The statistical assessment of heterogeneity is only limited by the number and precision of study estimates that are available.
+        By contrast, the assessment of inconsistency is also limited by network structure: it can only be assessed if closed loops exist within the network, so that estimates arrived at by different routes can be compared.
+        </p>
+
+        <p>
+        Therefore, in any meta-analysis, but especially in network meta-analysis, it is important to first consider whether the studies should be combined <em>at all</em>, based on epidemiological judgment of the study characteristics.
+        Many reasoning aids exist to help in this assessment process, see [CITE Salanti (?) formulations of exchangeability assumptions].
+        This should be supplemented by statistical tools, such as the node-splitting model for the assessment of inconsistency [TODO link to section].
+        Heterogeneity and inconsistency are also affected by the scale of measurement chosen for the analysis, e.g. an analysis on the odds ratio scale might be more consistent than an analysis on the risk ratio scale.
+        The scale of measurement is discussed in the next section.
+        See these references [TODO REFS] for a more in depth discussion.
+        </p>
 
         <h3>Likelihood / link</h3>
 
-        <p>TODO.Table: likelihood/links + scale of analysis / effect measure</p>
+        <p>
+        The likelihood reflects the distributional assumptions we make about the outcome data we aim to model.
+        For example, a Binomial likelihood is usually used for count data (e.g. number of treatment responders).
+        The link function transforms the parameters of the likelihood to the scale of measurement on which we assume the treatment effects to be linearly additive [CITE van Valkenhoef & Ades].
+        For example, the logit link transforms the Binomial success probability to log odds, resulting in an analysis on the log odds ratio scale.
+        </p>
+
+        <table>
+          <thead>
+            <caption>Likelihood / links supported by GeMTC</caption>
+          </thead>
+          <tr>
+            <th>Type of data</th>
+            <th>Likelihood</th>
+            <th>Link</th>
+            <th>Scale of measurement</th>
+            <th>Remarks</th>
+          </tr>
+          <tr>
+            <td>Count data</td>
+            <td>Binomial</td>
+            <td>Logit</td>
+            <td>Log odds ratio</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Count data</td>
+            <td>Binomial</td>
+            <td>Log</td>
+            <td>Log risk ratio</td>
+            <td>[TODO Warn et al. 2002]</td>
+          </tr>
+          <tr>
+            <td>Count data</td>
+            <td>Binomial</td>
+            <td>Cloglog</td>
+            <td>Log hazard ratio</td>
+            <td>Treats counts as rate data by assuming equal follow-up in each arm</td>
+          </tr>
+          <tr>
+            <td>Normal data</td>
+            <td>Normal</td>
+            <td>Identity</td>
+            <td>Mean difference</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Rate data</td>
+            <td>Poisson</td>
+            <td>Log</td>
+            <td>Log hazard ratio</td>
+            <td>-</td>
+          </tr>
+        </table>
 
         <h3>Prior distributions</h3>
-        <p>TODO.</p>
+
+        <p>
+        In a Bayesian analysis, prior beliefs (represented by prior distributions) are combined with data to arrive at the posterior distribution.
+        Quite often, a conservative analysis is desired with very little influence of prior beliefs.
+        In that case, <em>vague</em> priors are assigned.
+        In other cases, we may have strong prior beliefs (perhaps due to experience in clinical practice) which may be captured using <em>informative</em> priors.
+        </p>
+
+        <p>
+        Prior distributions must be assigned to all top level parameters in a Bayesian model.
+        For network meta-analysis, this typically means the treatment effects compared to a given reference treatment, the study baseline effects, and the heterogeneity variance in random effects models.
+        If the distributions are sufficiently vague they are unlikely to have a noticable impact on model results, especially if sufficient data are available.
+        In most situations, GeMTC can set the prior distributions automatically; the most straight-forward way to ensure they are sufficiently vague is to set the outcome scale parameter [TODO refer to section].
+        The heterogeneity variance is often the most difficult parameter to estimate, and therefore sees the most impact of priors.
+        In sparse networks, it may be sensible to assign an informative prior informed by empirical evidence [CITE rhodes and turner papers].
+        </p>
+
+        <h3>Model fit</h3>
+
+        <p>Model fit refers to how well the model represents the data, which is usually assessed by looking at the reverse: how likely the data are given the fitted model.</p>
+
+        <p>TODO</p>
 
         <h3>Run length and convergence</h3>
         <p>Bayesian inference using Markov Chain Monte Carlo relies on a “random walk” algorithm to sample from the posterior distribution implied by the data and the priors. The process starts by setting arbitrary values for the model parameters and continues by updating them  in every iteration. When assessing convergence we are concerned by two things:</p>
@@ -117,7 +235,8 @@
         <img src="img/network.png" alt="networkgraph nodesplit example" >
 
         <h2>Network meta-analysis in GeMTC</h2>
-        <p>TODO<p>
+
+        <p>The following sections give an overview of the GeMTC user interface.<p>
 
         <h3>Preparing your dataset</h3>
         <p>This section only applies to the stand-alone version of GeMTC, hosted on <a href="https://gemtc.drugis.org">https://gemtc.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
@@ -160,6 +279,11 @@
         <p>TODO</p>
         <h3>Interpreting model results</h3>
         <p>TODO</p>
+        <p>- Different sections; what is in each section?
+        - Link to node-split overview
+        - Refer to explanatory sections on convergence and model fit
+        - Examples of relative effects / rank probabilities</p>
+
       </div>
     </div>
    </div>
