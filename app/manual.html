@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
+    <title>gemtc.drugis.org</title>
+    <link rel="stylesheet" type="text/css" href="js/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/gemtc-drugis.css">
+    <script type="text/javascript" src="js/bower_components/foundation/js/vendor/custom.modernizr.js"></script>
+<script type="text/javascript" src="js/bower_components/bowser/bowser.min.js"></script>
+  </head>
+  <body>
+    <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
+      Your browser, <span id="browserVersion1"></span>, is <b>out of date</b>.
+      It has known <b>security flaws</b> and will <b>not run this web application correctly</b>.<br>
+      <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a> before continuing.
+    </div>
+    <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserUnknown">
+      Your browser is unknown to us.
+      This web application may or may not work correctly using it.
+      Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before continuing.
+    </div>
+    <script type="text/javascript">
+    if (bowser.c || (bowser.msie && bowser.version <= 8)) {
+      document.getElementById("browserVersion1").innerHTML = bowser.name + " " + bowser.version;
+      document.getElementById("browserCheck").style.display = "block";
+    }
+    if (bowser.x) {
+      document.getElementById("browserUnknown").style.display = "block";
+    }
+    </script>
+
+    <section id="hero">
+      <div class="row">
+        <div class="columns large-offset-2 large-8 medium-12">
+          <h1>GeMTC Manual</h1>
+        </h1>
+      </div>
+      </div>
+    </section>
+
+    <section class="content">
+    	<div class="row">
+    		<div class="columns large-offset-2 large-8 medium-12">
+        <h2>Introduction</h2>
+
+        <p>TODO: small introductory text, including a short discussion of the terminology used around heterogeneity and inconsistency. References to introductory texts about meta-analysis and network meta-analysis.</p>
+
+        <h2>Bayesian meta-analysis</h2>
+
+        <p>TODO</p>
+
+
+        <h3>General model structure</h3>
+
+        <p>TODO: basic model for the relative effects, both fixed effect and random effects models.</p>
+
+        <h3>Likelihood / link</h3>
+
+        <p>TODO.Table: likelihood/links + scale of analysis / effect measure</p>
+
+        <h3>Prior distributions</h3>
+        <p>TODO.</p>
+
+        <h3>Run length and convergence</h3>
+        <p>Bayesian inference using Markov Chain Monte Carlo relies on a “random walk” algorithm to sample from the posterior distribution implied by the data and the priors. The process starts by setting arbitrary values for the model parameters and continues by updating them  in every iteration. When assessing convergence we are concerned by two things:</p>
+        <ol>
+          <li>That the arbitrary starting values do not have an undue influence on the sampling process.</li>
+          <li>That the quantities of interest have been estimated to sufficient accuracy.</li>
+        </ol>
+        <p>To address the first issue the first NB iterations, called the burn-in period, are discarded from the sample. In addition, the number of inference iterations, NI, must be sufficient to explore most of the parameter space. In order to assess the first condition it helps to compare early iterations to later iterations and to compare the results of independent runs (“chains”) with different starting values. For example, in the time series plot on the left, the four different chains (dashed green, blue, red, and black lines) follow clearly distinguishable paths, and their moving averages (solid lines) are clearly different between the first and second half of samples:</p>
+
+        <div class="row">
+          <div class="columns large-6 ">
+            <img src="img/time_series_bad.png" alt="time series bad" >
+          </div>
+          <div class="columns large-6 ">
+             <img src="img/time_series_good.png" alt="time series good">
+          </div>
+        </div>
+
+        <p>In this case, it would be wise to increase both the number of burn-in iterations (NB) and the number of inference iterations, which leads to much better results, as illustrated by the time series plot on the right. The Brooks-Gelman-Rubin diagnostic incorporates these aspects in a numeric measure, the “Potential Scale Reduction Factor” (PSRF), which compares the variation within each chain to the variation between chains. The PSRF starts with a high value, and slowly approaches 1.0 as the chains become more similar. As a rule of thumb, the PSRF should at least be below 1.05. Plots can also show whether the PSRF is stable, as illustrated below.</p>
+
+        <p>Again, the plot on the left shows a run with insufficient burn-in and inference iterations, where the</p>
+
+        <div class="row">
+          <div class="columns large-6 ">
+            <img src="img/psrf_bad.png" alt="psrf plot bad">
+          </div>
+          <div class="columns large-6 ">
+             <img src="img/psrf_good.png" alt="psrf plot good" >
+          </div>
+        </div>
+
+        <p>PSRF is unstable and has high values. On the right, the PSRF steadily decreases and rapidly reaches stable values below 1.01.</p>
+
+        <p>The second issue, i.e. that the number of iterations should be enough to estimate the quantities of interest with sufficient accuracy, depends on the first condition being met. If this is the case, the Monte Carlo error provides an idea of the accuracy of the estimates, and should be small compared to the standard deviation of the quantities being estimated. In addition, the time series plots can give some idea of the estimation accuracy, as can the density plots.</p>
+
+        <div class="row">
+          <div class="columns large-6 ">
+            <img src="img/density_good.png" alt="Density plot bad" >
+          </div>
+          <div class="columns large-6 ">
+             <img src="img/density_good.png" alt="Density plot good" >
+          </div>
+        </div>
+
+        <p>In the density plots above, the figure on the left has outlying values in the tail of the distribution (the small vertical lines at the bottom, indicating sampled values), and doesn’t have an entirely regular shape. The density on the right is much smoother and has a more expected tapering off of extreme values in the tails.</p>
+
+        <h2 id="node-splitting-model">Node-splitting analysis of inconsistency</h2>
+        <p>The node-splitting approach for assessing the inconsistency of a network of interventions was introduced by Dias et. al1. The method focuses on one treatment comparison at a time. In this approach the direct evidence for a specific treatment comparison (i.e. the evidence coming from RCTs that directly perform this comparison) is contrasted with the indirect evidence coming from the rest of the network. </p>
+        <p>This is depicted in the figure below, for a network of eight treatments (A to H), where the node-splitting analysis is performed for the comparison of A vs. B. Studies directly comparing A to B are removed from the network and are used to obtain a direct estimate of the corresponding relative treatment effects, . Information coming from the rest of the network is used to obtain an indirect estimate of A vs. B,  These two estimates can then be contrasted, with important differences corresponding to the notion of network inconsistency. The difference between the direct and the indirect estimate is usually termed inconsistency factor, ; a posterior distribution of  close to zero implies no important discrepancies between direct and indirect evidence, and thus no inconsistency in the network. Values of away from zero indicate the existence of an inconsistency in the network.</p>
+
+        <p>The node-splitting method can be applied for all treatment comparisons for which there is direct evidence available in the network. This means that if for example there are no X vs. Y studies, one cannot perform the node-splitting method for the XY comparison.</p>
+
+        <img src="img/network.png" alt="networkgraph nodesplit example" >
+
+        <h2>Network meta-analysis in GeMTC</h2>
+        <p>TODO<p>
+
+        <h3>Preparing your dataset</h3>
+        <p>This section only applies to the stand-alone version of GeMTC, hosted on <a href="https://gemtc.drugis.org">https://gemtc.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
+        <p>After signing in to GeMTC, you will be redirected to your personal home page. It contains a list of your previously created analyses (which will be empty until you create one), and a button to create a new analysis. Clicking this button will open the “New analysis” dialog, where you choose a title for your analysis and the outcome, and upload a dataset file:</p>
+
+        <img src="img/gemtc_add_analysis.png" alt="add analysis screen shot" >
+
+        <p>Datasets can be uploaded in CSV format. The CSV file should contain one row per arm, and needs to contain “study” and “treatment” columns, which can contain names or identifiers for the study and treatment. The data columns may be one of:</p>
+        <ul>
+          <li>Continuous data: “mean” and “std.err”</li>
+          <li>Continuous data: “mean”, “std.dev”, and “sampleSize”</li>
+          <li>Dichotomous data: “responders” and “sampleSize”</li>
+          <li>Survival data: “responders” and “exposure” (exposure in person-time)</li>
+        </ul>
+
+        <p>The following is an example CSV file for a Parkinson’s disease dataset:</p>
+
+        <pre>
+          "study","treatment","mean","std.dev","sampleSize"
+          "1","A",-1.22,3.7,54
+          "1","C",-1.53,4.28,95
+          "2","A",-0.7,3.7,172
+          "2","B",-2.4,3.4,173
+          "3","A",-0.3,4.4,76
+          "3","B",-2.6,4.3,71
+          "3","D",-1.2,4.3,81
+          "4","C",-0.24,3,128
+          "4","D",-0.59,3,72
+          "5","C",-0.73,3,80
+          "5","D",-0.18,3,46
+          "6","D",-2.2,2.31,137
+          "6","E",-2.5,2.18,131
+          "7","D",-1.8,2.48,154
+          "7","E",-2.1,2.99,143
+        </pre>
+
+        <h3>Analyses and models</h3>
+        <p>TODO</p>
+        <h3>Creating a new model</h3>
+        <p>TODO</p>
+        <h3>Interpreting model results</h3>
+        <p>TODO</p>
+      </div>
+    </div>
+   </div>
+  </body>
+</html>

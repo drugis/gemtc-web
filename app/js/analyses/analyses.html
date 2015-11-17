@@ -1,7 +1,7 @@
 <div ui-view>
   <div class="row nav-bar-spacer" style="margin-bottom: 2rem;">
     <div class="columns center large-12">
-      <h1 id="analyses-header">Analyses</h1>
+      <h1 id="analyses-header">Analyses<inline-help help-key="analysis"></inline-help></h1>
     </div>
   </div>
   <div ng-show="!analysesLoaded" class="row">
@@ -20,7 +20,7 @@
       <table ng-show="analyses.length > 0">
         <tr>
           <th class="large-3">Name</th>
-          <th class="large-9">Outcome name</th>
+          <th class="large-9">Outcome name<inline-help help-key="outcome"></inline-help></th>
         </tr>
         <tr ng-repeat="analysis in analyses">
           <td style="vertical-align: top;">
