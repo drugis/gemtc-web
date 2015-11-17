@@ -333,7 +333,7 @@
                 <tr ng-repeat="(treatment, rankValues) in result.results.rankProbabilities">
                   <td>{{::treatment}}</td>
                   <td ng-repeat="rank in rankValues track by $index">
-                    {{::rank | number}}
+                    {{::rank | number : 3}}
                   </td>
                 </tr>
               </tbody>
