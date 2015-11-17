@@ -174,15 +174,15 @@
                     <tbody>
                       <tr>
                         <td>Residual deviance (<span style="text-decoration: overline;">D</span><sub>res</sub>)<inline-help help-key="residual-deviance"></inline-help></td>
-                        <td>{{result.results.residualDeviance}}</td>
+                        <td>{{result.results.residualDeviance | number : 1}}</td>
                       </tr>
                       <tr>
                         <td>Leverage (p<sub>D</sub>)</td>
-                        <td>{{result.results.leverage}}</td>
+                        <td>{{result.results.leverage | number : 1}}</td>
                       </tr>
                       <tr>
                         <td>DIC<inline-help help-key="deviance-information-criterion"></inline-help></td>
-                        <td>{{result.results.DIC}}</td>
+                        <td>{{result.results.DIC | number : 1}}</td>
                       </tr>
                     </tbody>
                   </table>
