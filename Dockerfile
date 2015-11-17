@@ -18,7 +18,7 @@ RUN npm install -g forever
 COPY . /
 
 RUN npm install
-RUN bower install --allow-root
+RUN bower update --allow-root
 
 EXPOSE 3001
 

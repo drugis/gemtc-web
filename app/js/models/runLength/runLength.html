@@ -1,21 +1,21 @@
 <div class="row ">
   <div class="large-8 columns">
     <label class="form-item-header">Run-length parameters</label>
-    <label>Number of burn-in iterations
-      <input type="number" min="1" step="1" ng-model="burnInIterations" ng-model-options='{ debounce: 200 }' id="burn-in-iterations">
+    <label>Number of burn-in iterations <inline-help help-key="burn-in-iterations"></inline-help>
+      <input type="number" min="1" step="1" ng-model="burnInIterations" ng-model-options='{ debounce: 200 }' id="nr-burn-in-input">
     </label>
-    <label>Number of inference iterations
-      <input type="number" min="1" step="1" ng-model="inferenceIterations" ng-model-options='{ debounce: 200 }' id="inference-iterations">
+    <label>Number of inference iterations<inline-help help-key="inference-iterations"></inline-help>
+      <input type="number" min="1" step="1" ng-model="inferenceIterations" ng-model-options='{ debounce: 200 }' id="nr-inference-input">
     </label>
-    <label>Thinning factor
-      <input type="number" min="1" step="1" ng-model="thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' id="thinning-factor">
+    <label>Thinning factor<inline-help help-key="thinning-factor"></inline-help>
+      <input type="number" min="1" step="1" ng-model="thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' id="nr-thinning-factor-input">
     </label>
   </div>
 </div>
 <!-- end run-length parameters section -->
 <div class="row">
   <div class="columns large-8 ">
-    <label class="form-item-header" ng-show="model.modelType.subType !== 'all-pairwise' && model.modelType.subType !== 'all-node-split'">Estimated run length</label>
+    <label class="form-item-header" ng-show="model.modelType.subType !== 'all-pairwise' && model.modelType.subType !== 'all-node-split'">Estimated run length<inline-help help-key="estimated-running-time"></inline-help></label>
     <label class="form-item-header" ng-show="model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split'">Maximum run length for these models</label> {{estimatedRunLengthHumanized}}
     <div class="alert" ng-show='!isRunlengthDivisibleByThinningFactor(model)'>
       The burn-in and inference iterations must be divisible by the thinning factor. Numbers may not be fractions.

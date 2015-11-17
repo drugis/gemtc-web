@@ -28,7 +28,7 @@
   "dependencies": {
     "angular": "~1.4.0",
     "angular-animate": "~1.4.0",
-    "angular-foundation": "~0.6.0",
+    "angular-foundation": "https://github.com/connorstroomberg/angular-foundation.git#popoverExpanded",
     "angular-resource": "~1.4.0",
     "angular-sanitize": "~1.4.0",
     "angular-ui-router": "0.2.14",
@@ -43,9 +43,13 @@
     "nvd3": "1.8.1",
     "papaparse": "~4.1.1",
     "requirejs": "~2.1.10",
-    "requirejs-domready": "~2.0.1"
+    "requirejs-domready": "~2.0.1",
+    "help-popup": "https://github.com/connorstroomberg/help-popup.git"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"
+  },
+  "resolutions": {
+    "angular-foundation": "popoverExpanded"
   }
 }
