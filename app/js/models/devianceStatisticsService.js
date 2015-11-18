@@ -15,12 +15,12 @@ define(['lodash'], function(_) {
 
       _.each(devianceStatistics.perArmDeviance, function(deviance, study) {
         var firstStudyRow = true;
-        _.each(studyMap[study], function(entry, index) {
+        _.each(deviance, function(devianceEntry, treatmentId) {
           var row = {
             studyName: study,
-            armName: treatmentMap[entry.treatment].name,
-            deviance: deviance[index],
-            leverage: devianceStatistics.perArmLeverage[study][index]
+            armName: treatmentMap[treatmentId].name,
+            deviance: devianceEntry,
+            leverage: devianceStatistics.perArmLeverage[study][treatmentId]
           };
           if(firstStudyRow) {
              row.rowSpan =   studyMap[study].length;
