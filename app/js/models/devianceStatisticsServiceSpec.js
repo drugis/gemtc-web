@@ -162,11 +162,11 @@ define(['angular', 'angular-mocks', 'services'], function() {
         }
         var result = devianceStatisticsService.buildTable(testStatistics, testProblem);
         expect(result.length).toBe(testProblem.entries.length);
-        expect(result[0].studyName).toBe('Aberg-Wistedt et al, 2000');
-        expect(result[0].armName).toBe('Fluoxetine');
-        expect(result[0].deviance).toBe(testStatistics.perArmDeviance['Aberg-Wistedt et al, 2000'][2]);
-        expect(result[0].leverage).toBe(testStatistics.perArmLeverage['Aberg-Wistedt et al, 2000'][2]);
-        expect(result[0].rowSpan).toBe(2);
+        expect(result[1].studyName).toBe('Aberg-Wistedt et al, 2000');
+        expect(result[1].armName).toBe('Fluoxetine');
+        expect(result[1].deviance).toBe(testStatistics.perArmDeviance['Aberg-Wistedt et al, 2000'][2]);
+        expect(result[1].leverage).toBe(testStatistics.perArmLeverage['Aberg-Wistedt et al, 2000'][2]);
+        expect(result[1].rowSpan).toBe(2);
         expect(result[1].rowSpan).not.toBeDefined();
       });
     });
