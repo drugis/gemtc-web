@@ -11,20 +11,26 @@ module.exports = {
 
 function getResult(taskId, callback) {
   db.query('SELECT result FROM patavitask WHERE id = $1', [taskId], function(error, result) {
-    if(error) {
+    if (error) {
       callback(error);
     } else {
-      callback(null, JSON.parse(result.rows[0].result).results);
+      if (result.rows.length === 0 || !result.rows[0].result) {
+        callback({
+          description: "no result found"
+        });
+      } else {
+        callback(null, JSON.parse(result.rows[0].result).results);
+      }
     }
   });
 }
 
 function getPataviTasksStatus(taskIds, callback) {
-  if(taskIds.length === 0) {
+  if (taskIds.length === 0) {
     callback(null, []);
   }
   var params = taskIds.map(function(item, idx) {
-    return '$' + (idx+1);
+    return '$' + (idx + 1);
   });
   db.query('SELECT id, result IS NOT NULL as hasResult FROM patavitask WHERE id in (' + params.join(',') + ')', taskIds, function(error, result) {
     if (error) {
@@ -50,7 +56,7 @@ function createPataviTask(problem, callback) {
 
 function deleteTask(id, callback) {
   logger.debug('deleting patavi task');
-  db.query('DELETE FROM patavitask WHERE id=$1', [id], function(error, result){
+  db.query('DELETE FROM patavitask WHERE id=$1', [id], function(error, result) {
     if (error) {
       callback(error);
     } else {
