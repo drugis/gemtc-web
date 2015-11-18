@@ -31,8 +31,12 @@ define(['angular', 'lodash'], function(angular, _) {
 
       if ($scope.networkModel) {
         if ($scope.networkModel.taskId) {
-          $scope.networkModel.result = findModelResult($scope.networkModel.id);
-          $scope.networkModel.result.then($scope.networkModelResultsDefer.resolve);
+          findModelResult($scope.networkModel.id).then(function(result) {
+            if (result) {
+              $scope.networkModel.result = result;
+            }
+            $scope.networkModelResultsDefer.resolve(result);
+          });
         }
       }
     });
@@ -51,10 +55,9 @@ define(['angular', 'lodash'], function(angular, _) {
           row.modelId = model.id;
           row.hasModel = true;
           if (model.taskId) {
-            row.result = findModelResult(model.id);
-
-            row.result.then(function(result) {
+            findModelResult(model.id).then(function(result) {
               if (result) {
+                row.result = result;
                 row.directEffectEstimate = NodeSplitOverviewService.buildDirectEffectEstimates(result);
                 row.inDirectEffectEstimate = NodeSplitOverviewService.buildIndirectEffectEstimates(result);
                 row.colSpan = 1;
