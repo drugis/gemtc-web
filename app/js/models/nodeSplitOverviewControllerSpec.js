@@ -150,6 +150,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         expect(scope.networkStateParams).toBe(stateParamsMock);
       });
     });
+    
     describe('when the scope.model resolves with a nodesplit model', function() {
       var optionsMock = [{
           label: 'comparison 1',

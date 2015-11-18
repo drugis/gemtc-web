@@ -1,7 +1,8 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state', '$modal', 'gemtcRootPath',
-    'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService'];
+    'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService'
+  ];
   var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, $modal, gemtcRootPath,
     models, problem, AnalysisService, ModelResource, NodeSplitOverviewService) {
 
@@ -30,8 +31,12 @@ define(['angular', 'lodash'], function(angular, _) {
 
       if ($scope.networkModel) {
         if ($scope.networkModel.taskId) {
-          $scope.networkModel.result = getModelResult($scope.networkModel.id);
-          $scope.networkModel.result.$promise.then($scope.networkModelResultsDefer.resolve);
+          findModelResult($scope.networkModel.id).then(function(result) {
+            if (result) {
+              $scope.networkModel.result = result;
+            }
+            $scope.networkModelResultsDefer.resolve(result);
+          });
         }
       }
     });
@@ -50,13 +55,16 @@ define(['angular', 'lodash'], function(angular, _) {
           row.modelId = model.id;
           row.hasModel = true;
           if (model.taskId) {
-            row.result = getModelResult(model.id);
-
-            row.result.$promise.then(function(result) {
-              row.directEffectEstimate = NodeSplitOverviewService.buildDirectEffectEstimates(result);
-              row.inDirectEffectEstimate = NodeSplitOverviewService.buildIndirectEffectEstimates(result);
-              row.colSpan = 1;
-              row.hasResults = true;
+            findModelResult(model.id).then(function(result) {
+              if (result) {
+                row.result = result;
+                row.directEffectEstimate = NodeSplitOverviewService.buildDirectEffectEstimates(result);
+                row.inDirectEffectEstimate = NodeSplitOverviewService.buildIndirectEffectEstimates(result);
+                row.colSpan = 1;
+                row.hasResults = true;
+              } else {
+                row.colSpan = 3;
+              }
             });
 
             $scope.networkModelResultsDefer.promise.then(function(result) {
@@ -90,6 +98,20 @@ define(['angular', 'lodash'], function(angular, _) {
       return ModelResource.getResult(getParams);
     }
 
+    function findModelResult(modelId) {
+      var getParams = angular.copy($stateParams);
+      getParams.modelId = modelId;
+      return ModelResource
+        .getResult(getParams)
+        .$promise.then(
+          function(result) {
+            return result
+          },
+          function(error) {
+            return $q.resolve(undefined);
+          });
+    }
+
     function findModelForComparison(comparison, models) {
       return _.find(models, function(model) {
         // todo: model settings should be equal.
@@ -97,7 +119,7 @@ define(['angular', 'lodash'], function(angular, _) {
           model.modelType.type === 'node-split' &&
           model.modelType.details.from.id === comparison.from.id &&
           model.modelType.details.to.id === comparison.to.id
-          );
+        );
       });
     }
 
@@ -130,8 +152,7 @@ define(['angular', 'lodash'], function(angular, _) {
           }
         }
       });
-    }
-    ;
+    };
 
 
     function openCreateNodeSplitDialog(comparison) {
@@ -160,8 +181,7 @@ define(['angular', 'lodash'], function(angular, _) {
           }
         }
       });
-    }
-    ;
+    };
 
 
   };
