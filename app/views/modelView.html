@@ -115,7 +115,7 @@
                       </tr>
                       <tr>
                         <td>Parameter</td>
-                        <td>Mean</td>
+                        <td>Standard deviation</td>
                         <td>Time-series S.E.<inline-help help-key="time-series-standard-error"></td>
                         <td>Point estimate</td>
                         <td>97.5% quantile</td>
@@ -124,7 +124,7 @@
                     <tbody>
                       <tr ng-repeat="diagnostic in gelmanDiagnostics| orderBy:'label'">
                         <td>{{diagnostic.label}}</td>
-                        <td>{{result.results.summaries.statistics[diagnostic.key].Mean}}</td>
+                        <td>{{result.results.summaries.statistics[diagnostic.key].SD}}</td>
                         <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
                         <td>{{diagnostic['Point est.']}}</td>
                         <td>{{diagnostic['Upper C.I.']}}</td>
@@ -174,15 +174,15 @@
                     <tbody>
                       <tr>
                         <td>Residual deviance (<span style="text-decoration: overline;">D</span><sub>res</sub>)<inline-help help-key="residual-deviance"></inline-help></td>
-                        <td>{{result.results.residualDeviance}}</td>
+                        <td>{{result.results.residualDeviance | number : 1}}</td>
                       </tr>
                       <tr>
                         <td>Leverage (p<sub>D</sub>)</td>
-                        <td>{{result.results.leverage}}</td>
+                        <td>{{result.results.leverage | number : 1}}</td>
                       </tr>
                       <tr>
                         <td>DIC<inline-help help-key="deviance-information-criterion"></inline-help></td>
-                        <td>{{result.results.DIC}}</td>
+                        <td>{{result.results.DIC | number : 1}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -333,7 +333,7 @@
                 <tr ng-repeat="(treatment, rankValues) in result.results.rankProbabilities">
                   <td>{{::treatment}}</td>
                   <td ng-repeat="rank in rankValues track by $index">
-                    {{::rank | number}}
+                    {{::rank | number : 3}}
                   </td>
                 </tr>
               </tbody>

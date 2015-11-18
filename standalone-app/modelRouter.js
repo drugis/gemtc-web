@@ -75,25 +75,35 @@ function getResult(request, response, next) {
   var modelCache;
 
   async.waterfall([
-      function(callback){
-        modelRepository.get(modelId, callback);
-      },
-      function(model, callback) {
-        modelCache = model;
-        if(model.taskId === null || model.taskId === undefined) {
-          callback({
-            statusCode: 404,
-            message: 'attempt to get results of model with no task'
-          });
-        }
-        callback();
-      }, function(callback) {
-        pataviTaskRepository.getResult(modelCache.taskId, callback);
-      }, function(pataviResult, callback) {
-        response.status(status.OK);
-        response.json(pataviResult);
+    function(callback) {
+      modelRepository.get(modelId, callback);
+    },
+    function(model, callback) {
+      modelCache = model;
+      if (model.taskId === null || model.taskId === undefined) {
+        callback({
+          statusCode: 404,
+          message: 'attempt to get results of model with no task'
+        });
       }
-    ], next);
+      callback();
+    },
+    function(callback) {
+      pataviTaskRepository.getResult(modelCache.taskId, callback);
+    },
+    function(pataviResult, callback) {
+      response.status(status.OK);
+      response.json(pataviResult);
+    }
+  ], function(error, result) {
+    if (error) {
+      response.status(404).send({
+        error: 'no result found for model with id ' + modelId
+      });
+    } else {
+      next();
+    }
+  });
 }
 
 function createModel(request, response, next) {
@@ -122,7 +132,7 @@ function createModel(request, response, next) {
         });
     }
   ], function(error) {
-    if(error) {
+    if (error) {
       next(error);
     }
   });

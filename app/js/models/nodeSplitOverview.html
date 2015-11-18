@@ -105,7 +105,7 @@
                 </span>
               </td>
 
-              <td class="text-center" ng-if="comparison.result">
+              <td class="text-center" ng-if="comparison.hasResults">
                 <span ng-if="!networkModel">No consistency model found.</span>
                 <span ng-if="networkModel && !networkModel.result">Consistency model not yet run.</span>
                 <nodesplit-forest-plot
