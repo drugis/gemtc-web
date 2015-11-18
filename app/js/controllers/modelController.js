@@ -99,7 +99,7 @@ define(['lodash'], function() {
         }
         var isLogScale = result.results.logScale;
         $scope.scaleName = AnalysisService.getScaleName($scope.model);
-        $scope.gelmanDiagnostics = DiagnosticsService.labelDiagnostics(result.results.gelmanDiagnostics, $scope.problem.treatments)
+        $scope.gelmanDiagnostics = DiagnosticsService.labelDiagnostics($scope.model.modelType.type, result.results.gelmanDiagnostics, $scope.problem.treatments)
         if ($scope.model.modelType.type !== 'node-split') {
           var relativeEffects = result.results.relativeEffects;
           result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
