@@ -89,6 +89,17 @@ wrap.matrix <- function(m) {
   l
 }
 
+wrap.arms <- function(m, network) {
+  l <- lapply(rownames(m), function(name) {
+    ts <- as.character(network[['data.ab']][['treatment']][network[['data.ab']][['study']] == name])
+    vs <- m[name, 1:length(ts)]
+    names(vs) <- ts
+    vs
+  })
+  names(l) <- rownames(m)
+  l
+}
+
 close.PataviJagsPB <- function(pb) {}
 
 readFile <- function(fileName) {
@@ -381,8 +392,8 @@ report('summary', 1.0)
     summary[['gelmanPlot']] <- gelmanPlot
     summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
     deviance <- result[['deviance']]
-    summary[['devianceStatistics']][['perArmDeviance']] <- wrap.matrix(deviance[['dev.ab']])
-    summary[['devianceStatistics']][['perArmLeverage']] <- wrap.matrix(deviance[['dev.ab']] - deviance[['fit.ab']])
+    summary[['devianceStatistics']][['perArmDeviance']] <- wrap.arms(deviance[['dev.ab']], network)
+    summary[['devianceStatistics']][['perArmLeverage']] <- wrap.arms(deviance[['dev.ab']] - deviance[['fit.ab']], network)
     summary[['residualDeviance']] <- deviance[['Dbar']]
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
