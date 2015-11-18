@@ -131,12 +131,12 @@ define(['angular', 'angular-mocks', 'services'], function() {
           },
           'perArmLeverage': {
             'Aberg-Wistedt et al, 2000': {
-              '4': 0.070573,
-              '2': 0.073178
+              '2': 0.073178,
+              '4': 0.070573
             },
             'Alves et al, 1999': {
-              '3': 0.23763,
-              '2': 0.37087
+              '2': 0.37087,
+              '3': 0.23763
             },
             'Ballus et al, 2000': {
               '2': 0.0034346,
