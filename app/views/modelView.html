@@ -115,7 +115,7 @@
                       </tr>
                       <tr>
                         <td>Parameter</td>
-                        <td>Mean</td>
+                        <td>Standard deviation</td>
                         <td>Time-series S.E.<inline-help help-key="time-series-standard-error"></td>
                         <td>Point estimate</td>
                         <td>97.5% quantile</td>
@@ -124,7 +124,7 @@
                     <tbody>
                       <tr ng-repeat="diagnostic in gelmanDiagnostics| orderBy:'label'">
                         <td>{{diagnostic.label}}</td>
-                        <td>{{result.results.summaries.statistics[diagnostic.key].Mean}}</td>
+                        <td>{{result.results.summaries.statistics[diagnostic.key].SD}}</td>
                         <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
                         <td>{{diagnostic['Point est.']}}</td>
                         <td>{{diagnostic['Upper C.I.']}}</td>
