@@ -5,7 +5,13 @@ define(['angular'], function() {
 
 		function handleReaction(rejection) {
 			var data, message;
-			if (rejection && rejection.data && rejection.data !== "") {
+			if (rejection && rejection.status === 404) {
+				$rootScope.$broadcast('error', {
+					code: 404,
+					cause: rejection.data.error
+				});
+				return $q.reject(rejection);
+			} else if (rejection && rejection.data && rejection.data !== "") {
 				data = rejection.data;
 				message = {
 					code: data.code,
