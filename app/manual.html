@@ -8,7 +8,11 @@
     <link rel="stylesheet" type="text/css" href="js/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/gemtc-drugis.css">
     <script type="text/javascript" src="js/bower_components/foundation/js/vendor/custom.modernizr.js"></script>
-<script type="text/javascript" src="js/bower_components/bowser/bowser.min.js"></script>
+    <script type="text/javascript" src="js/bower_components/bowser/bowser.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/contrib/auto-render.min.js"></script>
   </head>
   <body>
     <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
@@ -177,9 +181,28 @@
 
         <h3>Model fit</h3>
 
-        <p>Model fit refers to how well the model represents the data, which is usually assessed by looking at the reverse: how likely the data are given the fitted model.</p>
+        <p>
+        Model fit refers to how well the model represents the data, which is usually assessed by looking at the reverse: how likely the data are given the fitted model.
+        Model fit statistics are useful to identify outliers, and to select the best fitting model from among a number of equally plausible models.
+        </p>
 
-        <p>TODO</p>
+        <p>
+        A key metric of model fit is the <em>residual deviance</em> \(\bar{D}_{res}\), the posterior mean of the deviance under the current model, minus the deviance under the saturated model (i.e. a model with one parameter per data point).
+        In a well fitting model, each data point can be expected to contribute about 1 to the residual deviance, so that we can expect \(\bar{D}_{res}\) to equal the number of independent data points (i.e. the number of arms).
+        Lower values of residual deviance are better.
+        The residual deviance of individual data points is often useful to identify outliers that contribute disproportionately to the overall residual deviance.
+        </p>
+
+        <p>
+        Leverage statistics are used to assess the influence each data point has on the model parameters.
+        In Bayesian models, the leverage of a data point is the posterior mean of the residual deviance minus the residual deviance at the posterior mean of the fitted value for that data point.
+        The overall leverage \(p_D\) (the sum of the leverages of each data point) is also termed the effective number of parameters, and is a measure of model complexity.
+        </p>
+
+        <p>
+        The deviance information criterion (DIC), defined as \( \bar{D}_{res} + p_D \), is a measure of model fit that penalizes model complexity.
+        The DIC is used to compare fit between models for the same data; differences in DIC of 3 or greater are often considered relevant.
+        </p>
 
         <h3>Run length and convergence</h3>
         <p>Bayesian inference using Markov Chain Monte Carlo relies on a “random walk” algorithm to sample from the posterior distribution implied by the data and the priors. The process starts by setting arbitrary values for the model parameters and continues by updating them  in every iteration. When assessing convergence we are concerned by two things:</p>
@@ -287,5 +310,9 @@
       </div>
     </div>
    </div>
+
+   <script>
+    renderMathInElement(document.body);
+   </script>
   </body>
 </html>
