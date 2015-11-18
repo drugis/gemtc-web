@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
-    <title>gemtc.drugis.org</title>
+    <title>GeMTC user manual</title>
     <link rel="stylesheet" type="text/css" href="js/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/gemtc-drugis.css">
     <script type="text/javascript" src="js/bower_components/foundation/js/vendor/custom.modernizr.js"></script>
@@ -94,9 +94,87 @@
         We follow up with general techniques and considerations for Bayesian analysis as they apply within GeMTC: likelihood/link, prior distributions, model fit, and run-length and convergence.
         </p>
 
-        <h3>General model structure</h3>
+        <h3>Pairwise meta-analysis of normally distributed outcomes</h3>
+        <p>Meta-analysis is used to combine data from a series of studies reporting, for example, treatment effect \( Y_i \) in study \( i=1,\ldots,N \)
+        (<a href="http://dx.doi.org/10.1177/096228020101000404" title="A.J. Sutton &amp; K.R. Abrams (2001). Bayesian methods in meta-analysis and evidence synthesis. Statistical Methods in Medical Research.">Sutton &amp; Abrams, 2001</a>).</p>
 
-        <p>TODO: Sylwia's text.</p>
+        <h4>Fixed effects meta-analysis</h4>
+        <p>Assuming the treatment effects are normally distributed, their likelihood can be represented as</p>
+        \[
+        Y_i \sim \mathcal{N}(\delta, s_i^2),
+        \]
+        <p>where the effects \( Y_i \) are estimates of the underlying true treatment effect in the population \( \delta \), and their corresponding variances \( s_i^2 \) are assumed to be known.
+        In the fixed effect approach, it is assumed that in each study \( i \) the underlying effect \( \delta \) is the same. A prior distribution is assigned to the pooled effect, which is typically a non-informative prior distributions such as normal distribution with a large variance, \( \delta \sim \mathcal{N}(0.0, 10^3) \).</p>
+
+        <h4>Random effects meta-analysis</h4>
+        <p>In the presence of the between-study heterogeneity, a random effect approach is used where the treatment effects \( Y_i \) are assumed to estimate study-specific true treatment effects \( \delta_i \)  which are different in each study \( i \) and they follow a common distribution,</p>
+        \[
+        \begin{array}{rcl}
+        Y_i & \sim & \mathcal{N}(\delta_i, s_i^2),\\
+        \delta_i & \sim & \mathcal{N}(d, \tau^2),
+        \end{array}
+        \]
+        <p>where \( \tau^2 \) is the between-studies variance (heterogeneity parameter), which is estimated from the model and in the Bayesian framework is given a prior distribution, for example a uniform distribution is assigned  \( \tau^2 \sim \mathcal{U}(0, 100) \). Prior distribution is also placed on the pooled effect, \( d\sim \mathcal{N}(0.0, 10^3) \).</p>
+
+        <h3>Pairwise meta-analysis of binomially distributed outcomes</h3>
+
+        <p>When data from a number of studies reporting binomial outcomes are combined in a meta-analysis, the above normal models can be applied by synthesising the data on, for example, the log scale (log odds ratio or log relative risk). However, instead of assuming normality, exact Binomial distribution can be used to model the data (such as from two by two tables) directly. For example, when modeling odds ratios (ORs), the number of events \( r_{iA} \) and \( r_{Bi} \) in  arms \( A \) and \( B \) in each study \( i \) can be modelled using the Binomial distribution,</p>
+        \[
+        \begin{array}{rcl}
+        r_{Ai} &\sim & \mathcal{B}(p_{Ai}, n_{Ai}) \\
+        r_{Bi} &\sim & \mathcal{B}(p_{Bi}, n_{Bi}) \\
+        \mathrm{logit}(p_{Ai})&=&\mu_i\\
+        \mathrm{logit}(p_{Bi})&=&\mu_i+\delta_i \\
+        \delta_i &\sim & \mathcal{N}(d, \tau^2),
+        \end{array}
+        \]
+        <p>where, \( n_{Ai} \) and \( n_{Bi} \) are the numbers of individuals and \( p_{Ai} \) and \( p_{Bi} \) are the corresponding probabilities of event in arms \( A \) and \( B \) in each study \( i \). The \(\mu_i\) is the baseline treatment effect (log odds of an event) in the control arm \( A \) and \( \delta_i \) is the treatment effect of intervention in arm \( B \) relative to the control treatment in arm \( A \) in study \( i \). The pooled effect \( d \) is the log odds ratio, and odds ratio is \( e^d \). The baseline effects \( \mu_i \) and the pooled effect \( d \) are  given prior distributions, such as \( \mathcal{N}(0.0, 10^3) \).</p>
+
+        <p>This random-effects meta-analysis reduces to the fixed effects model by assuming that results in all the studies in meta-analysis estimate common underlying treatment effect differences \( \delta_i=\delta \) (in this case a prior distribution would be assigned to the pooled effect \( \delta \)).</p>
+
+        <h3>Network meta-analysis of normally distributed outcomes</h3>
+        <p>When data from multiple studies is recorded on multiple treatments, the random effects meta-analysis model (\ref{rema}) can be extended to the random effects network meta-analysis which allows to estimate the pooled effects within each treatment contrast
+        (<a href="http://dx.doi.org/10.1136/bmj.331.7521.897" title="D.M. Caldwell et al. (2005). Simultaneous comparison of multiple treatments: combining direct and indirect evidence. BMJ.">Caldwell et al., 2005</a>; 
+        <a href="http://dx.doi.org/10.1177/0272989X12458724" title="S. Dias et al. (2012). Evidence Synthesis for Decision Making 2: A Generalized Linear Modeling Framework for Pairwise and Network Meta-analysis of Randomized Controlled Trials. Medical Decision Making.">MDM 2</a>).</p>
+
+        <p>For data on the contrast level, such as mean difference or log OR, for the effect \( Y_{ibk} \) of treatment \( k \) versus treatment \( b \) in study \( i \), we can assume that the treatment effects are normally distributed and estimate the underlying true treatment effects \( \delta_{ibk} \):</p>
+        \[
+        \begin{array}{rcl}
+        Y_{ibk} & \sim & \mathcal{N}(\delta_{ibk}, s_i^2), \\
+        \delta_{ibk} & \sim & \mathcal{N}(d_{bk}, \tau_{bk}^2),
+        \end{array}
+        \]
+        <p>with the true effects \( \delta_{ibk} \) following a common distribution with the mean represented in terms of indirect effects \( d_{bk}=d_{1k}-d_{1b} \) where \( d_{1k} \) (\( d_{1b} \)) are the effects of treatment in each arm \( k \) (\( b \)) relative to the reference treatment \( 1 \), which are given prior distributions, \( d_{1k} \sim \mathcal{N}(0.0, 10^3) \),   and \( d_{11}=0 \). The between-studies variances \( \tau_{bk}^2 \) are typically assumed to be homogeneous across treatment contrasts \( \tau_{bk}^2=\tau^2 \).</p>
+
+        <h3>Network meta-analysis of binomially distributed outcomes</h3>
+        <p>For binomial data recorded on arm level, for example on the number of events (and the total number of individuals) in each arm of each study \( i \)</p>
+        \[
+        \begin{array}{rcl}
+        r_{ik} &\sim & \mathcal{B}(p_{ik}, n_{ik}) \\
+        \mathrm{logit}(p_{ik})&=&\theta_{ik}\\
+        \theta_{ik} &=& \left\{ \begin{array}{lcl} \mu_{ib} & if & b=k \\
+        \mu_{ib} + \delta_{ibk} & if & b> k   \end{array} \right. \\
+        \delta_{ibk} & \sim & \mathcal{N}(d_{bk}, \tau_{bk}^2),
+        \end{array}
+        \]
+        <p>where, similarly as for the contrast based model in section \ref{snma1}, the true effects \( \delta_{ibk} \) follow a common distribution with the mean represented in terms of indirect effects \( d_{bk}=d_{1k}-d_{1b} \) with prior distributions, \( d_{1k} \sim \mathcal{N}(0.0, 10^3) \),  and \( d_{11}=0 \). The between-studies variances are  assumed to be homogeneous across treatment contrasts \( \tau_{bk}^2=\tau^2 \).</p>
+
+        <h4>Network meta-analysis of multi-arm trials</h4>
+        <p>For multi-arm trials, correlation between the treatment effects between the arms can be taken into account. In a study \( i \) with \( j+1 \) treatment arm, this can be achieved by modelling the \( j \) treatment effects relative to the reference treatment  using multivariate normal distribution</p>
+        \[
+        \left( \begin{array}{c} \delta_{ibk1} \\ \delta_{ibk2} \\ \vdots \\ \delta_{ibkj} \end{array} \right)
+        \sim \mathcal{N}
+        \left(
+        \left( \begin{array}{c} d_{bk1} \\ d_{bk2} \\ \vdots \\ d_{bkj} \end{array} \right),
+        \left( \begin{array}{cccc} \tau^2 & \tau^2/2 & \cdots & \tau^2/2 \\
+                                    \tau^2/2 & \tau^2 & \cdots & \tau^2 /2 \\
+                                    \vdots & \vdots & \ddots & \vdots \\
+                                    \tau^2/2 & \tau^2/2 & \cdots & \tau^2 \end{array} \right)
+        \right)
+        \]
+        <p>where the covariance elements \( \tau^2/2 \) are based on the assumption of homogeneous between-study variances \( \tau^2 \) across treatment contrasts
+        (<a href="http://dx.doi.org/10.1002/sim.1875" title="G. Lu &amp; A.E. Ades (2004). Combination of direct and indirect evidence in mixed treatment comparisons. Statistic in Medicine.">Lu &amp; Ades, 2004</a>;
+        <a href="http://dx.doi.org/10.1002/(SICI)1097-0258(19961230)15:24<2733::AID-SIM562>3.0.CO;2-0" title="J.P.T. Higgins &amp; A. Whitehead (1996). Borrowing Strength from External Trials in a Meta-Analysis. Statistics in Medicine.">Higgins &amp; Whitehead, 1996</a>).</p>
 
         <h3>Heterogeneity and inconsistency</h3>
 
@@ -323,8 +401,29 @@
 
         <h3>Analyses and models</h3>
         <p>TODO</p>
+
         <h3>Creating a new model</h3>
+
         <p>TODO</p>
+
+        <h4>Implementation of network meta-analysis in GeMTC</h4>
+
+        <p>The implementation of network meta-analysis in GeMTC is described in two publications:
+        <a href="http://dx.doi.org/10.1002/jrsm.1054" title="G. van Valkenhoef et al. (2012). Automating network meta-analysis. Research Synthesis Methods.">van Valkenhoef et al. (2012)</a>, and
+        <a href="http://dx.doi.org/10.1002/jrsm.1167" title="G. van Valkenhoef et al. (2015). Automated generation of node-splitting models for assessment of inconsistency in network meta-analysis. Research Synthesis Methods.">van Valkenhoef et al. (2015)</a>.
+        Given the network of evidence and the modeling choices made by the user, GeMTC will automatically generate and run the required Bayesian hierarchical model.
+        Depending on the settings, GeMTC may automatically select the prior distributions and starting values as well.
+        </p>
+
+        <p>
+        The key parameter in this process is the <em>outcome scale</em> \( S \), which is meant to represent an unreasonably large deviation on the scale of measurement.
+        For example, for the log odds ratio a measurement scale somewhere between 2 and 5 may be appropriate, representing 2 to 5 orders of magnitude difference in the odds ratio.
+        For continuous outcomes, the right value of \( S \) depends on the continuous variable being measured and its units of measure.
+        By default, GeMTC will heuristically determine a value for \( S \); for final analyses, you will want to set this value yourself.
+        The outcome scale \( S \) is used to set default prior distributions.
+        These are displayed on the model creation screen, and (for the random effects standard deviation) can be overriden using your own settings.
+        </p>
+
         <h3>Interpreting model results</h3>
 
         <p>
