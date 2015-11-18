@@ -4,11 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
-    <title>gemtc.drugis.org</title>
+    <title>GeMTC user manual</title>
     <link rel="stylesheet" type="text/css" href="js/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/gemtc-drugis.css">
     <script type="text/javascript" src="js/bower_components/foundation/js/vendor/custom.modernizr.js"></script>
-<script type="text/javascript" src="js/bower_components/bowser/bowser.min.js"></script>
+    <script type="text/javascript" src="js/bower_components/bowser/bowser.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/contrib/auto-render.min.js"></script>
   </head>
   <body>
     <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
@@ -35,8 +39,9 @@
       <div class="row">
         <div class="columns large-offset-2 large-8 medium-12">
           <h1>GeMTC Manual</h1>
-        </h1>
-      </div>
+
+          <p style="margin-top: 30px; color: white;">Gert van Valkenhoef, Sylwia Bujkiewicz, Orestis Efthimiou, Daan Reid, and Connor Stroomberg</p>
+        </div>
       </div>
     </section>
 
@@ -45,23 +50,260 @@
     		<div class="columns large-offset-2 large-8 medium-12">
         <h2>Introduction</h2>
 
-        <p>TODO: small introductory text, including a short discussion of the terminology used around heterogeneity and inconsistency. References to introductory texts about meta-analysis and network meta-analysis.</p>
+        <p>
+        This is the manual for the GeMTC user interface for network meta-analysis.
+        It starts with a brief introduction to network meta-analysis in the Bayesian framework, including issues such as model fit and convergence.
+        This is followed by a guide to the GeMTC user interface itself.
+        Terminology in the GeMTC user interface tends to be marked with a question mark icon, which when clicked will show a brief explanation of the term as well as a link to futher information in this manual.
+        </p>
+
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/glossary_popover.png" alt="glossary popover" style=" padding: 5px; border: 1px solid gray;">
+        </div>
+
+        <p>
+        Although this manual contains a brief introduction to the terminology and methodology used in GeMTC, it is not a complete guide to network meta-analysis.
+        For further background, we recommend the following excellent open access publications:
+        </p>
+        <ul>
+          <li>The Medical Decision Making series on network meta-analysis based on the NICE Decision Support Unit series on evidence synthesis:
+            <a href="http://mdm.sagepub.com/content/33/5.toc" title="Table of Contents">Table of Contents</a>,
+            <a href="http://dx.doi.org/10.1177/0272989X12458724" title="S. Dias et al. (2012). Evidence Synthesis for Decision Making 2: A Generalized Linear Modeling Framework for Pairwise and Network Meta-analysis of Randomized Controlled Trials. Medical Decision Making.">MDM 2</a>,
+            <a href="http://dx.doi.org/10.1177/0272989X13485157" title="S. Dias et al. (2012).Evidence Synthesis for Decision Making 3: Heterogeneity - Subgroups, Meta-Regression, Bias, and Bias-Adjustment. Medical Decision Making.">MDM 3</a>,
+            <a href="http://dx.doi.org/10.1177/0272989X12455847" title="S. Dias et al (2012). Evidence Synthesis for Decision Making 4: Inconsistency in Networks of Evidence Based on Randomized Controlled Trials. Medical Decision Making.">MDM 4</a>
+          </li>
+          <li>The ISPOR guidelines on network meta-analysis:
+            <a title="A.E. Ades (2011). ISPOR States Its Position on Network Meta-Analysis. Value in Health." href="http://dx.doi.org/10.1016/j.jval.2011.05.001">ISPOR 0</a>,
+            <a title="J.P. Jansen et al. (2011). Interpreting Indirect Treatment Comparisons and Network Meta-Analysis for Health-Care Decision Making: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 1. Value in Health." href="http://dx.doi.org/10.1016/j.jval.2011.04.002">ISPOR 1</a>,
+            <a title="D.C. Hoaglin et al. (2011). Conducting Indirect-Treatment-Comparison and Network-Meta-Analysis Studies: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 2. Value in Health." href="http://dx.doi.org/10.1016/j.jval.2011.01.011">ISPOR 2</a>
+          </li>
+          <li>Evaluating the quality of evidence from a network meta-analysis: <a href="10.1371/journal.pone.0099682" title="Evaluating the Quality of Evidence from a Network Meta-Analysis">Salanti et al. (2014)</a></li>
+        </ul>
+
+        <p>
+        GeMTC is available as a stand-alone package at <a href="https://gemtc.drugis.org">gemtc.drugis.org</a>, and is also part of the <a href="https://addis.drugis.org">ADDIS</a> decision support system for evidence based medicine, developed at <a href="https://drugis.org">drugis.org</a>.
+        The functionality in the GeMTC user interface is supported by the <a href="http://drugis.org/software/r-packages/gemtc">GeMTC R package</a>.
+        All <a href="https://drugis.org">drugis.org</a> software is open source, and source code is available on <a href="https://github.com/drugis/">github.com/drugis</a>.
+        </p>
 
         <h2>Bayesian meta-analysis</h2>
 
-        <p>TODO</p>
+        <p>
+        This section introduces the Bayesian models for meta-analysis used by GeMTC, starting with models for pair-wise meta-analysis and then moving on to network meta-analysis as an extension.
+        The related issues of heterogeneity and inconsistency are discussed subsequently.
+        We follow up with general techniques and considerations for Bayesian analysis as they apply within GeMTC: likelihood/link, prior distributions, model fit, and run-length and convergence.
+        </p>
 
+        <h3>Pairwise meta-analysis of normally distributed outcomes</h3>
+        <p>Meta-analysis is used to combine data from a series of studies reporting, for example, treatment effect \( Y_i \) in study \( i=1,\ldots,N \)
+        (<a href="http://dx.doi.org/10.1177/096228020101000404" title="A.J. Sutton &amp; K.R. Abrams (2001). Bayesian methods in meta-analysis and evidence synthesis. Statistical Methods in Medical Research.">Sutton &amp; Abrams, 2001</a>).</p>
 
-        <h3>General model structure</h3>
+        <h4>Fixed effects meta-analysis</h4>
+        <p>Assuming the treatment effects are normally distributed, their likelihood can be represented as</p>
+        \[
+        Y_i \sim \mathcal{N}(\delta, s_i^2),
+        \]
+        <p>where the effects \( Y_i \) are estimates of the underlying true treatment effect in the population \( \delta \), and their corresponding variances \( s_i^2 \) are assumed to be known.
+        In the fixed effect approach, it is assumed that in each study \( i \) the underlying effect \( \delta \) is the same. A prior distribution is assigned to the pooled effect, which is typically a non-informative prior distributions such as normal distribution with a large variance, \( \delta \sim \mathcal{N}(0.0, 10^3) \).</p>
 
-        <p>TODO: basic model for the relative effects, both fixed effect and random effects models.</p>
+        <h4>Random effects meta-analysis</h4>
+        <p>In the presence of the between-study heterogeneity, a random effect approach is used where the treatment effects \( Y_i \) are assumed to estimate study-specific true treatment effects \( \delta_i \)  which are different in each study \( i \) and they follow a common distribution,</p>
+        \[
+        \begin{array}{rcl}
+        Y_i & \sim & \mathcal{N}(\delta_i, s_i^2),\\
+        \delta_i & \sim & \mathcal{N}(d, \tau^2),
+        \end{array}
+        \]
+        <p>where \( \tau^2 \) is the between-studies variance (heterogeneity parameter), which is estimated from the model and in the Bayesian framework is given a prior distribution, for example a uniform distribution is assigned  \( \tau^2 \sim \mathcal{U}(0, 100) \). Prior distribution is also placed on the pooled effect, \( d\sim \mathcal{N}(0.0, 10^3) \).</p>
+
+        <h3>Pairwise meta-analysis of binomially distributed outcomes</h3>
+
+        <p>When data from a number of studies reporting binomial outcomes are combined in a meta-analysis, the above normal models can be applied by synthesising the data on, for example, the log scale (log odds ratio or log relative risk). However, instead of assuming normality, exact Binomial distribution can be used to model the data (such as from two by two tables) directly. For example, when modeling odds ratios (ORs), the number of events \( r_{iA} \) and \( r_{Bi} \) in  arms \( A \) and \( B \) in each study \( i \) can be modelled using the Binomial distribution,</p>
+        \[
+        \begin{array}{rcl}
+        r_{Ai} &\sim & \mathcal{B}(p_{Ai}, n_{Ai}) \\
+        r_{Bi} &\sim & \mathcal{B}(p_{Bi}, n_{Bi}) \\
+        \mathrm{logit}(p_{Ai})&=&\mu_i\\
+        \mathrm{logit}(p_{Bi})&=&\mu_i+\delta_i \\
+        \delta_i &\sim & \mathcal{N}(d, \tau^2),
+        \end{array}
+        \]
+        <p>where, \( n_{Ai} \) and \( n_{Bi} \) are the numbers of individuals and \( p_{Ai} \) and \( p_{Bi} \) are the corresponding probabilities of event in arms \( A \) and \( B \) in each study \( i \). The \(\mu_i\) is the baseline treatment effect (log odds of an event) in the control arm \( A \) and \( \delta_i \) is the treatment effect of intervention in arm \( B \) relative to the control treatment in arm \( A \) in study \( i \). The pooled effect \( d \) is the log odds ratio, and odds ratio is \( e^d \). The baseline effects \( \mu_i \) and the pooled effect \( d \) are  given prior distributions, such as \( \mathcal{N}(0.0, 10^3) \).</p>
+
+        <p>This random-effects meta-analysis reduces to the fixed effects model by assuming that results in all the studies in meta-analysis estimate common underlying treatment effect differences \( \delta_i=\delta \) (in this case a prior distribution would be assigned to the pooled effect \( \delta \)).</p>
+
+        <h3>Network meta-analysis of normally distributed outcomes</h3>
+        <p>When data from multiple studies is recorded on multiple treatments, the random effects meta-analysis model (\ref{rema}) can be extended to the random effects network meta-analysis which allows to estimate the pooled effects within each treatment contrast
+        (<a href="http://dx.doi.org/10.1136/bmj.331.7521.897" title="D.M. Caldwell et al. (2005). Simultaneous comparison of multiple treatments: combining direct and indirect evidence. BMJ.">Caldwell et al., 2005</a>; 
+        <a href="http://dx.doi.org/10.1177/0272989X12458724" title="S. Dias et al. (2012). Evidence Synthesis for Decision Making 2: A Generalized Linear Modeling Framework for Pairwise and Network Meta-analysis of Randomized Controlled Trials. Medical Decision Making.">MDM 2</a>).</p>
+
+        <p>For data on the contrast level, such as mean difference or log OR, for the effect \( Y_{ibk} \) of treatment \( k \) versus treatment \( b \) in study \( i \), we can assume that the treatment effects are normally distributed and estimate the underlying true treatment effects \( \delta_{ibk} \):</p>
+        \[
+        \begin{array}{rcl}
+        Y_{ibk} & \sim & \mathcal{N}(\delta_{ibk}, s_i^2), \\
+        \delta_{ibk} & \sim & \mathcal{N}(d_{bk}, \tau_{bk}^2),
+        \end{array}
+        \]
+        <p>with the true effects \( \delta_{ibk} \) following a common distribution with the mean represented in terms of indirect effects \( d_{bk}=d_{1k}-d_{1b} \) where \( d_{1k} \) (\( d_{1b} \)) are the effects of treatment in each arm \( k \) (\( b \)) relative to the reference treatment \( 1 \), which are given prior distributions, \( d_{1k} \sim \mathcal{N}(0.0, 10^3) \),   and \( d_{11}=0 \). The between-studies variances \( \tau_{bk}^2 \) are typically assumed to be homogeneous across treatment contrasts \( \tau_{bk}^2=\tau^2 \).</p>
+
+        <h3>Network meta-analysis of binomially distributed outcomes</h3>
+        <p>For binomial data recorded on arm level, for example on the number of events (and the total number of individuals) in each arm of each study \( i \)</p>
+        \[
+        \begin{array}{rcl}
+        r_{ik} &\sim & \mathcal{B}(p_{ik}, n_{ik}) \\
+        \mathrm{logit}(p_{ik})&=&\theta_{ik}\\
+        \theta_{ik} &=& \left\{ \begin{array}{lcl} \mu_{ib} & if & b=k \\
+        \mu_{ib} + \delta_{ibk} & if & b> k   \end{array} \right. \\
+        \delta_{ibk} & \sim & \mathcal{N}(d_{bk}, \tau_{bk}^2),
+        \end{array}
+        \]
+        <p>where, similarly as for the contrast based model in section \ref{snma1}, the true effects \( \delta_{ibk} \) follow a common distribution with the mean represented in terms of indirect effects \( d_{bk}=d_{1k}-d_{1b} \) with prior distributions, \( d_{1k} \sim \mathcal{N}(0.0, 10^3) \),  and \( d_{11}=0 \). The between-studies variances are  assumed to be homogeneous across treatment contrasts \( \tau_{bk}^2=\tau^2 \).</p>
+
+        <h4>Network meta-analysis of multi-arm trials</h4>
+        <p>For multi-arm trials, correlation between the treatment effects between the arms can be taken into account. In a study \( i \) with \( j+1 \) treatment arm, this can be achieved by modelling the \( j \) treatment effects relative to the reference treatment  using multivariate normal distribution</p>
+        \[
+        \left( \begin{array}{c} \delta_{ibk1} \\ \delta_{ibk2} \\ \vdots \\ \delta_{ibkj} \end{array} \right)
+        \sim \mathcal{N}
+        \left(
+        \left( \begin{array}{c} d_{bk1} \\ d_{bk2} \\ \vdots \\ d_{bkj} \end{array} \right),
+        \left( \begin{array}{cccc} \tau^2 & \tau^2/2 & \cdots & \tau^2/2 \\
+                                    \tau^2/2 & \tau^2 & \cdots & \tau^2 /2 \\
+                                    \vdots & \vdots & \ddots & \vdots \\
+                                    \tau^2/2 & \tau^2/2 & \cdots & \tau^2 \end{array} \right)
+        \right)
+        \]
+        <p>where the covariance elements \( \tau^2/2 \) are based on the assumption of homogeneous between-study variances \( \tau^2 \) across treatment contrasts
+        (<a href="http://dx.doi.org/10.1002/sim.1875" title="G. Lu &amp; A.E. Ades (2004). Combination of direct and indirect evidence in mixed treatment comparisons. Statistic in Medicine.">Lu &amp; Ades, 2004</a>;
+        <a href="http://dx.doi.org/10.1002/(SICI)1097-0258(19961230)15:24<2733::AID-SIM562>3.0.CO;2-0" title="J.P.T. Higgins &amp; A. Whitehead (1996). Borrowing Strength from External Trials in a Meta-Analysis. Statistics in Medicine.">Higgins &amp; Whitehead, 1996</a>).</p>
+
+        <h3>Heterogeneity and inconsistency</h3>
+
+        <p>
+        In any meta-analysis, a key worry is whether the trials are similar enough in terms of potential <em>effect modifying covariates</em> to warrant the assumption that the true underlying trial effects are either identical (fixed effect) or exchangeable (random effects).
+        Importantly, because the models synthesize treatment contrasts (relative effects), only covariates that differentially impact the different treatments are relevant.
+        If a covariate (e.g. age at baseline) adversely affects the outcome irrespective of the intervention, it is not an effect modifier in the meta-analysis, assuming that the studies were properly randomized.
+        </p>
+
+        <p>
+        In a pair-wise meta-analysis, a lack of similarity between trials can only manifest as heterogeneity, i.e. between-trials differences in the underlying treatment effects within a comparison.
+        In network meta-analysis, it can also manifest as inconsistency, i.e. between-trial differences in the underlying treatment effects between comparisons.
+        Although both share a common cause, inconsistency is more concerning as can be more difficult or even impossible to detect.
+        The statistical assessment of heterogeneity is only limited by the number and precision of study estimates that are available.
+        By contrast, the assessment of inconsistency is also limited by network structure: it can only be assessed if closed loops exist within the network, so that estimates arrived at by different routes can be compared.
+        </p>
+
+        <p>
+        Therefore, in any meta-analysis, but especially in network meta-analysis, it is important to first consider whether the studies should be combined <em>at all</em>, based on epidemiological judgment of the study characteristics.
+        Many reasoning aids exist to help in this assessment process, see <a href="http://dx.doi.org/10.1002/jrsm.1037" title="G. Salanti (2012). Indirect and mixed-treatment comparison, network, or multiple-treatments meta-analysis: many names, many benefits, many concerns for the next generation evidence synthesis tool. Research Synthesis Methods.">Salanti (2012)</a>.
+        This should be supplemented by statistical tools, such as the node-splitting model for the assessment of inconsistency [TODO link to section].
+        Heterogeneity and inconsistency are also affected by the scale of measurement chosen for the analysis, e.g. an analysis on the odds ratio scale might be more consistent than an analysis on the risk ratio scale (<a href="http://dx.doi.org/10.1002/sim.1188" title="J.J. Deeks (2002). Issues in the selection of a summary statistic for meta-analysis of clinical trials with binary outcomes. Statistics in Medicine.">Deeks, 2002</a>; <a href="http://dx.doi.org/10.1002/jrsm.1040" title="D.M. Caldwell et al. (2012). Selecting the best scale for measuring treatment effect in a network meta-analysis: a case study in childhood nocturnal enuresis. Research Synthesis Methods.">Caldwell et al., 2012</a>).
+        The scale of measurement is discussed in the next section.
+        </p>
+
+        <p>
+        See these references (<a href="http://dx.doi.org/10.1186/1741-7015-11-159" title="J.P. Jansen & H. Naci (2013). Is network meta-analysis as valid as standard pairwise meta-analysis? It all depends on the distribution of effect modifiers. BMC Medicine.">Jansen &amp; Naci, 2013</a>; <a href="http://dx.doi.org/10.1136/bmj.309.6965.1351" title="S.G. Thompson(1994). Why sources of heterogeneity in meta-analysis should be investigated. BMJ.">Thompson, 1994</a>; TODO) for a more in depth discussion of heterogeneity and inconsistency.
+        </p>
 
         <h3>Likelihood / link</h3>
 
-        <p>TODO.Table: likelihood/links + scale of analysis / effect measure</p>
+        <p>
+        The likelihood reflects the distributional assumptions we make about the outcome data we aim to model.
+        For example, a Binomial likelihood is usually used for count data (e.g. number of treatment responders).
+        The link function transforms the parameters of the likelihood to the scale of measurement on which we assume the treatment effects to be linearly additive (<a href="http://dx.doi.org/10.1016/j.jval.2012.11.012" title="G. van Valkenhoef &amp; A.E. Ades (2013). Evidence synthesis assumes additivity on the scale of measurement: response to 'rank reversal in indirect comparisons' by Norton et al.. Value in Health.">van Valkenhoef &amp; Ades, 2013</a>).
+        For example, the logit link transforms the Binomial success probability to log odds, resulting in an analysis on the log odds ratio scale.
+        </p>
+
+        <table>
+          <thead>
+            <caption>Likelihood / links supported by GeMTC</caption>
+          </thead>
+          <tr>
+            <th>Type of data</th>
+            <th>Likelihood</th>
+            <th>Link</th>
+            <th>Scale of measurement</th>
+            <th>Remarks</th>
+          </tr>
+          <tr>
+            <td>Count data</td>
+            <td>Binomial</td>
+            <td>Logit</td>
+            <td>Log odds ratio</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Count data</td>
+            <td>Binomial</td>
+            <td>Log</td>
+            <td>Log risk ratio</td>
+            <td><a href="http://dx.doi.org/10.1002/sim.1189" title="D.E. Warn et al. (2002). Bayesian random effects meta-analysis of trials with binary outcomes: methods for the absolute risk difference and relative risk scales. Statistics in Medicine.">Warn et al. (2002)</a></td>
+          </tr>
+          <tr>
+            <td>Count data</td>
+            <td>Binomial</td>
+            <td>Cloglog</td>
+            <td>Log hazard ratio</td>
+            <td>Treats counts as rate data by assuming equal follow-up in each arm</td>
+          </tr>
+          <tr>
+            <td>Normal data</td>
+            <td>Normal</td>
+            <td>Identity</td>
+            <td>Mean difference</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Rate data</td>
+            <td>Poisson</td>
+            <td>Log</td>
+            <td>Log hazard ratio</td>
+            <td>-</td>
+          </tr>
+        </table>
 
         <h3>Prior distributions</h3>
-        <p>TODO.</p>
+
+        <p>
+        In a Bayesian analysis, prior beliefs (represented by prior distributions) are combined with data to arrive at the posterior distribution.
+        Quite often, a conservative analysis is desired with very little influence of prior beliefs.
+        In that case, <em>vague</em> priors are assigned.
+        In other cases, we may have strong prior beliefs (perhaps due to experience in clinical practice) which may be captured using <em>informative</em> priors.
+        </p>
+
+        <p>
+        Prior distributions must be assigned to all top level parameters in a Bayesian model.
+        For network meta-analysis, this typically means the treatment effects compared to a given reference treatment, the study baseline effects, and the heterogeneity variance in random effects models.
+        If the distributions are sufficiently vague they are unlikely to have a noticable impact on model results, especially if sufficient data are available.
+        In most situations, GeMTC can set the prior distributions automatically; the most straight-forward way to ensure they are sufficiently vague is to set the outcome scale parameter [TODO refer to section].
+        The heterogeneity variance is often the most difficult parameter to estimate, and therefore sees the most impact of priors.
+        In sparse networks, it may be sensible to assign an informative prior informed by empirical evidence
+        (<a href="http://dx.doi.org/10.1093/ije/dys041" title="Turner et al. (2012). Predicting the extent of heterogeneity in meta-analysis, using empirical data from the Cochrane Database of Systematic Reviews. International Journal of Epidemiology.">Turner et al. 2012</a>; <a href="http://dx.doi.org/10.1016/j.jclinepi.2014.08.012" title="Rhodes et al. (2015). Predictive distributions were developed for the extent of heterogeneity in meta-analyses of continuous outcome data. Journal of Clinical Epidemiology.">Rhodes et al. 2015</a>; <a href="http://dx.doi.org/10.1002/sim.6381" title="Turner et al. (2015). Predictive distributions for between-study heterogeneity and simple methods for their application in Bayesian meta-analysis. Statistics in Medicine.">Turner et al. 2015</a>).
+        </p>
+
+        <h3>Model fit</h3>
+
+        <p>
+        Model fit (<a href="http://dx.doi.org/10.1111/1467-9868.00353" title="D.J. Spiegelhalter et al. (2002). Bayesian measures of model complexity and fit. Journal of the Royal Statistical Society: Series B (Statistical Methodology).">Spiegelhalter et al., 2002</a>) refers to how well the model represents the data, which is usually assessed by looking at the reverse: how likely the data are given the fitted model.
+        Model fit statistics are useful to identify outliers, and to select the best fitting model from among a number of equally plausible models.
+        </p>
+
+        <p>
+        A key metric of model fit is the <em>residual deviance</em> \(\bar{D}_{res}\), the posterior mean of the deviance under the current model, minus the deviance under the saturated model (i.e. a model with one parameter per data point).
+        In a well fitting model, each data point can be expected to contribute about 1 to the residual deviance, so that we can expect \(\bar{D}_{res}\) to equal the number of independent data points (i.e. the number of arms).
+        Lower values of residual deviance are better.
+        The residual deviance of individual data points is often useful to identify outliers that contribute disproportionately to the overall residual deviance.
+        </p>
+
+        <p>
+        Leverage statistics are used to assess the influence each data point has on the model parameters.
+        In Bayesian models, the leverage of a data point is the posterior mean of the residual deviance minus the residual deviance at the posterior mean of the fitted value for that data point.
+        The overall leverage \(p_D\) (the sum of the leverages of each data point) is also termed the effective number of parameters, and is a measure of model complexity.
+        </p>
+
+        <p>
+        The deviance information criterion (DIC), defined as \( \bar{D}_{res} + p_D \), is a measure of model fit that penalizes model complexity.
+        The DIC is used to compare fit between models for the same data; differences in DIC of 3 or greater are often considered relevant.
+        </p>
 
         <h3>Run length and convergence</h3>
         <p>Bayesian inference using Markov Chain Monte Carlo relies on a “random walk” algorithm to sample from the posterior distribution implied by the data and the priors. The process starts by setting arbitrary values for the model parameters and continues by updating them  in every iteration. When assessing convergence we are concerned by two things:</p>
@@ -109,7 +351,9 @@
         <p>In the density plots above, the figure on the left has outlying values in the tail of the distribution (the small vertical lines at the bottom, indicating sampled values), and doesn’t have an entirely regular shape. The density on the right is much smoother and has a more expected tapering off of extreme values in the tails.</p>
 
         <h2 id="node-splitting-model">Node-splitting analysis of inconsistency</h2>
-        <p>The node-splitting approach for assessing the inconsistency of a network of interventions was introduced by Dias et. al1. The method focuses on one treatment comparison at a time. In this approach the direct evidence for a specific treatment comparison (i.e. the evidence coming from RCTs that directly perform this comparison) is contrasted with the indirect evidence coming from the rest of the network. </p>
+
+        <p>The node-splitting approach for assessing the inconsistency of a network of interventions was introduced by <a href="http://dx.doi.org/10.1002/sim.3767" title="S. Dias et al. (2010). Checking consistency in mixed treatment comparison meta-analysis. Statistics in Medicine.">Dias et al. (2010)</a>. The method focuses on one treatment comparison at a time. In this approach the direct evidence for a specific treatment comparison (i.e. the evidence coming from RCTs that directly perform this comparison) is contrasted with the indirect evidence coming from the rest of the network. </p>
+
         <p>This is depicted in the figure below, for a network of eight treatments (A to H), where the node-splitting analysis is performed for the comparison of A vs. B. Studies directly comparing A to B are removed from the network and are used to obtain a direct estimate of the corresponding relative treatment effects, . Information coming from the rest of the network is used to obtain an indirect estimate of A vs. B,  These two estimates can then be contrasted, with important differences corresponding to the notion of network inconsistency. The difference between the direct and the indirect estimate is usually termed inconsistency factor, ; a posterior distribution of  close to zero implies no important discrepancies between direct and indirect evidence, and thus no inconsistency in the network. Values of away from zero indicate the existence of an inconsistency in the network.</p>
 
         <p>The node-splitting method can be applied for all treatment comparisons for which there is direct evidence available in the network. This means that if for example there are no X vs. Y studies, one cannot perform the node-splitting method for the XY comparison.</p>
@@ -117,7 +361,8 @@
         <img src="img/network.png" alt="networkgraph nodesplit example" >
 
         <h2>Network meta-analysis in GeMTC</h2>
-        <p>TODO<p>
+
+        <p>The following sections give an overview of the GeMTC user interface.<p>
 
         <h3>Preparing your dataset</h3>
         <p>This section only applies to the stand-alone version of GeMTC, hosted on <a href="https://gemtc.drugis.org">https://gemtc.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
@@ -156,12 +401,112 @@
 
         <h3>Analyses and models</h3>
         <p>TODO</p>
+
         <h3>Creating a new model</h3>
+
         <p>TODO</p>
+
+        <h4>Implementation of network meta-analysis in GeMTC</h4>
+
+        <p>The implementation of network meta-analysis in GeMTC is described in two publications:
+        <a href="http://dx.doi.org/10.1002/jrsm.1054" title="G. van Valkenhoef et al. (2012). Automating network meta-analysis. Research Synthesis Methods.">van Valkenhoef et al. (2012)</a>, and
+        <a href="http://dx.doi.org/10.1002/jrsm.1167" title="G. van Valkenhoef et al. (2015). Automated generation of node-splitting models for assessment of inconsistency in network meta-analysis. Research Synthesis Methods.">van Valkenhoef et al. (2015)</a>.
+        Given the network of evidence and the modeling choices made by the user, GeMTC will automatically generate and run the required Bayesian hierarchical model.
+        Depending on the settings, GeMTC may automatically select the prior distributions and starting values as well.
+        </p>
+
+        <p>
+        The key parameter in this process is the <em>outcome scale</em> \( S \), which is meant to represent an unreasonably large deviation on the scale of measurement.
+        For example, for the log odds ratio a measurement scale somewhere between 2 and 5 may be appropriate, representing 2 to 5 orders of magnitude difference in the odds ratio.
+        For continuous outcomes, the right value of \( S \) depends on the continuous variable being measured and its units of measure.
+        By default, GeMTC will heuristically determine a value for \( S \); for final analyses, you will want to set this value yourself.
+        The outcome scale \( S \) is used to set default prior distributions.
+        These are displayed on the model creation screen, and (for the random effects standard deviation) can be overriden using your own settings.
+        </p>
+
         <h3>Interpreting model results</h3>
-        <p>TODO</p>
+
+        <p>
+        The model results screen will look somewhat different for the supported model types (network meta-analysis, pair-wise meta-analysis, and node-splitting).
+        However, it will always contain the following sections:
+        </p>
+        <ul>
+          <li>Convergence diagnostics</li>
+          <li>Model fit</li>
+          <li>Results</li>
+        </ul>
+
+        <p>
+        The convergence diagnostics section contains tools for the assessment of convergence and run-length. Before proceeding to interpret any of the other results, you should assure yourself that convergence and run-length are adequate. If they are not, use the "Extend run-length" button to increase the number of iterations.
+        </p>
+
+        <p>
+        The model fit section contains overall model fit statistics as well as per-arm deviance. If there are important outliers (residual deviance \( \gg 1 \), this may cast doubt on the model results.
+        Model fit statistics may also be used to compare between models.
+        </p>
+
+        <h4>Results: network meta-analysis</h4>
+
+        <p>
+        If the model is a random effects model, the random effects standard deviation is displayed as a measure of heterogeneity.
+        The extent of heterogeneity can be compared to the important effect sizes observed in the network.
+        If the heterogeneity is greater than or comparable to these effect sizes, that should raise concerns about the validity of the findings.
+        </p>
+        
+        <p>
+        The results section for a network meta-analysis will contain a league table of the relative effect of each treatment compared to each other treatment, on the scale of measurement implied by the selected likelihood/link (displayed in the caption).
+        The relative effects can also be assessed visually using the relative effects plots.
+        In this case you select a baseline to compare all other treatments against.
+        If there are many treatments, you may have to use the arrow buttons on the sides of the plot to navigate to the next page.
+        In either case, differences between treatments can be considered significant (at the 5% level) if their confidence intervals do not overlap the no-effect line (0 for difference scales, or 1 for ratio scales).
+        </p>
+
+        <p>
+        In addition to the relative effects, the Bayesian analysis produces rank probabilities, i.e. the probability for each treatment to obtain each possible rank in terms of their relative effects (outcome value).
+        Care should be taken when interpreting rank probabilities.
+        For example, a treatment may have a substantial first-rank probability either due to a high expected treatment effect, or due to great uncertainty in the effect estimate.
+        Therefore, never inspect only the first-rank probabilities, but always assess the full ranking profile.
+        In addition, treatment ranks do not imply much about effect sizes, and therefore both ranking and relative effect information should be considered when drawing conclusions that are clinically relevant.
+        </p>
+
+        <p><b>Warning: </b>At present, the rank probabilities represent the probability that each treatment has the highest, second highest, etc. <em>outcome value</em>, not the probability that each treatment is best, second best, etc. For example, if the outcome is mortality, the first ranked treatment would have the highest mortality and therefore be the worst treatment.</p>
+
+        <h4>Results: pair-wise meta-analysis</h4>
+
+        <p>
+        The results of a pair-wise meta-analysis are presented in a similar way to network meta-analysis.
+        The main difference is that the relative effects plot has been replaced by a Forest plot showing estimates from individual studies as well as the pooled estimate.
+        If there are many studies, you may have to use the arrow buttons on the sides of the plot to navigate to the next page.
+        The estimates shown for individual studies are maximum likelihood estimates, and in some cases (e.g. "zero cells") a continuity correction may have been applied - and the estimates shown may not be fully representative of their impact in a Bayesian analysis.
+        When in doubt, also consult the deviance statistics in the model fit section.
+        </p>
+
+        <h4>Results: node-splitting models</h4>
+
+        <p>
+        The results of the node-splitting model focus on the comparison of direct and indirect evidence on the selected comparison. Both a numerical summary and a graphical summary are displayed.
+        When direct and indirect evidence differ substantially, that indicates that inconsistency is present.
+        </p>
+
+        <p>A node-splitting overview screen is available from both the node-splitting results screen and the network meta-analysis results screen, at the top above the model settings box.</p>
+
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/goto_nsoverview.png" alt="glossary popover" style=" padding: 5px; border: 1px solid gray;">
+        </div>
+
+        <p>
+        The node-split overview will display a table of compatible models for each comparison.
+        The model fit (DIC), heterogeneity standard deviation (if applicable), and effect estimates from direct evidence, indirect evidence, and the consistency model are displayed for convenient assessment.
+        It is also possible to create and run models directly from the overview if necessary.
+        Please keep in mind that you should still assess the convergence and run-length of each model separately.
+        </p>
+
       </div>
     </div>
    </div>
+
+   <script>
+    renderMathInElement(document.body);
+   </script>
   </body>
 </html>
