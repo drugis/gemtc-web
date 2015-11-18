@@ -158,7 +158,7 @@
             <td>Binomial</td>
             <td>Log</td>
             <td>Log risk ratio</td>
-            <td>[TODO Warn et al. 2002]</td>
+            <td><a href="http://dx.doi.org/10.1002/sim.1189" title="D.E. Warn et al. (2002). Bayesian random effects meta-analysis of trials with binary outcomes: methods for the absolute risk difference and relative risk scales. Statistics in Medicine.">Warn et al. (2002)</a></td>
           </tr>
           <tr>
             <td>Count data</td>
@@ -326,11 +326,81 @@
         <h3>Creating a new model</h3>
         <p>TODO</p>
         <h3>Interpreting model results</h3>
-        <p>TODO</p>
-        <p>- Different sections; what is in each section?
-        - Link to node-split overview
-        - Refer to explanatory sections on convergence and model fit
-        - Examples of relative effects / rank probabilities</p>
+
+        <p>
+        The model results screen will look somewhat different for the supported model types (network meta-analysis, pair-wise meta-analysis, and node-splitting).
+        However, it will always contain the following sections:
+        </p>
+        <ul>
+          <li>Convergence diagnostics</li>
+          <li>Model fit</li>
+          <li>Results</li>
+        </ul>
+
+        <p>
+        The convergence diagnostics section contains tools for the assessment of convergence and run-length. Before proceeding to interpret any of the other results, you should assure yourself that convergence and run-length are adequate. If they are not, use the "Extend run-length" button to increase the number of iterations.
+        </p>
+
+        <p>
+        The model fit section contains overall model fit statistics as well as per-arm deviance. If there are important outliers (residual deviance \( \gg 1 \), this may cast doubt on the model results.
+        Model fit statistics may also be used to compare between models.
+        </p>
+
+        <h4>Results: network meta-analysis</h4>
+
+        <p>
+        If the model is a random effects model, the random effects standard deviation is displayed as a measure of heterogeneity.
+        The extent of heterogeneity can be compared to the important effect sizes observed in the network.
+        If the heterogeneity is greater than or comparable to these effect sizes, that should raise concerns about the validity of the findings.
+        </p>
+        
+        <p>
+        The results section for a network meta-analysis will contain a league table of the relative effect of each treatment compared to each other treatment, on the scale of measurement implied by the selected likelihood/link (displayed in the caption).
+        The relative effects can also be assessed visually using the relative effects plots.
+        In this case you select a baseline to compare all other treatments against.
+        If there are many treatments, you may have to use the arrow buttons on the sides of the plot to navigate to the next page.
+        In either case, differences between treatments can be considered significant (at the 5% level) if their confidence intervals do not overlap the no-effect line (0 for difference scales, or 1 for ratio scales).
+        </p>
+
+        <p>
+        In addition to the relative effects, the Bayesian analysis produces rank probabilities, i.e. the probability for each treatment to obtain each possible rank in terms of their relative effects (outcome value).
+        Care should be taken when interpreting rank probabilities.
+        For example, a treatment may have a substantial first-rank probability either due to a high expected treatment effect, or due to great uncertainty in the effect estimate.
+        Therefore, never inspect only the first-rank probabilities, but always assess the full ranking profile.
+        In addition, treatment ranks do not imply much about effect sizes, and therefore both ranking and relative effect information should be considered when drawing conclusions that are clinically relevant.
+        </p>
+
+        <p><b>Warning: </b>At present, the rank probabilities represent the probability that each treatment has the highest, second highest, etc. <em>outcome value</em>, not the probability that each treatment is best, second best, etc. For example, if the outcome is mortality, the first ranked treatment would have the highest mortality and therefore be the worst treatment.</p>
+
+        <h4>Results: pair-wise meta-analysis</h4>
+
+        <p>
+        The results of a pair-wise meta-analysis are presented in a similar way to network meta-analysis.
+        The main difference is that the relative effects plot has been replaced by a Forest plot showing estimates from individual studies as well as the pooled estimate.
+        If there are many studies, you may have to use the arrow buttons on the sides of the plot to navigate to the next page.
+        The estimates shown for individual studies are maximum likelihood estimates, and in some cases (e.g. "zero cells") a continuity correction may have been applied - and the estimates shown may not be fully representative of their impact in a Bayesian analysis.
+        When in doubt, also consult the deviance statistics in the model fit section.
+        </p>
+
+        <h4>Results: node-splitting models</h4>
+
+        <p>
+        The results of the node-splitting model focus on the comparison of direct and indirect evidence on the selected comparison. Both a numerical summary and a graphical summary are displayed.
+        When direct and indirect evidence differ substantially, that indicates that inconsistency is present.
+        </p>
+
+        <p>A node-splitting overview screen is available from both the node-splitting results screen and the network meta-analysis results screen, at the top above the model settings box.</p>
+
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/goto_nsoverview.png" alt="glossary popover" style=" padding: 5px; border: 1px solid gray;">
+        </div>
+
+        <p>
+        The node-split overview will display a table of compatible models for each comparison.
+        The model fit (DIC), heterogeneity standard deviation (if applicable), and effect estimates from direct evidence, indirect evidence, and the consistency model are displayed for convenient assessment.
+        It is also possible to create and run models directly from the overview if necessary.
+        Please keep in mind that you should still assess the convergence and run-length of each model separately.
+        </p>
 
       </div>
     </div>
