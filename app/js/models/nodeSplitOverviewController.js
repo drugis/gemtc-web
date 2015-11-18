@@ -61,7 +61,6 @@ define(['angular', 'lodash'], function(angular, _) {
                 row.hasResults = true;
               } else {
                 row.colSpan = 3;
-                console.log('result is falsy');
               }
             });
 
@@ -106,9 +105,7 @@ define(['angular', 'lodash'], function(angular, _) {
             return result
           },
           function(error) {
-            var intermidiate = $q.defer();
-            intermidiate.resolve(undefined);
-            return intermidiate.promise; 
+            return $q.resolve(undefined);
           });
     }
 
