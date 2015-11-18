@@ -62,6 +62,25 @@
         </div>
 
         <p>
+        Although this manual contains a brief introduction to the terminology and methodology used in GeMTC, it is not a complete guide to network meta-analysis.
+        For further background, we recommend the following excellent open access publications:
+        </p>
+        <ul>
+          <li>The Medical Decision Making series on network meta-analysis based on the NICE Decision Support Unit series on evidence synthesis:
+            <a href="http://mdm.sagepub.com/content/33/5.toc" title="Table of Contents">Table of Contents</a>,
+            <a href="http://dx.doi.org/10.1177/0272989X12458724" title="S. Dias et al. (2012). Evidence Synthesis for Decision Making 2: A Generalized Linear Modeling Framework for Pairwise and Network Meta-analysis of Randomized Controlled Trials. Medical Decision Making.">MDM 2</a>,
+            <a href="http://dx.doi.org/10.1177/0272989X13485157" title="S. Dias et al. (2012).Evidence Synthesis for Decision Making 3: Heterogeneity - Subgroups, Meta-Regression, Bias, and Bias-Adjustment. Medical Decision Making.">MDM 3</a>,
+            <a href="http://dx.doi.org/10.1177/0272989X12455847" title="S. Dias et al (2012). Evidence Synthesis for Decision Making 4: Inconsistency in Networks of Evidence Based on Randomized Controlled Trials. Medical Decision Making.">MDM 4</a>
+          </li>
+          <li>The ISPOR guidelines on network meta-analysis:
+            <a title="A.E. Ades (2011). ISPOR States Its Position on Network Meta-Analysis. Value in Health." href="http://dx.doi.org/10.1016/j.jval.2011.05.001">ISPOR 0</a>,
+            <a title="J.P. Jansen et al. (2011). Interpreting Indirect Treatment Comparisons and Network Meta-Analysis for Health-Care Decision Making: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 1. Value in Health." href="http://dx.doi.org/10.1016/j.jval.2011.04.002">ISPOR 1</a>,
+            <a title="D.C. Hoaglin et al. (2011). Conducting Indirect-Treatment-Comparison and Network-Meta-Analysis Studies: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 2. Value in Health." href="http://dx.doi.org/10.1016/j.jval.2011.01.011">ISPOR 2</a>
+          </li>
+          <li>Evaluating the quality of evidence from a network meta-analysis: <a href="10.1371/journal.pone.0099682" title="Evaluating the Quality of Evidence from a Network Meta-Analysis">Salanti et al. (2014)</a></li>
+        </ul>
+
+        <p>
         GeMTC is available as a stand-alone package at <a href="https://gemtc.drugis.org">gemtc.drugis.org</a>, and is also part of the <a href="https://addis.drugis.org">ADDIS</a> decision support system for evidence based medicine, developed at <a href="https://drugis.org">drugis.org</a>.
         The functionality in the GeMTC user interface is supported by the <a href="http://drugis.org/software/r-packages/gemtc">GeMTC R package</a>.
         All <a href="https://drugis.org">drugis.org</a> software is open source, and source code is available on <a href="https://github.com/drugis/">github.com/drugis</a>.
@@ -97,11 +116,14 @@
 
         <p>
         Therefore, in any meta-analysis, but especially in network meta-analysis, it is important to first consider whether the studies should be combined <em>at all</em>, based on epidemiological judgment of the study characteristics.
-        Many reasoning aids exist to help in this assessment process, see [CITE Salanti (?) formulations of exchangeability assumptions].
+        Many reasoning aids exist to help in this assessment process, see <a href="http://dx.doi.org/10.1002/jrsm.1037" title="G. Salanti (2012). Indirect and mixed-treatment comparison, network, or multiple-treatments meta-analysis: many names, many benefits, many concerns for the next generation evidence synthesis tool. Research Synthesis Methods.">Salanti (2012)</a>.
         This should be supplemented by statistical tools, such as the node-splitting model for the assessment of inconsistency [TODO link to section].
-        Heterogeneity and inconsistency are also affected by the scale of measurement chosen for the analysis, e.g. an analysis on the odds ratio scale might be more consistent than an analysis on the risk ratio scale.
+        Heterogeneity and inconsistency are also affected by the scale of measurement chosen for the analysis, e.g. an analysis on the odds ratio scale might be more consistent than an analysis on the risk ratio scale (<a href="http://dx.doi.org/10.1002/sim.1188" title="J.J. Deeks (2002). Issues in the selection of a summary statistic for meta-analysis of clinical trials with binary outcomes. Statistics in Medicine.">Deeks, 2002</a>; <a href="http://dx.doi.org/10.1002/jrsm.1040" title="D.M. Caldwell et al. (2012). Selecting the best scale for measuring treatment effect in a network meta-analysis: a case study in childhood nocturnal enuresis. Research Synthesis Methods.">Caldwell et al., 2012</a>).
         The scale of measurement is discussed in the next section.
-        See these references [TODO REFS] for a more in depth discussion.
+        </p>
+
+        <p>
+        See these references (<a href="http://dx.doi.org/10.1186/1741-7015-11-159" title="J.P. Jansen & H. Naci (2013). Is network meta-analysis as valid as standard pairwise meta-analysis? It all depends on the distribution of effect modifiers. BMC Medicine.">Jansen &amp; Naci, 2013</a>; <a href="http://dx.doi.org/10.1136/bmj.309.6965.1351" title="S.G. Thompson(1994). Why sources of heterogeneity in meta-analysis should be investigated. BMJ.">Thompson, 1994</a>; TODO) for a more in depth discussion of heterogeneity and inconsistency.
         </p>
 
         <h3>Likelihood / link</h3>
@@ -109,7 +131,7 @@
         <p>
         The likelihood reflects the distributional assumptions we make about the outcome data we aim to model.
         For example, a Binomial likelihood is usually used for count data (e.g. number of treatment responders).
-        The link function transforms the parameters of the likelihood to the scale of measurement on which we assume the treatment effects to be linearly additive [CITE van Valkenhoef & Ades].
+        The link function transforms the parameters of the likelihood to the scale of measurement on which we assume the treatment effects to be linearly additive (<a href="http://dx.doi.org/10.1016/j.jval.2012.11.012" title="G. van Valkenhoef &amp; A.E. Ades (2013). Evidence synthesis assumes additivity on the scale of measurement: response to 'rank reversal in indirect comparisons' by Norton et al.. Value in Health.">van Valkenhoef &amp; Ades, 2013</a>).
         For example, the logit link transforms the Binomial success probability to log odds, resulting in an analysis on the log odds ratio scale.
         </p>
 
@@ -176,13 +198,14 @@
         If the distributions are sufficiently vague they are unlikely to have a noticable impact on model results, especially if sufficient data are available.
         In most situations, GeMTC can set the prior distributions automatically; the most straight-forward way to ensure they are sufficiently vague is to set the outcome scale parameter [TODO refer to section].
         The heterogeneity variance is often the most difficult parameter to estimate, and therefore sees the most impact of priors.
-        In sparse networks, it may be sensible to assign an informative prior informed by empirical evidence [CITE rhodes and turner papers].
+        In sparse networks, it may be sensible to assign an informative prior informed by empirical evidence
+        (<a href="http://dx.doi.org/10.1093/ije/dys041" title="Turner et al. (2012). Predicting the extent of heterogeneity in meta-analysis, using empirical data from the Cochrane Database of Systematic Reviews. International Journal of Epidemiology.">Turner et al. 2012</a>; <a href="http://dx.doi.org/10.1016/j.jclinepi.2014.08.012" title="Rhodes et al. (2015). Predictive distributions were developed for the extent of heterogeneity in meta-analyses of continuous outcome data. Journal of Clinical Epidemiology.">Rhodes et al. 2015</a>; <a href="http://dx.doi.org/10.1002/sim.6381" title="Turner et al. (2015). Predictive distributions for between-study heterogeneity and simple methods for their application in Bayesian meta-analysis. Statistics in Medicine.">Turner et al. 2015</a>).
         </p>
 
         <h3>Model fit</h3>
 
         <p>
-        Model fit refers to how well the model represents the data, which is usually assessed by looking at the reverse: how likely the data are given the fitted model.
+        Model fit (<a href="http://dx.doi.org/10.1111/1467-9868.00353" title="D.J. Spiegelhalter et al. (2002). Bayesian measures of model complexity and fit. Journal of the Royal Statistical Society: Series B (Statistical Methodology).">Spiegelhalter et al., 2002</a>) refers to how well the model represents the data, which is usually assessed by looking at the reverse: how likely the data are given the fitted model.
         Model fit statistics are useful to identify outliers, and to select the best fitting model from among a number of equally plausible models.
         </p>
 
@@ -250,7 +273,9 @@
         <p>In the density plots above, the figure on the left has outlying values in the tail of the distribution (the small vertical lines at the bottom, indicating sampled values), and doesn’t have an entirely regular shape. The density on the right is much smoother and has a more expected tapering off of extreme values in the tails.</p>
 
         <h2 id="node-splitting-model">Node-splitting analysis of inconsistency</h2>
-        <p>The node-splitting approach for assessing the inconsistency of a network of interventions was introduced by Dias et. al1. The method focuses on one treatment comparison at a time. In this approach the direct evidence for a specific treatment comparison (i.e. the evidence coming from RCTs that directly perform this comparison) is contrasted with the indirect evidence coming from the rest of the network. </p>
+
+        <p>The node-splitting approach for assessing the inconsistency of a network of interventions was introduced by <a href="http://dx.doi.org/10.1002/sim.3767" title="S. Dias et al. (2010). Checking consistency in mixed treatment comparison meta-analysis. Statistics in Medicine.">Dias et al. (2010)</a>. The method focuses on one treatment comparison at a time. In this approach the direct evidence for a specific treatment comparison (i.e. the evidence coming from RCTs that directly perform this comparison) is contrasted with the indirect evidence coming from the rest of the network. </p>
+
         <p>This is depicted in the figure below, for a network of eight treatments (A to H), where the node-splitting analysis is performed for the comparison of A vs. B. Studies directly comparing A to B are removed from the network and are used to obtain a direct estimate of the corresponding relative treatment effects, . Information coming from the rest of the network is used to obtain an indirect estimate of A vs. B,  These two estimates can then be contrasted, with important differences corresponding to the notion of network inconsistency. The difference between the direct and the indirect estimate is usually termed inconsistency factor, ; a posterior distribution of  close to zero implies no important discrepancies between direct and indirect evidence, and thus no inconsistency in the network. Values of away from zero indicate the existence of an inconsistency in the network.</p>
 
         <p>The node-splitting method can be applied for all treatment comparisons for which there is direct evidence available in the network. This means that if for example there are no X vs. Y studies, one cannot perform the node-splitting method for the XY comparison.</p>
