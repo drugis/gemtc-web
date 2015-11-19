@@ -23,7 +23,7 @@ define(['lodash'], function(_) {
             leverage: devianceStatistics.perArmLeverage[study][treatmentId]
           };
           if(firstStudyRow) {
-             row.rowSpan =   studyMap[study].length;
+             row.rowSpan =   Object.keys(deviance).length;
           }
           table.push(row);
           firstStudyRow = false;
