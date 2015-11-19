@@ -366,7 +366,9 @@
 
         <p>The node-splitting method can be applied for all treatment comparisons for which there is direct evidence available in the network. This means that if for example there are no X vs. Y studies, one cannot perform the node-splitting method for the X-Y comparison.</p>
 
-        <img src="img/network.png" alt="networkgraph nodesplit example" >
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/network.png" alt="networkgraph nodesplit example" style=" padding: 5px; border: 1px solid gray;">
+        </div>
 
         <h2 id="gemtc-network-meta-analysis">Network meta-analysis in GeMTC</h2>
 
@@ -376,7 +378,9 @@
         <p>This section only applies to the stand-alone version of GeMTC, hosted on <a href="https://gemtc.drugis.org">https://gemtc.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
         <p>After signing in to GeMTC, you will be redirected to your personal home page. It contains a list of your previously created analyses (which will be empty until you create one), and a button to create a new analysis. Clicking this button will open the “New analysis” dialog, where you choose a title for your analysis and outcome, and upload a dataset file:</p>
 
-        <img src="img/gemtc_add_analysis.png" alt="add analysis screen shot" >
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/gemtc_add_analysis.png" alt="add analysis screen shot" style=" padding: 5px; border: 1px solid gray;">
+        </div>
 
         <p>Datasets can be uploaded in CSV format. The CSV file should contain one row per arm, and needs to contain “study” and “treatment” columns, which can contain names or identifiers for the study and treatment. The data columns may be one of:</p>
         <ul>
@@ -410,16 +414,20 @@
         <h3 id="analyses-and-models">Analyses and models</h3>
         <p>An analysis consists of a set of data together with all the models that have been run on these data. After creating an analysis, the analysis screen shows the evidence network, the models, the evidence table, and a button to create more models:</p>
 
-        <img src="img/analysis_view.png" alt="The analysis view">
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/analysis_view.png" alt="The analysis view" style=" padding: 5px; border: 1px solid gray;">
+        </div>
 
         <h3 id="model-creation">Creating a new model</h3>
 
         <p>A model consists of various settings and parameters, plus the results of running that model if they are available.
         Models can be created in several ways, most importantly from the analysis screen. Clicking the "Create Model" button from the analysis screen should navigate to the model creation screen:</p>
 
-        <img src="img/model_creation.png" alt="The analysis view">
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/model_creation.png" alt="The analysis view" style=" padding: 5px; border: 1px solid gray;">
+        </div>
 
-        <p>On the model creation screen you can tweak the model settings to your satisfaction before creating and running it. Once the run is complete, the <a href="model-results">model results</a> should be shown.</p>
+        <p>On the model creation screen you can tweak the model settings to your satisfaction before creating and running it. Once the run is complete, the <a href="#model-results">model results</a> should be shown.</p>
 
         <h4 id="gemtc-network-meta-analysis-implementation">Implementation of network meta-analysis in GeMTC</h4>
 
@@ -456,7 +464,7 @@
         </p>
 
         <p>
-        The model fit section contains overall <a href="#model-fit">model fit</a> statistics as well as per-arm deviance. If there are important outliers (residual deviance \( \gg 1 \), this may cast doubt on the model results.
+        The model fit section contains overall <a href="#model-fit">model fit</a> statistics as well as per-arm deviance. If there are important outliers (residual deviance \( \gg 1 \)), this may cast doubt on the model results.
         Model fit statistics may also be used to compare between models.
         </p>
 
