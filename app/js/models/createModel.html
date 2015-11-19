@@ -33,17 +33,17 @@
           <label class="form-item-header">Model Type<inline-help help-key="model-type"></inline-help></label>
           <div class="stacked-radio">
             <input type="radio" value="network" ng-model="model.modelType.mainType" id="network-model-type-radio" ng-change="modelTypeChange()">
-            <label for="network-model-type-radio">Network meta-analysis</label>
+            <label for="network-model-type-radio">Consistency model</label>
           </div>
           <div class="stacked-radio">
             <input type="radio" value="pairwise" ng-model="model.modelType.mainType" id="pairwise-model-main-type-radio" ng-change="modelTypeChange()" ng-disabled="comparisonOptions.length === 0">
-            <label for="pairwise-model-main-type-radio">Pair-wise analysis <em ng-show="comparisonOptions.length === 0"> (Not possible for this analysis)</em></label>
+            <label for="pairwise-model-main-type-radio">Pair-wise model <em ng-show="comparisonOptions.length === 0"> (Not possible for this analysis)</em></label>
           </div>
           <div class="indent-one" ng-show="model.modelType.mainType == 'pairwise'">
-            <label for="comparison-select">Select comparison for which to perform pair-wise analysis</label>
+            <label for="comparison-select">Select comparison for which to perform pair-wise model</label>
             <div class="stacked-radio">
               <input type="radio" value="all-pairwise" ng-model="model.modelType.subType" id="all-pairwise-model-type-radio">
-              <label for="all-pairwise-model-type-radio">All pairwise meta-analyses (batch)</label>
+              <label for="all-pairwise-model-type-radio">All pairwise models (batch)</label>
             </div>
             <div class="stacked-radio">
               <span>
@@ -55,10 +55,10 @@
           </div>
           <div class="stacked-radio">
             <input type="radio" value="node-split" ng-model="model.modelType.mainType" id="node-split-model-main-type-radio" ng-change="modelTypeChange()" ng-disabled="nodeSplitOptions.length === 0">
-            <label for="node-split-model-main-type-radio">Node-splitting analysis <inline-help help-key="node-splitting-model"></inline-help><em ng-show="nodeSplitOptions.length === 0"> (Not possible for this analysis)</em></label>
+            <label for="node-split-model-main-type-radio">Node-splitting model <inline-help help-key="node-splitting-model"></inline-help><em ng-show="nodeSplitOptions.length === 0"> (Not possible for this model)</em></label>
           </div>
           <div class="indent-one" ng-show="model.modelType.mainType == 'node-split'">
-            <label for="comparison-select">Select comparison for which to perform node-splitting analysis</label>
+            <label for="comparison-select">Select comparison for which to perform node-splitting model</label>
             <div class="stacked-radio">
               <input type="radio" value="all-node-split" ng-model="model.modelType.subType" id="all-node-split-model-type-radio">
               <label for="all-node-split-model-type-radio">All models</label>
@@ -135,7 +135,7 @@
           <div class="columns large-6 stacked-radio">
             <input type="radio" value="standard-deviation" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-standard-deviation-radio" ng-change="heterogeneityPriorTypechange()">
             <label for="heterogeneity-prior-standard-deviation-radio">Uniform for standard deviation</label>
-              
+
               <div ng-show="model.heterogeneityPrior.type === 'standard-deviation'">
                 <div class="row">
                   <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
