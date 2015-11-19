@@ -40,16 +40,16 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function cleanUpEvidencePropertyNames(armData) {
       var evidence = {}
-      if(armData['responders']) {
-        evidence.responders = armData['responders'];
+      if(armData.hasOwnProperty('responders')) {
+        evidence.responders = armData.responders;
       }
-      if(armData['sampleSize']) {
-        evidence.sampleSize = armData['sampleSize'];
+      if(armData.hasOwnProperty('sampleSize')) {
+        evidence.sampleSize = armData.sampleSize;
       }
-      if(armData['mean']) {
-        evidence.mean = armData['mean']
+      if(armData.hasOwnProperty('mean')) {
+        evidence.mean = armData.mean
       }
-      if(armData['std.dev']) {
+      if(armData.hasOwnProperty('std.dev')) {
         evidence.stdDev = armData['std.dev']
       }
       return evidence;
