@@ -24,12 +24,6 @@ ModelResultPage.prototype = {
       .setValue('#nr-inference-input', '60')
       .click('#submit-extend-run-length-btn');
   },
-  showConvergenceDiagnostics: function() {
-    browser.click('#show-convergence-diagnostics');
-  },
-  hideConvergenceDiagnostics: function() {
-    browser.click('#hide-convergence-diagnostics');
-  },
   assertDirectiveImagesRendered: function(directiveName) {
    
     browser.elements('tag name', directiveName, function(result) {
