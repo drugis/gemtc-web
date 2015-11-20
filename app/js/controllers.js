@@ -9,5 +9,6 @@ define(function(require) {
     .controller('NodeSplitOverviewController', require('gemtc-web/models/nodeSplitOverviewController'))
     .controller('CreateNodeSplitModelController', require('gemtc-web/models/createNodeSplitModelController'))
     .controller('CreateNetworkModelController', require('gemtc-web/models/createNetworkModelController'))
+    .controller('PlotNavigationController', require('gemtc-web/util/graphModalDirective/plotNavigationController'))
     ;
 });
