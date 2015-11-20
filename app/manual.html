@@ -7,12 +7,22 @@
     <title>GeMTC user manual</title>
     <link rel="stylesheet" type="text/css" href="js/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/gemtc-drugis.css">
-    <script type="text/javascript" src="js/bower_components/foundation/js/vendor/custom.modernizr.js"></script>
-    <script type="text/javascript" src="js/bower_components/bowser/bowser.min.js"></script>
-
+    <script src="js/bower_components/foundation/js/vendor/custom.modernizr.js"></script>
+    <script src="js/bower_components/bowser/bowser.min.js"></script>
     <link rel="stylesheet" href="js/bower_components/KaTeX/dist/katex.min.css">
     <script src="js/bower_components/KaTeX/dist/katex.min.js"></script>
     <script src="js/bower_components/KaTeX/dist/contrib/auto-render.min.js"></script>
+    <script src="js/bower_components/jquery/jquery.min.js"></script>
+    <script src="js/bower_components/scrollup/dist/jquery.scrollUp.min.js"></script>
+    <style type="text/css">
+			#scrollUp {
+			    bottom: 20px;
+			    right: 20px;
+			    padding: 10px 20px;
+			    background-color: #555;
+			    color: #fff;
+			}
+    </style>
   </head>
   <body>
     <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
@@ -37,7 +47,7 @@
 
     <section id="hero">
       <div class="row">
-        <div class="columns large-offset-2 large-8 medium-12">
+        <div class="columns large-offset-2 large-8 medium-12 end">
           <h1>GeMTC Manual</h1>
 
           <p style="margin-top: 30px; color: white;">Gert van Valkenhoef, Sylwia Bujkiewicz, Orestis Efthimiou, Daan Reid, and Connor Stroomberg</p>
@@ -46,8 +56,34 @@
     </section>
 
     <section class="content">
+
     	<div class="row">
-    		<div class="columns large-offset-2 large-8 medium-12">
+            <div class="columns large-3">
+                    <ul class="side-nav">
+										
+										  <li class="heading"><a href="#bayesian-meta-analysis" style="padding-left : 0;">Bayesian meta-analysis</a></li>
+										  <li><a href="#model-structure">Model structure</a></li>
+										  <li><a href="#heterogeneity">Heterogeneity and inconsistency</a></li>
+										  <li><a href="#likelihood-link">Likelihood / link</a></li>
+										  <li><a href="#prior-distributions">Prior distributions</a></li>
+										  <li><a href="#model-fit">Model fit</a></li>
+										  <li><a href="#run-length-convergence">Run length and convergence</a></li>
+										
+
+										  <li class="heading"><a href="#node-splitting-analysis" style="padding-left : 0;">Node-splitting analysis of inconsistency</a></li>
+											
+
+											<li class="heading"><a href="#gemtc-network-meta-analysis" style="padding-left : 0;">Network meta-analysis in GeMTC</a></li>
+											<li><a href="#gemtc-preparing-dataset">Preparing your dataset</a></li>
+											<li><a href="#analyses-and-models">Analyses and models</a></li>
+											<li><a href="#model creation">Creating a new model</a></li>
+											<li><a href="#model-results">Interpreting model results</a></li>
+
+
+									</ul>
+										</div>
+				<div class="columns large-8 medium-12 end">
+
         <h2>Introduction</h2>
 
         <p>
@@ -94,7 +130,9 @@
         We follow up with general techniques and considerations for Bayesian analysis as they apply to GeMTC: likelihood/link, prior distributions, model fit, and run-length and convergence.
         </p>
 
-        <h3 id="pairwise-analysis-normally-distributed">Pairwise meta-analysis of normally distributed outcomes</h3>
+        <h3 id="model-structure">Model structure</h3>
+
+        <h4 id="pairwise-analysis-normally-distributed">Pairwise meta-analysis of normally distributed outcomes</h4>
         <p>Meta-analysis is used to combine data from a series of studies reporting, for example, treatment effect \( Y_i \) in study \( i=1,\ldots,N \)
         (<a href="http://dx.doi.org/10.1177/096228020101000404" title="A.J. Sutton &amp; K.R. Abrams (2001). Bayesian methods in meta-analysis and evidence synthesis. Statistical Methods in Medical Research.">Sutton &amp; Abrams, 2001</a>).</p>
 
@@ -116,7 +154,7 @@
         \]
         <p>where \( \tau^2 \) is the between-studies variance (heterogeneity parameter), which is estimated from the model. In the Bayesian framework \( \tau^2 \) is given a prior distribution, for example a uniform distribution:  \( \tau^2 \sim \mathcal{U}(0, 100) \). Prior distribution is also placed on the pooled effect, \( d\sim \mathcal{N}(0.0, 10^3) \).</p>
 
-        <h3 id="pairwise-analysis-binomially-distributed">Pairwise meta-analysis of binomially distributed outcomes</h3>
+        <h4 id="pairwise-analysis-binomially-distributed">Pairwise meta-analysis of binomially distributed outcomes</h4>
 
         <p>When data from a number of studies reporting binomial outcomes are combined in a meta-analysis, the above normal models can be applied by synthesising the data on, for example, the log scale (log odds ratio or log relative risk). However, instead of assuming normality, exact Binomial distributions can be used to model the data (such as from two by two tables) directly. For example, when modeling odds ratios (ORs), the number of events \( r_{iA} \) and \( r_{Bi} \) in  arms \( A \) and \( B \) in each study \( i \) can be modelled using the Binomial distribution,</p>
         \[
@@ -132,7 +170,7 @@
 
         <p>This random-effects meta-analysis reduces to the fixed effects model by assuming that results in all the studies in meta-analysis estimate common underlying treatment effect differences \( \delta_i=\delta \) (in this case a prior distribution would be assigned to the pooled effect \( \delta \)).</p>
 
-        <h3 id="network-meta-analysis-normally-distributed">Network meta-analysis of normally distributed outcomes</h3>
+        <h4 id="network-meta-analysis-normally-distributed">Network meta-analysis of normally distributed outcomes</h4>
         <p>When data from multiple studies is recorded on multiple treatments, the <a href="#pairwise-analysis-random-effects">random effects meta-analysis model</a> can be extended to a random effects network meta-analysis which allows estimation of the pooled effects within each treatment contrast
         (<a href="http://dx.doi.org/10.1136/bmj.331.7521.897" title="D.M. Caldwell et al. (2005). Simultaneous comparison of multiple treatments: combining direct and indirect evidence. BMJ.">Caldwell et al., 2005</a>;
         <a href="http://dx.doi.org/10.1177/0272989X12458724" title="S. Dias et al. (2012). Evidence Synthesis for Decision Making 2: A Generalized Linear Modeling Framework for Pairwise and Network Meta-analysis of Randomized Controlled Trials. Medical Decision Making.">MDM 2</a>).</p>
@@ -146,7 +184,7 @@
         \]
         <p>with the true effects \( \delta_{ibk} \) following a common distribution with the mean represented in terms of indirect effects \( d_{bk}=d_{1k}-d_{1b} \) where \( d_{1k} \) (\( d_{1b} \)) are the effects of treatment in each arm \( k \) (\( b \)) relative to the reference treatment \( 1 \), which are given prior distributions, \( d_{1k} \sim \mathcal{N}(0.0, 10^3) \),   and \( d_{11}=0 \). The between-studies variances \( \tau_{bk}^2 \) are typically assumed to be homogeneous across treatment contrasts \( \tau_{bk}^2=\tau^2 \).</p>
 
-        <h3 id="network-meta-analysis-binomially-distributed">Network meta-analysis of binomially distributed outcomes</h3>
+        <h4 id="network-meta-analysis-binomially-distributed">Network meta-analysis of binomially distributed outcomes</h4>
         <p>For binomial data recorded on the arm level, for example on the number of events (and the total number of individuals) in each arm of each study \( i \) can be modelled thus:</p>
         \[
         \begin{array}{rcl}
@@ -514,6 +552,9 @@
 
    <script>
     renderMathInElement(document.body);
+    $(function () {
+    	$.scrollUp();
+		});
    </script>
   </body>
 </html>
