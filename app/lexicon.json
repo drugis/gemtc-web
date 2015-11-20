@@ -1,172 +1,197 @@
 {
-	"analysis": {
-		"title": "Analysis",
-		"text": "In GeMTC, an analysis consists of a dataset and any number of models constructed over that dataset. Typically, an analysis will aim to answer a single question, but it may be necessary to create multiple models to answer sub-questions, e.g. whether the model is consistent.",
-		"link": "/manual.html"
-	},
-	"burn-in-iterations": {
-		"title": "Burn-in iterations",
-		"text": "The number of iterations of the MCMC simulation that are discarded before the inference phase is started.",
-		"link": "/manual.html"
-	},
-	"consistency": {
-		"title": "Consistency",
-		"text": "There is consistency when the studies included in the evidence network are (broadly) in agreement regarding the relative effects. (In)consistency in network meta-analysis is closely related to heterogeneity in pair-wise meta-analysis (and indeed in network meta-analysis). Inconsistency refers to the difference between direct and indirect estimates, and can be assessed using node-splitting models.",
-		"link": "/manual.html"
-	},
-	"dataset-file": {
-		"title": "Dataset file",
-		"text": "The problem file can be in JSON or Comma-Separated Values (CSV) format. A JSON file must contain a single json object representing the problem. The problem must contain the 'entries' and 'treatments' fields. The 'treatments' field must contain a list of objects that each contain a name and id. The entries must be a list of data rows. Each data row must contain at least the 'study' and 'treatment' columns. The 'treatment' column of each entry must refer to an id present in the treatments list. Each data row must have the same columns as the first data row. A CSV file must contain a first row with column names. Each subsequent row should have the same number of columns, with values corresponding to the column at the same position in the header row. The first two columns should always be a 'study' and a 'treatment' column, in that order.",
-		"link": "/manual.html"
-	},
-	"density-plot": {
-		"title": "Density plot",
-		"text": "A plot of the estimated (marginal) posterior density for a single parameter. Often used for the assessment of run-length.",
-		"link": "/manual.html"
-	},
-	"deviance-information-criterion": {
-		"title": "Deviance Information Criterion (DIC)",
-		"text": "A Bayesian criterion for assessing model fit, which penalizes both deviance (i.e. whether the data are likely given the estimated parameters) and model complexity. Lower values of DIC are better, and differences in DIC greater than 3-5 are often considered meaningful.",
-		"link": "/manual.html"
-	},
-	"direct-estimate": {
-		"title": "Direct estimate",
-		"text": "An estimate of the relative effect of one treatment compared to another, based solely on studies that include both treatments. One output of a node-splitting model.",
-		"link": "/manual.html"
-	},
-	"effects-type": {
-		"title": "Effects type",
-		"text": "The choice of effects type corresponds to different assumptions about between-study variation. In a fixed effect model all studies share the same underlying mean relative treatment effects, and any between-study variation is due to sampling error. By contrast, random effects models allow for between-study variation beyond sampling error, encoded by a normal distribution with a mean and standard deviation parameter.",
-		"link": "/manual.html"
-	},
-	"estimated-running-time": {
-		"title": "Estimated running time",
-		"text": "Running time in seconds or minutes estimated based on structural properties of the model (e.g., number of arms and studies) and run-length settings. This is only an indication, and the actual running time may deviate quite significantly from the estimate.",
-		"link": "/manual.html"
-	},
-	"evidence-table": {
-		"title": "Evidence table",
-		"text": "Evidence table A table summarizing all studies and study arms in the dataset, as well as the observed outcomes in each arm.",
-		"link": "/manual.html"
-	},
-	"forest-plot": {
-		"title": "Forest plot",
-		"text": "A plot showing the treatment effect for each study.",
-		"link": "/manual.html"
-	},
-	"inconsistency": {
-		"title": "Inconsistency",
-		"text": "The absence of consistency. (TODO replace with text from manual)",
-		"link": "/manual.html"
-	},
-	"indirect-estimate": {
-		"title": "Indirect estimate",
-		"text": "An estimate of the relative effect of one treatment compared to another based solely on studies that do not include both treatments. One output of a node-splitting model.",
-		"link": "/manual.html"
-	},
-	"inference-iterations": {
-		"title": "Inference iterations",
-		"text": "The iterations of the MCMC simulation that are used to draw inferences on the posterior distributions.",
-		"link": "/manual.html"
-	},
-	"likelihood-link": {
-		"title": "Likelihood/link",
-		"text": "The likelihood is the assumed distribution of the observed outcomes (e.g. a binomial distribution might be used for count data). The link function transforms the parameter(s) of the chosen likelihood to a scale on which a linear model for meta-analysis is appropriate (e.g. the logit link function transforms the probability parameter of the binomial distribution to the log-odds scale for meta-analysis). Therefore, each likelihood/link corresponds to a measure of relative treatment effects to be used in the meta-analysis.",
-		"link": "/manual.html"
-	},
-	"mean-difference": {
-		"title": "Mean difference",
-		"text": "The mean difference scale computes relative effects for continuous variables by taking the difference of means",
-		"link": "/manual.html"
-	},
-	"model": {
-		"title": "Model",
-		"text": "In GeMTC, a model is an object with a title, a specific collection of settings, and, if the model was run, the results of estimating the model.",
-		"link": "/manual.html"
-	},
-	"model-fit": {
-		"title": "Model fit",
-		"text": "In GeMTC, a model is an object with a title, a specific collection of settings, and, if the model was run, the results of estimating the model.",
-		"link": "/manual.html"
-	},
-	"model-type": {
-		"title": "Model type",
-		"text": "In GeMTC, the model type refers to the type of model in the broadest sense, e.g. pair-wise meta-analysis, network meta-analysis, and node-splitting models.",
-		"link": "/manual.html"
-	},
-	"model-computed": {
-		"title": "Model computed",
-		"text": "Whether the model has been estimated by running the MCMC simulation.",
-		"link": "/manual.html"
-	},
-	"network-graph": {
-		"title": "Network graph",
-		"text": "A graph showing the treatments as nodes and the comparisons as connections between the nodes. Larger node sizes indicate a larger total number of participants in arms including that treatment, and thicker connections indicate a larger number of studies investigating that comparison.",
-		"link": "/manual.html"
-	},
-	"node-splitting-model": {
-		"title": "Node-splitting model",
-		"text": " model where direct and indirect evidence are estimated separately for a specific treatment comparison (the node “being split”). These estimates can be compared to each other and to the estimate obtained from a consistency model to judge the agreement between direct and indirect evidence. This is a method for assessing consistency.",
-		"link": "/manual.html#node-splitting-model"
-	},
-	"outcome": {
-		"title": "Outcome",
-		"text": "The outcome (i.e. variable of interest) investigated in this analysis.",
-		"link": "/manual.html"
-	},
-	"outcome-scale": {
-		"title": "Outcome scale",
-		"text": "The outcome scale is used to set the default random effects standard deviation prior and relative effects prior distribution used by GeMTC. The value of the outcome scale should correspond to an implausibly large variation on the scale of analysis (e.g. a log-odds ratio of 5, which would correspond to a difference of five orders of magnitude on the odds ratio scale). If no value is specified, it will be chosen heuristically from the data.",
-		"link": "/manual.html"
-	},
-	"potential-scale-reduction-factor": {
-		"title": "Potential Scale Reduction Factor (PSRF)",
-		"text": "The main outcome of the Brooks-Gelman-Rubin diagnostic for convergence of an MCMC simulation. It compares within-chain and between-chain estimates to diagnose whether the simulation has reached a stable state. Values of PSRF start out high and should approach 1 as the simulation better approximates convergence. Values below 1.05 are generally considered 'safe'",
-		"link": "/manual.html"
-	},
-	"heterogeneity-prior-distribution": {
-		"title": "Heterogeneity prior distribution",
-		"text": "The prior distribution for the random effects standard deviation. Bayesian estimation will combine the prior and the data to estimate a posterior distribution. The random effects standard deviation can be set on either the standard deviation directly, or on the variance (the standard deviation squared) or the precision (1 / variance). By default, GeMTC will set a uniform prior for the standard deviation based on the outcome scale.",
-		"link": "/manual.html"
-	},
-	"rank-probabilities": {
-		"title": "Rank probabilities",
-		"text": "Rank probabilities encode the probability for each treatment to be the best, second best, etc. under the posterior distribution derived for the relative effects.",
-		"link": "/manual.html"
-	},
-	"relative-effect-prior-distributions": {
-		"title": "Relative effect prior distributions",
-		"text": "The relative effect prior encodes prior beliefs about the relative treatment effects. These distributions are nearly always set to be extremely vague, to prevent undue influence on the results. If the outcome scale is set correctly it is often desirable to leave these at the default.",
-		"link": "/manual.html"
-	},
-	"relative-effects": {
-		"title": "Relative effects",
-		"text": "The differences in performance between the treatments on the scale of analysis (e.g the odds ratio; determined by the chosen likelihood/link). Note that on some outcome scales, a large relative difference may correspond to a small absolute difference. For example, a risk ratio of 2 is large, but if the base incidence is 0.1%, the absolute difference is only 0.1%.",
-		"link": "/manual.html"
-	},
-	"residual-deviance": {
-		"title": "Residual deviance",
-		"text": " The mean deviance (TODO) under the current model, relative to the deviance under a saturated model (with one parameter per data point). Smaller residual deviance indicates better model fit, and in a well fitting model the residual deviance should be approximately equal to the number of data points.",
-		"link": "/manual.html"
-	},
-	"run-length-settings": {
-		"title": "Run length settings",
-		"text": "The number of burn-in iterations, the number of inference iterations, and the thinning factor. Appropriate run length settings are required to draw valid conclusions from an MCMC simulation.",
-		"link": "/manual.html"
-	},
-	"thinning-factor": {
-		"title": "Thinning factor",
-		"text": "Successive iterations of an MCMC simulation are often highly correlated (high auto-correlation). By setting a thinning factor n > 1, only every n-th iteration will be stored. Because of the high auto-correlation, little valuable information is lost, but memory use and time to compute summary statistics are reduced.",
-		"link": "/manual.html"
-	},
-	"time-series-standard-error": {
-		"title": "Time series standard error",
-		"text": "The time series standard error is an estimate of the remaining error due to the finite length of the MCMC simulation. It takes into account the fact that successive iterations of the MCMC simulation are correlated. The time series standard error may be compared to the estimate of the standard deviation of the same parameter. If the time series standard error is relatively high, run length may be insufficient.",
-		"link": "/manual.html"
-	},
-	"trace-plot": {
-		"title": "Trace plot (time series plot) ",
-		"text": "A visualization of the random walk undertaken by each chain of the MCMC simulation. Used to assess convergence and run length.",
-		"link": "/manual.html"
-	}
+  "analysis": {
+    "title": "Analysis",
+    "text": "In GeMTC, an analysis consists of a dataset and any number of models constructed over that dataset. Typically, an analysis will aim to answer a single question, but it may be necessary to create multiple models to answer sub-questions, e.g. whether the model is consistent.",
+    "link": "/manual.html#analyses-and-models"
+  },
+  "burn-in-iterations": {
+    "title": "Burn-in iterations",
+    "text": "The number of iterations of the MCMC simulation that are discarded before the inference phase is started.",
+    "link": "/manual.html#run-length-convergence"
+  },
+  "consistency": {
+    "title": "Consistency",
+    "text": "There is consistency when the studies included in the evidence network are (broadly) in agreement regarding the relative effects. (In)consistency in network meta-analysis is closely related to heterogeneity in pair-wise meta-analysis (and indeed in network meta-analysis). Inconsistency refers to the difference between direct and indirect estimates, and can be assessed using node-splitting models.",
+    "link": "/manual.html#heterogeneity"
+  },
+  "dataset-file": {
+    "title": "Dataset file",
+    "text": "The problem file can be in JSON or Comma-Separated Values (CSV) format. A JSON file must contain a single json object representing the problem. The problem must contain the 'entries' and 'treatments' fields. The 'treatments' field must contain a list of objects that each contain a name and id. The entries must be a list of data rows. Each data row must contain at least the 'study' and 'treatment' columns. The 'treatment' column of each entry must refer to an id present in the treatments list. Each data row must have the same columns as the first data row. A CSV file must contain a first row with column names. Each subsequent row should have the same number of columns, with values corresponding to the column at the same position in the header row. The first two columns should always be a 'study' and a 'treatment' column, in that order.",
+    "link": "/manual.html#gemtc-preparing-dataset"
+  },
+  "density-plot": {
+    "title": "Density plot",
+    "text": "A plot of the estimated (marginal) posterior density for a single parameter. Often used for the assessment of run-length.",
+    "link": "/manual.html#run-length-convergence"
+  },
+  "deviance-information-criterion": {
+    "title": "Deviance Information Criterion (DIC)",
+    "text": "A Bayesian criterion for assessing model fit, which penalizes both deviance (i.e. whether the data are likely given the estimated parameters) and model complexity. Lower values of DIC are better, and differences in DIC greater than 3-5 are often considered meaningful.",
+    "link": "/manual.html#model-fit"
+  },
+  "direct-estimate": {
+    "title": "Direct estimate",
+    "text": "An estimate of the relative effect of one treatment compared to another, based solely on studies that include both treatments. One output of a node-splitting model.",
+    "link": "/manual.html#node-splitting-analysis"
+  },
+  "effects-type": {
+    "title": "Effects type",
+    "text": "The choice of effects type corresponds to different assumptions about between-study variation. In a fixed effect model all studies share the same underlying mean relative treatment effects, and any between-study variation is due to sampling error. By contrast, random effects models allow for between-study variation beyond sampling error, encoded by a normal distribution with a mean and standard deviation parameter.",
+    "link": "/manual.html#random-effects"
+  },
+  "estimated-running-time": {
+    "title": "Estimated running time",
+    "text": "Running time in seconds or minutes estimated based on structural properties of the model (e.g., number of arms and studies) and run-length settings. This is only an indication, and the actual running time may deviate quite significantly from the estimate.",
+    "link": "/manual.html#model-creation"
+  },
+  "evidence-table": {
+    "title": "Evidence table",
+    "text": "Evidence table A table summarizing all studies and study arms in the dataset, as well as the observed outcomes in each arm.",
+    "link": "/manual.html#analyses-and-models"
+  },
+  "forest-plot": {
+    "title": "Forest plot",
+    "text": "A plot showing the treatment effect for each study.",
+    "link": "/manual.html#pairwise-meta-analysis-results"
+  },
+  "hazard-ratio": {
+    "title": "Hazard ratio",
+    "text": "The ratio of the hazard rates of an event in two groups being compared. If the hazard rate is h1 in the base group and h2 in the other group, the hazard ratio is h2/h1. The hazard rate is the limit of the number of events per unit time per person at risk, as the time interval approaches zero.",
+    "link": "/manual.html#likelihood-link"
+  },
+  "heterogeneity-prior-distribution": {
+    "title": "Heterogeneity prior distribution",
+    "text": "The prior distribution for the random effects standard deviation. Bayesian estimation will combine the prior and the data to estimate a posterior distribution. The random effects standard deviation can be set on either the standard deviation directly, or on the variance (the standard deviation squared) or the precision (1 / variance). By default, GeMTC will set a uniform prior for the standard deviation based on the outcome scale.",
+    "link": "/manual.html#prior-distributions"
+  },
+  "inconsistency": {
+    "title": "Inconsistency",
+    "text": "In network meta-analysis, between-trial differences in the underlying treatment effects between comparisons",
+    "link": "/manual.html#heterogeneity"
+  },
+  "indirect-estimate": {
+    "title": "Indirect estimate",
+    "text": "An estimate of the relative effect of one treatment compared to another based solely on studies that do not include both treatments. One output of a node-splitting model.",
+    "link": "/manual.html#node-splitting-analysis"
+  },
+  "inference-iterations": {
+    "title": "Inference iterations",
+    "text": "The iterations of the MCMC simulation that are used to draw inferences on the posterior distributions.",
+    "link": "/manual.html#run-length-convergence"
+  },
+  "leverage": {
+    "title": "Leverage",
+    "text": "Leverage statistics are used to assess the influence each data point has on the model parameters. In Bayesian models, the leverage of a data point is the posterior mean of the residual deviance minus the residual deviance at the posterior mean of the fitted value for that data point.",
+    "link": "/manual.html#model-fit"
+  },
+  "likelihood-link": {
+    "title": "Likelihood/link",
+    "text": "The likelihood is the assumed distribution of the observed outcomes (e.g. a binomial distribution might be used for count data). The link function transforms the parameter(s) of the chosen likelihood to a scale on which a linear model for meta-analysis is appropriate (e.g. the logit link function transforms the probability parameter of the binomial distribution to the log-odds scale for meta-analysis). Therefore, each likelihood/link corresponds to a measure of relative treatment effects to be used in the meta-analysis.",
+    "link": "/manual.html#likelihood-link"
+  },
+  "markov-chain-monte-carlo": {
+    "title": "Markov chain Monte Carlo",
+    "text": "Markov chain Monte Carlo (MCMC) methods are algorithms that sample from a probability distribution using a random walk that converges on that distribution. The random walk is started at a specific point in the parameter space (initial values) and every iteration the position is modified by taking a random step. After some time, this process is equivalent to sampling from the target distribution.",
+    "link": "/manual.html#run-length-convergence"
+  },
+  "mean-difference": {
+    "title": "Mean difference",
+    "text": "The mean difference scale computes relative effects for continuous variables by taking the difference of means",
+    "link": "/manual.html#likelihood-link"
+  },
+  "model": {
+    "title": "Model",
+    "text": "In GeMTC, a model is an object with a title, a specific collection of settings, and, if the model was run, the results of estimating the model.",
+    "link": "/manual.html#analyses-and-models"
+  },
+  "model-fit": {
+    "title": "Model fit",
+    "text": "In GeMTC, a model is an object with a title, a specific collection of settings, and, if the model was run, the results of estimating the model.",
+    "link": "/manual.html#model-fit"
+  },
+  "model-type": {
+    "title": "Model type",
+    "text": "In GeMTC, the model type refers to the type of model in the broadest sense, e.g. pair-wise meta-analysis, network meta-analysis, and node-splitting models.",
+    "link": "/manual.html#model-creation"
+  },
+  "model-computed": {
+    "title": "Model computed",
+    "text": "Whether the model has been estimated by running the MCMC simulation.",
+    "link": "/manual.html#analyses-and-models"
+  },
+  "network-graph": {
+    "title": "Network graph",
+    "text": "A graph showing the treatments as nodes and the comparisons as connections between the nodes. Larger node sizes indicate a larger total number of participants in arms including that treatment, and thicker connections indicate a larger number of studies investigating that comparison.",
+    "link": "/manual.html#analyses-and-models"
+  },
+  "node-splitting-model": {
+    "title": "Node-splitting model",
+    "text": " model where direct and indirect evidence are estimated separately for a specific treatment comparison (the node “being split”). These estimates can be compared to each other and to the estimate obtained from a consistency model to judge the agreement between direct and indirect evidence. This is a method for assessing consistency.",
+    "link": "/manual.html#node-splitting-analysis"
+  },
+  "odds-ratio": {
+    "title": "Odds ratio",
+    "text": "The ratio of the odds of an event in two groups being compared. If p is a probability, the odds are p/(1-p). If the odds are o1 in the base group and o2 in the other group, the odds ratio is o2/o1",
+    "link": "/manual.html#gemtc-network-meta-analysis-implementation"
+  },
+  "outcome": {
+    "title": "Outcome",
+    "text": "The outcome (i.e. variable of interest) investigated in this analysis.",
+    "link": "/manual.html#analyses-and-models"
+  },
+  "outcome-scale": {
+    "title": "Outcome scale",
+    "text": "The outcome scale is used to set the default random effects standard deviation prior and relative effects prior distribution used by GeMTC. The value of the outcome scale should correspond to an implausibly large variation on the scale of analysis (e.g. a log-odds ratio of 5, which would correspond to a difference of five orders of magnitude on the odds ratio scale). If no value is specified, it will be chosen heuristically from the data.",
+    "link": "/manual.html#gemtc-network-meta-analysis-implementation"
+  },
+  "potential-scale-reduction-factor": {
+    "title": "Potential Scale Reduction Factor (PSRF)",
+    "text": "The main outcome of the Brooks-Gelman-Rubin diagnostic for convergence of an MCMC simulation. It compares within-chain and between-chain estimates to diagnose whether the simulation has reached a stable state. Values of PSRF start out high and should approach 1 as the simulation better approximates convergence. Values below 1.05 are generally considered 'safe'",
+    "link": "/manual.html#run-length-convergence"
+  },
+  "rank-probabilities": {
+    "title": "Rank probabilities",
+    "text": "Rank probabilities encode the probability for each treatment to be the best, second best, etc. under the posterior distribution derived for the relative effects.",
+    "link": "/manual.html#model-results"
+  },
+  "relative-effect-prior-distributions": {
+    "title": "Relative effect prior distributions",
+    "text": "The relative effect prior encodes prior beliefs about the relative treatment effects. These distributions are nearly always set to be extremely vague, to prevent undue influence on the results. If the outcome scale is set correctly it is often desirable to leave these at the default.",
+    "link": "/manual.html#prior-distributions"
+  },
+  "relative-effects": {
+    "title": "Relative effects",
+    "text": "The differences in performance between the treatments on the scale of analysis (e.g the odds ratio; determined by the chosen likelihood/link). Note that on some outcome scales, a large relative difference may correspond to a small absolute difference. For example, a risk ratio of 2 is large, but if the base incidence is 0.1%, the absolute difference is only 0.1%.",
+    "link": "/manual.html#network-meta-analysis-results"
+  },
+  "residual-deviance": {
+    "title": "Residual deviance",
+    "text": " The mean deviance (TODO) under the current model, relative to the deviance under a saturated model (with one parameter per data point). Smaller residual deviance indicates better model fit, and in a well fitting model the residual deviance should be approximately equal to the number of data points.",
+    "link": "/manual.html#model-fit"
+  },
+  "risk-ratio":{
+  	"title": "Risk ratio",
+  	"text": "The ratio of the risk (probability) of an event in two groups being compared, also known as “relative risk”. If the risk is p1 in the base group and p2 in the other group, the risk ratio is p2/p1. The risk ratio is not symmetric in the definition of the event, so that RR(survival) /= 1/RR(mortality). By contrast, the odds ratio is symmetric.",
+  	"link": "/manual.html#likelihood-link"
+  },
+  "run-length-settings": {
+    "title": "Run length settings",
+    "text": "The number of burn-in iterations, the number of inference iterations, and the thinning factor. Appropriate run length settings are required to draw valid conclusions from an MCMC simulation.",
+    "link": "/manual.html#run-length-convergence"
+  },
+  "thinning-factor": {
+    "title": "Thinning factor",
+    "text": "Successive iterations of an MCMC simulation are often highly correlated (high auto-correlation). By setting a thinning factor n > 1, only every n-th iteration will be stored. Because of the high auto-correlation, little valuable information is lost, but memory use and time to compute summary statistics are reduced.",
+    "link": "/manual.html#run-length-convergence"
+  },
+  "time-series-standard-error": {
+    "title": "Time series standard error",
+    "text": "The time series standard error is an estimate of the remaining error due to the finite length of the MCMC simulation. It takes into account the fact that successive iterations of the MCMC simulation are correlated. The time series standard error may be compared to the estimate of the standard deviation of the same parameter. If the time series standard error is relatively high, run length may be insufficient.",
+    "link": "/manual.html#run-length-convergence"
+  },
+  "trace-plot": {
+    "title": "Trace plot (time series plot) ",
+    "text": "A visualization of the random walk undertaken by each chain of the MCMC simulation. Used to assess convergence and run length.",
+    "link": "/manual.html#run-length-convergence"
+  }
 }
