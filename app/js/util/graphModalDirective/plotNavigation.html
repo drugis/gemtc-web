@@ -28,20 +28,26 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="columns large-12 large-centered text-center clearfix">
-        <button
-        ng-click="previousComparison()"
-        ng-disabled = "selectedIndex === 0"
-        class="secondary left medium"
-        style="width: 10rem;"><i class="fa fa-angle-left"></i> previous</button>
-        <span>{{comparisonLabel}}</span>
-        <button
-        ng-click="nextComparison()"
-        ng-disabled = "selectedIndex === gelmanDiagnostics.length - 1"
-        class="secondary right medium"
-        style="width: 10rem;">next <i class="fa fa-angle-right"></i></button>
+    <div class="row hidden-for-large-up text-center">
+      <div class="columns large-12">
+        {{comparisonLabel}}
       </div>
+    </div>
+    <div class="row">
+      <div class="columns large-4">
+        <button class="expand secondary" ng-click="previousComparison()"
+        ng-disabled = "selectedIndex === 0">previous</button>
+      </div>
+      
+      <div class="columns large-4 show-for-large-up text-center">
+        {{comparisonLabel}}
+      </div>
+      
+      <div class="columns large-4">
+        <button class="expand secondary" ng-click="nextComparison()"
+        ng-disabled = "selectedIndex === gelmanDiagnostics.length - 1">next</button>
+      </div>
+      
     </div>
   </div>
 </div>
