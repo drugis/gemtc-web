@@ -75,7 +75,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
       devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildTable']);
-      diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['labelDiagnostics']);
+      diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['buildDiagnosticMap']);
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
       stateMock = jasmine.createSpyObj('$state', ['reload']);
       modalMock = jasmine.createSpyObj('$modal', ['open']);
@@ -167,7 +167,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
             }));
 
             it('the gelman diagnostics should be labelled', inject(function() {
-              expect(diagnosticsService.labelDiagnostics).toHaveBeenCalled();
+              expect(diagnosticsService.buildDiagnosticMap).toHaveBeenCalled();
             }));
 
             it('should use the firt treatment as the selectedBaseline', inject(function(){
