@@ -112,6 +112,7 @@
                       <tr>
                         <td colspan="3"></td>
                         <td colspan="2">Potential scale reduction factor (PSRF)<inline-help help-key="potential-scale-reduction-factor"></inline-help></td>
+                        <td></td>
                       </tr>
                       <tr>
                         <td>Parameter</td>
@@ -119,6 +120,7 @@
                         <td>Time-series S.E.<inline-help help-key="time-series-standard-error"></td>
                         <td>Point estimate</td>
                         <td>97.5% quantile</td>
+                        <td class="large-2"></td>
                       </tr>
                     </thead>
                     <tbody>
@@ -128,20 +130,14 @@
                         <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
                         <td>{{diagnostic['Point est.']}}</td>
                         <td>{{diagnostic['Upper C.I.']}}</td>
+                        <td class="button-cell"><graph-modal gelman-diagnostics="gelmanDiagnostics" convergence-data="{traceplots: result.results.tracePlot, psrfPlots: result.results.gelmanPlot}" selected-comparison="diagnostic" />
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="columns large-8 medium-6 small-12">
-                <!-- gemtc stand-alone doas not set editMode-->
-                <button id="open-run-length-dialog-btn" ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()" class="small">Extend run-length</button>
-                <button id="show-convergence-diagnostics" ng-show="!isConvergencePlotsShown" ng-click="showConvergencePlots()" class="small info">Show diagnostics plots</button>
-                <button id="hide-convergence-diagnostics" ng-show="isConvergencePlotsShown" ng-click="hideConvergencePlots()" class="small info">Hide diagnostics plots</button>
-              </div>
-            </div>
+
             <div class="row" ng-show="isConvergencePlotsShown">
               <div class="columns large-6 medium-6 small-12">
                 <p><strong>Time series plots</strong><inline-help help-key="trace-plot"></p>

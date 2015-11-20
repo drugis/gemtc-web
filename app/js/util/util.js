@@ -16,8 +16,12 @@ define(function (require) {
     .directive('pagedPngPlot', require('util/pagedPngPlotDirective'))
     .directive('appAlert', require('util/appAlertDirective'))
     .directive('export', require('util/exportDirective'))
+    .directive('graphModal', require('util/graphModalDirective/graphModalDirective'))
 
-    // interseptors
+    // controllers
+    .controller('PlotNavigationController', require('util/graphModalDirective/plotNavigationController'))
+
+    // interceptors
     .factory('errorInterceptor', require('util/errorInterceptor'))
     .factory('sessionExpiredInterceptor', require('util/sessionExpiredInterceptor'))
 

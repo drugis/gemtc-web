@@ -5,20 +5,23 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
     return {
       restrict: 'A',
       scope: {
-        fileName: '='
+        fileName: '=',
+        dontFloatSibling: '='
       },
       link: function(scope, element, attrs) {
         
         var btnElement = $compile('<button ng-click="exportElement()" class="export-button info small">Export</button>')(scope);
         element.after(btnElement);
-        element.css('float', 'left');
+        if(!scope.dontFloatSibling) {
+          element.css('float', 'left');
+        }
 
         if (element.is('table')) {
           scope.exportElement = showCopyPasteMessage;
         } else if (element.is('img')) {
-          scope.exportElement = _.partial(exportImage, scope.fileName, element[0]);
+          scope.exportElement = _.partial(exportImage, element[0]);
         } else if (element.find('svg').length > 0) {
-          scope.exportElement = _.partial(exportSvg, scope.fileName, element.find('svg'));
+          scope.exportElement = _.partial(exportSvg, element.find('svg'));
         }
         
         function showCopyPasteMessage() {
@@ -34,7 +37,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
           });
         }
 
-        function exportImage(fileName, sourceImage) {
+        function exportImage(sourceImage) {
           var $canvasElement = jQuery('<canvas/>')
             .prop({
               width: sourceImage.width,
@@ -44,7 +47,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
           context.drawImage(sourceImage, 0, 0);
 
           var a = document.createElement("a");
-          a.download = fileName + ".png";
+          a.download = scope.fileName + ".png";
           a.href = $canvasElement[0].toDataURL("image/png");
 
           // work around firefox security feature that stop triggering click event from script
@@ -56,10 +59,10 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
           a.dispatchEvent(clickEvent);
         }
 
-        function exportSvg(fileName, $svgElement) {
+        function exportSvg($svgElement) {
           //can't set svg instructions as image src directly
           var $image = createImage($svgElement);
-          $image.load(_.partial(exportImage, fileName, $image[0]));
+          $image.load(_.partial(exportImage, $image[0]));
         }
 
         function createImage($svgElement) {
