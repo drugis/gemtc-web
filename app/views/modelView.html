@@ -138,16 +138,10 @@
               </div>
             </div>
 
-            <div class="row" ng-show="isConvergencePlotsShown">
-              <div class="columns large-6 medium-6 small-12">
-                <p><strong>Time series plots</strong><inline-help help-key="trace-plot"></p>
-                <paged-png-plot file-name="'tracePlot'" pages="result.results.tracePlot"></paged-png-plot>
-              </div>
-            </div>
-            <div class="row" ng-show="isConvergencePlotsShown">
-              <div class="columns large-6 medium-6 small-12">
-                <p><strong>PSRF plots</strong><inline-help help-key="potential-scale-reduction-factor"></inline-help></p>
-                <paged-png-plot file-name="'psrfPlot'" pages="result.results.gelmanPlot"></paged-png-plot>
+            <div class="row">
+              <div class="columns large-8 medium-6 small-12">
+                <!-- gemtc stand-alone doas not set editMode-->
+                <button id="open-run-length-dialog-btn" ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()" class="small">Extend run-length</button>
               </div>
             </div>
           </div>
