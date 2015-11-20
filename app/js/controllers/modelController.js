@@ -86,19 +86,7 @@ define(['lodash'], function() {
       });
     }
 
-    function removeEffectsFromPsrfPlots(psrfPlots) {
-      //  indirect and direct effects are expected to be at last-1 and last-2
-      var comparisons = psrfPlots.slice(0, psrfPlots.length - 3);
-      var standardDev = psrfPlots[psrfPlots.length - 1];
-      return comparisons.concat(standardDev);
-    }
 
-    function removeEffectsFromTracePlots(tracePlots) {
-      //  indirect and direct effects are expected to be at last-3 through last-6
-      var comparisons = tracePlots.slice(0, tracePlots.length - 6); // remove indirect and direct effects
-      var standardDev = tracePlots.slice(tracePlots.length - 2, tracePlots.length);
-      return comparisons.concat(standardDev);
-    }
 
     function pataviRunSuccessCallback(result) {
       return ProblemResource.get({
@@ -113,14 +101,21 @@ define(['lodash'], function() {
         }
         var isLogScale = result.results.logScale;
         $scope.scaleName = AnalysisService.getScaleName($scope.model);
-        $scope.gelmanDiagnostics = DiagnosticsService.labelDiagnostics($scope.model.modelType.type, result.results.gelmanDiagnostics, $scope.problem.treatments)
+        $scope.diagnosticMap = DiagnosticsService.buildDiagnosticMap(
+          $scope.model.modelType.type,
+          result.results.gelmanDiagnostics,
+          $scope.problem.treatments,
+          result.results.tracePlot,
+          result.results.gelmanPlot
+        );
+
+        $scope.diagnostics = _.values($scope.diagnosticMap);
+
+
         if ($scope.model.modelType.type !== 'node-split') {
           var relativeEffects = result.results.relativeEffects;
           result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
           $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
-        } else {
-          result.results.gelmanPlot = removeEffectsFromPsrfPlots(result.results.gelmanPlot);
-          result.results.tracePlot = removeEffectsFromTracePlots(result.results.tracePlot);
         }
         $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set

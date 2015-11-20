@@ -2,19 +2,19 @@
 define([], function() {
   var dependencies = ['$scope', '$modalInstance'];
   var PlotNavigationController = function($scope, $modalInstance) {
+    $scope.sortedLabels = Object.keys($scope.diagnosticsMap).sort();
 
     $scope.type = 'tracePlot';
-
-    $scope.selectedIndex = $scope.gelmanDiagnostics.indexOf($scope.selectedDiagnostic);
-    $scope.comparisonLabel = $scope.gelmanDiagnostics[$scope.selectedIndex].label;
+    $scope.selectedIndex = $scope.sortedLabels.indexOf($scope.selectedComparison.label);
+    $scope.comparisonLabel = $scope.sortedLabels[$scope.selectedIndex];
 
     $scope.previousComparison = function() {
       --$scope.selectedIndex;
-      $scope.comparisonLabel = $scope.gelmanDiagnostics[$scope.selectedIndex].label;
+      $scope.comparisonLabel = $scope.sortedLabels[$scope.selectedIndex];
     }
     $scope.nextComparison = function() {
       ++$scope.selectedIndex;
-      $scope.comparisonLabel = $scope.gelmanDiagnostics[$scope.selectedIndex].label;
+      $scope.comparisonLabel = $scope.sortedLabels[$scope.selectedIndex];
     }
 
     $scope.cancel = function() {

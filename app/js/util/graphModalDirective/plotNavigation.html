@@ -24,7 +24,7 @@
       
       <div class="row">
         <div class="columns large-12 large-centered text-center">
-          <img ng-src="{{structuredPlots[comparisonLabel][type]}}" export dont-float-sibling="true" file-name="type"></img>
+          <img ng-src="{{diagnosticsMap[comparisonLabel][type]}}" export dont-float-sibling="true" file-name="type"></img>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@
       
       <div class="columns large-4">
         <button class="expand secondary" ng-click="nextComparison()"
-        ng-disabled = "selectedIndex === gelmanDiagnostics.length - 1">next</button>
+        ng-disabled = "selectedIndex === sortedLabels.length - 1">next</button>
       </div>
       
     </div>

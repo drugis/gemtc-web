@@ -124,13 +124,13 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr ng-repeat="diagnostic in gelmanDiagnostics| orderBy:'label'">
+                      <tr ng-repeat="diagnostic in diagnostics | orderBy: 'label'">
                         <td>{{diagnostic.label}}</td>
                         <td>{{result.results.summaries.statistics[diagnostic.key].SD}}</td>
                         <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
                         <td>{{diagnostic['Point est.']}}</td>
                         <td>{{diagnostic['Upper C.I.']}}</td>
-                        <td class="button-cell"><graph-modal gelman-diagnostics="gelmanDiagnostics" convergence-data="{traceplots: result.results.tracePlot, psrfPlots: result.results.gelmanPlot}" selected-comparison="diagnostic" />
+                        <td class="button-cell"><graph-modal diagnostics-map="diagnosticMap" selected-comparison="diagnostic" />
                       </tr>
                     </tbody>
                   </table>
