@@ -35,7 +35,7 @@
     "bowser": "~0.7.3",
     "d3": "3.5.6",
     "foundation": "5.0.2",
-    "font-awesome": "~4.0.3",
+    "font-awesome": "~4.2",
     "jquery": "2.0.3",
     "lodash": "~3.9.3",
     "modernizr": "~2.8.0",
@@ -50,8 +50,5 @@
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"
-  },
-  "resolutions": {
-    "angular-foundation": "popoverExpanded"
   }
 }
