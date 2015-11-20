@@ -11,5 +11,6 @@ define(function(require) {
     .directive('runLength', require('gemtc-web/models/runLength/runLengthDirective'))
     .directive('nodesplitForestPlot',require('gemtc-web/models/nodesplitForestPlot/nodesplitForestPlotDirective'))
     .directive('heterogeneityPrior', require('gemtc-web/models/heterogeneityPrior/heterogeneityPriorDirective'))
+    .directive('graphModal', require('gemtc-web/util/graphModalDirective/graphModalDirective'))
   ;
 });
