@@ -1,0 +1,62 @@
+<div class="row" ng-if="result.results" style="padding-top: 2rem;">
+    <div class="columns large-2">
+      <h3 class="main-category-header">Model fit</h3>
+    </div>
+    <div class="columns large-8 end">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row" ng-if="result.results">
+    <div class="columns large-8 medium-6 small-12">
+      <div>
+        <table export>
+          <caption>Model fit statistics</caption>
+          <tbody>
+            <tr>
+              <td>Residual deviance (<span style="text-decoration: overline;">D</span><sub>res</sub>) <data-inline-help help-key="residual-deviance"></data-inline-help></td>
+              <td>{{result.results.residualDeviance | number : 1}}</td>
+            </tr>
+            <tr>
+              <td>Leverage (p<sub>D</sub>)</td>
+              <td>{{result.results.leverage | number : 1}}</td>
+            </tr>
+            <tr>
+              <td>DIC <data-inline-help help-key="deviance-information-criterion"></data-inline-help></td>
+              <td>{{result.results.DIC | number : 1}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" ng-if="result.results">
+    <div class="columns large-12 medium-12 small-12">
+      <img export file-name="'residualDeviancePlot'" ng-src="{{result.results.deviancePlot[0]}}">
+    </div>
+  </div>
+
+  <div class="row" ng-if="result.results">
+    <div class="columns large-12 medium-12 small-12">
+      <table export>
+        <thead>
+          <caption>Residual deviance per arm per study <data-inline-help help-key="residual-deviance"></data-inline-help></caption>
+          <tr>
+            <th>Study</th>
+            <th>Arm</th>
+            <th>Residual deviance</th>
+            <th>Leverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="row in devianceStatisticsTable">
+            <td ng-if="row.rowSpan" rowspan="{{row.rowSpan}}" style="vertical-align: top;">{{::row.studyName}}</td>
+            <td>{{::row.armName}}</td>
+            <td  class="text-center">{{::row.deviance | number}}</td>
+            <td  class="text-center">{{::row.leverage | number}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
