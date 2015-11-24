@@ -63,6 +63,7 @@ define(
 
         $rootScope.$on("$stateChangeSuccess",
           function(event, toState, toParams, fromState, fromParams) {
+            $rootScope.currentStateName = toState.name;
             delete $rootScope.error;
           }
         );
@@ -115,8 +116,7 @@ define(
             controller: 'CreateModelController'
           })
           .state('standalone-model-container', {
-            templateUrl: 'js/models/standalone-model-container.html',
-            controller: 'StandAloneModelContainerController'
+            templateUrl: 'js/models/standalone-model-container.html'
           })
           .state('model', {
             parent: 'standalone-model-container',

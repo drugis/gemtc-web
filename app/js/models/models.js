@@ -7,7 +7,6 @@ define(function (require) {
   return angular.module('gemtc.models', dependencies)
   	// controllers
   	.controller('ModelsController', require('models/modelsController'))
-    .controller('StandAloneModelContainerController', require('models/standAloneModelContainerController'))
     .controller('CreateModelController', require('models/createModelController'))
     .controller('ExtendRunLengthController', require('models/extendRunLengthController'))
     .controller('NodeSplitOverviewController', require('models/nodeSplitOverviewController'))
