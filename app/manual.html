@@ -179,9 +179,12 @@
         <p>This random-effects meta-analysis reduces to the fixed effects model by assuming that results in all the studies in meta-analysis estimate common underlying treatment effect differences \( \delta_i=\delta \) (in this case a prior distribution would be assigned to the pooled effect \( \delta \)).</p>
 
         <h4 id="network-meta-analysis-normally-distributed">Network meta-analysis of normally distributed outcomes</h4>
+
         <p>When data from multiple studies is recorded on multiple treatments, the <a href="#pairwise-analysis-random-effects">random effects meta-analysis model</a> can be extended to a random effects network meta-analysis which allows estimation of the pooled effects within each treatment contrast
         (<a href="http://dx.doi.org/10.1136/bmj.331.7521.897" title="D.M. Caldwell et al. (2005). Simultaneous comparison of multiple treatments: combining direct and indirect evidence. BMJ.">Caldwell et al., 2005</a>;
         <a href="http://dx.doi.org/10.1177/0272989X12458724" title="S. Dias et al. (2012). Evidence Synthesis for Decision Making 2: A Generalized Linear Modeling Framework for Pairwise and Network Meta-analysis of Randomized Controlled Trials. Medical Decision Making.">MDM 2</a>).</p>
+
+        <h5 id="network-meta-analysis-contrast-level">NMA for data entry on contrast level</h5>
 
         <p>For data on the contrast level (such as mean difference or log OR) for the effect \( Y_{ibk} \) of treatment \( k \) versus treatment \( b \) in study \( i \), we can assume that the treatment effects are normally distributed and estimate the underlying true treatment effects \( \delta_{ibk} \):</p>
         \[
@@ -191,6 +194,20 @@
         \end{array}
         \]
         <p>with the true effects \( \delta_{ibk} \) following a common distribution with the mean represented in terms of indirect effects \( d_{bk}=d_{1k}-d_{1b} \) where \( d_{1k} \) (\( d_{1b} \)) are the effects of treatment in each arm \( k \) (\( b \)) relative to the reference treatment \( 1 \), which are given prior distributions, \( d_{1k} \sim \mathcal{N}(0.0, 10^3) \),   and \( d_{11}=0 \). The between-studies variances \( \tau_{bk}^2 \) are typically assumed to be homogeneous across treatment contrasts \( \tau_{bk}^2=\tau^2 \).</p>
+
+        <h5 id="network-meta-analysis-contrast-level">NMA for data entry on arm level</h5>
+
+        <p>When data is recorded on each arm separately, for example representing mean measurement or log odds of event \( Y_{ik} \) in each arm \( k \) and study \(i \) , then we can model the treatment effect difference \(\delta_{ibk} \) between arms \( k \) and \( b \) in the following way:</p>
+
+        \[
+        \begin{array}{rcl}
+        Y_{ik} &=& \left\{ \begin{array}{lcl} \mu_{ib} & if & b = k \\
+        \mu_{ib} + \delta_{ibk} & if & b > k   \end{array} \right. \\
+        \delta_{ibk} & \sim & \mathcal{N}(d_{bk}, \tau_{bk}^2),
+        \end{array}
+        \]
+        <p>where, similarly as in <a href="#network-meta-analysis-contrast-level">the model for contrast level data</a>, the true effects \( \delta_{ibk} \) follow a common distribution with the mean expressed in terms of indirect effects \( d_{bk} = d_{1k} - d_{1b} \) with prior distributions \( d_{1k} \sim \mathcal{N} (0.0, 103), d_{11} = 0 and _tau_{bk}^2 = \tau^2 \).
+
 
         <h4 id="network-meta-analysis-binomially-distributed">Network meta-analysis of binomially distributed outcomes</h4>
         <p>For binomial data recorded on the arm level, for example on the number of events (and the total number of individuals) in each arm of each study \( i \) can be modelled thus:</p>
@@ -203,7 +220,7 @@
         \delta_{ibk} & \sim & \mathcal{N}(d_{bk}, \tau_{bk}^2),
         \end{array}
         \]
-        <p>where, similarly as for the <a href="#network-meta-analysis-normally-distributed">contrast based model</a>, the true effects \( \delta_{ibk} \) follow a common distribution with the mean represented in terms of indirect effects \( d_{bk}=d_{1k}-d_{1b} \) with prior distributions, \( d_{1k} \sim \mathcal{N}(0.0, 10^3) \),  and \( d_{11}=0 \). The between-studies variances are  assumed to be homogeneous across treatment contrasts \( \tau_{bk}^2=\tau^2 \).</p>
+        <p>where, similarly as for the <a href="#network-meta-analysis-normally-distributed">normal model</a>, the true effects \( \delta_{ibk} \) follow a common distribution with the mean represented in terms of indirect effects \( d_{bk}=d_{1k}-d_{1b} \) with prior distributions, \( d_{1k} \sim \mathcal{N}(0.0, 10^3) \),  and \( d_{11}=0 \). The between-studies variances are  assumed to be homogeneous across treatment contrasts \( \tau_{bk}^2=\tau^2 \).</p>
 
         <h4 id="network-meta-analysis-multi-arm-trials">Network meta-analysis of multi-arm trials</h4>
         <p>For multi-arm trials, correlation between the treatment effects between arms can be taken into account. In a study \( i \) with \( j+1 \) treatment arms, this can be achieved by modelling the \( j \) treatment effects relative to the reference treatment using a multivariate normal distribution</p>
