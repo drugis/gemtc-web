@@ -160,7 +160,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
               scope.$apply();
             });
 
-            fit('the diagnostics should be placed on the scope and sorted', function() {
+            it('the diagnostics should be placed on the scope and sorted', function() {
               expect(scope.diagnostics).toBeDefined();
               expect(scope.diagnostics[0].key).toBe('d.2.12');
               expect(scope.diagnostics[4].key).toBe('sd.d');
