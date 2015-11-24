@@ -1,345 +1,334 @@
 <div ui-view>
   <div class="row">
-  <div class="columns large-12" id="model-results-header">
-    <h1>Model<inline-help help-key="model"></inline-help></h1>
-
-    <h5 class="subheader inline">Title: </h5><h5 id="model-label" class="inline">{{::model.title}}<h5>
-
-    <h5 class="subheader inline">Analysis: </h5><a ui-sref="networkMetaAnalysis(stateParams)"><h5 id="model-view-analysis" class="inline">{{::analysis.title}}</a><inline-help help-key="analysis"></inline-help><h5>
-
-    <h5 class="subheader inline">Outcome: </h5><h5 id="model-view-outcome" class="inline">{{::analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span><inline-help help-key="outcome"></inline-help><h5>
-
+    <div class="columns large-12" id="model-results-header">
+      <h1>Model<data-inline-help help-key="model"></data-inline-help></h1>
+      <h5 class="subheader inline">Title: </h5><h5 id="model-label" class="inline">{{::model.title}} <h5>
+      <h5 class="subheader inline">Analysis: </h5><a ui-sref="networkMetaAnalysis(stateParams)"><h5 id="model-view-analysis" class="inline">{{::analysis.title}} </a><data-inline-help help-key="analysis"></data-inline-help><h5>
+      <h5 class="subheader inline">Outcome: </h5><h5 id="model-view-outcome" class="inline">{{::analysis.outcome.name}} <span ng-show="result.results.logScale">(log scale) </span><data-inline-help help-key="outcome"></data-inline-help><h5>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="columns large-12">
-    <div>
-      <span ng-if="!result.results">
-        <h4 class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
-      </span>
-      <div ng-if="result.results" style="padding-top: 1rem;" id="model-results-results-header">
-        <div class="row">
-          <div class="columns columns large-7 medium-8 small-12">
 
-            <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 " class="row">Go to node-split overview</a>
+  <div class="row">
+    <div class="columns columns large-7 medium-8 small-12">
+      <h4 ng-if="!result.results" class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
+      <div ng-if="result.results" style="padding-top: 1rem;">
+        <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 " class="row">Go to node-split overview</a>
+        <div class="panel callout">
+          <h5><strong>Model settings</strong></h5>
+          <table class="layout-table">
+            <tr>
+              <td class="large-6 text-right"><strong>model type</strong></td>
+              <td>
+                {{::model.modelType.type}} 
+                <data-inline-help help-key="model-type"></data-inline-help>
+              </td>
+            </tr>
+            <tr ng-if="model.modelType.type === 'pairwise'">
+              <td class="large-6 text-right"><strong>pairwise comparison</strong></td>
+              <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
+            </tr>
+            <tr ng-if="model.modelType.type === 'node-split'">
+              <td class="large-6 text-right"><strong>split comparison</strong></td>
+              <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
+            </tr>
+            <tr>
+              <td class="large-6 text-right"><strong>effects type</strong></td>
+              <td>
+                {{::result.results.linearModel}} 
+                <data-inline-help help-key="effects-type"></data-inline-help>
+              </td>
+            </tr>
+            <tr>
+              <td class="large-6 text-right"><strong>outcome scale</strong></td>
+              <td ng-if="model.outcomeScale">
+                {{::model.outcomeScale}} 
+                <data-inline-help help-key="outcome-scale"></data-inline-help>
+              </td>
+              <td ng-if="!model.outcomeScale">
+                {{::result.results.outcomeScale}} (imputed) 
+                <data-inline-help help-key="outcome-scale"></data-inline-help>
+              </td>
+            </tr>
+            <tr>
+              <td class="large-6 text-right"><strong>likelihood / link</strong></td>
+              <td>
+                {{::result.results.likelihood}} / {{::result.results.link}} 
+                <data-inline-help help-key="likelihood-link"></data-inline-help>
+              </td>
+            </tr>
+            <tr ng-if="model.linearModel === 'random'" >
+              <td class="large-6 text-right"><strong>heterogeneity prior</strong></td>
+              <td><heterogeneity-prior prior="result.results.heterogeneityPrior"></heterogeneity-prior> <data-inline-help help-key="heterogeneity-prior-distribution"></data-inline-help></td>
+            </tr>
+            <tr>
+              <td class="large-6 text-right" style="vertical-align:top;"><strong>run-length</strong></td>
+              <td>
+                <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
+                  <li style="padding-bottom: 0.5rem">
+                    burn-in: {{::result.results.burnInIterations}} 
+                    <data-inline-help help-key="burn-in-iterations"></data-inline-help>
+                  </li>
+                  <li style="padding-bottom: 0.5rem">
+                    inference: {{::result.results.inferenceIterations}} 
+                    <data-inline-help help-key="inference-iterations"></data-inline-help>
+                  </li>
+                  <li style="padding-bottom: 0.5rem">
+                    thinning: {{::result.results.thinningFactor}} 
+                    <data-inline-help help-key="thinning-factor"></data-inline-help>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </table>
+        </div> <!-- end callout panel -->
+      </div> <!-- end setting show in result section -->
+    </div> <!-- end settings columns -->
+  </div> <!-- end settings row -->
 
-            <div class="panel callout">
-              <h5><strong>Model settings</strong></h5>
-              <table class="layout-table">
-                <tr>
-                  <td class="large-6 text-right"><strong>model type</strong></td>
-                  <td>
-                    {{::model.modelType.type}}
-                    <inline-help help-key="model-type"></inline-help>
-                  </td>
-                </tr>
-                <tr ng-if="model.modelType.type === 'pairwise'">
-                  <td class="large-6 text-right"><strong>pairwise comparison</strong></td>
-                  <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
-                </tr>
-                <tr ng-if="model.modelType.type === 'node-split'">
-                  <td class="large-6 text-right"><strong>split comparison</strong></td>
-                  <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
-                </tr>
-                <tr>
-                  <td class="large-6 text-right"><strong>effects type</strong></td>
-                  <td>
-                    {{::result.results.linearModel}}
-                    <inline-help help-key="effects-type"></inline-help>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="large-6 text-right"><strong>outcome scale</strong></td>
-                  <td ng-if="model.outcomeScale">
-                    {{::model.outcomeScale}}
-                    <inline-help help-key="outcome-scale"></inline-help>
-                  </td>
-                  <td ng-if="!model.outcomeScale">
-                    {{::result.results.outcomeScale}} (imputed)
-                    <inline-help help-key="outcome-scale"></inline-help>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="large-6 text-right"><strong>likelihood / link</strong></td>
-                  <td>
-                    {{::result.results.likelihood}} / {{::result.results.link}}
-                    <inline-help help-key="likelihood-link"></inline-help>
-                  </td>
-                </tr>
-                <tr ng-if="model.linearModel === 'random'" >
-                  <td class="large-6 text-right"><strong>heterogeneity prior</strong></td>
-                  <td><heterogeneity-prior prior="result.results.heterogeneityPrior"></heterogeneity-prior><inline-help help-key="heterogeneity-prior-distribution"></inline-help></td>
-                </tr>
-                <tr>
-                  <td class="large-6 text-right" style="vertical-align:top;"><strong>run-length</strong></td>
-                  <td>
-                    <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
-                      <li style="padding-bottom: 0.5rem">
-                        burn-in: {{::result.results.burnInIterations}}
-                        <inline-help help-key="burn-in-iterations"></inline-help>
-                      </li>
-                      <li style="padding-bottom: 0.5rem">
-                        inference: {{::result.results.inferenceIterations}}
-                        <inline-help help-key="inference-iterations"></inline-help>
-                      </li>
-                      <li style="padding-bottom: 0.5rem">
-                        thinning: {{::result.results.thinningFactor}}
-                        <inline-help help-key="thinning-factor"></inline-help>
-                      </li>
-                    </ul>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="columns">
-            <div class="row" style="padding-top: 1rem;">
-              <div class="columns large-3">
-                <h3 class="main-category-header">Convergence diagnostics</h3>
-              </div>
-              <div class="columns large-8 end">
-                <hr>
-              </div>
-            </div>
-            <div class="row">
-              <div class="columns large-8 medium-6 small-12">
-                <div>
-                  <table export>
-                    <caption>Per-parameter convergence diagnostics</caption>
-                    <thead>
-                      <tr>
-                        <td colspan="3"></td>
-                        <td colspan="2">Potential scale reduction factor (PSRF)<inline-help help-key="potential-scale-reduction-factor"></inline-help></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>Parameter</td>
-                        <td>Standard deviation</td>
-                        <td>Time-series S.E.<inline-help help-key="time-series-standard-error"></td>
-                        <td>Point estimate</td>
-                        <td>97.5% quantile</td>
-                        <td class="large-2"></td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr ng-repeat="diagnostic in diagnostics | orderBy: 'label'">
-                        <td>{{diagnostic.label}}</td>
-                        <td>{{result.results.summaries.statistics[diagnostic.key].SD}}</td>
-                        <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
-                        <td>{{diagnostic['Point est.']}}</td>
-                        <td>{{diagnostic['Upper C.I.']}}</td>
-                        <td class="button-cell"><graph-modal diagnostics-map="diagnosticMap" selected-comparison="diagnostic" />
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
 
-            <div class="row">
-              <div class="columns large-8 medium-6 small-12">
-                <!-- gemtc stand-alone doas not set editMode-->
-                <button id="open-run-length-dialog-btn" ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()" class="small">Extend run-length</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="columns">
-            <div class="row" style="padding-top: 1rem;">
-              <div class="columns large-2">
-                <h3 class="main-category-header">Model fit</h3>
-              </div>
-              <div class="columns large-8 end">
-                <hr>
-              </div>
-            </div>
-            <div class="row">
-              <div class="columns large-8 medium-6 small-12">
-                <div>
-                  <table export>
-                    <caption>Model fit statistics</caption>
-                    <tbody>
-                      <tr>
-                        <td>Residual deviance (<span style="text-decoration: overline;">D</span><sub>res</sub>)<inline-help help-key="residual-deviance"></inline-help></td>
-                        <td>{{result.results.residualDeviance | number : 1}}</td>
-                      </tr>
-                      <tr>
-                        <td>Leverage (p<sub>D</sub>)</td>
-                        <td>{{result.results.leverage | number : 1}}</td>
-                      </tr>
-                      <tr>
-                        <td>DIC<inline-help help-key="deviance-information-criterion"></inline-help></td>
-                        <td>{{result.results.DIC | number : 1}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="columns large-12 medium-12 small-12">
-                <img export file-name="'residualDeviancePlot'" ng-src="{{result.results.deviancePlot[0]}}">
-              </div>
-            </div>
-            <div class="row">
-              <div class="columns large-12 medium-12 small-12">
-                <table export>
-                  <thead>
-                    <caption>Residual deviance per arm per study<inline-help help-key="residual-deviance"></inline-help></caption>
-                    <tr>
-                      <th>Study</th>
-                      <th>Arm</th>
-                      <th>Residual deviance</th>
-                      <th>Leverage</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="row in devianceStatisticsTable">
-                      <td ng-if="row.rowSpan" rowspan="{{row.rowSpan}}" style="vertical-align: top;">{{::row.studyName}}</td>
-                      <td>{{::row.armName}}</td>
-                      <td  class="text-center">{{::row.deviance | number}}</td>
-                      <td  class="text-center">{{::row.leverage | number}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row" style="padding-top: 1rem;">
-          <div class="columns large-1">
-            <h3 class="main-category-header">Results</h3>
-          </div>
-          <div class="columns large-8 end">
-            <hr>
-          </div>
-        </div>
-        <div class="row" ng-show="model.linearModel === 'random'" style="padding-top: 1rem;">
-          <div class="columns large-12">
-            <p><strong>Random effects standard deviation </strong> {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</p>
-          </div>
-        </div>
+  <div class="row" ng-if="result.results"  style="padding-top: 1rem;">
+    <div class="columns large-3">
+      <h3 class="main-category-header">Convergence diagnostics</h3>
+    </div>
+    <div class="columns large-8 end">
+      <hr>
+    </div> 
+  </div> <!-- end Convergence diagnostics header -->
 
-        <div class="row" ng-if="model.modelType.type === 'node-split'">
-          <div class="column large-12">
-            <table>
-              <caption>Node splitting results</caption>
-              <thead>
-                <tr>
-                  <th> </th>
-                  <th>Median (95% CrI)</th>
-                </tr>
-              </thead>
-              <tr>
-                <td><strong>Direct estimate</strong><inline-help help-key="direct-estimate"></inline-help></td>
-                <td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
+  <div class="row" ng-if="result.results" >
+    <div class="columns large-12 medium-6 small-12">
+        <table export>
+          <caption>Per-parameter convergence diagnostics</caption>
+          <thead>
+            <tr>
+              <td colspan="3"></td>
+              <td colspan="2">Potential scale reduction factor (PSRF) <data-inline-help help-key="potential-scale-reduction-factor"></data-inline-help></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Parameter</td>
+              <td>Standard deviation</td>
+              <td>Time-series S.E. <data-inline-help help-key="time-series-standard-error"></td>
+              <td>Point estimate</td>
+              <td>97.5% quantile</td>
+              <td class="large-2"></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="diagnostic in diagnostics | orderBy: 'label'">
+              <td>{{diagnostic.label}}</td>
+              <td>{{result.results.summaries.statistics[diagnostic.key].SD}}</td>
+              <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
+              <td>{{diagnostic['Point est.']}}</td>
+              <td>{{diagnostic['Upper C.I.']}}</td>
+              <td class="button-cell"><graph-modal diagnostics-map="diagnosticMap" selected-comparison="diagnostic" />
               </tr>
-              <tr>
-                <td><strong>Indirect estimate</strong><inline-help help-key="indirect-estimate"></inline-help></td>
-                <td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
-              </tr>
-            </table>
-          </div>
-        </div>
+            </tbody>
+          </table>
+      </div>
+    </div> <!-- end Convergence diagnostics content -->
 
-        <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-12">
-            <p><strong>Relative effects table<inline-help help-key="relative-effects"></inline-help></strong></p>
-              <table export>
-                <caption>Comparison of the included interventions: {{::scaleName}} (95% CrI). Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
-                </caption>
-                <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
-                  <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
-                    <span ng-switch-when="effect">
-                      {{relativeEffectsCell.mean | number: 3}} ({{relativeEffectsCell.lowerBound | number: 3}}, {{relativeEffectsCell.upperBound | number: 3}})
-                    </span>
-                    <span ng-switch-when="label" class="table-cell-label">
-                      {{relativeEffectsCell.label}}
-                    </span>
-                    <span ng-switch-when="empty"></span>
-                  </td>
-                </tr>
-              </table>
-          </div>
-        </div>
+    <div class="row" ng-if="result.results" >
+      <div class="columns large-8 medium-6 small-12">
+        <!-- gemtc stand-alone does not set editMode-->
+        <button id="open-run-length-dialog-btn" ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()" class="small">Extend run-length</button>
+      </div>
+    </div> <!-- end Extend runlength-btn row -->
 
-        <div class="row" ng-if="model.modelType.type === 'network'">
-          <div class="columns">
-            <div class="row">
-              <div class="columns large-6 small-8">
-                <p><strong>Relative effects plots</strong><inline-help help-key="relative-effects"></inline-help></p>
-                <label>Select baseline:
-                  <select ng-options="treatment.name for treatment in problem.treatments" ng-model="selectedBaseline"></select>
-                </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="columns center">
-                <paged-svg-plot file-name="'relativeEffect'" pages="result.results.relativeEffectPlots[selectedBaseline.id]"></paged-svg-plot>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="row" ng-if="model.modelType.type === 'pairwise'">
-          <div class="columns">
-            <div class="row">
-              <div class="columns large-12 small-8">
-                <p><strong>Study effect forest plot</strong><inline-help help-key="forest-plot"></inline-help></p>
-                <paged-svg-plot file-name="'forestPlot'" pages="result.results.studyForestPlot"></paged-svg-plot>
-              </div>
-            </div>
-          </div>
-        </div>
+ <!-- -start results section -->
+    <div class="row" ng-if="result.results" style="padding-top: 1rem;">
+      <div class="columns large-1">
+        <h3 class="main-category-header">Results</h3>
+      </div>
+      <div class="columns large-8 end">
+        <hr>
+      </div>
+    </div>
 
-        <div class="row" ng-if="model.modelType.type === 'node-split'">
-          <div class="columns">
-            <div class="row">
-              <div class="columns large-12 small-8">
-                <p><strong>Density plot</strong><inline-help help-key="density-plot"></inline-help></p>
-                <paged-png-plot file-name="'densityPlot'" pages="result.results.densityPlot"></paged-png-plot>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div class="row" ng-show="result.results && model.linearModel === 'random'" style="padding-top: 1rem;">
+      <div class="columns large-12">
+        <p><strong>Random effects standard deviation </strong> {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</p>
+      </div>
+    </div>
 
-        <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-12">
-            <div>
-              <p><strong>Rank probabilities</strong><inline-help help-key="rank-probabilities"></inline-help></p>
-            </div>
-            <table export>
-              <caption>Rank probabilities table</caption>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th ng-repeat="rank in result.results.rankProbabilities">Rank {{::$index + 1}}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="(treatment, rankValues) in result.results.rankProbabilities">
-                  <td>{{::treatment}}</td>
-                  <td ng-repeat="rank in rankValues track by $index">
-                    {{::rank | number : 3}}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+    <div class="row" ng-if="result.results && model.modelType.type === 'node-split'">
+      <div class="column large-12">
+        <table>
+          <caption>Node splitting results</caption>
+          <thead>
+            <tr>
+              <th> </th>
+              <th>Median (95% CrI)</th>
+            </tr>
+          </thead>
+          <tr>
+            <td><strong>Direct estimate </strong><data-inline-help help-key="direct-estimate"></data-inline-help></td>
+            <td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
+          </tr>
+          <tr>
+            <td><strong>Indirect estimate </strong><data-inline-help help-key="indirect-estimate"></data-inline-help></td>
+            <td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="row" style="padding-top: 1rem;" ng-if="result.results && model.modelType.type !== 'node-split'">
+      <div class="columns large-12">
+        <p><strong>Relative effects table <data-inline-help help-key="relative-effects"></data-inline-help></strong></p>
+        <table export>
+          <caption>Comparison of the included interventions: {{::scaleName}} (95% CrI). Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
+          </caption>
+          <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
+            <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
+              <span ng-switch-when="effect">
+                {{relativeEffectsCell.mean | number: 3}} ({{relativeEffectsCell.lowerBound | number: 3}}, {{relativeEffectsCell.upperBound | number: 3}})
+              </span>
+              <span ng-switch-when="label" class="table-cell-label">
+                {{relativeEffectsCell.label}}
+              </span>
+              <span ng-switch-when="empty"></span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div ng-if="result.results && model.modelType.type === 'network'">
+      <div class="row">
+        <div class="columns large-6 small-8">
+          <p>
+            <strong>Relative effects plots </strong>
+            <data-inline-help help-key="relative-effects"></data-inline-help>
+          </p>
+          <label>Select baseline: <select ng-options="treatment.name for treatment in problem.treatments" ng-model="selectedBaseline"></select></label>
         </div>
-        <div class="row" style="padding-top: 1rem;" ng-if="model.modelType.type !== 'node-split'">
-          <div class="columns large-12">
-            <div class="addis-graph" style="width:450px; height:450px;" export file-name="'rankProbabilities'">
-              <caption>Rank probabilities plot</caption>
-              <gemtc-rank-plot value="result.results.rankProbabilities" stacked="true"></gemtc-rank-plot>
-            </div>
+      </div>
+      <div class="row">
+        <div class="columns large-12 center">
+          <data-paged-svg-plot file-name="'relativeEffect'" pages="result.results.relativeEffectPlots[selectedBaseline.id]"></data-paged-svg-plot>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" ng-if="result.results && model.modelType.type === 'pairwise'">
+      <div class="columns">
+        <div class="row">
+          <div class="columns large-12 small-8">
+            <p><strong>Study effect forest plot </strong><data-inline-help help-key="forest-plot"></data-inline-help></p>
+            <data-paged-svg-plot file-name="'forestPlot'" pages="result.results.studyForestPlot"></data-paged-svg-plot>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="row" ng-if="result.results && model.modelType.type === 'node-split'">
+      <div class="columns large-12 small-8">
+        <p><strong>Density plot </strong><data-inline-help help-key="density-plot"></data-inline-help></p>
+        <data-paged-png-plot file-name="'densityPlot'" pages="result.results.densityPlot"></data-paged-png-plot>
+      </div>
+    </div>
+
+    <div class="row" style="padding-top: 1rem;" ng-if="result.results && model.modelType.type !== 'node-split'">
+      <div class="columns large-12">
+        <div>
+          <p><strong>Rank probabilities </strong><data-inline-help help-key="rank-probabilities"></data-inline-help></p>
+        </div>
+        <table export>
+          <caption>Rank probabilities table</caption>
+          <thead>
+            <tr>
+              <th></th>
+              <th ng-repeat="rank in result.results.rankProbabilities">Rank {{::$index + 1}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="(treatment, rankValues) in result.results.rankProbabilities">
+              <td>{{::treatment}}</td>
+              <td ng-repeat="rank in rankValues track by $index">
+                {{::rank | number : 3}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row" style="padding-top: 1rem;" ng-if="result.results && model.modelType.type !== 'node-split'">
+      <div class="columns large-12">
+        <div class="addis-graph" style="width:450px; height:450px;" export file-name="'rankProbabilities'">
+          <caption>Rank probabilities plot</caption>
+          <data-gemtc-rank-plot value="result.results.rankProbabilities" stacked="true"></data-gemtc-rank-plot>
+        </div>
+      </div>
+    </div>
+
+ <!-- -end  results section -->
+
+
+
+  <div class="row" ng-if="result.results" style="padding-top: 2rem;">
+    <div class="columns large-2">
+      <h3 class="main-category-header">Model fit</h3>
+    </div>
+    <div class="columns large-8 end">
+      <hr>
+    </div>
   </div>
+
+  <div class="row" ng-if="result.results">
+    <div class="columns large-8 medium-6 small-12">
+      <div>
+        <table export>
+          <caption>Model fit statistics</caption>
+          <tbody>
+            <tr>
+              <td>Residual deviance (<span style="text-decoration: overline;">D</span><sub>res</sub>) <data-inline-help help-key="residual-deviance"></data-inline-help></td>
+              <td>{{result.results.residualDeviance | number : 1}}</td>
+            </tr>
+            <tr>
+              <td>Leverage (p<sub>D</sub>)</td>
+              <td>{{result.results.leverage | number : 1}}</td>
+            </tr>
+            <tr>
+              <td>DIC <data-inline-help help-key="deviance-information-criterion"></data-inline-help></td>
+              <td>{{result.results.DIC | number : 1}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" ng-if="result.results">
+    <div class="columns large-12 medium-12 small-12">
+      <img export file-name="'residualDeviancePlot'" ng-src="{{result.results.deviancePlot[0]}}">
+    </div>
+  </div>
+
+  <div class="row" ng-if="result.results">
+    <div class="columns large-12 medium-12 small-12">
+      <table export>
+        <thead>
+          <caption>Residual deviance per arm per study <data-inline-help help-key="residual-deviance"></data-inline-help></caption>
+          <tr>
+            <th>Study</th>
+            <th>Arm</th>
+            <th>Residual deviance</th>
+            <th>Leverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="row in devianceStatisticsTable">
+            <td ng-if="row.rowSpan" rowspan="{{row.rowSpan}}" style="vertical-align: top;">{{::row.studyName}}</td>
+            <td>{{::row.armName}}</td>
+            <td  class="text-center">{{::row.deviance | number}}</td>
+            <td  class="text-center">{{::row.leverage | number}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 </div>
+
 </div ui-view>
