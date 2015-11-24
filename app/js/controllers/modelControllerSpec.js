@@ -102,23 +102,6 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       it('should attempt to load the model', function() {
         expect(modelResource.get).toHaveBeenCalledWith(mockStateParams);
       });
-      it('should set convergence plots to hidden', function() {
-        expect(scope.isConvergencePlotsShown).toBe(false);
-      });
-      it('should make hideConvergencePlots available on the scope', function() {
-        expect(scope.hideConvergencePlots).toBeDefined();
-      });
-      it('should make showConvergencePlots available on the scope', function() {
-        expect(scope.showConvergencePlots).toBeDefined();
-      });
-      it('hideConvergencePlots should set convergence plots to hidden', function() {
-        scope.hideConvergencePlots();
-        expect(scope.isConvergencePlotsShown).toBe(false);
-      });
-      it('hideConvergencePlots should set convergence plots to shown', function() {
-        scope.showConvergencePlots();
-        expect(scope.isConvergencePlotsShown).toBe(true);
-      });
     });
 
     describe('when a non-nodesplit model is loaded', function() {
@@ -148,7 +131,19 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         describe('when the patavi results are ready', function() {
 
           beforeEach(function() {
+            var diagnostics = [{
+              key: 'd.3.45'
+            }, {
+              key: 'd.2.12'
+            }, {
+              key: 'sd.d'
+            }, {
+              key: 'd.3.88'
+            }, {
+              key: 'd.3.29'
+            }];
             pataviResultDeferred.resolve(pataviResult);
+            diagnosticsService.buildDiagnosticMap.and.returnValue(diagnostics);
             scope.$apply();
           });
 
@@ -162,6 +157,12 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
               scope.$apply();
             });
 
+            it('the diagnostics should be placed on the scope and sorted', function() {
+              expect(scope.diagnostics).toBeDefined();
+              expect(scope.diagnostics[0].key).toBe('d.2.12');
+              expect(scope.diagnostics[4].key).toBe('sd.d');
+            });
+
             it('the relativeEffectsTable should be constructed', inject(function() {
               expect(relativeEffectsTableService.buildTable).toHaveBeenCalled();
             }));
@@ -170,7 +171,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
               expect(diagnosticsService.buildDiagnosticMap).toHaveBeenCalled();
             }));
 
-            it('should use the firt treatment as the selectedBaseline', inject(function(){
+            it('should use the first treatment as the selectedBaseline', inject(function() {
               expect(scope.selectedBaseline).toEqual(mockProblem.treatments[0]);
             }))
           });
