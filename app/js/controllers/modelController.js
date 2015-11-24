@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function() {
+define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService'
@@ -78,7 +78,7 @@ define(['lodash'], function() {
               $state.go($state.current, {}, {
                 reload: true
               });
-            }
+            };
           }
         }
       });
@@ -122,8 +122,10 @@ define(['lodash'], function() {
           result.results.gelmanPlot
         );
         console.log('before sort');
-        $scope.diagnostics = _.values($scope.diagnosticMap).sort(compareDiagnostics);
-        console.log('after sort');
+        var unsorted = _.values($scope.diagnosticMap);
+        console.log('unsorted: ' + JSON.stringify(unsorted));
+        $scope.diagnostics = unsorted.sort(compareDiagnostics);
+        console.log('sorted ' + JSON.stringify($scope.diagnostics));
 
         if ($scope.model.modelType.type !== 'node-split') {
           var relativeEffects = result.results.relativeEffects;
