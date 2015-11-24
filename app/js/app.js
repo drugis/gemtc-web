@@ -61,6 +61,12 @@ define(
           });
         });
 
+        $rootScope.$on("$stateChangeSuccess",
+          function(event, toState, toParams, fromState, fromParams) {
+            delete $rootScope.error;
+          }
+        );
+
         HelpPopupService.loadLexicon($http.get('lexicon.json'));
       }
     ]);
