@@ -18,9 +18,7 @@ define(['lodash'], function() {
       percentage: 0
     };
     $scope.model = ModelResource.get($stateParams);
-    $scope.isConvergencePlotsShown = false;
-    $scope.showConvergencePlots = showConvergencePlots;
-    $scope.hideConvergencePlots = hideConvergencePlots;
+    $scope.$parent.model = $scope.model;
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
@@ -49,14 +47,6 @@ define(['lodash'], function() {
 
     function getTaskId() {
       return PataviTaskIdResource.get($stateParams);
-    }
-
-    function showConvergencePlots() {
-      $scope.isConvergencePlotsShown = true;
-    }
-
-    function hideConvergencePlots() {
-      $scope.isConvergencePlotsShown = false;
     }
 
     function nameRankProbabilities(rankProbabilities, treatments) {
@@ -94,7 +84,21 @@ define(['lodash'], function() {
       });
     }
 
-
+    function compareDiagnostics(a, b) {
+      // if random effecs, sort sd.d to back
+      if(a.key === 'sd.d') {
+        return 1;
+      } else if (b.key === 'sd.d') {
+        return -1;
+      }
+      var componentsA = a.key.split('.'); // split 'd.20.3' into components
+      var componentsB = b.key.split('.'); // split 'd.20.3' into components
+      if (componentsA[1] !== componentsB[1]) {
+        return parseInt(componentsA[1]) > parseInt(componentsB[1]);
+      } else {
+        return parseInt(componentsA[2]) > parseInt(componentsB[2]);
+      }
+    }
 
     function pataviRunSuccessCallback(result) {
       return ProblemResource.get({
@@ -117,8 +121,7 @@ define(['lodash'], function() {
           result.results.gelmanPlot
         );
 
-        $scope.diagnostics = _.values($scope.diagnosticMap);
-
+        $scope.diagnostics = _.values($scope.diagnosticMap).sort(compareDiagnostics);
 
         if ($scope.model.modelType.type !== 'node-split') {
           var relativeEffects = result.results.relativeEffects;

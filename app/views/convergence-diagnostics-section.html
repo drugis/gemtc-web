@@ -4,7 +4,7 @@
     </div>
     <div class="columns large-8 end">
       <hr>
-    </div> 
+    </div>
   </div> <!-- end Convergence diagnostics header -->
 
   <div class="row" ng-if="result.results" >
@@ -27,7 +27,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="diagnostic in diagnostics | orderBy: 'label'">
+            <tr ng-repeat="diagnostic in diagnostics">
               <td>{{diagnostic.label}}</td>
               <td>{{result.results.summaries.statistics[diagnostic.key].SD}}</td>
               <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
