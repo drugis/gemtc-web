@@ -153,7 +153,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
 
           describe('when the problem is loaded', function() {
             beforeEach(function() {
+              console.log('resolving');
               problemDeferred.resolve(mockProblem);
+              console.log('resolved');
              // problemDeferred.promise.then(done);
               scope.$apply();
             });
@@ -162,6 +164,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
               expect(scope.diagnostics).toBeDefined();
               expect(scope.diagnostics[0].key).toBe('d.2.12');
               expect(scope.diagnostics[4].key).toBe('sd.d');
+              console.log(JSON.stringify(scope.diagnostics));
             });
 
             it('the relativeEffectsTable should be constructed', inject(function() {
