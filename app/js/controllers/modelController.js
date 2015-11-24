@@ -8,6 +8,11 @@ define(['lodash'], function() {
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, AnalysisService,
     DevianceStatisticsService) {
 
+    $scope.resultsViewTemplate = gemtcRootPath + 'views/results-section.html';
+    $scope.modelSettingsViewTemplate = gemtcRootPath + 'views/model-settings-section.html';
+    $scope.convergenceDiagnosticsViewTemplate = gemtcRootPath + 'views/convergence-diagnostics-section.html';
+    $scope.modelFitViewTemplate = gemtcRootPath + 'views/model-fit-section.html';
+
     $scope.analysis = AnalysisResource.get($stateParams);
     $scope.progress = {
       percentage: 0
