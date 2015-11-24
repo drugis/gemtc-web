@@ -9057,10 +9057,6 @@ th.hide-for-touch {
 .color-stripe {
   background: #F57C00;
   height: 0.45rem;
-  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  margin-botten: 1rem;
 }
 
 /* line 21, ../drugis-css/_drugis.scss */
@@ -9193,7 +9189,7 @@ select option {
 
 /* line 126, ../drugis-css/_drugis.scss */
 body.f-topbar-fixed {
-  padding-top: 4rem;
+  padding-top: 6rem;
 }
 
 /* line 132, ../drugis-css/_drugis.scss */
@@ -9499,4 +9495,14 @@ table.layout-table td {
 .top-bar-section ul.top-bar-content {
   padding-top: 5px;
   margin-left: 4rem;
+}
+
+/* line 63, ../sass/_gemtc-drugis-base.scss */
+.breadcrumbs.fixed {
+  margin-top: 52px;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.28);
+  border-bottom: 1px solod rgba(0, 0, 0, 0.14);
+  z-index: 50;
 }

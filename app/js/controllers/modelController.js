@@ -18,13 +18,16 @@ define(['lodash'], function() {
       percentage: 0
     };
     $scope.model = ModelResource.get($stateParams);
-    $scope.$parent.model = $scope.model;
     $scope.isConvergencePlotsShown = false;
     $scope.showConvergencePlots = showConvergencePlots;
     $scope.hideConvergencePlots = hideConvergencePlots;
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
+
+    // pass information to parent for use in beardcrumbs
+    $scope.$parent.model = $scope.model;
+    $scope.$parent.analysis = $scope.analysis;
 
     $scope.model
       .$promise
