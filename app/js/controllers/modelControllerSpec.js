@@ -151,9 +151,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
             expect(problemResource.get).toHaveBeenCalledWith(mockStateParams);
           });
 
-          describe('when the problem is loaded', function() {
+          describe('when the problem is loaded', function(done) {
             beforeEach(function() {
               problemDeferred.resolve(mockProblem);
+              problemDeferred.promise.then(done);
               scope.$apply();
             });
 
