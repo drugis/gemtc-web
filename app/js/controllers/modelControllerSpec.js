@@ -151,14 +151,14 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
             expect(problemResource.get).toHaveBeenCalledWith(mockStateParams);
           });
 
-          describe('when the problem is loaded', function(done) {
+          describe('when the problem is loaded', function() {
             beforeEach(function() {
               problemDeferred.resolve(mockProblem);
-              problemDeferred.promise.then(done);
+             // problemDeferred.promise.then(done);
               scope.$apply();
             });
 
-            it('the diagnostics should be placed on the scope and sorted', function() {
+            fit('the diagnostics should be placed on the scope and sorted', function() {
               expect(scope.diagnostics).toBeDefined();
               expect(scope.diagnostics[0].key).toBe('d.2.12');
               expect(scope.diagnostics[4].key).toBe('sd.d');
