@@ -95,9 +95,9 @@ define(['lodash'], function(_) {
       var componentsA = a.key.split('.'); // split 'd.20.3' into components
       var componentsB = b.key.split('.'); // split 'd.20.3' into components
       if (componentsA[1] !== componentsB[1]) {
-        return parseInt(componentsA[1]) > parseInt(componentsB[1]);
+        return parseInt(componentsA[1]) - parseInt(componentsB[1]);
       } else {
-        return parseInt(componentsA[2]) > parseInt(componentsB[2]);
+        return parseInt(componentsA[2]) - parseInt(componentsB[2]);
       }
     }
 
