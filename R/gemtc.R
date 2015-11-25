@@ -319,8 +319,9 @@ times$forest <- system.time({
     # create forest plot for pairwise analysis
     if(modelType == "pairwise") {
       forestPlot <- plotToSvg(function() {
-        t1 <- params[['modelType']][['details']][['from']][['id']]
-        t2 <- params[['modelType']][['details']][['to']][['id']]
+        t1 <- as.character(params[['modelType']][['details']][['from']][['id']])
+        t2 <- as.character(params[['modelType']][['details']][['to']][['id']])
+	print(paste(t1, t2, class(t1)))
         pwforest(result, t1, t2)
       })
     }
