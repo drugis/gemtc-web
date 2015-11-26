@@ -85,7 +85,6 @@ define(['lodash'], function(_) {
     }
 
     function compareDiagnostics(a, b) {
-      console.log('sorting ' + a.key + '; ' + b.key);
       // if random effecs, sort sd.d to back
       if(a.key === 'sd.d') {
         return 1;
@@ -121,11 +120,9 @@ define(['lodash'], function(_) {
           result.results.tracePlot,
           result.results.gelmanPlot
         );
-        console.log('before sort');
+
         var unsorted = _.values($scope.diagnosticMap);
-        console.log('unsorted: ' + JSON.stringify(unsorted));
         $scope.diagnostics = unsorted.sort(compareDiagnostics);
-        console.log('sorted ' + JSON.stringify($scope.diagnostics));
 
         if ($scope.model.modelType.type !== 'node-split') {
           var relativeEffects = result.results.relativeEffects;
