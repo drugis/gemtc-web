@@ -1,7 +1,7 @@
 <div ui-view>
   <div class="row">
     <div class="columns large-12" id="model-results-header">
-      <h1>Model<data-inline-help help-key="model"></data-inline-help></h1>
+      <h1>Model <data-inline-help help-key="model"></data-inline-help></h1>
       <h5 class="subheader inline">Title: </h5><h5 id="model-label" class="inline">{{::model.title}} <h5>
       <h5 class="subheader inline">Analysis: </h5><a ui-sref="networkMetaAnalysis(stateParams)"><h5 id="model-view-analysis" class="inline">{{::analysis.title}} </a><data-inline-help help-key="analysis"></data-inline-help><h5>
       <h5 class="subheader inline">Outcome: </h5><h5 id="model-view-outcome" class="inline">{{::analysis.outcome.name}} <span ng-show="result.results.logScale">(log scale) </span><data-inline-help help-key="outcome"></data-inline-help><h5>
