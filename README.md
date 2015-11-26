@@ -115,3 +115,18 @@ To run nightwatch integration tests:
     node gemtc &
     nightwatch --config nightwatch-local.json
 
+
+Release log
+===========
+
+2015-11-27 (0.2.7)
+------------------
+- Added inline help, and an user's guide.
+- Added breadcrumbs
+- Redesigned convergence diagnostics plots
+- Added nodesplitting summary screen
+- Added residual deviance statistics
+- Allow specification of heterogeneity prior
+- Allow extension of model runs that have not converged
+- Allow limited exporting of tables and figures
+- Many small UI/terminology improvements
