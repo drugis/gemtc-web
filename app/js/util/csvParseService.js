@@ -2,6 +2,17 @@
 define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
   var dependencies = [];
 
+  var ENTRY_COLUMN_OPTIONS = [
+    'mean',
+    'std.dev',
+    'std.err',
+    'sampleSize',
+    'responders',
+    'exposure',
+    'study',
+    'treatment'
+  ];
+
   function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
@@ -66,11 +77,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
         if (parseResult.meta.delimiter === ';') {
           parseResult.data = normaliseData(parseResult.data)
         }
-        return {
-          isValid: true,
-          message: '',
-          problem: linesToProblem(parseResult.data)
-        }
+        return parseLines(parseResult.data);
       }
     }
 
@@ -115,6 +122,71 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       });
     }
 
+    function emptyStringToNull(val) {
+      return val === '' ? null : val;
+    }
+
+    function extractCovariates(structuredLines) {
+      return _.reduce(structuredLines, function(accum, line) {
+        var covariates = _.omit(line, ENTRY_COLUMN_OPTIONS);
+        covariates = _.mapValues(covariates, emptyStringToNull);
+        if (!accum[line.study]) {
+          accum[line.study] = [];
+        }
+        accum[line.study].push(covariates);
+        return accum;
+      }, {});
+    }
+
+    /**
+     * Check whether a study's arms are consistent as regards their covariate values.
+     * Permissible: 1) a single value, and the rest blank (null)
+     *              2) all the same value
+     **/
+
+    function checkStudyConsistency(studyArms) {
+      var covariateNames = _.keys(studyArms[0]);
+      var errorColumn;
+      var covValues = {};
+      _.find(studyArms, function(arm) {
+        return errorColumn = _.find(covariateNames, function(covariateName) {
+          if (covValues[covariateName] !== undefined && arm[covariateName] !== null && arm[covariateName] !== covValues[covariateName]) {
+            return true;
+          }
+          covValues[covariateName] = arm[covariateName]
+        });
+      });
+      return errorColumn;
+    }
+
+    function checkConsistency(covariates) {
+      var errorMessage;
+      var error = _.find(covariates, function(studyCovariates, key) {
+        var errorColumn = checkStudyConsistency(studyCovariates);
+        if (errorColumn) {
+          errorMessage = 'Inconsistent covariates: study ' + key + ', column ' + errorColumn;
+        }
+      });
+
+      return errorMessage;
+    }
+
+    function compressPerStudy(studyArms) {
+      return _.reduce(studyArms, function(accum, arm) {
+        var columnNames = _.keys(arm);
+        _.each(columnNames, function(covariateName) {
+          if (accum[covariateName] === undefined || arm[covariateName] !== null) {
+            accum[covariateName] = arm[covariateName];
+          }
+        });
+        return accum;
+      }, {});
+    }
+
+    function compressCovariates(covariates) {
+      return _.mapValues(covariates, compressPerStudy);
+    }
+
     /**
      * Takes an array of lines, expects the first line to contain column names
      * produces an ADDIS problem, with a property 'entries' and a property 'treatments'
@@ -124,8 +196,16 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
      * The study column should contain string values.
      * Treatments contains all the treatments, with and ID and name property
      **/
-    function linesToProblem(lines) {
+    function parseLines(lines) {
+
+      var parseResult = {
+        isValid: true,
+        message: '',
+        problem: {}
+      };
+
       var headerLine = lines[0];
+
       var dataLines = lines.slice(1, lines.length);
 
       // sort datalines by treatment names
@@ -144,7 +224,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
         return entry.study.toString();
       }
 
-      var entries = _.map(sortedDataLines, function(line) {
+      var structuredLines = _.map(sortedDataLines, function(line) {
         var entry = _.zipObject(headerLine, line);
         entry.study = convertStudyValueToString(entry);
         // substitute treatment name with its ID
@@ -152,10 +232,27 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
         return entry;
       });
 
-      return {
+      var entries = _.map(structuredLines, function(line) {
+        return _.pick(line, ENTRY_COLUMN_OPTIONS);
+      });
+
+      var studyLevelCovariates = extractCovariates(structuredLines);
+
+      var consistencyErrorMessage = checkConsistency(studyLevelCovariates);
+      parseResult.isValid = !consistencyErrorMessage;
+      parseResult.message = !consistencyErrorMessage ? '' : consistencyErrorMessage;
+
+      if (parseResult.isValid) {
+        studyLevelCovariates = compressCovariates(studyLevelCovariates);
+      }
+
+      parseResult.problem = {
         entries: entries,
-        treatments: buildTreatments(treatmentMap)
+        treatments: buildTreatments(treatmentMap),
+        studyLevelCovariates: studyLevelCovariates
       };
+
+      return parseResult;
     }
 
     return {
