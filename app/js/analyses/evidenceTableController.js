@@ -7,7 +7,7 @@ define([], function() {
       var studyMap = AnalysisService.problemToStudyMap($scope.analysis.problem);
       var studies = EvidenceTableService.studyMapToStudyArray(studyMap);
       $scope.outcomeType = EvidenceTableService.determineOutcomeType(studies);
-      $scope.tableRows = EvidenceTableService.studyListToEvidenceRows(studies)
+      $scope.tableRows = EvidenceTableService.studyListToEvidenceRows(studies, $scope.analysis.problem.studyLevelCovariates)
     });
 
   }
