@@ -57,6 +57,11 @@ define(['lodash', 'moment'], function(_, moment) {
       $scope.likelihoodLinkOptions = compatible.concat(incompatible);
       $scope.model.likelihoodLink = compatible[0];
       modelDefer.resolve(ModelService.cleanModel($scope.model));
+      if (problem.studyLevelCovariates) {
+        $scope.covariateOptions = buildCovariateOptions(problem);
+        $scope.model.covariateOption = $scope.covariateOptions[0];
+        $scope.model.metaRegressionControl = problem.treatments[0];
+      }
       return problem;
     });
 
@@ -68,6 +73,10 @@ define(['lodash', 'moment'], function(_, moment) {
           type: 'automatic'
         }
       }
+    }
+
+    function buildCovariateOptions(problem) {
+      return _.keys(problem.studyLevelCovariates[problem.entries[0].study]);
     }
 
     function modelTypeChange() {
@@ -100,8 +109,8 @@ define(['lodash', 'moment'], function(_, moment) {
 
     function heterogeneityParamsChange() {
       var values = $scope.model.heterogeneityPrior.values;
-      if($scope.model.heterogeneityPrior.type === 'automatic') {
-        $scope.isValidHeterogeneityPrior = true;        
+      if ($scope.model.heterogeneityPrior.type === 'automatic') {
+        $scope.isValidHeterogeneityPrior = true;
       } else if (values === undefined) {
         $scope.isValidHeterogeneityPrior = false;
       } else if ($scope.model.heterogeneityPrior.type === 'standard-deviation') {
@@ -110,7 +119,7 @@ define(['lodash', 'moment'], function(_, moment) {
         $scope.isValidHeterogeneityPrior = (values.stdDev >= 0)
       } else if ($scope.model.heterogeneityPrior.type === 'precision') {
         $scope.isValidHeterogeneityPrior = (values.rate >= 0 && values.shape >= 0)
-      } 
+      }
     }
 
     function isAddButtonDisabled(model) {
