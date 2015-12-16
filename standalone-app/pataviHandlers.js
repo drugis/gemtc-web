@@ -34,6 +34,7 @@ function getPataviTask(request, response, next) {
         }
       },
       function(analysis, callback) {
+        console.log('yo model chache : ' + JSON.stringify(modelCache));
         pataviHandlerService.createPataviTask(analysis, modelCache, callback);
       },
       function(createdId, callback) {

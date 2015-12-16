@@ -22,7 +22,7 @@ define(['angular', 'lodash'], function(angular, _) {
         model.regressor = {
           variable: frontEndModel.covariateOption,
           coefficient: 'shared',
-          control: frontEndModel.metaRegressionControl.id
+          control: frontEndModel.metaRegressionControl.id.toString()
         };
         delete model.covariateOption;
         delete model.metaRegressionControl;

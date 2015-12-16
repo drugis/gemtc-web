@@ -57,7 +57,7 @@
       </div>
     </div>
 
-    <div ng-if="result.results && model.modelType.type === 'network'">
+    <div ng-if="result.results && (model.modelType.type === 'network' || model.modelType.type === 'regression')">
       <div class="row">
         <div class="columns large-6 small-8">
           <p>
