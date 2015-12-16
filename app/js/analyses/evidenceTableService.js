@@ -22,17 +22,34 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
-    function studyListToEvidenceRows(studyList) {
+    function formatCovariate(data) {
+      return data === null ? 'NA' : data
+    }
+
+    function buildCovariatesColumns(studyCovariates) {
+      return _.map(studyCovariates, function(data, headerTitle) {
+        return {
+          data: formatCovariate(data),
+          headerTitle: headerTitle
+        };
+      });
+    }
+
+    function studyListToEvidenceRows(studyList, studyLevelCovariates) {
       var tableRows = [];
       _.each(studyList, function(study) {
         _.each(study.arms, function(arm) {
-          tableRows.push({
+          var tableRow = {
             studyTitle: study.title,
             studyRowSpan: study.arms.length,
             treatmentTitle: arm.title,
             evidence: cleanUpEvidencePropertyNames(arm.data),
             showStudyColumn: (study.arms[0].title === arm.title)
-          });
+          };
+          if(studyLevelCovariates) {
+            tableRow.covariatesColumns = buildCovariatesColumns(studyLevelCovariates[study.title]);
+          }
+          tableRows.push(tableRow);
         })
       });
       return tableRows;

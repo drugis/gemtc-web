@@ -1,40 +1,49 @@
 <div class="row">
-	<div class="columns large-12">
-		<table class="network-meta-analysis-table">
-		<caption>Evidence table<inline-help help-key="evidence-table"></inline-help></caption>
-			<thead>
-				<tr>
-					<th class="large-3">Study</th>
-					<th class="large-3">Treatment</th>
-					<th ng-show="outcomeType === 'dichotomous'" class="large-2">Subjects with outcome</th>
-					<th ng-show="outcomeType === 'continuous'" class="large-1">&mu;</th>
-					<th ng-show="outcomeType === 'continuous'" class="large-1">&sigma;</th>
-					<th  class="large-1">N</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="treatment in tableRows">
-					<td rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}" style="vertical-align: top;">
-						{{treatment.studyTitle}}
-					</td>
-					<td >
-						{{treatment.treatmentTitle}}
-					</td>
-					<td class="text-center" ng-show="outcomeType === 'dichotomous'">
-						{{treatment.evidence.responders}}
-					</td>
-					<td class="text-center" ng-show="outcomeType === 'continuous'">
-						{{treatment.evidence.mean}}
-					</td class="text-center">
-					<td ng-show="outcomeType === 'continuous'">
-						{{treatment.evidence.stdDev}}
-					</td>
-					<td class="text-center" >
-						{{treatment.evidence.sampleSize}}
-					</td>
+  <div class="columns large-12">
+    <table class="network-meta-analysis-table">
+    <caption>Evidence table<inline-help help-key="evidence-table"></inline-help></caption>
+      <thead>
+        <tr>
+          <th rowspan="2" class="large-3">Study</th>
+          <th ng-show="tableRows[0].covariatesColumns.length > 0"
+            colspan="{{tableRows[0].covariatesColumns.length}}">Covariates
+          </th>
+          <th rowspan="2" class="large-3">Treatment</th>
+          <th rowspan="2" ng-show="outcomeType === 'dichotomous'" class="large-2">Subjects with outcome</th>
+          <th rowspan="2" ng-show="outcomeType === 'continuous'" class="large-1">&mu;</th>
+          <th rowspan="2" ng-show="outcomeType === 'continuous'" class="large-1">&sigma;</th>
+          <th rowspan="2" class="large-1">N</th>
+        </tr>
+        <tr>
+          <th ng-repeat="covariate in tableRows[0].covariatesColumns">{{covariate.headerTitle}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="treatment in tableRows">
+          <td rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}" style="vertical-align: top;">
+            {{treatment.studyTitle}}
+          </td>
+          <td ng-repeat="covariate in treatment.covariatesColumns" rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}" style="vertical-align:top" class="text-center">
+            {{covariate.data}}
+          </td>
+          <td >
+            {{treatment.treatmentTitle}}
+          </td>
+          <td class="text-center" ng-show="outcomeType === 'dichotomous'">
+            {{treatment.evidence.responders}}
+          </td>
+          <td class="text-center" ng-show="outcomeType === 'continuous'">
+            {{treatment.evidence.mean}}
+          </td class="text-center">
+          <td ng-show="outcomeType === 'continuous'">
+            {{treatment.evidence.stdDev}}
+          </td>
+          <td class="text-center" >
+            {{treatment.evidence.sampleSize}}
+          </td>
 
-				</tr>
-			</tbody>
-		</table>
-	</div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
