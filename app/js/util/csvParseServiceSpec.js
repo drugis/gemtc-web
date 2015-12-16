@@ -21,6 +21,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
     }));
 
     describe('parse', function() {
+
       it('should parse valid csv', function() {
 
         var parseResult = csvParseService.parse(validCsv);
@@ -61,6 +62,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(parseResult.problem.studyLevelCovariates).toEqual(expectedCovariates);
         expect(typeof parseResult.problem.entries[0].study).toBe('string');
       });
+
       it('should parse valid Euro-peen csv', function() {
 
         var parseResult = csvParseService.parse(validEuropeanCsv);
@@ -88,6 +90,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(parseResult.problem.entries[0]).toEqual(expectedFirstEntry);
         expect(typeof parseResult.problem.entries[0].study).toBe('string');
       });
+
       it('should parse covariates where only one arm has a value', function() {
         var validCsvOneCovariate = '"study","treatment","mean","std.dev","sampleSize","LENGTH_OF_FOLLOW_UP","BLINDING_AT_LEAST_DOUBLE_BLIND"\n' +
           '"S1","A",-1.22,3.7,54,31,1\n' +
@@ -110,6 +113,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(parseResult.problem.studyLevelCovariates).toBeDefined();
         expect(parseResult.problem.studyLevelCovariates).toEqual(expectedCovariates);
       });
+
       it('should raise an error when a covariate has a different version for different arms within the same study', function() {
         var validCsvOneCovariate = '"study","treatment","mean","std.dev","sampleSize","LENGTH_OF_FOLLOW_UP","BLINDING_AT_LEAST_DOUBLE_BLIND"\n' +
           '"S1","A",-1.22,3.7,54,31,1\n' +
@@ -120,11 +124,23 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(parseResult.isValid).toBe(false);
         expect(parseResult.message).toBe('Inconsistent covariates: study S1, column BLINDING_AT_LEAST_DOUBLE_BLIND');
       });
+
       it('should fail on invalid csv', function() {
         var nonsense = 'a,"b,c\nd,e';
         var parseResult = csvParseService.parse(nonsense);
         expect(parseResult.isValid).toBe(false);
         expect(parseResult.message).toBe('Quoted field unterminated;');
+      });
+
+      it('should raise an error when the covariates are not numaric', function() {
+        var validCsvOneCovariate = '"study","treatment","mean","std.dev","sampleSize","LENGTH_OF_FOLLOW_UP"\n' +
+          '"S1","A",-1.22,3.7,54,one\n' +
+          '"S1","C",-1.53,4.28,95,one\n' ;
+          '"S2","A",-0.7,3.7,172,two\n' +
+          '"S2","B",-2.4,3.4,173,two\n';
+        var parseResult = csvParseService.parse(validCsvOneCovariate);
+        expect(parseResult.isValid).toBe(false);
+        expect(parseResult.message).toBe('Non-numeric covariate: study S1, column LENGTH_OF_FOLLOW_UP');
       });
 
     });
