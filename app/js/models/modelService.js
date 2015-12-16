@@ -6,16 +6,26 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function cleanModel(frontEndModel) {
       var model = _.cloneDeep(frontEndModel);
-      if (frontEndModel.modelType.mainType === 'node-split')
+      if (frontEndModel.modelType.mainType === 'node-split') {
         model.modelType.details = {
           from: _.omit(frontEndModel.nodeSplitComparison.from, 'sampleSize'),
           to: _.omit(frontEndModel.nodeSplitComparison.to, 'sampleSize')
         };
+      }
       if (frontEndModel.modelType.mainType === 'pairwise') {
         model.modelType.details = {
           from: _.omit(frontEndModel.pairwiseComparison.from, 'sampleSize'),
           to: _.omit(frontEndModel.pairwiseComparison.to, 'sampleSize')
         };
+      }
+      if (frontEndModel.modelType.mainType === 'regression') {
+        model.regressor = {
+          variable: frontEndModel.covariateOption,
+          coefficient: 'shared',
+          control: frontEndModel.metaRegressionControl.id
+        };
+        delete model.covariateOption;
+        delete model.metaRegressionControl;
       }
       model.modelType = _.omit(model.modelType, 'mainType', 'subType');
       model.modelType.type = frontEndModel.modelType.mainType;
@@ -26,7 +36,7 @@ define(['angular', 'lodash'], function(angular, _) {
       } else {
         model.outcomeScale = frontEndModel.outcomeScale.value;
       }
-      if(model.heterogeneityPrior && model.heterogeneityPrior.type === 'automatic') {
+      if (model.heterogeneityPrior && model.heterogeneityPrior.type === 'automatic') {
         delete model.heterogeneityPrior;
       }
       model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink');

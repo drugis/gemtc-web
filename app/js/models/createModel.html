@@ -72,11 +72,11 @@
         </div>
       </div>
       <div class="stacked-radio">
-        <input type="radio" value="meta-regression" ng-model="model.modelType.mainType" id="meta-regression-model-type-radio" ng-change="modelTypeChange()" ng-disabled="!problem.studyLevelCovariates">
+        <input type="radio" value="regression" ng-model="model.modelType.mainType" id="meta-regression-model-type-radio" ng-change="modelTypeChange()" ng-disabled="!problem.studyLevelCovariates">
         <label for="meta-regression-model-type-radio">Meta-regression</label><span ng-if="!problem.studyLevelCovariates">Data does not contain covariates</span>
       </div>
       
-      <div class="indent-one" ng-show="model.modelType.mainType == 'meta-regression'">
+      <div class="indent-one" ng-show="model.modelType.mainType == 'regression'">
         <label  for="covariate-select">Select covariate
           <select
             id="covariate-select"
@@ -85,7 +85,7 @@
           ></select>
         </label>
       </div>
-      <div class="indent-one" ng-show="model.modelType.mainType == 'meta-regression'">
+      <div class="indent-one" ng-show="model.modelType.mainType == 'regression'">
         <label for="meta-regression-control-select">Select control treatment
           <select
             id="meta-regression-control-select"

@@ -50,6 +50,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
       it('should clean a random-effects network front-end model with automatic heterogeneityPrior', function() {
         expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
       });
+
       it('should clean a random-effects node-splitting model where heterogeneityPrior has been set', function() {
         frontEndModel.modelType = {
           mainType: 'node-split'
@@ -94,6 +95,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         };
         expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
       });
+
       it('should clean a random-effects pairwise model where the outcomeScale has been set', function() {
         frontEndModel.modelType = {
           mainType: 'pairwise'
@@ -123,6 +125,27 @@ define(['angular', 'angular-mocks', 'services'], function() {
           type: 'pairwise'
         }
         cleanedModel.outcomeScale = 123456;
+        expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
+      });
+
+      it('should clean a regression model', function() {
+        frontEndModel.modelType = {
+          mainType: 'regression'
+        };
+        frontEndModel.covariateOption = 'COVARIATE';
+        frontEndModel.metaRegressionControl = {
+          id: 1
+        };
+
+        cleanedModel.modelType = {
+          type: 'regression',
+        };
+        cleanedModel.regressor = {
+          variable: 'COVARIATE',
+          coefficient: 'shared',
+          control: 1
+        };
+
         expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
       });
     });
