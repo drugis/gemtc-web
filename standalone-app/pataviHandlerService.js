@@ -15,7 +15,8 @@ var modelSettings = [
   'likelihood',
   'link',
   'outcomeScale',
-  'heterogeneityPrior'];
+  'heterogeneityPrior',
+  'regressor'];
 
 function createPataviTask(analysis, model, callback) {
   var problemPlusModelSettings = _.extend(analysis.problem, _.pick(model, modelSettings));

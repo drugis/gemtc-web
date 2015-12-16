@@ -1,7 +1,9 @@
 var logger = require('./logger'),
   dbUtil = require('./dbUtil'),
   _ = require('lodash'),
-  db = require('./db')(dbUtil.buildGemtcDBUrl());
+  db = require('./db')(dbUtil.buildGemtcDBUrl()),
+  columnString = 'title, analysisId, linearModel, burn_in_iterations, inference_iterations, ' +
+    ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior, regressor';
 
 module.exports = {
   create: createModel,
@@ -24,7 +26,8 @@ function mapModelRow(modelRow) {
     thinningFactor: modelRow.thinning_factor,
     likelihood: modelRow.likelihood,
     link: modelRow.link,
-    heterogeneityPrior: modelRow.heterogeneity_prior
+    heterogeneityPrior: modelRow.heterogeneity_prior,
+    regressor: modelRow.regressor
   };
 
   if (modelRow.outcome_scale) {
@@ -37,8 +40,7 @@ function mapModelRow(modelRow) {
 function findByAnalysis(analysisId, callback) {
   logger.debug('modelRepository.findByAnalysis, where analysisId = ' + analysisId);
   db.query(
-    ' SELECT id, title, analysisId, taskId, linearModel, burn_in_iterations, inference_iterations, ' +
-    ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior '+
+    ' SELECT id, taskId, ' + columnString + 
     ' FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
       if (error) {
         logger.error('error finding models by analysisId, error: ' + error);
@@ -53,11 +55,10 @@ function findByAnalysis(analysisId, callback) {
 function createModel(ownerAccountId, analysisId, newModel, callback) {
 
   db.query(
-    ' INSERT INTO model (analysisId, title, linearModel, burn_in_iterations, inference_iterations, ' +
-    ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior) ' +
-    ' VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id', [
-      analysisId,
+    ' INSERT INTO model (' + columnString + ') ' +
+    ' VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id', [
       newModel.title,
+      analysisId,
       newModel.linearModel,
       newModel.burnInIterations,
       newModel.inferenceIterations,
@@ -66,7 +67,8 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
       newModel.likelihood,
       newModel.link,
       newModel.outcomeScale,
-      newModel.heterogeneityPrior
+      newModel.heterogeneityPrior,
+      newModel.regressor
     ],
     function(error, result) {
       if (error) {
@@ -80,8 +82,7 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
 
 function getModel(modelId, callback) {
   db.query(
-    ' SELECT id, title, analysisId, taskId, linearModel, burn_in_iterations, inference_iterations, '+
-    ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior'+
+    ' SELECT id, taskId, ' + columnString +
     ' FROM model WHERE id=$1', [modelId], function(error, result) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);

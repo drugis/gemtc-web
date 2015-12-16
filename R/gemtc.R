@@ -234,8 +234,17 @@ gemtc <- function(params) {
 
     treatments <- do.call(rbind, lapply(params[['treatments']],
       function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
+    
+    covars <- params[['studyLevelCovariates']]
+    studies <- do.call(rbind, lapply(names(covars),
+      function(studyName) {
+        values <- c(list("study"=studyName), covars[[studyName]])
+        values[sapply(values, is.null)] <- NA_real_
+        do.call(data.frame, c(values, list(stringsAsFactors=FALSE)))
+      }
+    ))
 
-    network <- mtc.network(data.ab=data.ab, treatments=treatments)
+    network <- mtc.network(data.ab=data.ab, treatments=treatments, studies=studies)
     mtc.model.params <- list(network=network, linearModel=linearModel)
     if(!is.null(params[['likelihood']])) {
       mtc.model.params <- c(mtc.model.params, list('likelihood' = params[['likelihood']]))
@@ -250,6 +259,9 @@ gemtc <- function(params) {
       t1 <- params[['modelType']][['details']][['from']][['id']]
       t2 <- params[['modelType']][['details']][['to']][['id']]
       mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
+    }
+    if(modelType == 'regression') {
+      mtc.model.params <- c(mtc.model.params, list(type="regression", regressor = as.list(params[['regressor']])))
     }
     if(linearModel == 'random') {
       if(heterogeneityPriorType == 'standard-deviation') {
@@ -375,7 +387,7 @@ report('summary', 1.0)
     summary[['inferenceIterations']] <- params[['inferenceIterations']]
     summary[['thinningFactor']] <- params[['thinningFactor']]
     summary[['outcomeScale']] <- model[['om.scale']]
-    if(modelType != 'node-split') {
+    if(modelType != 'node-split' && modelType != 'regression') {
       summary[['relativeEffects']] <- releffect
       summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
     }
@@ -388,6 +400,9 @@ report('summary', 1.0)
     }
     if(modelType == 'node-split') {
       summary[['densityPlot']] <- densityPlot
+    }
+    if(modelType == 'regression') {
+      summary[['regressor']] <- wrap.matrix(params[['regressor']])
     }
     summary[['tracePlot']] <- tracePlot
     summary[['gelmanPlot']] <- gelmanPlot

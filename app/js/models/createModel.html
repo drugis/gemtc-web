@@ -84,8 +84,6 @@
             ng-model="model.covariateOption"
           ></select>
         </label>
-      </div>
-      <div class="indent-one" ng-show="model.modelType.mainType == 'regression'">
         <label for="meta-regression-control-select">Select control treatment
           <select
             id="meta-regression-control-select"
@@ -232,11 +230,15 @@
   </div>
   
 </div>
-
-
 <!-- end heterogeneity prior section -->
 
-<data-run-length problem="problem" model="cleanModel" burn-in-iterations="model.burnInIterations" inference-iterations="model.inferenceIterations" thinning-factor="model.thinningFactor" is-valid-data-run-length="isValidRunLength"></data-run-length>
+<data-run-length
+problem="problem"
+model="cleanModel"
+burn-in-iterations="model.burnInIterations"
+inference-iterations="model.inferenceIterations"
+thinning-factor="model.thinningFactor"
+is-valid-run-length="isValidRunLength"></data-run-length>
 
 <div class="row bottom-button-bar">
   <div class="large-9 columns">
