@@ -160,7 +160,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
     }
 
     function checkConsistency(covariates) {
-      var errorMessage;
+      var errorMessage = '';
       var error = _.find(covariates, function(studyCovariates, key) {
         var errorColumn = checkStudyConsistency(studyCovariates);
         if (errorColumn) {
@@ -185,6 +185,18 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
 
     function compressCovariates(covariates) {
       return _.mapValues(covariates, compressPerStudy);
+    }
+
+    function checkNumeric(studyLevelCovariates) {
+      var errorMessage = '';
+      _.find(studyLevelCovariates, function(study, studyName) {
+        return _.find(study, function(covariate, covariateName) {
+          if (covariate !== null && !Number.isFinite(covariate)) {
+            return errorMessage = 'Non-numeric covariate: study ' + studyName + ', column ' + covariateName;
+          }
+        });
+      });
+      return errorMessage;
     }
 
     /**
@@ -244,6 +256,12 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
 
       if (parseResult.isValid) {
         studyLevelCovariates = compressCovariates(studyLevelCovariates);
+      }
+
+      if (parseResult.isValid) {
+        var numericErrorMesasge = checkNumeric(studyLevelCovariates, parseResult);
+        parseResult.isValid = !numericErrorMesasge;
+        parseResult.message = !numericErrorMesasge ? '' : numericErrorMesasge
       }
 
       parseResult.problem = {
