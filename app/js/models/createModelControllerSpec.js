@@ -31,7 +31,20 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       };
 
       problemMock = {
-        $promise: problemDefer.promise
+        $promise: problemDefer.promise,
+        entries: [{
+          study: 'study 1'
+        }],
+        treatments: [{
+          id: 1,
+          name: "treatment1"
+        }],
+        studyLevelCovariates: {
+          'study 1': {
+            COVARIATE_1: null,
+            COVARIATE_2: null
+          }
+        }
       };
 
       problemResourceMock.get.and.returnValue(problemMock);
@@ -100,6 +113,10 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         expect(scope.likelihoodLinkOptions[1]).toEqual(likelihoodLinkOptionsMock[0]);
         expect(scope.model.likelihoodLink).toEqual(likelihoodLinkOptionsMock[1]);
       });
+      it('should place covariate options on the scope', function() {
+        expect(scope.covariateOptions).toEqual(['COVARIATE_1', 'COVARIATE_2'])
+      });
+
     });
 
     describe('createModel', function() {
