@@ -167,17 +167,17 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
               console.log('test value scope.diagnostics ' + JSON.stringify(scope.diagnostics));
             });
 
-            it('the relativeEffectsTable should be constructed', inject(function() {
+            it('the relativeEffectsTable should be constructed', function() {
               expect(relativeEffectsTableService.buildTable).toHaveBeenCalled();
-            }));
+            });
 
-            it('the gelman diagnostics should be labelled', inject(function() {
+            it('the gelman diagnostics should be labelled', function() {
               expect(diagnosticsService.buildDiagnosticMap).toHaveBeenCalled();
-            }));
+            });
 
-            it('should use the first treatment as the selectedBaseline', inject(function() {
+            it('should use the first treatment as the selectedBaseline', function() {
               expect(scope.selectedBaseline).toEqual(mockProblem.treatments[0]);
-            }))
+            });
           });
         });
       });
@@ -195,9 +195,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         scope.$apply();
       });
 
-      it('the relativeEffectsTable should not be constructed', inject(function() {
+      it('the relativeEffectsTable should not be constructed', function() {
         expect(relativeEffectsTableService.buildTable).not.toHaveBeenCalled();
-      }));
+      });
     });
 
   });
