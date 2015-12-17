@@ -36,6 +36,7 @@ define(['lodash', 'moment'], function(_, moment) {
     $scope.isNumber = isNumber;
     $scope.cleanModel = modelDefer;
     $scope.problem = ProblemResource.get($stateParams);
+    $scope.selectedCovariateValueHasNullValues = false;
 
     $scope.problem.$promise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
@@ -122,14 +123,24 @@ define(['lodash', 'moment'], function(_, moment) {
       }
     }
 
-    function isAddButtonDisabled(model) {
+    function variableHasNAValues(covariateName, problem) {
+      return _.find(problem.studyLevelCovariates, function(covariate) {
+        return covariate[covariateName] === null;
+      });
+    }
+
+    function isAddButtonDisabled(model, problem) {
+
+      $scope.selectedCovariateValueHasNullValues = model.modelType.mainType === 'regression' && variableHasNAValues(model.covariateOption, problem);
+
       return !model ||
         !model.title ||
         !!$scope.isAddingModel ||
         !model.likelihoodLink ||
         model.likelihoodLink.compatibility === 'incompatible' ||
-        $scope.model.outcomeScale.value <= 0 ||
-        ($scope.model.outcomeScale.type === 'fixed' && !angular.isNumber($scope.model.outcomeScale.value));
+        model.outcomeScale.value <= 0 ||
+        (model.outcomeScale.type === 'fixed' && !angular.isNumber(model.outcomeScale.value))
+        || $scope.selectedCovariateValueHasNullValues;
     }
 
     function isNumber(value) {
