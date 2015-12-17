@@ -263,7 +263,10 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           title: 'title',
           burnInIterations: 1000,
           inferenceIterations: 100,
-          thinningFactor: 10
+          thinningFactor: 10,
+          modelType: {
+            mainType : 'consistency'
+          }
         };
 
         scope.estimateRunLength = 301;
@@ -271,12 +274,15 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         expect(scope.isAddButtonDisabled(model)).toBe(true);
       });
 
-      it('should return false the model is ready to save', function() {
+      it('should return false when the model is ready to save', function() {
         var model = {
           title: 'title',
           burnInIterations: 1000,
           inferenceIterations: 100,
-          thinningFactor: 10
+          thinningFactor: 10,
+          modelType: {
+            mainType : 'consistency'
+          }
         };
 
         scope.estimateRunLength = 299;
@@ -293,8 +299,48 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
         expect(scope.isAddButtonDisabled(model)).toBe(false);
       });
-    });
 
+      it('should return true if the model is a regression model and the selected covariate includes null values', function() {
+        var model = {
+          title: 'title',
+          burnInIterations: 1000,
+          inferenceIterations: 100,
+          thinningFactor: 10,
+          modelType: {
+            mainType : 'regression'
+          },
+          covariateOption: 'my cov'
+        };
+
+        scope.estimateRunLength = 299;
+        scope.isAddingModel = false;
+        model.likelihoodLink = {
+          compatibility: 'compatibility'
+        };
+        model.outcomeScale = {
+          outcomeScale: {
+            value: 1,
+            type: 'fixed'
+          }
+        };
+
+        var problem = {
+          studyLevelCovariates: {
+            'study 1': {
+              SOME_COVARIATE: 1,
+              'my cov': 1
+            },
+            'study 2': {
+              SOME_COVARIATE: null,
+              'my cov': null
+            }
+          }
+        }
+
+        expect(scope.isAddButtonDisabled(model, problem)).toBeTruthy();
+      });
+
+    });
 
 
   });

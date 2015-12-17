@@ -84,6 +84,7 @@
             ng-model="model.covariateOption"
           ></select>
         </label>
+        <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">This covariate has missing values.</div>
         <label for="meta-regression-control-select">Select control treatment
           <select
             id="meta-regression-control-select"
@@ -242,10 +243,11 @@ is-valid-run-length="isValidRunLength"></data-run-length>
 
 <div class="row bottom-button-bar">
   <div class="large-9 columns">
-    <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="!isValidRunLength || !isValidHeterogeneityPrior || isAddButtonDisabled(model)">
+    <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="!isValidRunLength || !isValidHeterogeneityPrior || isAddButtonDisabled(model, problem)">
     Create Model(s)
     </button>
     <div class="alert" ng-show='!model.title'>Model title missing.</div>
+    <div class="alert" ng-show="selectedCovariateValueHasNullValues">The selected covariate has missing values.</div>
   </div>
 </div>
 
