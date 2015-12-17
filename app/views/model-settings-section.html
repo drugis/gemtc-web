@@ -21,6 +21,18 @@
               <td class="large-6 text-right"><strong>split comparison</strong></td>
               <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
             </tr>
+            <tr ng-if="model.modelType.type === 'regression'">
+              <td class="large-5 text-right"><strong>coefficient</strong></td>
+              <td>{{::model.regressor.coefficient}}</td>
+            </tr>
+            <tr ng-if="model.modelType.type === 'regression'">
+              <td class="large-5 text-right"><strong>covariate</strong></td>
+              <td>{{::model.regressor.variable}}</td>
+            </tr>
+            <tr ng-if="model.modelType.type === 'regression'">
+              <td class="large-5 text-right"><strong>control treatment</strong></td>
+              <td>{{::controlTreatment.name}}</td>
+            </tr>
             <tr>
               <td class="large-6 text-right"><strong>effects type</strong></td>
               <td>

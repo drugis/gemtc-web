@@ -37,6 +37,8 @@ define(['lodash'], function(_) {
           return 'd.indirect (Indirect estimate)';
         } else if (key === 'd.direct') {
           return 'd.direct (Direct estimate)';
+        } else if (key === 'B') {
+          return 'Beta (covariate)';
         } else {
           var splitKey = key.split('.');
           var treatment1Id = splitKey[1];
