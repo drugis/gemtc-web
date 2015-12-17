@@ -191,7 +191,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       var errorMessage = '';
       _.find(studyLevelCovariates, function(study, studyName) {
         return _.find(study, function(covariate, covariateName) {
-          if (covariate !== null && !Number.isFinite(covariate)) {
+          if (covariate !== null && !isNumeric(covariate)) {
             return errorMessage = 'Non-numeric covariate: study ' + studyName + ', column ' + covariateName;
           }
         });
