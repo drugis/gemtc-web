@@ -86,7 +86,7 @@ define(['lodash'], function(_) {
 
     function compareDiagnostics(a, b) {
       // if random effecs, sort sd.d to back
-      if(a.key === 'sd.d') {
+      if (a.key === 'sd.d') {
         return 1;
       } else if (b.key === 'sd.d') {
         return -1;
@@ -130,6 +130,11 @@ define(['lodash'], function(_) {
           $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
         }
         $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
+        if ($scope.model.regressor) {
+          $scope.controlTreatment = _.find(problem.treatments, function(treatment) {
+            return treatment.id == $scope.model.regressor.control;
+          });
+        }
         $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
       });
     }

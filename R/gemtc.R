@@ -315,7 +315,7 @@ if(modelType != 'node-split') {
 
 times$relplot <- system.time({
   #create forest plot files for network analyses
-  if(modelType == "network") {
+  if(modelType == "network" || modelType == "regression") {
     forestPlots <- lapply(treatmentIds, function(treatmentId) {
       plotToSvg(function() {
         treatmentN <- which(treatmentIds == treatmentId)
@@ -387,12 +387,12 @@ report('summary', 1.0)
     summary[['inferenceIterations']] <- params[['inferenceIterations']]
     summary[['thinningFactor']] <- params[['thinningFactor']]
     summary[['outcomeScale']] <- model[['om.scale']]
-    if(modelType != 'node-split' && modelType != 'regression') {
+    if(modelType != 'node-split') {
       summary[['relativeEffects']] <- releffect
       summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
     }
     summary[['alternatives']] <- names(summary[['rankProbabilities']])
-    if(modelType == "network") {
+    if(modelType == "network" || modelType == "regression") {
       summary[['relativeEffectPlots']] <- forestPlots
     }
     if(modelType == "pairwise") {
@@ -402,7 +402,7 @@ report('summary', 1.0)
       summary[['densityPlot']] <- densityPlot
     }
     if(modelType == 'regression') {
-      summary[['regressor']] <- wrap.matrix(params[['regressor']])
+      summary[['regressor']] <- params[['regressor']]
     }
     summary[['tracePlot']] <- tracePlot
     summary[['gelmanPlot']] <- gelmanPlot

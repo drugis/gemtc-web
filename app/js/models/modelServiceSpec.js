@@ -1,5 +1,5 @@
 define(['angular', 'angular-mocks', 'services'], function() {
-  describe('the deviance statistics service', function() {
+  describe('the model service', function() {
     beforeEach(module('gemtc.models'));
 
     var modelService;
@@ -143,7 +143,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         cleanedModel.regressor = {
           variable: 'COVARIATE',
           coefficient: 'shared',
-          control: 1
+          control: '1'
         };
 
         expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
