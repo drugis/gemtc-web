@@ -84,21 +84,6 @@ define(['lodash'], function(_) {
       });
     }
 
-    function compareDiagnostics(a, b) {
-      // if random effecs, sort sd.d to back
-      if (a.key === 'sd.d') {
-        return 1;
-      } else if (b.key === 'sd.d') {
-        return -1;
-      }
-      var componentsA = a.key.split('.'); // split 'd.20.3' into components
-      var componentsB = b.key.split('.'); // split 'd.20.3' into components
-      if (componentsA[1] !== componentsB[1]) {
-        return parseInt(componentsA[1]) - parseInt(componentsB[1]);
-      } else {
-        return parseInt(componentsA[2]) - parseInt(componentsB[2]);
-      }
-    }
 
     function pataviRunSuccessCallback(result) {
       return ProblemResource.get({
@@ -122,7 +107,7 @@ define(['lodash'], function(_) {
         );
 
         var unsorted = _.values($scope.diagnosticMap);
-        $scope.diagnostics = unsorted.sort(compareDiagnostics);
+        $scope.diagnostics = unsorted.sort(DiagnosticsService.compareDiagnostics);
 
         if ($scope.model.modelType.type !== 'node-split') {
           var relativeEffects = result.results.relativeEffects;

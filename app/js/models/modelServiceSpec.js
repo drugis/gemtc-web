@@ -136,13 +136,14 @@ define(['angular', 'angular-mocks', 'services'], function() {
         frontEndModel.metaRegressionControl = {
           id: 1
         };
+        frontEndModel.treatmentInteraction = 'unrelated';
 
         cleanedModel.modelType = {
           type: 'regression',
         };
         cleanedModel.regressor = {
           variable: 'COVARIATE',
-          coefficient: 'shared',
+          coefficient: 'unrelated',
           control: '1'
         };
 

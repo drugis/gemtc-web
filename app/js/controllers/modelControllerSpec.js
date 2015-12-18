@@ -75,7 +75,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
       devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildTable']);
-      diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['buildDiagnosticMap']);
+      diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['buildDiagnosticMap', 'compareDiagnostics']);
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
       stateMock = jasmine.createSpyObj('$state', ['reload']);
       modalMock = jasmine.createSpyObj('$modal', ['open']);
@@ -156,15 +156,12 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
               console.log('resolving');
               problemDeferred.resolve(mockProblem);
               console.log('resolved');
-             // problemDeferred.promise.then(done);
               scope.$apply();
             });
 
             it('the diagnostics should be placed on the scope and sorted', function() {
               expect(scope.diagnostics).toBeDefined();
-              expect(scope.diagnostics[0].key).toBe('d.2.12');
-              expect(scope.diagnostics[4].key).toBe('sd.d');
-              console.log('test value scope.diagnostics ' + JSON.stringify(scope.diagnostics));
+              expect(diagnosticsService.compareDiagnostics).toHaveBeenCalled();
             });
 
             it('the relativeEffectsTable should be constructed', function() {

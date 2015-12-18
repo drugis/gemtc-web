@@ -38,7 +38,10 @@ define(['lodash'], function(_) {
         } else if (key === 'd.direct') {
           return 'd.direct (Direct estimate)';
         } else if (key === 'B') {
-          return 'Beta (covariate)';
+          return 'beta (covariate)';
+        } else if (key.slice(0, 5) === 'beta[') {
+          var treatmentId = key.substring(key.indexOf('[') + 1, key.length - 1);
+          return 'beta (' + treatmentsById[treatmentId].name + ')';
         } else {
           var splitKey = key.split('.');
           var treatment1Id = splitKey[1];
@@ -85,10 +88,25 @@ define(['lodash'], function(_) {
       return diagnosticMap;
     }
 
-
+    function compareDiagnostics(a, b) {
+      // if random effecs, sort sd.d to back
+      if (a.key === 'sd.d') {
+        return 1;
+      } else if (b.key === 'sd.d') {
+        return -1;
+      }
+      var componentsA = a.key.split('.'); // split 'd.20.3' into components
+      var componentsB = b.key.split('.'); // split 'd.20.3' into components
+      if (componentsA[1] !== componentsB[1]) {
+        return parseInt(componentsA[1]) - parseInt(componentsB[1]);
+      } else {
+        return parseInt(componentsA[2]) - parseInt(componentsB[2]);
+      }
+    }
 
     return {
-      buildDiagnosticMap: buildDiagnosticMap
+      buildDiagnosticMap: buildDiagnosticMap,
+      compareDiagnostics: compareDiagnostics
     };
   };
 

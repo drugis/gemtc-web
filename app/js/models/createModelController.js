@@ -22,7 +22,8 @@ define(['lodash', 'moment'], function(_, moment) {
       thinningFactor: 10,
       heterogeneityPrior: {
         type: 'automatic'
-      }
+      },
+      treatmentInteraction: 'shared'
     };
     $scope.isTaskTooLong = false;
     $scope.isValidHeterogeneityPrior = true;
