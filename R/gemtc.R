@@ -261,7 +261,9 @@ gemtc <- function(params) {
       mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
     }
     if(modelType == 'regression') {
-      mtc.model.params <- c(mtc.model.params, list(type="regression", regressor = as.list(params[['regressor']])))
+      regressor <- as.list(params[['regressor']])
+      regressor[['variable']] <- make.names(regressor[['variable']]) # must be valid column name for data frame
+      mtc.model.params <- c(mtc.model.params, list(type="regression", regressor = regressor))
     }
     if(linearModel == 'random') {
       if(heterogeneityPriorType == 'standard-deviation') {
