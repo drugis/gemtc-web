@@ -21,11 +21,12 @@ define(['angular', 'lodash'], function(angular, _) {
       if (frontEndModel.modelType.mainType === 'regression') {
         model.regressor = {
           variable: frontEndModel.covariateOption,
-          coefficient: 'shared',
+          coefficient: frontEndModel.treatmentInteraction,
           control: frontEndModel.metaRegressionControl.id.toString()
         };
         delete model.covariateOption;
         delete model.metaRegressionControl;
+        delete model.treatmentInteraction;
       }
       model.modelType = _.omit(model.modelType, 'mainType', 'subType');
       model.modelType.type = frontEndModel.modelType.mainType;

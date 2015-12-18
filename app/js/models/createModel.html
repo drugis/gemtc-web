@@ -85,6 +85,15 @@
           ></select>
         </label>
         <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">This covariate has missing values.</div>
+        <label>Treatment-interaction model</label>
+        <div class="stacked-radio">
+          <input type="radio" value="shared" ng-model="model.treatmentInteraction" id="treatment-interaction-type-shared-radio">
+          <label for="treatment-interaction-type-shared-radio">Shared coefficient</label>
+        </div>
+        <div class="stacked-radio">
+          <input type="radio" value="unrelated" ng-model="model.treatmentInteraction" id="treatment-interaction-type-unrelated-radio">
+          <label for="treatment-interaction-type-unrelated-radio">Unrelated coefiicients</label>
+        </div>
         <label for="meta-regression-control-select">Select control treatment
           <select
             id="meta-regression-control-select"
