@@ -73,7 +73,7 @@
       </div>
       <div class="stacked-radio">
         <input type="radio" value="regression" ng-model="model.modelType.mainType" id="meta-regression-model-type-radio" ng-change="modelTypeChange()" ng-disabled="!problem.studyLevelCovariates">
-        <label for="meta-regression-model-type-radio">Meta-regression</label><span ng-if="!problem.studyLevelCovariates">Data does not contain covariates</span>
+        <label for="meta-regression-model-type-radio">Meta-regression<em ng-if="!problem.studyLevelCovariates"> (Data does not contain covariates)</em></label>
       </div>
       
       <div class="indent-one" ng-show="model.modelType.mainType == 'regression'">
