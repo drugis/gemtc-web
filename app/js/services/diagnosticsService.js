@@ -95,9 +95,21 @@ define(['lodash'], function(_) {
       } else if (b.key === 'sd.d') {
         return -1;
       }
+
+      if (a.key.indexOf('beta[') > -1 && b.key.indexOf('beta[') > -1) {
+        var aId = a.key.substring(a.key.indexOf('[') + 1, a.key.length - 1);
+        var bId = b.key.substring(b.key.indexOf('[') + 1, b.key.length - 1);
+        return parseInt(aId) - parseInt(bId);
+      } else {
+        if (a.key.indexOf('beta[') > -1) {
+          return 1;
+        } else if (b.key.indexOf('beta[') > -1) {
+          return -1;
+        }
+      }
       var componentsA = a.key.split('.'); // split 'd.20.3' into components
       var componentsB = b.key.split('.'); // split 'd.20.3' into components
-      if (componentsA[1] !== componentsB[1]) {
+      if (componentsA[1] !== componentsB[1]) { // only compare y of 'd.x.y.' if x is equal
         return parseInt(componentsA[1]) - parseInt(componentsB[1]);
       } else {
         return parseInt(componentsA[2]) - parseInt(componentsB[2]);

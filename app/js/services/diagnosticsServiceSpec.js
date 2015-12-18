@@ -1,5 +1,5 @@
 define(['angular', 'angular-mocks', 'services'], function() {
-  describe('the diagnostics service', function() {
+  fdescribe('the diagnostics service', function() {
 
     var diagnosticsService;
 
@@ -209,7 +209,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         };
         modelType = 'node-split';
         psrfPlots = ['a', 'b', 'c', 'd', 'e', 'f'];
-        tracePlots = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j','k','l'];
+        tracePlots = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
         var map = diagnosticsService.buildDiagnosticMap(
           modelType,
           gelmanDiagnostics,
@@ -218,6 +218,63 @@ define(['angular', 'angular-mocks', 'services'], function() {
           psrfPlots);
         expect(map).toEqual(expected);
 
+      });
+    });
+
+    describe('compareDiagnostics', function() {
+      it('should place sd.d at the rear', function() {
+        var a = {
+          key: 'sd.d'
+        };
+        var b = {
+          key: 'zedzedzed'
+        };
+        expect(diagnosticsService.compareDiagnostics(a, b)).toBe(1);
+        expect(diagnosticsService.compareDiagnostics(b, a)).toBe(-1);
+      });
+      describe('when comparing d.x.y pairs', function() {
+        it('should sort first by x', function() {
+          var a = {
+            key: 'd.12.3'
+          };
+          var b = {
+            key: 'd.1.3'
+          };
+          expect(diagnosticsService.compareDiagnostics(a, b) > 0).toBe(true);
+          expect(diagnosticsService.compareDiagnostics(b, a) < 0).toBe(true);
+        });
+        it('should sort second by y', function() {
+          var a = {
+            key: 'd.1.23'
+          };
+          var b = {
+            key: 'd.1.3'
+          };
+          expect(diagnosticsService.compareDiagnostics(a, b) > 0).toBe(true);
+          expect(diagnosticsService.compareDiagnostics(b, a) < 0).toBe(true);
+        });
+      });
+      describe('when comparing beta[x] strings', function() {
+        it('beta should go behind d.x.y', function() {
+          var a = {
+            key: 'd.1.23'
+          };
+          var b = {
+            key: 'beta[3]'
+          };
+          expect(diagnosticsService.compareDiagnostics(a, b) < 0).toBe(true);
+          expect(diagnosticsService.compareDiagnostics(b, a) > 0).toBe(true);
+        });
+        it('betas should be sorted numerically', function() {
+          var a = {
+            key: 'beta[3]'
+          };
+          var b = {
+            key: 'beta[30]'
+          };
+          expect(diagnosticsService.compareDiagnostics(a, b) < 0).toBe(true);
+          expect(diagnosticsService.compareDiagnostics(b, a) > 0).toBe(true);
+        });
       });
     });
 
