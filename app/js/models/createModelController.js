@@ -34,6 +34,7 @@ define(['lodash', 'moment'], function(_, moment) {
     $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
     $scope.heterogeneityPriorTypechange = heterogeneityPriorTypechange;
     $scope.heterogeneityParamsChange = heterogeneityParamsChange;
+    $scope.covariateChange = covariateChange;
     $scope.addLevel = addLevel;
     $scope.addLevelOnEnter = addLevelOnEnter;
     $scope.levelAlreadyPresent = levelAlreadyPresent;
@@ -79,6 +80,12 @@ define(['lodash', 'moment'], function(_, moment) {
           type: 'automatic'
         }
       }
+    }
+
+    function covariateChange() {
+      $scope.variableIsBinary = $scope.model.modelType.mainType === 'regression' 
+        && variableIsBinary($scope.model.covariateOption, $scope.problem);
+      $scope.model.levels = [];
     }
 
     function buildCovariateOptions(problem) {
@@ -146,9 +153,11 @@ define(['lodash', 'moment'], function(_, moment) {
       $scope.newLevel = undefined;
     }
 
-    function addLevelOnEnter(newLevel) {
-      if (event.which === 13 && !levelAlreadyPresent(newLevel)) { // 13 == enter key
+    function addLevelOnEnter($event, newLevel) {
+      if ($event.which === 13 && !levelAlreadyPresent(newLevel)) { // 13 == enter key
         addLevel(newLevel);
+        $event.stopPropagation();
+        $event.preventDefault();
       }
     }
 
@@ -159,8 +168,6 @@ define(['lodash', 'moment'], function(_, moment) {
     function isAddButtonDisabled(model, problem) {
 
       $scope.selectedCovariateValueHasNullValues = model.modelType.mainType === 'regression' && variableHasNAValues(model.covariateOption, problem);
-
-      $scope.variableIsBinary = model.modelType.mainType === 'regression' && variableIsBinary(model.covariateOption, problem);
 
       return !model ||
         !model.title ||

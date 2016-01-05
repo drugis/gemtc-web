@@ -86,38 +86,47 @@
 	"studyLevelCovariates": {
 		"Alves et al, 1999": {
 			"BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+			"LENGTH_OF_FOLLOW_UP": 30.0,
 			"MULTI_CENTER_STUDY": 1.0
 		},
 		"Boyer et al, 1998": {
 			"BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+			"LENGTH_OF_FOLLOW_UP": 30.0,
 			"MULTI_CENTER_STUDY": 1.0
 		},
 		"Behnke et al, 2003": {
 			"BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+			"LENGTH_OF_FOLLOW_UP": 30.0,
 			"MULTI_CENTER_STUDY": 1.0
 		},
 		"Bennie et al, 1995": {
 			"BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+			"LENGTH_OF_FOLLOW_UP": 30.0,
 			"MULTI_CENTER_STUDY": null
 		},
 		"Rudolph and Feiger, 1999": {
 			"BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+			"LENGTH_OF_FOLLOW_UP": 30.0,
 			"MULTI_CENTER_STUDY": null
 		},
 		"De Wilde et al, 1993": {
 			"BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+			"LENGTH_OF_FOLLOW_UP": 30.0,
 			"MULTI_CENTER_STUDY": null
 		},
 		"Schone and Ludwig, 1993": {
 			"BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+			"LENGTH_OF_FOLLOW_UP": 30.0,
 			"MULTI_CENTER_STUDY": null
 		},
 		"Aberg-Wistedt et al, 2000": {
 			"BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+			"LENGTH_OF_FOLLOW_UP": 30.0,
 			"MULTI_CENTER_STUDY": null
 		},
 		"Ballus et al, 2000": {
 			"BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+			"LENGTH_OF_FOLLOW_UP": 30.0,
 			"MULTI_CENTER_STUDY": null
 		}
 	}

@@ -82,6 +82,7 @@
             id="covariate-select"
             ng-options="covariate for covariate in covariateOptions"
             ng-model="model.covariateOption"
+            ng-change="covariateChange()"
           ></select>
         </label>
         <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">This covariate has missing values.</div>
@@ -98,11 +99,11 @@
                 <input id="covariate-level" 
                   type="number"  
                   ng-model="newLevel"
-                  ng-keypress="addLevelOnEnter(newLevel)"
+                  ng-keypress="addLevelOnEnter($event, newLevel)"
               </label>
             </div>
             <div class="small-3 columns">
-              <button ng-disabled="levelAlreadyPresent(newLevel)" type="button" ng-click="addLevel(newLevel)"  class="postfix">Add level</button>
+              <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel)" type="button" ng-click="addLevel(newLevel)"  class="postfix">Add level</button>
             </div>
             <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">Level already present.</div>
           </div>
