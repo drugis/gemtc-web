@@ -55,6 +55,7 @@ Setup environment variables
     export GEMTC_DB=gemtc
     export GEMTC_DB_USERNAME=gemtc
     export GEMTC_DB_PASSWORD=develop
+    export PATAVI_TASK_DB=patavitask
     export PATAVI_TASK_DB_USERNAME=patavitask
     export PATAVI_TASK_DB_PASSWORD=develop
     export GEMTC_HOST=http://localhost:3001
