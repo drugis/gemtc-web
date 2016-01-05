@@ -26,6 +26,7 @@ function getResult(taskId, callback) {
 }
 
 function getPataviTasksStatus(taskIds, callback) {
+  logger.debug('pataviTaskRepository.getPataviTasksStatus');
   if (taskIds.length === 0) {
     callback(null, []);
   }
@@ -34,6 +35,7 @@ function getPataviTasksStatus(taskIds, callback) {
   });
   db.query('SELECT id, result IS NOT NULL as hasResult FROM patavitask WHERE id in (' + params.join(',') + ')', taskIds, function(error, result) {
     if (error) {
+      logger.error('an error occured during: pataviTaskRepository.getPataviTasksStatus');
       callback(error);
     } else {
       callback(null, result.rows);
