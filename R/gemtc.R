@@ -312,6 +312,15 @@ if(modelType != 'node-split') {
       report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
       list(t1=comp[1], t2=comp[2], quantiles=q)
     })
+    if(modelType == 'regression') {
+      levelReleffects <- lapply(regressor[['levels']], function(level) {
+        apply(comps, 2, function(comp) {
+          q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE, covariate=level))[['summaries']][['quantiles']]
+          report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
+          list(t1=comp[1], t2=comp[2], quantiles=q)
+        })
+      })
+    }
   })
 }
 
