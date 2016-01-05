@@ -24,9 +24,13 @@ define(['angular', 'lodash'], function(angular, _) {
           coefficient: frontEndModel.treatmentInteraction,
           control: frontEndModel.metaRegressionControl.id.toString()
         };
+        if(frontEndModel.levels.length) {
+          model.regressor.levels = frontEndModel.levels
+        }
         delete model.covariateOption;
         delete model.metaRegressionControl;
         delete model.treatmentInteraction;
+        delete model.levels;
       }
       model.modelType = _.omit(model.modelType, 'mainType', 'subType');
       model.modelType.type = frontEndModel.modelType.mainType;

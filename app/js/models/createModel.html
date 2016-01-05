@@ -85,14 +85,37 @@
           ></select>
         </label>
         <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">This covariate has missing values.</div>
+        <div ng-show="variableIsBinary" style="margin-bottom: 2rem;">Variable is binary.</div>
+        <div ng-hide="variableIsBinary">
+          Levels:
+          <ul ng-show="model.levels.length" class="no-bullet">
+            <li ng-repeat="level in model.levels">{{level}}</li>
+          </ul>
+          <span ng-hide="model.levels.length">Default (none defined)</span>
+          <div class="row collapse">
+            <div class="small-9 columns">
+              <label for="covariate-level">
+                <input id="covariate-level" 
+                  type="number"  
+                  ng-model="newLevel"
+                  ng-keypress="addLevelOnEnter(newLevel)"
+              </label>
+            </div>
+            <div class="small-3 columns">
+              <button ng-disabled="levelAlreadyPresent(newLevel)" type="button" ng-click="addLevel(newLevel)"  class="postfix">Add level</button>
+            </div>
+            <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">Level already present.</div>
+          </div>
+        </div>
+        
         <label>Treatment-interaction model</label>
         <div class="stacked-radio">
-          <input type="radio" value="shared" ng-model="model.treatmentInteraction" id="treatment-interaction-type-shared-radio">
+          <input type="radio" value="shared" ng-model="model.treatmentInteraction" id="treatment-interaction-type-shraed-radio">
           <label for="treatment-interaction-type-shared-radio">Shared coefficient</label>
         </div>
         <div class="stacked-radio">
           <input type="radio" value="unrelated" ng-model="model.treatmentInteraction" id="treatment-interaction-type-unrelated-radio">
-          <label for="treatment-interaction-type-unrelated-radio">Unrelated coefiicients</label>
+          <label for="treatment-interaction-type-unrelated-radio">Unrelated coefficients</label>
         </div>
         <label for="meta-regression-control-select">Select control treatment
           <select
