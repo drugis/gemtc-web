@@ -128,7 +128,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
       });
 
-      it('should clean a regression model', function() {
+      it('should clean a binary regression model', function() {
         frontEndModel.modelType = {
           mainType: 'regression'
         };
@@ -137,6 +137,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
           id: 1
         };
         frontEndModel.treatmentInteraction = 'unrelated';
+        frontEndModel.levels = [0, 1];
 
         cleanedModel.modelType = {
           type: 'regression',
@@ -144,8 +145,34 @@ define(['angular', 'angular-mocks', 'services'], function() {
         cleanedModel.regressor = {
           variable: 'COVARIATE',
           coefficient: 'unrelated',
-          control: '1'
+          control: '1',
+          levels: [0, 1]
         };
+
+
+        expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
+      });
+      it('should clean a non-binary regression model with defined levels', function() {
+        frontEndModel.modelType = {
+          mainType: 'regression'
+        };
+        frontEndModel.covariateOption = 'COVARIATE';
+        frontEndModel.metaRegressionControl = {
+          id: 1
+        };
+        frontEndModel.treatmentInteraction = 'unrelated';
+        frontEndModel.levels = [10, 20, 30] ;
+
+        cleanedModel.modelType = {
+          type: 'regression',
+        };
+        cleanedModel.regressor = {
+          variable: 'COVARIATE',
+          coefficient: 'unrelated',
+          control: '1',
+          levels: [10, 20, 30]
+        };
+
 
         expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
       });
