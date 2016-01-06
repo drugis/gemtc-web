@@ -125,11 +125,11 @@ plotToFile <- function(plotFunction, dataType, extension, imageCreationFunction,
 }
 
 plotToSvg <- function(plotFunction, plotNames) {
-  plotToFile(plotFunction, 'svg+xml', '.svg', svg)
+  plotToFile(plotFunction, 'svg+xml', '.svg', svg, plotNames)
 }
 
 plotToPng <- function(plotFunction, plotNames) {
-  plotToFile(plotFunction, 'png', '.png', png)
+  plotToFile(plotFunction, 'png', '.png', png, plotNames)
 }
 
 predict.t <- function(network, n.adapt, n.iter, thin) {
