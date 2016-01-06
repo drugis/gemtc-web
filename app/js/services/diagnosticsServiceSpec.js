@@ -1,5 +1,5 @@
 define(['angular', 'angular-mocks', 'services'], function() {
-  fdescribe('the diagnostics service', function() {
+  describe('the diagnostics service', function() {
 
     var diagnosticsService;
 

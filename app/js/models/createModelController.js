@@ -85,7 +85,11 @@ define(['lodash', 'moment'], function(_, moment) {
     function covariateChange() {
       $scope.variableIsBinary = $scope.model.modelType.mainType === 'regression' 
         && variableIsBinary($scope.model.covariateOption, $scope.problem);
-      $scope.model.levels = [];
+      if($scope.variableIsBinary) {
+        $scope.model.levels = [0, 1];
+      } else {
+        $scope.model.levels = [];
+      }
     }
 
     function buildCovariateOptions(problem) {

@@ -320,21 +320,31 @@ if(modelType != 'node-split') {
           list(t1=comp[1], t2=comp[2], quantiles=q)
         })
       })
+      names(levelReleffects) <- regressor[['levels']]
     }
   })
 }
 
 times$relplot <- system.time({
   #create forest plot files for network analyses
-  if(modelType == "network" || modelType == "regression") {
-    forestPlots <- lapply(treatmentIds, function(treatmentId) {
-      plotToSvg(function() {
-        treatmentN <- which(treatmentIds == treatmentId)
-        forest(relative.effect(result, treatmentId), use.description=TRUE)
-        report('relplot', treatmentN / length(treatmentIds))
-      })
+
+  plotForestPlot <- function(treatmentId) {
+    plotToSvg(function() {
+      treatmentN <- which(treatmentIds == treatmentId)
+      forest(relative.effect(result, treatmentId), use.description=TRUE)
+      report('relplot', treatmentN / length(treatmentIds))
     })
+  }
+  if(modelType == "network" || modelType == "regression") {
+    forestPlots <- lapply(treatmentIds, plotForestPlot)
     names(forestPlots) <- treatmentIds
+    if(regressor != null) {
+      levelForestplots <- lapply(regressor[['levels']], function(level) {
+        lapply(treatmentIds, plotForestPlot)
+        names(forestPlots) <- treatmentIds
+      })
+      names(levelForestplots) <- regressor[['levels']]
+    }
   }
 })
 
