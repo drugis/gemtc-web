@@ -1,5 +1,5 @@
 define(['angular', 'angular-mocks', 'services'], function() {
-  fdescribe('the diagnostics service', function() {
+  describe('the diagnostics service', function() {
 
     var diagnosticsService;
 
@@ -115,110 +115,55 @@ define(['angular', 'angular-mocks', 'services'], function() {
             psrfPlot: 'f'
           }
         };
-        modelType = 'network';
-        psrfPlots = ['a', 'b', 'c', 'd', 'e', 'f'];
-        tracePlots = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
-        var map = diagnosticsService.buildDiagnosticMap(
-          modelType,
-          gelmanDiagnostics,
-          treatments,
-          tracePlots,
-          psrfPlots);
+        var model = {
+          modelType: {
+            type: 'network'
+          }
+        };
+        var tracePlots = {
+          'd.2.3': 'a',
+          'd.2.4': 'c',
+          'd.2.5': 'e',
+          'sd.d': 'g',
+          'd.indirect': 'i',
+          'd.direct': 'k'
+        };
+        var densityPlots = {
+          'd.2.3': 'b',
+          'd.2.4': 'd',
+          'd.2.5': 'f',
+          'sd.d': 'h',
+          'd.indirect': 'j',
+          'd.direct': 'l'
+        };
+        var psrfPlots = {
+          'd.2.3': 'a',
+          'd.2.4': 'b',
+          'd.2.5': 'c',
+          'sd.d': 'd',
+          'd.indirect': 'e',
+          'd.direct': 'f'
+        };
+        var result = {
+          results: {
+            gelmanDiagnostics: gelmanDiagnostics,
+            convergencePlots: {
+              trace: tracePlots,
+              density: densityPlots,
+              psrf: psrfPlots
+            }
+          }
+        };
+
+        var problem = {
+          treatments: treatments
+        };
+
+        var map = diagnosticsService.buildDiagnosticMap(model, problem, result);
         expect(map).toEqual(expected);
 
       });
 
-      it('should not include direct and indirect if model type is network', function() {
-        var treatments = [{
-          id: 2,
-          name: 'Fluoxetine'
-        }, {
-          id: 3,
-          name: 'Paroxetine'
-        }, {
-          id: 4,
-          name: 'Venlafaxine'
-        }, {
-          id: 5,
-          name: 'Sertraline'
-        }];
-        var gelmanDiagnostics = {
-          'd.2.3': {
-            'Point est.': 1.0004,
-            'Upper C.I.': 1.0011
-          },
-          'd.2.4': {
-            'Point est.': 1.0005,
-            'Upper C.I.': 1.0017
-          },
-          'd.2.5': {
-            'Point est.': 1.0002,
-            'Upper C.I.': 1.0005
-          },
-          'deviance': {
-            'Point est.': 1.0002,
-            'Upper C.I.': 1.0005
-          },
-          'sd.d': {
-            'Point est.': 1.0007,
-            'Upper C.I.': 1.0011
-          },
-          'd.indirect': {
-            'Point est.': 1.0008,
-            'Upper C.I.': 1.0012
-          }
-        };
-
-        var expected = {
-          'd.2.3 (Fluoxetine, Paroxetine)': {
-            key: 'd.2.3',
-            label: 'd.2.3 (Fluoxetine, Paroxetine)',
-            'Point est.': 1.0004,
-            'Upper C.I.': 1.0011,
-            tracePlot: 'a',
-            densityPlot: 'b',
-            psrfPlot: 'a'
-          },
-          'd.2.4 (Fluoxetine, Venlafaxine)': {
-            key: 'd.2.4',
-            label: 'd.2.4 (Fluoxetine, Venlafaxine)',
-            'Point est.': 1.0005,
-            'Upper C.I.': 1.0017,
-            tracePlot: 'c',
-            densityPlot: 'd',
-            psrfPlot: 'b'
-          },
-          'd.2.5 (Fluoxetine, Sertraline)': {
-            key: 'd.2.5',
-            label: 'd.2.5 (Fluoxetine, Sertraline)',
-            'Point est.': 1.0002,
-            'Upper C.I.': 1.0005,
-            tracePlot: 'e',
-            densityPlot: 'f',
-            psrfPlot: 'c'
-          },
-          'sd.d (Random effects standard deviation)': {
-            key: 'sd.d',
-            label: 'sd.d (Random effects standard deviation)',
-            'Point est.': 1.0007,
-            'Upper C.I.': 1.0011,
-            tracePlot: 'k',
-            densityPlot: 'l',
-            psrfPlot: 'f'
-          }
-        };
-        modelType = 'node-split';
-        psrfPlots = ['a', 'b', 'c', 'd', 'e', 'f'];
-        tracePlots = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
-        var map = diagnosticsService.buildDiagnosticMap(
-          modelType,
-          gelmanDiagnostics,
-          treatments,
-          tracePlots,
-          psrfPlots);
-        expect(map).toEqual(expected);
-
-      });
     });
 
     describe('compareDiagnostics', function() {
