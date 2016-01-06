@@ -1,6 +1,6 @@
 var logger = require('./logger');
 var dbUtil = require('./dbUtil');
-var db = require('./db')(dbUtil.buildPataviDBUrl());
+var db = require('./db')(dbUtil.pataviDBUrl);
 
 module.exports = {
   getResult: getResult,

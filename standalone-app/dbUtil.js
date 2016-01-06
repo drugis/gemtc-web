@@ -1,8 +1,8 @@
 var logger = require('./logger');
 
 module.exports = {
-  buildPataviDBUrl: buildPataviDBUrl,
-  buildGemtcDBUrl: buildGemtcDBUrl
+  pataviDBUrl: buildPataviDBUrl(),
+  gemtcDBUrl: buildGemtcDBUrl()
 }
 
 function buildPataviDBUrl() {
@@ -11,7 +11,7 @@ function buildPataviDBUrl() {
     env.PATAVI_TASK_DB,
     env.PATAVI_TASK_DB_USERNAME,
     env.PATAVI_TASK_DB_PASSWORD);
-  logger.debug('pataviDBUrl: ' + url);
+  logger.info('Patavi db url: ' + url);
   return url;
 }
 
@@ -21,7 +21,7 @@ function buildGemtcDBUrl() {
     env.GEMTC_DB,
     env.GEMTC_DB_USERNAME,
     env.GEMTC_DB_PASSWORD);
-  logger.debug('gemtc DB url: ' + url);
+  logger.info('Gemtc db url: ' + url);
   return url;
 }
 

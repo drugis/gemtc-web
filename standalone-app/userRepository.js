@@ -1,6 +1,6 @@
 var
   dbUtil = require('./dbUtil'),
-  db = require('./db')(dbUtil.buildGemtcDBUrl()),
+  db = require('./db')(dbUtil.gemtcDBUrl),
   logger = require('./logger');
 
 var findUserByGoogleIdQuery = '' +

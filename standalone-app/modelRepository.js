@@ -1,8 +1,8 @@
-var logger = require('./logger'),
-  dbUtil = require('./dbUtil'),
-  _ = require('lodash'),
-  db = require('./db')(dbUtil.buildGemtcDBUrl()),
-  columnString = 'title, analysisId, linearModel, burn_in_iterations, inference_iterations, ' +
+var logger = require('./logger');
+var dbUtil = require('./dbUtil');
+var _ = require('lodash');
+var db = require('./db')(dbUtil.gemtcDBUrl);
+var columnString = 'title, analysisId, linearModel, burn_in_iterations, inference_iterations, ' +
     ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior, regressor';
 
 module.exports = {
