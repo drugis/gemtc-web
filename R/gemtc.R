@@ -106,7 +106,7 @@ readFile <- function(fileName) {
   readChar(fileName, file.info(fileName)$size)
 }
 
-plotToFile <- function(plotFunction, dataType, extension, imageCreationFunction, plotNames) {
+plotToFile <- function(plotFunction, dataType, extension, imageCreationFunction) {
   prefix <- tempfile()
   imageName <- paste(prefix, '-%05d', extension, sep='')
   imageCreationFunction(imageName)
@@ -115,21 +115,19 @@ plotToFile <- function(plotFunction, dataType, extension, imageCreationFunction,
 
   # read & delete plot files
   filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
-  plots <- lapply(filenames, function(filename) {
+  lapply (filenames, function(filename) {
     contents <- paste0("data:image/", dataType, ";base64,", base64encode(filename))
     file.remove(filename)
     contents
   })
-  names(plots) <- plotNames
-  plots
 }
 
-plotToSvg <- function(plotFunction, plotNames) {
-  plotToFile(plotFunction, 'svg+xml', '.svg', svg, plotNames)
+plotToSvg <- function(plotFunction) {
+  plotToFile(plotFunction, 'svg+xml', '.svg', svg)
 }
 
-plotToPng <- function(plotFunction, plotNames) {
-  plotToFile(plotFunction, 'png', '.png', png, plotNames)
+plotToPng <- function(plotFunction) {
+  plotToFile(plotFunction, 'png', '.png', png)
 }
 
 predict.t <- function(network, n.adapt, n.iter, thin) {
@@ -325,12 +323,11 @@ times$relplot <- system.time({
         treatmentN <- which(treatmentIds == treatmentId)
         forest(relative.effect(result, treatmentId), use.description=TRUE)
         report('relplot', treatmentN / length(treatmentIds))
-      }, treatmentIds)
+      })
     })
+    names(forestPlots) <- treatmentIds
   }
 })
-
-paramNames <- colnames(result[['samples']][[1]])
 
 times$forest <- system.time({
     # create forest plot for pairwise analysis
@@ -340,17 +337,16 @@ times$forest <- system.time({
         t2 <- as.character(params[['modelType']][['details']][['to']][['id']])
 	print(paste(t1, t2, class(t1)))
         pwforest(result, t1, t2)
-      }, paramNames)
+      })
     }
 })
 report('forestplot', 1.0)
-
 
 times$traceplot <- system.time({
     #create results plot
     tracePlot <- plotToPng(function() {
       plot(result, auto.layout=FALSE)
-    }, rep(paramNames, each=2))
+    })
 })
 report('traceplot', 1.0)
 
@@ -358,7 +354,7 @@ times$psrfplot <- system.time({
     #create gelman plot
     gelmanPlot <- plotToPng(function() {
       gelman.plot(result, auto.layout=FALSE, ask=FALSE)
-    }, paramNames)
+    })
 })
 report('psrfplot', 1.0)
 
@@ -366,14 +362,14 @@ times$deviancePlot <- system.time({
     #create deviance plot
     deviancePlot <- plotToSvg(function() {
       plotDeviance(result)
-    }, 'deviance')
+    })
 })
 report('deviancePlot', 1.0)
 
 if(modelType == 'node-split') {
   densityPlot <- plotToPng(function() {
     nsdensity(result)
-  }, c('direct', 'indirect'))
+  })
 }
 report('densityplot', 1.0)
 
