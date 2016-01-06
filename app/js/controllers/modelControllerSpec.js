@@ -153,9 +153,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
 
           describe('when the problem is loaded', function() {
             beforeEach(function() {
-              console.log('resolving');
               problemDeferred.resolve(mockProblem);
-              console.log('resolved');
               scope.$apply();
             });
 

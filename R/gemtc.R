@@ -115,7 +115,7 @@ plotToFile <- function(plotFunction, dataType, extension, imageCreationFunction)
 
   # read & delete plot files
   filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
-  lapply (filenames, function(filename) {
+  lapply(filenames, function(filename) {
     contents <- paste0("data:image/", dataType, ";base64,", base64encode(filename))
     file.remove(filename)
     contents
@@ -142,7 +142,7 @@ predict.t <- function(network, n.adapt, n.iter, thin) {
     'forestplot'=0.1,
     'traceplot'=0.062 * n.saved * 0.001 * n.iter / thin,
     'psrfplot'=(0.04 + 0.007 * n.saved) * 0.001 * n.iter / thin,
-    'densityplot'=1, # FIXME
+    'nodeSplitDensityPlot'=1, # FIXME
     'deviancePlot'=1, #FIXME
     'summary'=0.0075 * n.saved * 0.001 * n.iter / thin
   )
@@ -354,18 +354,24 @@ times$forest <- system.time({
       forestPlot <- plotToSvg(function() {
         t1 <- as.character(params[['modelType']][['details']][['from']][['id']])
         t2 <- as.character(params[['modelType']][['details']][['to']][['id']])
-	print(paste(t1, t2, class(t1)))
         pwforest(result, t1, t2)
       })
     }
 })
 report('forestplot', 1.0)
 
+paramNames <- colnames(result[['samples']][[1]])
+
 times$traceplot <- system.time({
     #create results plot
     tracePlot <- plotToPng(function() {
       plot(result, auto.layout=FALSE)
     })
+    sel <- seq(2, length(tracePlot), by=2)
+    densityPlot <- tracePlot[sel]
+    tracePlot <- tracePlot[-sel]
+    names(densityPlot) <- paramNames
+    names(tracePlot) <- paramNames
 })
 report('traceplot', 1.0)
 
@@ -374,6 +380,7 @@ times$psrfplot <- system.time({
     gelmanPlot <- plotToPng(function() {
       gelman.plot(result, auto.layout=FALSE, ask=FALSE)
     })
+    names(gelmanPlot) <- paramNames
 })
 report('psrfplot', 1.0)
 
@@ -386,11 +393,11 @@ times$deviancePlot <- system.time({
 report('deviancePlot', 1.0)
 
 if(modelType == 'node-split') {
-  densityPlot <- plotToPng(function() {
+  nodeSplitDensityPlot <- plotToPng(function() {
     nsdensity(result)
   })
 }
-report('densityplot', 1.0)
+report('nodeSplitDensityPlot', 1.0)
 
 times$summary <- system.time({
   summary <- summary(result)
@@ -420,15 +427,17 @@ report('summary', 1.0)
       summary[['studyForestPlot']] <- forestPlot
     }
     if(modelType == 'node-split') {
-      summary[['densityPlot']] <- densityPlot
+      summary[['nodeSplitDensityPlot']] <- nodeSplitDensityPlot
     }
     if(modelType == 'regression') {
       summary[['regressor']] <- params[['regressor']]
       summary[['levelForestplots']] <- levelForestplots
       summary[['levelReleffects']] <- levelReleffects
     }
-    summary[['tracePlot']] <- tracePlot
-    summary[['gelmanPlot']] <- gelmanPlot
+    summary[['convergencePlots']] <- list(
+      trace=tracePlot,
+      density=densityPlot,
+      psrf=gelmanPlot)
     summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
     deviance <- result[['deviance']]
     summary[['devianceStatistics']][['perArmDeviance']] <- wrap.arms(deviance[['dev.ab']], model[['network']])
