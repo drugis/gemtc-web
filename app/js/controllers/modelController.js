@@ -99,11 +99,9 @@ define(['lodash'], function(_) {
         var isLogScale = result.results.logScale;
         $scope.scaleName = AnalysisService.getScaleName($scope.model);
         $scope.diagnosticMap = DiagnosticsService.buildDiagnosticMap(
-          $scope.model.modelType.type,
-          result.results.gelmanDiagnostics,
-          $scope.problem.treatments,
-          result.results.tracePlot,
-          result.results.gelmanPlot
+          $scope.model,
+          $scope.problem,
+          $scope.result
         );
 
         var unsorted = _.values($scope.diagnosticMap);
