@@ -424,6 +424,8 @@ report('summary', 1.0)
     }
     if(modelType == 'regression') {
       summary[['regressor']] <- params[['regressor']]
+      summary[['levelForestplots']] <- levelForestplots
+      summary[['levelReleffects']] <- levelReleffects
     }
     summary[['tracePlot']] <- tracePlot
     summary[['gelmanPlot']] <- gelmanPlot
