@@ -144,6 +144,7 @@ predict.t <- function(network, n.adapt, n.iter, thin) {
     'psrfplot'=(0.04 + 0.007 * n.saved) * 0.001 * n.iter / thin,
     'nodeSplitDensityPlot'=1, # FIXME
     'deviancePlot'=1, #FIXME
+    'covariateEffectPlot'=1, #FIXME
     'summary'=0.0075 * n.saved * 0.001 * n.iter / thin
   )
 }
@@ -380,6 +381,19 @@ if(modelType == 'node-split') {
 }
 report('nodeSplitDensityPlot', 1.0)
 
+if(modelType == 'regression') {
+  treatmentIds <- as.character(network[['treatments']][['id']])
+  control <- model[['regressor']][['control']]
+  controlIdx <- which(treatmentIds == control)
+  t1 <- rep(control, length(treatmentIds) - 1)
+  t2 <- treatmentIds[-controlIdx]
+  covariateEffectPlot <- plotToPng(function() {
+    plotCovariateEffect(result, t1, t2)
+  })
+  names(covariateEffectPlot) <- t2
+}
+report('covariateEffectPlot', 1.0)
+
 times$summary <- system.time({
   summary <- summary(result)
 })
@@ -412,6 +426,7 @@ report('summary', 1.0)
     }
     if(modelType == 'regression') {
       summary[['regressor']] <- params[['regressor']]
+      summary[['covariateEffectPlot']] <- covariateEffectPlot
     }
     summary[['convergencePlots']] <- list(
       trace=tracePlot,
