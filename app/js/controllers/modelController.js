@@ -84,6 +84,21 @@ define(['lodash'], function(_) {
       });
     }
 
+    // transform cov plots object to  a list of objects, each object has treatment name as key and plot as value
+    function buildCovariatePlotOptions(result, problem) {
+      var treatmentsById = _.indexBy(problem.treatments, 'id');
+      return Object
+        .keys(result.results.covariateEffectPlot)
+        .map(function(key) {
+          var covPlotObject = {};
+          covPlotObject[treatmentsById[key].name] = result.results.covariateEffectPlot[key];
+          return covPlotObject;
+        })
+      sort(function(a, b) {
+        return Object.keys(a)[0].localeCompare(Object.keys(b)[0]);
+      });
+    }
+
 
     function pataviRunSuccessCallback(result) {
       return ProblemResource.get({
@@ -117,6 +132,10 @@ define(['lodash'], function(_) {
           $scope.controlTreatment = _.find(problem.treatments, function(treatment) {
             return treatment.id == $scope.model.regressor.control;
           });
+
+          // build cov plot options
+          $scope.covariateEffectPlots = buildCovariatePlotOptions($scope.result , $scope.problem);
+
         }
         $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
       });
