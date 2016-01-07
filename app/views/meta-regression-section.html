@@ -1,0 +1,17 @@
+<div class="row" ng-if="result.results" style="padding-top: 1rem;">
+  <div class="columns large-2 medium-4">
+    <h3 id="model-results-results-header" class="main-category-header">Meta regression</h3>
+  </div>
+  <div class="columns large-7 medium-6 end">
+    <hr>
+  </div>
+</div>
+
+<div class="row" ng-show="result.results && model.modelType.type === 'regression'" >
+  <div class="columns large-4 end">
+    <select     
+      ng-options="covariateEffectPlot as covariateEffectPlot.treatmentName for covariateEffectPlot in covariateEffectPlots" 
+      ng-model="covariateEffectPlot"></select>
+    <img ng-src="{{covariateEffectPlot.plot}}" export file-name="'covariate-effect-plot'">
+  </div>
+</div>
