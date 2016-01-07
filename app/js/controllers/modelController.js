@@ -111,9 +111,16 @@ define(['lodash'], function(_) {
         $scope.diagnostics = unsorted.sort(DiagnosticsService.compareDiagnostics);
 
         if ($scope.model.modelType.type !== 'node-split') {
-          var relativeEffects = result.results.relativeEffects;
           result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
-          $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
+          var relativeEffects = result.results.relativeEffects;
+
+          $scope.relativeEffectsTables = _.map(relativeEffects, function(relativeEffect, key) {
+            return {
+              level: key,
+              table: RelativeEffectsTableService.buildTable(relativeEffect, isLogScale, problem.treatments)
+            };
+          });
+          $scope.relativeEffectsTable = _.find($scope.relativeEffectsTables, function(x) { return x.level === 'centering'; })
         }
         $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         if ($scope.model.regressor) {

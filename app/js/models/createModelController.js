@@ -153,7 +153,7 @@ define(['lodash', 'moment'], function(_, moment) {
 
     function addLevel(newLevel) {
       $scope.model.levels.push(newLevel);
-      $scope.model.levels.sort();
+      $scope.model.levels.sort(function(a, b) { return a - b; });
       $scope.newLevel = undefined;
     }
 
