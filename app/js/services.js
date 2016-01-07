@@ -11,5 +11,6 @@ define(function(require) {
     .factory('AnalysisService', require('gemtc-web/analyses/analysisService'))
     .factory('DiagnosticsService', require('gemtc-web/services/diagnosticsService'))
     .factory('NodeSplitOverviewService', require('gemtc-web/models/nodeSplitOverviewService'))
+    .factory('MetaRegressionService', require('gemtc-web/models/metaRegressionService'))
     ;
 });
