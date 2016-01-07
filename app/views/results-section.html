@@ -39,6 +39,13 @@
 <div class="row" style="padding-top: 1rem;" ng-if="result.results && model.modelType.type !== 'node-split'">
   <div class="columns large-12">
     <p><strong>Relative effects table <data-inline-help help-key="relative-effects"></data-inline-help></strong></p>
+    <select
+      ng-if="relativeEffectsTables.length > 1"
+      ng-options="relativeEffectsTable in relativeEffectsTables"
+      ng-model="relativeEffectsTable"
+      >
+      
+    </select>
     <table export>
       <caption>Comparison of the included interventions: {{::scaleName}} (95% CrI). Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
       </caption>

@@ -34,6 +34,10 @@ define(['lodash', 'moment'], function(_, moment) {
     $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
     $scope.heterogeneityPriorTypechange = heterogeneityPriorTypechange;
     $scope.heterogeneityParamsChange = heterogeneityParamsChange;
+    $scope.covariateChange = covariateChange;
+    $scope.addLevel = addLevel;
+    $scope.addLevelOnEnter = addLevelOnEnter;
+    $scope.levelAlreadyPresent = levelAlreadyPresent;
     $scope.isNumber = isNumber;
     $scope.cleanModel = modelDefer;
     $scope.problem = ProblemResource.get($stateParams);
@@ -63,6 +67,7 @@ define(['lodash', 'moment'], function(_, moment) {
         $scope.covariateOptions = buildCovariateOptions(problem);
         $scope.model.covariateOption = $scope.covariateOptions[0];
         $scope.model.metaRegressionControl = problem.treatments[0];
+        $scope.model.levels = [];
       }
       return problem;
     });
@@ -74,6 +79,16 @@ define(['lodash', 'moment'], function(_, moment) {
         $scope.model.heterogeneityPrior = {
           type: 'automatic'
         }
+      }
+    }
+
+    function covariateChange() {
+      $scope.variableIsBinary = $scope.model.modelType.mainType === 'regression' 
+        && variableIsBinary($scope.model.covariateOption, $scope.problem);
+      if($scope.variableIsBinary) {
+        $scope.model.levels = [0, 1];
+      } else {
+        $scope.model.levels = [];
       }
     }
 
@@ -130,6 +145,30 @@ define(['lodash', 'moment'], function(_, moment) {
       });
     }
 
+    function variableIsBinary(covariateName, problem) {
+      return !_.find(problem.studyLevelCovariates, function(covariate) {
+        return covariate[covariateName] !== 0.0 && covariate[covariateName] !== 1.0;
+      });
+    }
+
+    function addLevel(newLevel) {
+      $scope.model.levels.push(newLevel);
+      $scope.model.levels.sort();
+      $scope.newLevel = undefined;
+    }
+
+    function addLevelOnEnter($event, newLevel) {
+      if ($event.which === 13 && !levelAlreadyPresent(newLevel)) { // 13 == enter key
+        addLevel(newLevel);
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+    }
+
+    function levelAlreadyPresent(newLevel) {
+      return _.contains($scope.model.levels, newLevel);
+    }
+
     function isAddButtonDisabled(model, problem) {
 
       $scope.selectedCovariateValueHasNullValues = model.modelType.mainType === 'regression' && variableHasNAValues(model.covariateOption, problem);
@@ -140,8 +179,7 @@ define(['lodash', 'moment'], function(_, moment) {
         !model.likelihoodLink ||
         model.likelihoodLink.compatibility === 'incompatible' ||
         model.outcomeScale.value <= 0 ||
-        (model.outcomeScale.type === 'fixed' && !angular.isNumber(model.outcomeScale.value))
-        || $scope.selectedCovariateValueHasNullValues;
+        (model.outcomeScale.type === 'fixed' && !angular.isNumber(model.outcomeScale.value)) || $scope.selectedCovariateValueHasNullValues;
     }
 
     function isNumber(value) {

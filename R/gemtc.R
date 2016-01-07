@@ -235,7 +235,7 @@ gemtc <- function(params) {
 
     treatments <- do.call(rbind, lapply(params[['treatments']],
       function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
-    
+
     covars <- params[['studyLevelCovariates']]
     studies <- do.call(rbind, lapply(names(covars),
       function(studyName) {
@@ -308,25 +308,47 @@ if(modelType != 'node-split') {
     comps <- combn(treatmentIds, 2)
     t1 <- comps[1,]
     t2 <- comps[2,]
-    releffect <- apply(comps, 2, function(comp) {
+    releffect <- list(centering=apply(comps, 2, function(comp) {
       q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
       report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
       list(t1=comp[1], t2=comp[2], quantiles=q)
-    })
+    }))
+    if(modelType == 'regression') {
+      levelReleffects <- lapply(regressor[['levels']], function(level) {
+        apply(comps, 2, function(comp) {
+          q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE, covariate=level))[['summaries']][['quantiles']]
+          report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
+          list(t1=comp[1], t2=comp[2], quantiles=q)
+        })
+      })
+      names(levelReleffects) <- regressor[['levels']]
+      releffect <- c(releffect, levelReleffects)
+    }
   })
 }
 
 times$relplot <- system.time({
   #create forest plot files for network analyses
-  if(modelType == "network" || modelType == "regression") {
-    forestPlots <- lapply(treatmentIds, function(treatmentId) {
-      plotToSvg(function() {
-        treatmentN <- which(treatmentIds == treatmentId)
-        forest(relative.effect(result, treatmentId), use.description=TRUE)
-        report('relplot', treatmentN / length(treatmentIds))
-      })
+
+  plotForestPlot <- function(treatmentId) {
+    plotToSvg(function() {
+      treatmentN <- which(treatmentIds == treatmentId)
+      forest(relative.effect(result, treatmentId), use.description=TRUE)
+      report('relplot', treatmentN / length(treatmentIds))
     })
-    names(forestPlots) <- treatmentIds
+  }
+  if(modelType == "network" || modelType == "regression") {
+    centeringForestplot <- lapply(treatmentIds, plotForestPlot)
+    names(centeringForestplot) <- treatmentIds
+    forestPlots <- list(centering=centeringForestplot)
+    if(!is.null(regressor)) {
+      levelForestplots <- lapply(regressor[['levels']], function(level) {
+        levelForestplot <- lapply(treatmentIds, plotForestPlot)
+        names(levelForestplot) <- treatmentIds
+      })
+      names(levelForestplots) <- regressor[['levels']]
+      forestPlots <- c(forestPlots, levelForestplots)
+    }
   }
 })
 

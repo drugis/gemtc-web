@@ -339,7 +339,6 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
         expect(scope.isAddButtonDisabled(model, problem)).toBeTruthy();
       });
-
     });
 
 
