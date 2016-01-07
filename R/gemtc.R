@@ -234,7 +234,7 @@ gemtc <- function(params) {
 
     treatments <- do.call(rbind, lapply(params[['treatments']],
       function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
-    
+
     covars <- params[['studyLevelCovariates']]
     studies <- do.call(rbind, lapply(names(covars),
       function(studyName) {
@@ -340,10 +340,10 @@ times$relplot <- system.time({
     centeringForestplot <- lapply(treatmentIds, plotForestPlot)
     names(centeringForestplot) <- treatmentIds
     forestPlots <- list(centering=centeringForestplot)
-    if(regressor != null) {
+    if(!is.null(regressor)) {
       levelForestplots <- lapply(regressor[['levels']], function(level) {
-        lapply(treatmentIds, plotForestPlot)
-        names(forestPlots) <- treatmentIds
+        levelForestplot <- lapply(treatmentIds, plotForestPlot)
+        names(levelForestplot) <- treatmentIds
       })
       names(levelForestplots) <- regressor[['levels']]
       forestPlots <- c(forestPlots, levelForestplots)
