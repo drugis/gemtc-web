@@ -2,16 +2,17 @@
 define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
-    'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService'
+    'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService'
   ];
   var ModelController = function($scope, $modal, $state, $stateParams, gemtcRootPath, ModelResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, AnalysisService,
-    DevianceStatisticsService) {
+    DevianceStatisticsService, MetaRegressionService) {
 
     $scope.resultsViewTemplate = gemtcRootPath + 'views/results-section.html';
     $scope.modelSettingsViewTemplate = gemtcRootPath + 'views/model-settings-section.html';
     $scope.convergenceDiagnosticsViewTemplate = gemtcRootPath + 'views/convergence-diagnostics-section.html';
     $scope.modelFitViewTemplate = gemtcRootPath + 'views/model-fit-section.html';
+    $scope.metaRegressionTemplate = gemtcRootPath + 'views/meta-regression-section.html';
 
     $scope.analysis = AnalysisResource.get($stateParams);
     $scope.progress = {
@@ -84,20 +85,7 @@ define(['lodash'], function(_) {
       });
     }
 
-    // transform cov plots object to  a list of objects, each object has treatment name as key and plot as value
-    function buildCovariatePlotOptions(result, problem) {
-      var treatmentsById = _.indexBy(problem.treatments, 'id');
-      return Object
-        .keys(result.results.covariateEffectPlot)
-        .map(function(key) {
-          var covPlotObject = {};
-          covPlotObject[treatmentsById[key].name] = result.results.covariateEffectPlot[key];
-          return covPlotObject;
-        })
-      sort(function(a, b) {
-        return Object.keys(a)[0].localeCompare(Object.keys(b)[0]);
-      });
-    }
+
 
 
     function pataviRunSuccessCallback(result) {
@@ -134,8 +122,8 @@ define(['lodash'], function(_) {
           });
 
           // build cov plot options
-          $scope.covariateEffectPlots = buildCovariatePlotOptions($scope.result , $scope.problem);
-
+          $scope.covariateEffectPlots = MetaRegressionService.buildCovariatePlotOptions($scope.result , $scope.problem);
+          $scope.covariateEffectPlot = $scope.covariateEffectPlots[0];
         }
         $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
       });

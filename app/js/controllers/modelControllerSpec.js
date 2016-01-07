@@ -22,6 +22,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       relativeEffectsTableService,
       devianceStatisticsServiceMock,
       diagnosticsService,
+      metaRegressionService,
       analysisServiceMock,
       stateMock,
       modalMock;
@@ -79,6 +80,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
       stateMock = jasmine.createSpyObj('$state', ['reload']);
       modalMock = jasmine.createSpyObj('$modal', ['open']);
+      metaRegressionService = jasmine.createSpyObj('MetaRegressionService', ['buildCovariatePlotOptions']);
 
       $controller('ModelController', {
         $scope: scope,
@@ -94,7 +96,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         DiagnosticsService: diagnosticsService,
         AnalysisService: analysisServiceMock,
         DevianceStatisticsService: devianceStatisticsServiceMock,
-        gemtcRootPath: ''
+        gemtcRootPath: '',
+        MetaRegressionService: metaRegressionService
       });
     }));
 
