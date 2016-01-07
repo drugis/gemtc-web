@@ -86,27 +86,28 @@
           ></select>
         </label>
         <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">This covariate has missing values.</div>
-        <div ng-show="variableIsBinary" style="margin-bottom: 2rem;">Variable is binary.</div>
+        <div ng-show="variableIsBinary" style="margin-bottom: 2rem;">Variable is binary (i.e. levels are [0, 1]).</div>
         <div ng-hide="variableIsBinary">
-          Levels:
-          <ul ng-show="model.levels.length" class="no-bullet">
-            <li ng-repeat="level in model.levels">{{level}}</li>
-          </ul>
-          <span ng-hide="model.levels.length">Default (none defined)</span>
-          <div class="row collapse">
-            <div class="small-9 columns">
-              <label for="covariate-level">
-                <input id="covariate-level" 
-                  type="number"  
+          <label>Levels
+            <ul ng-show="model.levels.length" class="no-bullet">
+              <li ng-repeat="level in model.levels"><strong><label>{{level}}</label></strong></li>
+            </ul>
+            <span ng-hide="model.levels.length">Default (none defined)</span>
+            <div class="row collapse">
+              <div class="small-9 columns">
+                <label for="covariate-level">
+                  <input id="covariate-level"
+                  type="number"
                   ng-model="newLevel"
                   ng-keypress="addLevelOnEnter($event, newLevel)"
-              </label>
+                </label>
+              </div>
+              <div class="small-3 columns">
+                <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel)" type="button" ng-click="addLevel(newLevel)"  class="postfix">Add level</button>
+              </div>
+              <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">Level already present.</div>
             </div>
-            <div class="small-3 columns">
-              <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel)" type="button" ng-click="addLevel(newLevel)"  class="postfix">Add level</button>
-            </div>
-            <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">Level already present.</div>
-          </div>
+          </label>
         </div>
         
         <label>Treatment-interaction model</label>

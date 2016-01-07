@@ -40,8 +40,8 @@
   <div class="columns large-12">
     <p><strong>Relative effects table <data-inline-help help-key="relative-effects"></data-inline-help></strong></p>
     <select
-      ng-if="relativeEffectsTables.length > 1"
-      ng-options="relativeEffectsTable in relativeEffectsTables"
+      ng-show="relativeEffectsTables.length > 1"
+      ng-options="relativeEffectsTable as relativeEffectsTable.level for relativeEffectsTable in relativeEffectsTables"
       ng-model="relativeEffectsTable"
       >
       
@@ -49,7 +49,7 @@
     <table export>
       <caption>Comparison of the included interventions: {{::scaleName}} (95% CrI). Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
       </caption>
-      <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.rows">
+      <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.table.rows">
         <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
           <span ng-switch-when="effect">
             {{relativeEffectsCell.mean | number: 3}} ({{relativeEffectsCell.lowerBound | number: 3}}, {{relativeEffectsCell.upperBound | number: 3}})
