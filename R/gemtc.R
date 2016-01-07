@@ -307,11 +307,11 @@ if(modelType != 'node-split') {
     comps <- combn(treatmentIds, 2)
     t1 <- comps[1,]
     t2 <- comps[2,]
-    releffect <- apply(comps, 2, function(comp) {
+    releffect <- list(centering=apply(comps, 2, function(comp) {
       q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
       report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
       list(t1=comp[1], t2=comp[2], quantiles=q)
-    })
+    }))
     if(modelType == 'regression') {
       levelReleffects <- lapply(regressor[['levels']], function(level) {
         apply(comps, 2, function(comp) {
@@ -321,6 +321,7 @@ if(modelType != 'node-split') {
         })
       })
       names(levelReleffects) <- regressor[['levels']]
+      releffect <- c(releffect, levelReleffects)
     }
   })
 }
@@ -336,14 +337,16 @@ times$relplot <- system.time({
     })
   }
   if(modelType == "network" || modelType == "regression") {
-    forestPlots <- lapply(treatmentIds, plotForestPlot)
-    names(forestPlots) <- treatmentIds
+    centeringForestplot <- lapply(treatmentIds, plotForestPlot)
+    names(centeringForestplot) <- treatmentIds
+    forestPlots <- list(centering=centeringForestplot)
     if(regressor != null) {
       levelForestplots <- lapply(regressor[['levels']], function(level) {
         lapply(treatmentIds, plotForestPlot)
         names(forestPlots) <- treatmentIds
       })
       names(levelForestplots) <- regressor[['levels']]
+      forestPlots <- c(forestPlots, levelForestplots)
     }
   }
 })
@@ -431,8 +434,6 @@ report('summary', 1.0)
     }
     if(modelType == 'regression') {
       summary[['regressor']] <- params[['regressor']]
-      summary[['levelForestplots']] <- levelForestplots
-      summary[['levelReleffects']] <- levelReleffects
     }
     summary[['convergencePlots']] <- list(
       trace=tracePlot,
