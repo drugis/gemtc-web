@@ -331,14 +331,10 @@ if(modelType != 'node-split') {
 times$relplot <- system.time({
   #create forest plot files for network analyses
 
-  plotForestPlot <- function(treatmentId, level=NULL) {
+  plotForestPlot <- function(treatmentId, level=NA) {
     plotToSvg(function() {
       treatmentN <- which(treatmentIds == treatmentId)
-      if(is.null(level)) {
-        forest(relative.effect(result, treatmentId), use.description=TRUE)
-      } else {
-        forest(relative.effect(result, treatmentId, covariate=level), use.description=TRUE)
-      }
+      forest(relative.effect(result, treatmentId, covariate=level), use.description=TRUE)
       report('relplot', treatmentN / length(treatmentIds))
     })
   }
@@ -442,7 +438,7 @@ report('summary', 1.0)
     summary[['outcomeScale']] <- model[['om.scale']]
     if(modelType != 'node-split') {
       summary[['relativeEffects']] <- releffect
-      summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
+      summary[['rankProbabilities']] <- list(centering=wrap.matrix(rank.probability(result)))
     }
     summary[['alternatives']] <- names(summary[['rankProbabilities']])
     if(modelType == "network" || modelType == "regression") {
@@ -458,6 +454,11 @@ report('summary', 1.0)
       summary[['regressor']] <- params[['regressor']]
       summary[['regressor']][['modelRegressor']] <- regressor[['modelRegressor']]
       summary[['covariateEffectPlot']] <- covariateEffectPlot
+      levelRankProbabilities <- lapply(regressor[['levels']], function(level) {
+        wrap.matrix(rank.probability(result, covariate=level))
+      })
+      names(levelRankProbabilities) <- regressor[['levels']]
+      summary[['rankProbabilities']] <- c(summary[['rankProbabilities']], levelRankProbabilities)
     }
     summary[['convergencePlots']] <- list(
       trace=tracePlot,

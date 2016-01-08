@@ -64,9 +64,17 @@ define(['angular', 'lodash'], function(angular, _) {
       }
     }
 
+    function variableIsBinary(covariateName, problem) {
+      return !_.find(problem.studyLevelCovariates, function(covariate) {
+        return covariate[covariateName] !== 0.0 && covariate[covariateName] !== 1.0
+          && covariate[covariateName] !== 0 && covariate[covariateName] !== 1;
+      });
+    }
+
     return {
       cleanModel: cleanModel,
-      createModelBatch: createModelBatch
+      createModelBatch: createModelBatch,
+      variableIsBinary: variableIsBinary
     };
   };
 
