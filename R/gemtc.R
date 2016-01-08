@@ -330,10 +330,14 @@ if(modelType != 'node-split') {
 times$relplot <- system.time({
   #create forest plot files for network analyses
 
-  plotForestPlot <- function(treatmentId) {
+  plotForestPlot <- function(treatmentId, level=NULL) {
     plotToSvg(function() {
       treatmentN <- which(treatmentIds == treatmentId)
-      forest(relative.effect(result, treatmentId), use.description=TRUE)
+      if(is.null(level)) {
+        forest(relative.effect(result, treatmentId), use.description=TRUE)
+      } else {
+        forest(relative.effect(result, treatmentId, covariate=level), use.description=TRUE)
+      }
       report('relplot', treatmentN / length(treatmentIds))
     })
   }
@@ -343,8 +347,11 @@ times$relplot <- system.time({
     forestPlots <- list(centering=centeringForestplot)
     if(!is.null(regressor)) {
       levelForestplots <- lapply(regressor[['levels']], function(level) {
-        levelForestplot <- lapply(treatmentIds, plotForestPlot)
+        levelForestplot <- lapply(treatmentIds, function(x){
+          plotForestPlot(x, level)
+        })
         names(levelForestplot) <- treatmentIds
+        levelForestplot
       })
       names(levelForestplots) <- regressor[['levels']]
       forestPlots <- c(forestPlots, levelForestplots)

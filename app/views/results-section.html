@@ -41,7 +41,7 @@
     <p><strong>Relative effects table <data-inline-help help-key="relative-effects"></data-inline-help></strong></p>
     <label ng-show="relativeEffectsTables.length > 1">
       Covariate level
-      <select      
+      <select
         ng-options="relativeEffectsTable as relativeEffectsTable.level for relativeEffectsTable in relativeEffectsTables"
         ng-model="relativeEffectsTable"
         ></select>
@@ -78,7 +78,7 @@
     <div class="columns large-6 small-8">
       <label ng-show="relativeEffectPlots.length > 1">
         Covariate level
-        <select      
+        <select
           ng-options="relativeEffectPlot as relativeEffectPlot.level for relativeEffectPlot in relativeEffectPlots"
           ng-model="relativeEffectPlot"
           ></select>
@@ -87,7 +87,7 @@
   </div>
   <div class="row">
     <div class="columns large-12 center">
-      <data-paged-svg-plot file-name="'relativeEffect'" pages="relativeEffectPlot[selectedBaseline.id]"></data-paged-svg-plot>
+      <data-paged-svg-plot file-name="'relativeEffect'" pages="relativeEffectPlot.plots[selectedBaseline.id]"></data-paged-svg-plot>
     </div>
   </div>
 </div>
