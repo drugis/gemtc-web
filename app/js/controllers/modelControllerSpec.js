@@ -57,7 +57,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviResult = {
         $promise: pataviResultDeferred.promise,
         results: {
-          relativeEffects: [],
+          relativeEffects: [[]],
           rankProbabilities: [],
           tracePlot: [],
           gelmanPlot: []
