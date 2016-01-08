@@ -68,6 +68,7 @@ define(['lodash', 'moment'], function(_, moment) {
         $scope.model.covariateOption = $scope.covariateOptions[0];
         $scope.model.metaRegressionControl = problem.treatments[0];
         $scope.model.levels = [];
+        $scope.variableIsBinary = variableIsBinary($scope.model.covariateOption, $scope.problem);
       }
       return problem;
     });
@@ -83,7 +84,7 @@ define(['lodash', 'moment'], function(_, moment) {
     }
 
     function covariateChange() {
-      $scope.variableIsBinary = $scope.model.modelType.mainType === 'regression' 
+      $scope.variableIsBinary = $scope.model.modelType.mainType === 'regression'
         && variableIsBinary($scope.model.covariateOption, $scope.problem);
       if($scope.variableIsBinary) {
         $scope.model.levels = [0, 1];
@@ -147,7 +148,8 @@ define(['lodash', 'moment'], function(_, moment) {
 
     function variableIsBinary(covariateName, problem) {
       return !_.find(problem.studyLevelCovariates, function(covariate) {
-        return covariate[covariateName] !== 0.0 && covariate[covariateName] !== 1.0;
+        return covariate[covariateName] !== 0.0 && covariate[covariateName] !== 1.0
+          && covariate[covariateName] !== 0 && covariate[covariateName] !== 1;
       });
     }
 
