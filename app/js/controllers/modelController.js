@@ -50,6 +50,18 @@ define(['lodash'], function(_) {
       return PataviTaskIdResource.get($stateParams);
     }
 
+    function findCentering(resultsWithLevels) {
+      return _.find(resultsWithLevels, function(resultWithLevel) {
+        return resultWithLevel.level === 'centering';
+      });
+    }
+
+    function filterCentering(resultsWithLevels) {
+      return _.filter(resultsWithLevels, function(resultWithLevel) {
+        return resultWithLevel.level !== 'centering';
+      });
+    }
+
     function nameRankProbabilities(rankProbabilities, treatments) {
       return _.reduce(_.pairs(rankProbabilities), function(memo, pair) {
         var treatmentName = _.find(treatments, function(treatment) {
@@ -131,11 +143,7 @@ define(['lodash'], function(_) {
           });
 
           if (ModelService.isVariableBinary($scope.model.regressor.variable, $scope.problem)) {
-            function filterCentering(resultsWithLevels) {
-              return _.filter(resultsWithLevels, function(resultWithLevel) {
-                return resultWithLevel.level !== 'centering';
-              });
-            }
+
             $scope.rankProbabilitiesByLevel = filterCentering($scope.rankProbabilitiesByLevel);
             $scope.relativeEffectsTables = filterCentering($scope.relativeEffectsTables);
             $scope.relativeEffectPlots = filterCentering($scope.relativeEffectPlots);
@@ -143,11 +151,6 @@ define(['lodash'], function(_) {
             $scope.relativeEffectPlot = $scope.relativeEffectPlots[0];
             $scope.rankProbabilities = $scope.rankProbabilitiesByLevel[0];
           } else {
-            function findCentering(resultsWithLevels) {
-              return _.find(resultsWithLevels, function(resultWithLevel) {
-                return resultWithLevel.level === 'centering';
-              });
-            }
             $scope.relativeEffectsTable = findCentering($scope.relativeEffectsTables);
             $scope.relativeEffectPlot = findCentering($scope.relativeEffectPlots);
             $scope.rankProbabilities = findCentering($scope.rankProbabilitiesByLevel);
