@@ -29,7 +29,7 @@
               <td class="large-5 text-right"><strong>covariate</strong></td>
               <td>{{::model.regressor.variable}}</td>
             </tr>
-            <tr ng-if="model.modelType.type === 'regression'">
+            <tr ng-if="model.modelType.type === 'regression' && result.results.regressor.modelRegressor.mu">
               <td class="large-5 text-right"><strong>centering value (s.d)</strong></td>
               <td>{{::result.results.regressor.modelRegressor.mu|number:3}} ({{::result.results.regressor.modelRegressor.sd|number:3}})</td>
             </tr>
