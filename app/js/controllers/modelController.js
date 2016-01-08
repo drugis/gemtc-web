@@ -134,6 +134,8 @@ define(['lodash'], function(_) {
           $scope.controlTreatment = _.find(problem.treatments, function(treatment) {
             return treatment.id == $scope.model.regressor.control;
           });
+          $scope.relativeEffectsTable.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
+          $scope.relativeEffectPlot.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
 
           // build cov plot options
           $scope.covariateEffectPlots = MetaRegressionService.buildCovariatePlotOptions($scope.result , $scope.problem);

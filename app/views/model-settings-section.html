@@ -9,7 +9,7 @@
             <tr>
               <td class="large-6 text-right"><strong>model type</strong></td>
               <td>
-                {{::model.modelType.type}} 
+                {{::model.modelType.type}}
                 <data-inline-help help-key="model-type"></data-inline-help>
               </td>
             </tr>
@@ -30,31 +30,35 @@
               <td>{{::model.regressor.variable}}</td>
             </tr>
             <tr ng-if="model.modelType.type === 'regression'">
+              <td class="large-5 text-right"><strong>centering value (s.d)</strong></td>
+              <td>{{::result.results.regressor.modelRegressor.mu|number:3}} ({{::result.results.regressor.modelRegressor.sd|number:3}})</td>
+            </tr>
+            <tr ng-if="model.modelType.type === 'regression'">
               <td class="large-5 text-right"><strong>control treatment</strong></td>
               <td>{{::controlTreatment.name}}</td>
             </tr>
             <tr>
               <td class="large-6 text-right"><strong>effects type</strong></td>
               <td>
-                {{::result.results.linearModel}} 
+                {{::result.results.linearModel}}
                 <data-inline-help help-key="effects-type"></data-inline-help>
               </td>
             </tr>
             <tr>
               <td class="large-6 text-right"><strong>outcome scale</strong></td>
               <td ng-if="model.outcomeScale">
-                {{::model.outcomeScale}} 
+                {{::model.outcomeScale}}
                 <data-inline-help help-key="outcome-scale"></data-inline-help>
               </td>
               <td ng-if="!model.outcomeScale">
-                {{::result.results.outcomeScale}} (imputed) 
+                {{::result.results.outcomeScale}} (imputed)
                 <data-inline-help help-key="outcome-scale"></data-inline-help>
               </td>
             </tr>
             <tr>
               <td class="large-6 text-right"><strong>likelihood / link</strong></td>
               <td>
-                {{::result.results.likelihood}} / {{::result.results.link}} 
+                {{::result.results.likelihood}} / {{::result.results.link}}
                 <data-inline-help help-key="likelihood-link"></data-inline-help>
               </td>
             </tr>
@@ -67,15 +71,15 @@
               <td>
                 <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
                   <li style="padding-bottom: 0.5rem">
-                    burn-in: {{::result.results.burnInIterations}} 
+                    burn-in: {{::result.results.burnInIterations}}
                     <data-inline-help help-key="burn-in-iterations"></data-inline-help>
                   </li>
                   <li style="padding-bottom: 0.5rem">
-                    inference: {{::result.results.inferenceIterations}} 
+                    inference: {{::result.results.inferenceIterations}}
                     <data-inline-help help-key="inference-iterations"></data-inline-help>
                   </li>
                   <li style="padding-bottom: 0.5rem">
-                    thinning: {{::result.results.thinningFactor}} 
+                    thinning: {{::result.results.thinningFactor}}
                     <data-inline-help help-key="thinning-factor"></data-inline-help>
                   </li>
                 </ul>
