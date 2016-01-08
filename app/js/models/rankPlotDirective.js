@@ -56,6 +56,8 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
 
         scope.$watch('value', function(newVal, oldVal) {
           if (!newVal) return;
+          d3.selectAll("svg > *").remove();
+
           nv.addGraph(function() {
             svg.append("rect")
               .attr("width", "100%")
