@@ -121,6 +121,12 @@ define(['lodash'], function(_) {
             };
           });
           $scope.relativeEffectsTable = _.find($scope.relativeEffectsTables, function(x) { return x.level === 'centering'; })
+          $scope.relativeEffectForestPlots = _.map(result.results.relativeEffectPlots, function(plots {
+            return {
+              level: key,
+              plots: plots
+            };
+          });
         }
         $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         if ($scope.model.regressor) {
