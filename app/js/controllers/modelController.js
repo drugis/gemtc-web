@@ -120,13 +120,14 @@ define(['lodash'], function(_) {
               table: RelativeEffectsTableService.buildTable(relativeEffect, isLogScale, problem.treatments)
             };
           });
-          $scope.relativeEffectsTable = _.find($scope.relativeEffectsTables, function(x) { return x.level === 'centering'; })
-          $scope.relativeEffectForestPlots = _.map(result.results.relativeEffectPlots, function(plots {
+          $scope.relativeEffectsTable = _.find($scope.relativeEffectsTables, function(x) { return x.level === 'centering'; });
+          $scope.relativeEffectPlots = _.map(result.results.relativeEffectPlots, function(plots, key) {
             return {
               level: key,
               plots: plots
             };
           });
+          $scope.relativeEffectPlot = _.find($scope.relativeEffectPlots, function(x) { return x.level === 'centering'; });
         }
         $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
         if ($scope.model.regressor) {
