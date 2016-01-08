@@ -23,6 +23,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       devianceStatisticsServiceMock,
       diagnosticsService,
       metaRegressionService,
+      modelserviceMock,
       analysisServiceMock,
       stateMock,
       modalMock;
@@ -60,7 +61,12 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
           relativeEffects: [[]],
           rankProbabilities: [],
           tracePlot: [],
-          gelmanPlot: []
+          gelmanPlot: [],
+          regressor: {
+            modelRegressor: {
+              mu: 'mu'
+            }
+          }
         },
         logScale: true
       };
@@ -81,6 +87,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       stateMock = jasmine.createSpyObj('$state', ['reload']);
       modalMock = jasmine.createSpyObj('$modal', ['open']);
       metaRegressionService = jasmine.createSpyObj('MetaRegressionService', ['buildCovariatePlotOptions']);
+      metaRegressionService.buildCovariatePlotOptions.and.returnValue([]);
+      modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary']);
+      modelserviceMock.isVariableBinary.and.returnValue(true);
 
       $controller('ModelController', {
         $scope: scope,
@@ -95,6 +104,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         AnalysisResource: analysisResource,
         DiagnosticsService: diagnosticsService,
         AnalysisService: analysisServiceMock,
+        ModelService: modelserviceMock,
         DevianceStatisticsService: devianceStatisticsServiceMock,
         gemtcRootPath: '',
         MetaRegressionService: metaRegressionService
@@ -112,6 +122,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         scope.model.modelType = {
           type: 'network'
         };
+        scope.model.regressor = {
+          variable: {}
+        }
         modelDeferred.resolve(mockModel);
         scope.$apply();
       });

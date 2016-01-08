@@ -130,7 +130,7 @@ define(['lodash'], function(_) {
             };
           });
 
-          if (ModelService.variableIsBinary($scope.model.regressor.variable, $scope.problem)) {
+          if (ModelService.isVariableBinary($scope.model.regressor.variable, $scope.problem)) {
             function filterCentering(resultsWithLevels) {
               return _.filter(resultsWithLevels, function(resultWithLevel) {
                 return resultWithLevel.level !== 'centering';
