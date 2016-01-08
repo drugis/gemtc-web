@@ -181,6 +181,7 @@ gemtc <- function(params) {
   thin <- nullCheckWithDefault(params[['thinningFactor']], 10)
   modelType <-  nullCheckWithDefault(params[['modelType']][['type']], 'network')
   heterogeneityPriorType <- nullCheckWithDefault(params[['heterogeneityPrior']][['type']], 'automatic')
+  regressor <- as.list(params[['regressor']])
 
   progress.start <- 0
   progress.jags <- NA
@@ -262,7 +263,6 @@ gemtc <- function(params) {
       mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
     }
     if(modelType == 'regression') {
-      regressor <- as.list(params[['regressor']])
       regressor[['variable']] <- make.names(regressor[['variable']]) # must be valid column name for data frame
       mtc.model.params <- c(mtc.model.params, list(type="regression", regressor = regressor))
     }
@@ -281,6 +281,7 @@ gemtc <- function(params) {
       }
     }
     model <- do.call(mtc.model, mtc.model.params)
+    regressor[['modelRegressor']] <- model[['regressor']]
     update(list(progress=0))
   })
 
@@ -455,6 +456,7 @@ report('summary', 1.0)
     }
     if(modelType == 'regression') {
       summary[['regressor']] <- params[['regressor']]
+      summary[['regressor']][['modelRegressor']] <- regressor[['modelRegressor']]
       summary[['covariateEffectPlot']] <- covariateEffectPlot
     }
     summary[['convergencePlots']] <- list(
@@ -475,6 +477,7 @@ report('summary', 1.0)
       heterogeneityPrior[['args']][2] <- heterogeneityPrior[['args']][2]^-0.5
     }
     summary[['heterogeneityPrior']] <- heterogeneityPrior
+
     print(times)
 
     update(list(progress=100))
