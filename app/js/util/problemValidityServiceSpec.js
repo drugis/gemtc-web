@@ -60,16 +60,21 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(result.isValid).toBe(true);
       });
 
-      it('should return true for a valid problem', function() {
+      it('should return true for a valid relative effects data problem', function() {
         var problem = {
           entries: [{
             study: 1,
             treatment: 1
-          },
-          {
-            treatment: 1,
-            study: 1,
           }],
+          relativeEffectsData: {
+            2: {
+              baseArm: {
+                treatment: 1,
+                baseArmStandardError: 0.3
+              },
+              otherArms: []
+            }
+          },
           treatments: [{
             id: 1,
             name: 'treatment 1'
@@ -79,6 +84,51 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(result.isValid).toBe(true);
       });
 
+      it('should return false for a problem in which a study has both relative effects and absolute data', function() {
+        var problem = {
+          entries: [{
+            study: 1,
+            treatment: 1
+          }],
+          relativeEffectsData: {
+            1: {
+              baseArm: {
+                treatment: 1,
+                baseArmStandardError: 0.3
+              },
+              otherArms: []
+            }
+          },
+          treatments: [{
+            id: 1,
+            name: 'treatment 1'
+          }]
+        }
+        var result = problemValidityService.getValidity(problem);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain(' Studies may not have both relative effects data and absolute data');
+      });
+
+      it('should return false for a relative effect problem in which a study has more than 2 arms but no base arm standardError', function() {
+        var problem = {
+          entries: [],
+          relativeEffectsData: {
+            2: {
+              baseArm: {
+                treatment: 1,
+              },
+              otherArms: [{},{}]
+            }
+          },
+          treatments: [{
+            id: 1,
+            name: 'treatment 1'
+          }]
+        }
+        var result = problemValidityService.getValidity(problem);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain(' Relative effects data must containt baseArmStandardError if the study contains more than 2 arms');
+      });
 
       it('should return false for a malformed entry', function() {
         var problem = {
@@ -103,7 +153,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
             study: 5,
             stddev: 0.3,
             sampleSize: 30
-          },{
+          }, {
             treatment: 1,
             study: 5,
             rate: 0.3,
@@ -146,7 +196,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
 
     });
 
-    describe('parse', function () {
+    describe('parse', function() {
       it('should return false for a null string object ', function() {
         var nullString = null;
         var result = problemValidityService.parse(nullString);

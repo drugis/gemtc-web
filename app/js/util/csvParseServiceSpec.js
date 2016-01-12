@@ -30,7 +30,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       csvParseService = CSVParseService;
     }));
 
-    fdescribe('parse', function() {
+    describe('parse', function() {
 
       it('should parse valid absolute csv', function() {
 
