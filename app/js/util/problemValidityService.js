@@ -23,8 +23,8 @@ define(['angular', 'lodash'], function(angular, _) {
       var firstColumnProperties = _.keys(entries[0]).sort().join('');
 
       return !_.find(entries, function(entry) {
-          return _.keys(entry).sort().join('') !== firstColumnProperties;
-        });
+        return _.keys(entry).sort().join('') !== firstColumnProperties;
+      });
 
     }
 
@@ -35,6 +35,23 @@ define(['angular', 'lodash'], function(angular, _) {
         isValid = isValid && refersToExtantTreatment(entry, problem.treatments);
       });
       return isValid;
+    }
+
+    function hasMixedStudyEntry(problem) {
+      return !!_.find(problem.entries, function(entry) {
+        return _.contains(_.keys(problem.relativeEffectsData), entry.study.toString());
+      });
+    }
+
+    /*
+     * A single base (reference) arm per study ("baseArm"),
+     * which has a treatment and a "baseArmStandardError".
+     *  The "baseArmStandardError" may be missing only if the study has < 3 arms.
+     */
+    function missingBaseArm(problem) {
+      return !!_.find(_.values(problem.relativeEffectsData), function(effect) {
+       return !effect.baseArm.baseArmStandardError && effect.otherArms.length >= 2; // 3 minus base arm
+      });
     }
 
     /*
@@ -75,15 +92,27 @@ define(['angular', 'lodash'], function(angular, _) {
           result.isValid = false;
           result.message += ' The treatments field must contain a list of objects that all have name and id';
         }
+
+        if (problem.relativeEffectsData) {
+          if (hasMixedStudyEntry(problem)) {
+            result.isValid = false;
+            result.message += ' Studies may not have both relative effects data and absolute data';
+          }
+          if (missingBaseArm(problem)) {
+            result.isValid = false;
+            result.message += ' Relative effects data must containt baseArmStandardError if the study contains more than 2 arms';
+          }
+        }
+
       }
       return result;
     }
 
     function parse(inputString) {
       var isValidJsonString = inputString && ((typeof inputString) === 'string') && /^[\],:{}\s]*$/.test(
-          inputString.replace(/\\["\\\/bfnrtu]/g, '@')
-            .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
-            .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
+        inputString.replace(/\\["\\\/bfnrtu]/g, '@')
+        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+        .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
       );
 
       if (isValidJsonString) {
