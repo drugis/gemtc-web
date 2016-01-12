@@ -2,17 +2,27 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
   describe('the csv parse service', function() {
 
     var csvParseService;
-    var validCsv = '"study","treatment","mean","std.dev","sampleSize","LENGTH_OF_FOLLOW_UP","BLINDING_AT_LEAST_DOUBLE_BLIND"\n' +
+    var validAbsoluteCsv = '"study","treatment","mean","std.dev","sampleSize","LENGTH_OF_FOLLOW_UP","BLINDING_AT_LEAST_DOUBLE_BLIND"\n' +
       '"1","A",-1.22,3.7,54,31,1\n' +
       '"1","C",-1.53,4.28,95,31,1\n' +
       '"2","A",-0.7,3.7,172,,0\n' +
       '"2","B",-2.4,3.4,173,,0\n';
 
-    var validEuropeanCsv = '"study";"treatment";"mean";"std.dev";"sampleSize"\n' +
+    var validEuropeanAbsoluteCsv = '"study";"treatment";"mean";"std.dev";"sampleSize"\n' +
       '"1";"A";-1,22;3,7;54\n' +
       '"1";"C";-1,53;4,28;95\n' +
       '"2";"A";-0,7;3,7;172\n' +
       '"2";"B";-2,4;3,4;173\n';
+
+    var validRelativeEffectCsv = 'study,treatment,mean,std.dev,sampleSize,re.diff,re.diff.se\n' +
+      '1,A,-1.22,0.504,1,NA,NA\n' +
+      '1,C,-1.53,0.439,1,NA,NA\n' +
+      '2,A,-0.7,0.282,1,NA,NA\n' +
+      '2,B,-2.4,0.258,1,NA,NA\n' +
+      '4,C,NA,NA,NA,NA,NA\n' +
+      '4,D,NA,NA,NA,-0.35,0.441941738\n' +
+      '5,C,NA,NA,NA,NA,NA\n' +
+      '5,D,NA,NA,NA,0.55,0.555114559\n';
 
     beforeEach(module('gemtc.util'));
 
@@ -20,11 +30,11 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       csvParseService = CSVParseService;
     }));
 
-    describe('parse', function() {
+    fdescribe('parse', function() {
 
-      it('should parse valid csv', function() {
+      it('should parse valid absolute csv', function() {
 
-        var parseResult = csvParseService.parse(validCsv);
+        var parseResult = csvParseService.parse(validAbsoluteCsv);
         var expectedTreatments = [{
           id: 1,
           name: 'A'
@@ -63,9 +73,9 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(typeof parseResult.problem.entries[0].study).toBe('string');
       });
 
-      it('should parse valid Euro-peen csv', function() {
+      it('should parse valid Euro-peen absolute csv', function() {
 
-        var parseResult = csvParseService.parse(validEuropeanCsv);
+        var parseResult = csvParseService.parse(validEuropeanAbsoluteCsv);
         var expectedTreatments = [{
           id: 1,
           name: 'A'
@@ -132,15 +142,44 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(parseResult.message).toBe('Quoted field unterminated;');
       });
 
-      it('should raise an error when the covariates are not numaric', function() {
+      it('should raise an error when the covariates are not numeric', function() {
         var validCsvOneCovariate = '"study","treatment","mean","std.dev","sampleSize","LENGTH_OF_FOLLOW_UP"\n' +
           '"S1","A",-1.22,3.7,54,one\n' +
-          '"S1","C",-1.53,4.28,95,one\n' ;
-          '"S2","A",-0.7,3.7,172,two\n' +
-          '"S2","B",-2.4,3.4,173,two\n';
+          '"S1","C",-1.53,4.28,95,one\n' +
+        '"S2","A",-0.7,3.7,172,two\n' +
+        '"S2","B",-2.4,3.4,173,two\n';
         var parseResult = csvParseService.parse(validCsvOneCovariate);
         expect(parseResult.isValid).toBe(false);
         expect(parseResult.message).toBe('Non-numeric covariate: study S1, column LENGTH_OF_FOLLOW_UP');
+      });
+
+      it('should parse relative effects data', function() {
+        var expectedRelativeDifferenceData = {
+          4: {
+            otherArms: [{
+              treatment: 4,
+              meanDifference: -0.35,
+              standardError: 0.441941738
+            }],
+            baseArm: {
+              treatment: 3
+            }
+          },
+          5: {
+            otherArms: [{
+              treatment: 4,
+              meanDifference: 0.55,
+              standardError: 0.555114559
+            }],
+            baseArm: {
+              treatment: 3
+            }
+          }
+        };
+        var parseResult = csvParseService.parse(validRelativeEffectCsv);
+        var parsedProblem = parseResult.problem;
+        expect(parseResult.isValid).toBe(true);
+        expect(parseResult.problem.relativeEffectData).toEqual(expectedRelativeDifferenceData);
       });
 
     });
