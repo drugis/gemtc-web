@@ -449,6 +449,12 @@ report('summary', 1.0)
     }
     if(modelType == 'node-split') {
       summary[['nodeSplitDensityPlot']] <- nodeSplitDensityPlot
+
+      diff <- as.matrix(result[['samples']][,'d.direct']) - as.matrix(result[['samples']][,'d.indirect'])
+      prob <- sum(diff > 0)/length(diff)
+      summary[['nodeSplit']] <- list(
+        diff=list(quantiles=quantile(diff, c(0.025,0.25,0.5,0.75,0.975))),
+        incons.p=2 * min(prob, 1 - prob))
     }
     if(modelType == 'regression') {
       summary[['regressor']] <- params[['regressor']]
