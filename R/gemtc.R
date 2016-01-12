@@ -409,7 +409,7 @@ report('nodeSplitDensityPlot', 1.0)
 
 if(modelType == 'regression') {
   treatmentIds <- as.character(network[['treatments']][['id']])
-  control <- model[['regressor']][['control']]
+  control <- as.character(model[['regressor']][['control']])
   controlIdx <- which(treatmentIds == control)
   t1 <- rep(control, length(treatmentIds) - 1)
   t2 <- treatmentIds[-controlIdx]
