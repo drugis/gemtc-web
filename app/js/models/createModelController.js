@@ -166,7 +166,7 @@ define(['lodash', 'moment'], function(_, moment) {
     }
 
     function levelAlreadyPresent(newLevel) {
-      return _.contains($scope.model.levels, newLevel);
+      return _.includes($scope.model.levels, newLevel);
     }
 
     function isAddButtonDisabled(model, problem) {

@@ -9,6 +9,7 @@ define(['angular'], function () {
         uploadResult = CSVParseService.parse(problemFile.contents);
       } else if (problemFile.extension === 'json') {
         uploadResult = ProblemValidityService.parse(problemFile.contents);
+        uploadResult = ProblemValidityService.getValidity(uploadResult.problem);
       } else {
         uploadResult = {
           isValid: false,
@@ -16,9 +17,6 @@ define(['angular'], function () {
         };
       }
 
-      if (uploadResult.isValid) {
-        uploadResult = ProblemValidityService.getValidity(uploadResult.problem);
-      }
       return uploadResult;
     }
 

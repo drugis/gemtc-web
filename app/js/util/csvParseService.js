@@ -134,8 +134,14 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
     }
 
     function extractCovariates(structuredLines) {
+      var standardProperties = ENTRY_COLUMN_OPTIONS.concat(RELATIVE_EFFECTS_COLUMN_OPTIONS);
       return _.reduce(structuredLines, function(accum, line) {
-        var covariates = _.omit(line, ENTRY_COLUMN_OPTIONS.concat(RELATIVE_EFFECTS_COLUMN_OPTIONS));
+        var covariates = _.reduce(line, function(accum, value, key){
+          if (!_.includes(standardProperties, key)) {
+            accum[key] = value;
+          }
+          return accum;
+        }, {});
         covariates = _.mapValues(covariates, emptyStringToNull);
         if (!accum[line.study]) {
           accum[line.study] = [];
@@ -244,7 +250,10 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       }
 
       var structuredLines = _.map(sortedDataLines, function(line) {
-        var arm = _.zipObject(headerLine, line);
+        var arm = headerLine.reduce(function(accum, header, index) {
+          accum[header] = line[index];
+          return accum;
+        }, {});
         arm.study = convertStudyValueToString(arm);
         // substitute treatment name with its ID
         arm.treatment = treatmentMap[arm.treatment];
@@ -252,7 +261,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       });
 
       function isEntry(entryCandidate) {
-        return !_.contains(_.values(entryCandidate), 'NA');
+        return !_.includes(_.values(entryCandidate), 'NA');
       }
 
       function lineToEntry(line) {
@@ -260,7 +269,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       }
 
       function isRelativeEffect(line) {
-        return _.contains(_.values(lineToEntry(line)), 'NA');
+        return _.includes(_.values(lineToEntry(line)), 'NA');
       }
 
       function lineToRelativeEffect(line) {
@@ -272,8 +281,12 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
           return entry['re.diff'] === 'NA' && entry['re.diff.se'] === 'NA';
         }
 
-        if(!accum[entry.study]) {
-          accum[entry.study] = {
+        if(!accum.data) {
+          accum.data  = {};
+        }
+
+        if(!accum.data[entry.study]) {
+          accum.data[entry.study] = {
             otherArms: []
           };
         }
@@ -285,9 +298,9 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
           if (entry['re.base.se' !== undefined]) {
             baseArm.baseArmStandardError = entry['re.base.se'];
           }
-          accum[entry.study].baseArm = baseArm;
+          accum.data[entry.study].baseArm = baseArm;
         } else {
-          accum[entry.study].otherArms.push({
+          accum.data[entry.study].otherArms.push({
             treatment: entry.treatment,
             meanDifference: entry['re.diff'],
             standardError: entry['re.diff.se']

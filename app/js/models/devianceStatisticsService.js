@@ -5,7 +5,7 @@ define(['lodash'], function(_) {
   var DevianceStatisticsService = function() {
     function buildTable(devianceStatistics, problem) {
       var table = [],
-        treatmentMap = _.indexBy(problem.treatments, 'id'),
+        treatmentMap = _.keyBy(problem.treatments, 'id'),
         studyMap = _.transform(problem.entries, function(result, entry) {
           var studyName = entry.study;
           result[studyName] = result[studyName] ? result[studyName].concat(entry) : [entry];

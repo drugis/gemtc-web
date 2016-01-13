@@ -146,8 +146,8 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         var validCsvOneCovariate = '"study","treatment","mean","std.dev","sampleSize","LENGTH_OF_FOLLOW_UP"\n' +
           '"S1","A",-1.22,3.7,54,one\n' +
           '"S1","C",-1.53,4.28,95,one\n' +
-        '"S2","A",-0.7,3.7,172,two\n' +
-        '"S2","B",-2.4,3.4,173,two\n';
+          '"S2","A",-0.7,3.7,172,two\n' +
+          '"S2","B",-2.4,3.4,173,two\n';
         var parseResult = csvParseService.parse(validCsvOneCovariate);
         expect(parseResult.isValid).toBe(false);
         expect(parseResult.message).toBe('Non-numeric covariate: study S1, column LENGTH_OF_FOLLOW_UP');
@@ -155,24 +155,26 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
 
       it('should parse relative effects data', function() {
         var expectedRelativeDifferenceData = {
-          4: {
-            otherArms: [{
-              treatment: 4,
-              meanDifference: -0.35,
-              standardError: 0.441941738
-            }],
-            baseArm: {
-              treatment: 3
-            }
-          },
-          5: {
-            otherArms: [{
-              treatment: 4,
-              meanDifference: 0.55,
-              standardError: 0.555114559
-            }],
-            baseArm: {
-              treatment: 3
+          data: {
+            4: {
+              otherArms: [{
+                treatment: 4,
+                meanDifference: -0.35,
+                standardError: 0.441941738
+              }],
+              baseArm: {
+                treatment: 3
+              }
+            },
+            5: {
+              otherArms: [{
+                treatment: 4,
+                meanDifference: 0.55,
+                standardError: 0.555114559
+              }],
+              baseArm: {
+                treatment: 3
+              }
             }
           }
         };

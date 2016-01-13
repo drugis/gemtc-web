@@ -19,13 +19,6 @@ define([], function() {
       });
     };
 
-    $scope.isAddButtonDisabled = function(analysis) {
-      return !analysis ||
-        !analysis.title ||
-        !analysis.outcome ||
-        !analysis.problem ||
-        !!$scope.isAddingAnalysis;
-    }
   }
   return dependencies.concat(ModelController);
 });

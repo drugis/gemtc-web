@@ -37,7 +37,7 @@ define(['lodash'], function(_) {
         }
       }
 
-      var treatmentsById = _.indexBy(treatments, 'id');
+      var treatmentsById = _.keyBy(treatments, 'id');
       var diagnosticsWithoutDeviance = _.omit(diagnostics, 'deviance');
       return _.reduce(diagnosticsWithoutDeviance, function(accum, diagnostic, key) {
         if (!skipRowForNodeSplit(modelType, key)) {

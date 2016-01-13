@@ -7,11 +7,11 @@ define(['lodash'], function(_) {
     /*
      ** Transform covariate effects plots object to a list of objects,
      ** each object has treatmentName and a plot for the corresponding treatment
-     ** 
+     **
      ** The returned list is sorted by treatmentName
      */
     function buildCovariatePlotOptions(result, problem) {
-      var treatmentsById = _.indexBy(problem.treatments, 'id');
+      var treatmentsById = _.keyBy(problem.treatments, 'id');
       return Object
         .keys(result.results.covariateEffectPlot)
         .map(function(key) {
