@@ -107,6 +107,10 @@ define(
               'evidenceTable': {
                 templateUrl: '/js/analyses/evidenceTable.html',
                 controller: 'EvidenceTableController'
+              },
+              'relativeEffectTable': {
+                templateUrl: '/js/analyses/relativeEffectTable.html',
+                controller: 'RelativeEffecTableController'
               }
             }
           })
