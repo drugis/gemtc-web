@@ -15,7 +15,7 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.model.$promise.then(function() {
       var networkModel;
       $scope.analysis.$promise.then(buildComparisonRows).then(function() {
-        $scope.baseModelNotShown = $scope.model.modelType.type === 'node-split' && !_.some($scope.comparisons, 'modelId', $scope.model.id);
+        $scope.baseModelNotShown = $scope.model.modelType.type === 'node-split' && !_.some($scope.comparisons, ['modelId', $scope.model.id]);
       });
       if ($scope.model.modelType.type === 'node-split') {
         networkModel = findNetworkModelForModel($scope.model, models);

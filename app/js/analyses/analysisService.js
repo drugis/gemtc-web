@@ -8,6 +8,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "likelihood": "normal",
       "link": "identity",
       "scale": "mean difference",
+      "analysisScale": "mean difference",
       "columns": [
         ["mean", "std.err"],
         ["mean", "std.dev", "sampleSize"]
@@ -17,6 +18,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "likelihood": "binom",
       "link": "logit",
       "scale": "odds ratio",
+      "analysisScale": "log odds ratio",
       "columns": [
         ["responders", "sampleSize"]
       ],
@@ -25,6 +27,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "likelihood": "binom",
       "link": "log",
       "scale": "risk ratio",
+      "analysisScale": "log risk ratio",
       "columns": [
         ["responders", "sampleSize"]
       ],
@@ -33,6 +36,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "likelihood": "binom",
       "link": "cloglog",
       "scale": "hazard ratio",
+      "analysisScale": "log hazard ratio",
       "columns": [
         ["responders", "sampleSize"]
       ],
@@ -41,6 +45,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "likelihood": "poisson",
       "link": "log",
       "scale": "hazard ratio",
+      "analysisScale": "log hazard ratio",
       "columns": [
         ["responders", "exposure"]
       ],
@@ -49,7 +54,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function problemToStudyMap(problemArg) {
       var problem = angular.copy(problemArg);
-      var treatmentsMap = _.indexBy(problem.treatments, 'id');
+      var treatmentsMap = _.keyBy(problem.treatments, 'id');
       return _.reduce(problem.entries, function(studies, entry) {
         if (!studies[entry.study]) {
           studies[entry.study] = {
@@ -132,9 +137,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function countRandomEffects(entries) {
       // sum of number of arms minus number of studies
-      var studies = _.uniq(entries, function(entry) {
-        return entry.study;
-      });
+      var studies = _.uniqBy(entries, 'study');
       return entries.length - studies.length;
     }
 
@@ -216,7 +219,7 @@ define(['angular', 'lodash'], function(angular, _) {
       });
 
       // check connected nodes
-      return _.any(nodesToVisit, function(nodeToVisit) {
+      return _.some(nodesToVisit, function(nodeToVisit) {
         return hasIndirectPath(startNode, nodeToVisit, network, path.concat(currentNode));
       });
     }
@@ -263,13 +266,13 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function createLikelihoodLinkOptions(problem) {
       return _.map(likelihoodLinkSettings, function(setting) {
-        var isCompatible = _.any(setting.columns, function(columns) {
+        var isCompatible = _.some(setting.columns, function(columns) {
           return _.every(columns, function(columnName) {
             return problem.entries[0].hasOwnProperty(columnName);
           });
         });
 
-        var option = _.pick(setting, ['likelihood', 'link', 'scale', 'missingColumnsLabel']);
+        var option = _.pick(setting, ['likelihood', 'link', 'scale', 'missingColumnsLabel', 'analysisScale']);
         option.label = option.likelihood + '/' + option.link + ' (' + option.scale + ')';
         option.compatibility = isCompatible ? 'compatible' : 'incompatible';
         return option;

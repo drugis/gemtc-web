@@ -75,7 +75,7 @@
         <input type="radio" value="regression" ng-model="model.modelType.mainType" id="meta-regression-model-type-radio" ng-change="modelTypeChange()" ng-disabled="!problem.studyLevelCovariates">
         <label for="meta-regression-model-type-radio">Meta-regression<em ng-if="!problem.studyLevelCovariates"> (Data does not contain covariates)</em></label>
       </div>
-      
+
       <div class="indent-one" ng-show="model.modelType.mainType == 'regression'">
         <label  for="covariate-select">Select covariate
           <select
@@ -99,7 +99,7 @@
                   <input id="covariate-level"
                   type="number"
                   ng-model="newLevel"
-                  ng-keypress="addLevelOnEnter($event, newLevel)"
+                  ng-keypress="addLevelOnEnter($event, newLevel)">
                 </label>
               </div>
               <div class="small-3 columns">
@@ -109,7 +109,7 @@
             </div>
           </label>
         </div>
-        
+
         <label>Treatment-interaction model</label>
         <div class="stacked-radio">
           <input type="radio" value="shared" ng-model="model.treatmentInteraction" id="treatment-interaction-type-shraed-radio">
@@ -127,7 +127,7 @@
           ></select>
         </label>
       </div>
-      
+
     </div>
   </div>
   <!-- end model type section -->
@@ -187,12 +187,12 @@
       <label for="heterogeneity-prior-automatic-radio">Automatic (heuristic uniform) ~ U(0, <span ng-show="model.outcomeScale.type !== 'fixed'">S</span><span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)</label>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="columns large-6 stacked-radio">
       <input type="radio" value="standard-deviation" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-standard-deviation-radio" ng-change="heterogeneityPriorTypechange()">
       <label for="heterogeneity-prior-standard-deviation-radio">Uniform for standard deviation</label>
-      
+
       <div ng-show="model.heterogeneityPrior.type === 'standard-deviation'">
         <div class="row">
           <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
@@ -212,10 +212,10 @@
           </div>
         </div>
       </div>
-      
+
     </div>
   </div>
-  
+
   <div class="row">
     <div class="columns large-6 stacked-radio">
       <input type="radio" value="variance" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-variance-radio" ng-change="heterogeneityPriorTypechange()">
@@ -239,7 +239,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="columns large-6 stacked-radio">
       <input type="radio" value="precision" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-precision-radio" ng-change="heterogeneityPriorTypechange()">
@@ -263,7 +263,7 @@
       </div>
     </div>
   </div>
-  
+
 </div>
 <!-- end heterogeneity prior section -->
 
