@@ -415,7 +415,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
           expect(network.interventions.length).toEqual(3);
           expect(network.interventions[0].name).toBeDefined();
           expect(network.interventions[0].id).toBeDefined();
-          expect(network.interventions[0].sampleSize).toBeDefined();
+          expect(network.interventions[0].sampleSize).not.toBeDefined();
 
           expect(network.edges).toBeDefined();
           expect(network.edges[0].studies).toBeDefined();
