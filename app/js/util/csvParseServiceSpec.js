@@ -14,7 +14,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       '"2";"A";-0,7;3,7;172\n' +
       '"2";"B";-2,4;3,4;173\n';
 
-    var validRelativeEffectCsv = 'study,treatment,mean,std.dev,sampleSize,re.diff,re.diff.se\n' +
+    var validMixedEffectCsv = 'study,treatment,mean,std.dev,sampleSize,re.diff,re.diff.se\n' +
       '1,A,-1.22,0.504,1,NA,NA\n' +
       '1,C,-1.53,0.439,1,NA,NA\n' +
       '2,A,-0.7,0.282,1,NA,NA\n' +
@@ -23,6 +23,13 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       '4,D,NA,NA,NA,-0.35,0.441941738\n' +
       '5,C,NA,NA,NA,NA,NA\n' +
       '5,D,NA,NA,NA,0.55,0.555114559\n';
+
+    var validRelativeOnlyCsv = 'study,treatment,re.diff,re.diff.se,re.base.se\n' +
+      '1,A,NA,NA,0.5035062\n' +
+      '1,C,-0.31,0.668089651,NA\n' +
+      '2,A,NA,NA,0.2821224\n' +
+      '2,B,-1.7,0.382640605,NA\n';
+
 
     beforeEach(module('gemtc.util'));
 
@@ -62,7 +69,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
             "BLINDING_AT_LEAST_DOUBLE_BLIND": 0.0,
             "LENGTH_OF_FOLLOW_UP": null
           }
-        }
+        };
 
         expect(parseResult.isValid).toBe(true);
         expect(parseResult.problem.treatments).toEqual(expectedTreatments);
@@ -116,7 +123,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
             "BLINDING_AT_LEAST_DOUBLE_BLIND": 0.0,
             "LENGTH_OF_FOLLOW_UP": null
           }
-        }
+        };
 
         var parseResult = csvParseService.parse(validCsvOneCovariate);
         expect(parseResult.isValid).toBe(true);
@@ -153,7 +160,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(parseResult.message).toBe('Non-numeric covariate: study S1, column LENGTH_OF_FOLLOW_UP');
       });
 
-      it('should parse relative effects data', function() {
+      it('should parse mixed absolute and relative effects data', function() {
         var expectedRelativeDifferenceData = {
           data: {
             4: {
@@ -178,7 +185,44 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
             }
           }
         };
-        var parseResult = csvParseService.parse(validRelativeEffectCsv);
+        var parseResult = csvParseService.parse(validMixedEffectCsv);
+        var parsedProblem = parseResult.problem;
+        expect(parseResult.isValid).toBe(true);
+        expect(parseResult.problem.relativeEffectData).toEqual(expectedRelativeDifferenceData);
+      });
+
+      it('should parse only relative effects data', function() {
+        // '1,A,NA,NA,0.5035062' +
+        // '1,C,-0.31,0.668089651,NA' +
+        // '2,A,NA,NA,0.2821224' +
+        // '2,B,-1.7,0.382640605,NA';        //
+        var expectedRelativeDifferenceData = {
+          data: {
+            1: {
+              otherArms: [{
+                treatment: 3,
+                meanDifference: -0.31,
+                standardError: 0.668089651
+              }],
+              baseArm: {
+                treatment: 1,
+                baseArmStandardError: 0.5035062
+              }
+            },
+            2: {
+              otherArms: [{
+                treatment: 2,
+                meanDifference: -1.7,
+                standardError: 0.382640605
+              }],
+              baseArm: {
+                treatment: 1,
+                baseArmStandardError: 0.2821224
+              }
+            }
+          }
+        };
+        var parseResult = csvParseService.parse(validRelativeOnlyCsv);
         var parsedProblem = parseResult.problem;
         expect(parseResult.isValid).toBe(true);
         expect(parseResult.problem.relativeEffectData).toEqual(expectedRelativeDifferenceData);
