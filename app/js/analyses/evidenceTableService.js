@@ -5,7 +5,7 @@ define(['angular', 'lodash'], function(angular, _) {
   var EvidenceTableService = function() {
 
     function determineOutcomeType(studyList) {
-      return studyList[0].arms[0].data.responders ? "dichotomous" : "continuous"
+      return studyList[0].arms[0].data.responders ? "dichotomous" : "continuous";
     }
 
     function studyMapToStudyArray(studyMap) {
@@ -16,14 +16,14 @@ define(['angular', 'lodash'], function(angular, _) {
             return {
               title: key,
               data: val
-            }
+            };
           })
         };
       });
     }
 
     function formatCovariate(data) {
-      return data === null ? 'NA' : data
+      return data === null ? 'NA' : data;
     }
 
     function buildCovariatesColumns(studyCovariates) {
@@ -37,8 +37,8 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function studyListToEvidenceRows(studyList, studyLevelCovariates) {
       var tableRows = [];
-      _.each(studyList, function(study) {
-        _.each(study.arms, function(arm) {
+      _.forEach(studyList, function(study) {
+        _.forEach(study.arms, function(arm) {
           var tableRow = {
             studyTitle: study.title,
             studyRowSpan: study.arms.length,
@@ -46,30 +46,72 @@ define(['angular', 'lodash'], function(angular, _) {
             evidence: cleanUpEvidencePropertyNames(arm.data),
             showStudyColumn: (study.arms[0].title === arm.title)
           };
-          if(studyLevelCovariates) {
+          if (studyLevelCovariates) {
             tableRow.covariatesColumns = buildCovariatesColumns(studyLevelCovariates[study.title]);
           }
           tableRows.push(tableRow);
-        })
+        });
       });
       return tableRows;
     }
 
     function cleanUpEvidencePropertyNames(armData) {
-      var evidence = {}
-      if(armData.hasOwnProperty('responders')) {
+      var evidence = {};
+      if (armData.hasOwnProperty('responders')) {
         evidence.responders = armData.responders;
       }
-      if(armData.hasOwnProperty('sampleSize')) {
+      if (armData.hasOwnProperty('sampleSize')) {
         evidence.sampleSize = armData.sampleSize;
       }
-      if(armData.hasOwnProperty('mean')) {
-        evidence.mean = armData.mean
+      if (armData.hasOwnProperty('mean')) {
+        evidence.mean = armData.mean;
       }
-      if(armData.hasOwnProperty('std.dev')) {
-        evidence.stdDev = armData['std.dev']
+      if (armData.hasOwnProperty('std.dev')) {
+        evidence.stdDev = armData['std.dev'];
       }
       return evidence;
+    }
+
+    function buildTreatmentMap(treatments) {
+      return _.reduce(treatments, function(accum, treatment) {
+        accum[treatment.id] = treatment.name;
+        return accum;
+      }, {});
+    }
+
+
+    function buildRelativeEffectDataRows(problem) {
+      var tableRows = [];
+      var treatmentMap = buildTreatmentMap(problem.treatments);
+
+      _.forEach(problem.relativeEffectData.data, function(study, studyTitle) {
+        var baseArmRow = {
+          studyTitle: studyTitle,
+          treatmentTitle: treatmentMap[study.baseArm.treatment],
+          studyRowSpan: study.otherArms.length + 1, // plus one for base arm
+          baseArmStandardError: study.baseArm.baseArmStandardError,
+          showStudyColumn: true
+        };
+        if (problem.studyLevelCovariates) {
+          baseArmRow.covariatesColumns = buildCovariatesColumns(problem.studyLevelCovariates[studyTitle]);
+        }
+        tableRows.push(baseArmRow);
+        study.otherArms.forEach(function(arm) {
+          var tableRow = {
+            studyTitle: studyTitle,
+            studyRowSpan: study.otherArms.length + 1, // plus one for base arm
+            treatmentTitle: treatmentMap[arm.treatment],
+            meanDifference: arm.meanDifference,
+            standardError: arm.standardError,
+            showStudyColumn: false
+          };
+          if (problem.studyLevelCovariates) {
+            tableRow.covariatesColumns = buildCovariatesColumns(problem.studyLevelCovariates[studyTitle]);
+          }
+          tableRows.push(tableRow);
+        });
+      });
+      return tableRows;
     }
 
 
@@ -77,6 +119,7 @@ define(['angular', 'lodash'], function(angular, _) {
       determineOutcomeType: determineOutcomeType,
       studyMapToStudyArray: studyMapToStudyArray,
       studyListToEvidenceRows: studyListToEvidenceRows,
+      buildRelativeEffectDataRows: buildRelativeEffectDataRows
     };
 
   };

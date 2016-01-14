@@ -110,7 +110,7 @@ define(
               },
               'relativeEffectTable': {
                 templateUrl: '/js/analyses/relativeEffectTable.html',
-                controller: 'RelativeEffecTableController'
+                controller: 'RelativeEffectTableController'
               }
             }
           })
