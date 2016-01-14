@@ -66,8 +66,8 @@ define(['angular', 'lodash'], function(angular, _) {
         return studies;
       }, {});
 
-      if (problem.relativeEffectsData) {
-        studyMap =  _.reduce(problem.relativeEffectsData.data, function(studies, study, studyName) {
+      if (problem.relativeEffectData) {
+        studyMap = _.reduce(problem.relativeEffectData.data, function(studies, study, studyName) {
           var studyEntry = {
             arms: {}
           };
@@ -120,9 +120,11 @@ define(['angular', 'lodash'], function(angular, _) {
         var intervention = {};
         intervention.name = treatment.name;
         intervention.id = treatment.id;
-        intervention.sampleSize = _.reduce(problem.entries, function(totalSampleSize, entry) {
-          return entry.treatment === treatment.id ? totalSampleSize + entry.sampleSize : totalSampleSize;
-        }, 0);
+        if (!problem.relativeEffectData || !problem.relativeEffectData.data) {
+          intervention.sampleSize = _.reduce(problem.entries, function(totalSampleSize, entry) {
+            return entry.treatment === treatment.id ? totalSampleSize + entry.sampleSize : totalSampleSize;
+          }, 0);
+        }
         return intervention;
       }
 

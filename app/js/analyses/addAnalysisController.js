@@ -62,7 +62,6 @@ define(['lodash'], function(_) {
     function addScale(scale) {
       $scope.selectedScale = scale;
       $scope.uploadResult.problem.relativeEffectData.scale = scale ? scale.analysisScale : undefined;
-      var validity = ProblemValidityService.getValidity($scope.uploadResult.problem);
     }
 
   };
