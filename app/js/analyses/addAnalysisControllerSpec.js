@@ -9,7 +9,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
     beforeEach(inject(function($rootScope, $controller, $q) {
       scope = $rootScope;
 
-      locationMock = jasmine.createSpyObj('location', ['url']);
+      var locationMock = jasmine.createSpyObj('location', ['url']);
 
       modalInstance = jasmine.createSpyObj('modalInstance', ['close', 'dismiss']);
 
@@ -54,6 +54,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
       beforeEach(function() {
         analysis = {};
+        scope.uploadResult = {};
         scope.addAnalysis(analysis);
       });
 
