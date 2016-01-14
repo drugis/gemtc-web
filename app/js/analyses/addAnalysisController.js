@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = ['$http', '$scope', '$location', 'AnalysisResource', 'ModelResource',
-    '$modalInstance', 'FileUploadService','ProblemValidityService', 'AnalysisService'
+    '$modalInstance', 'FileUploadService', 'ProblemValidityService', 'AnalysisService'
   ];
   var AddAnalysisController = function($http, $scope, $location, AnalysisResource, ModelResource,
     $modalInstance, FileUploadService, ProblemValidityService, AnalysisService) {
@@ -20,7 +20,7 @@ define(['lodash'], function(_) {
         if ($scope.uploadResult.isValid) {
           $scope.analysis.problem = $scope.uploadResult.problem;
           $scope.scaleOptions = _.uniqBy(AnalysisService.createLikelihoodLinkOptions($scope.analysis.problem), 'analysisScale');
-          $scope.selectedScale = $scope.scaleOptions.find(function(option){
+          $scope.selectedScale = $scope.scaleOptions.find(function(option) {
             return option.compatibility === 'compatible';
           });
         }
@@ -43,6 +43,11 @@ define(['lodash'], function(_) {
 
     function addAnalysis(analysis) {
       $scope.isAddingAnalysis = true;
+      $scope.analysis.problem = $scope.uploadResult.problem;
+      if ($scope.selectedScale) {
+        $scope.analysis.problem.relativeEffectData.scale = $scope.selectedScale.analysisScale;
+      }
+
       AnalysisResource.save(analysis, function(result, headers) {
         $modalInstance.close();
         $scope.isAddingAnalysis = false;
@@ -58,9 +63,6 @@ define(['lodash'], function(_) {
       $scope.selectedScale = scale;
       $scope.uploadResult.problem.relativeEffectData.scale = scale ? scale.analysisScale : undefined;
       var validity = ProblemValidityService.getValidity($scope.uploadResult.problem);
-      if(validity.isValid) {
-        $scope.analysis.problem = $scope.uploadResult.problem;
-      }
     }
 
   };

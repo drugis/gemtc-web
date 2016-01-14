@@ -1,6 +1,6 @@
 define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
   describe('the add analysisController', function() {
-    var scope, analysisResource, state, modalInstance,
+    var scope, analysisResource, modalInstance,
       saveDefer, mockSaveResult,
       problemValidityService, csvParseService, fileUploadService;
 

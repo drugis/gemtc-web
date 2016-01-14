@@ -10,78 +10,202 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     }));
 
     describe('problemToStudyMap', function() {
+      describe('for an absolute problem', function() {
+        var problem = {
+          "entries": [{
+            "study": "Study1",
+            "treatment": 1,
+            "responders": 58,
+            "sampleSize": 100
+          }, {
+            "study": "Study1",
+            "treatment": 2,
+            "responders": 53,
+            "sampleSize": 103
+          }, {
+            "study": "Study2",
+            "treatment": 1,
+            "responders": 58,
+            "sampleSize": 100
+          }, {
+            "study": "Study2",
+            "treatment": 2,
+            "responders": 53,
+            "sampleSize": 103
+          }],
+          relativeEffectsData: {},
+          "treatments": [{
+            "id": 1,
+            "name": "Treatment1"
+          }, {
+            "id": 2,
+            "name": "Treatment2"
+          }]
+        };
 
-      var problem = {
-        "entries": [{
-          "study": "Study1",
-          "treatment": 1,
-          "responders": 58,
-          "sampleSize": 100
-        }, {
-          "study": "Study1",
-          "treatment": 2,
-          "responders": 53,
-          "sampleSize": 103
-        }, {
-          "study": "Study2",
-          "treatment": 1,
-          "responders": 58,
-          "sampleSize": 100
-        }, {
-          "study": "Study2",
-          "treatment": 2,
-          "responders": 53,
-          "sampleSize": 103
-        }],
-        "treatments": [{
-          "id": 1,
-          "name": "Treatment1"
-        }, {
-          "id": 2,
-          "name": "Treatment2"
-        }]
-      };
-
-      var expextedStudyMap = {
-        'Study1': {
-          arms: {
-            'Treatment1': {
-              "responders": 58,
-              "sampleSize": 100
-            },
-            'Treatment2': {
-              "responders": 53,
-              "sampleSize": 103
+        var expextedStudyMap = {
+          'Study1': {
+            arms: {
+              'Treatment1': {
+                "responders": 58,
+                "sampleSize": 100
+              },
+              'Treatment2': {
+                "responders": 53,
+                "sampleSize": 103
+              }
+            }
+          },
+          'Study2': {
+            arms: {
+              'Treatment1': {
+                "responders": 58,
+                "sampleSize": 100
+              },
+              'Treatment2': {
+                "responders": 53,
+                "sampleSize": 103
+              }
             }
           }
-        },
-        'Study2': {
-          arms: {
-            'Treatment1': {
-              "responders": 58,
-              "sampleSize": 100
-            },
-            'Treatment2': {
-              "responders": 53,
-              "sampleSize": 103
+        };
+        var studyMap;
+
+        beforeEach(inject(function() {
+          studyMap = analysisService.problemToStudyMap(problem);
+        }));
+
+        it('generate a map of studies with arms', function() {
+          expect(studyMap.Study1).toBeDefined();
+          expect(studyMap.Study1.arms.Treatment1).toBeDefined();
+          expect(studyMap.Study1.arms.Treatment2).toBeDefined();
+
+          expect(studyMap).toEqual(expextedStudyMap);
+        });
+      });
+      describe('for an mixed absolute/relative problem', function() {
+        var problem = {
+          "entries": [{
+            "study": "Study1",
+            "treatment": 1,
+            "responders": 58,
+            "sampleSize": 100
+          }, {
+            "study": "Study1",
+            "treatment": 2,
+            "responders": 53,
+            "sampleSize": 103
+          }, {
+            "study": "Study2",
+            "treatment": 1,
+            "responders": 58,
+            "sampleSize": 100
+          }, {
+            "study": "Study2",
+            "treatment": 2,
+            "responders": 53,
+            "sampleSize": 103
+          }],
+          relativeEffectsData: {
+            scale: "log odds ratio",
+            data: {
+              'study 3': {
+                baseArm: {
+                  treatment: 1,
+                  baseArmStandardError: 20
+                },
+                otherArms: [{
+                  treatment: 2,
+                  meanDifference: 10,
+                  standardError: 11
+                }]
+              },
+              'study 4': {
+                baseArm: {
+                  treatment: 2,
+                  baseArmStandardError: 30
+                },
+                otherArms: [{
+                  treatment: 1,
+                  meanDifference: 12,
+                  standardError: 13
+                }]
+              }
+            }
+          },
+          "treatments": [{
+            "id": 1,
+            "name": "Treatment1"
+          }, {
+            "id": 2,
+            "name": "Treatment2"
+          }]
+        };
+
+        var expextedStudyMap = {
+          'Study1': {
+            arms: {
+              'Treatment1': {
+                "responders": 58,
+                "sampleSize": 100
+              },
+              'Treatment2': {
+                "responders": 53,
+                "sampleSize": 103
+              }
+            }
+          },
+          'Study2': {
+            arms: {
+              'Treatment1': {
+                "responders": 58,
+                "sampleSize": 100
+              },
+              'Treatment2': {
+                "responders": 53,
+                "sampleSize": 103
+              }
+            }
+          },
+          'study 3': {
+            arms: {
+              'Treatment1': {
+                baseArmStandardError: 20
+              },
+              'Treatment2': {
+                meanDifference: 10,
+                standardError: 11
+              }
+            }
+          },
+          'study 4': {
+            arms: {
+              'Treatment1': {
+                meanDifference: 12,
+                standardError: 13
+              },
+              'Treatment2': {
+                baseArmStandardError: 30
+              },
             }
           }
-        }
-      };
-      var studyMap;
+        };
+        var studyMap;
 
-      beforeEach(inject(function() {
-        studyMap = analysisService.problemToStudyMap(problem);
-      }));
+        beforeEach(inject(function() {
+          studyMap = analysisService.problemToStudyMap(problem);
+        }));
 
-      it('generate a map of studies with arms', function() {
-        expect(studyMap.Study1).toBeDefined();
-        expect(studyMap.Study1.arms.Treatment1).toBeDefined();
-        expect(studyMap.Study1.arms.Treatment2).toBeDefined();
+        it('generate a map of studies with arms', function() {
+          expect(studyMap.Study1).toBeDefined();
+          expect(studyMap.Study1.arms.Treatment1).toBeDefined();
+          expect(studyMap.Study1.arms.Treatment2).toBeDefined();
 
-        expect(studyMap).toEqual(expextedStudyMap);
+          expect(studyMap).toEqual(expextedStudyMap);
+        });
       });
     });
+
 
     describe('transformProblemToNetwork', function() {
 
@@ -379,7 +503,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 2'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find zero nodeSplitOptions', function() {
@@ -419,7 +543,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 3'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find three nodeSplitOptions', function() {
@@ -462,7 +586,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 4'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find zero nodeSplitOptions', function() {
@@ -511,7 +635,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 4'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find three nodeSplitOptions', function() {
@@ -549,7 +673,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
           });
 
 
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find no nodeSplitOptions and crash at some point', function() {
@@ -593,7 +717,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 3'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find one nodeSplitOption', function() {
