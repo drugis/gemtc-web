@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('The analysis service', function() {
 
@@ -207,7 +208,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     });
 
     describe('estimateRunLength for a random-effects network model', function() {
-      var options;
+      var runLength;
       var problem = {
         entries: [{
           study: "Study1"
@@ -252,7 +253,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     });
 
     describe('estimateRunLength for a random-effects pairwise model', function() {
-      var options;
+      var runLength;
       var problem = {
         entries: [{
           study: "Study1",
@@ -315,7 +316,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     });
 
     describe('estimateRunLength for a fixed-effect network model', function() {
-      var options;
+      var runLength;
       var problem = {
         entries: [{
           study: "Study1"
@@ -379,7 +380,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 2'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find zero nodeSplitOptions', function() {
@@ -419,7 +420,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 3'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find three nodeSplitOptions', function() {
@@ -462,7 +463,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 4'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find zero nodeSplitOptions', function() {
@@ -511,7 +512,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 4'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find three nodeSplitOptions', function() {
@@ -549,7 +550,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
           });
 
 
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find no nodeSplitOptions and crash at some point', function() {
@@ -593,7 +594,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
               name: 'treatment 3'
             }]
           };
-          nodeSplitOptions = analysisService.createNodeSplitOptions(problem)
+          nodeSplitOptions = analysisService.createNodeSplitOptions(problem);
         });
 
         it('should find one nodeSplitOption', function() {

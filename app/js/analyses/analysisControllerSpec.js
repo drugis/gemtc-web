@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('the analysisController', function() {
     var scope, analysisResource, stateParamsMock, networkPlotService;
