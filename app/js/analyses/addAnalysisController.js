@@ -15,7 +15,7 @@ define(['lodash'], function(_) {
     $scope.isScaleIncompatible = isScaleIncompatible;
 
     $scope.$watch('problemFile.contents', function(newValue, oldValue) {
-      if (newValue && newValue != oldValue) {
+      if (newValue && newValue !== oldValue) {
         $scope.uploadResult = FileUploadService.processFile($scope.problemFile);
         if ($scope.uploadResult.isValid) {
           $scope.analysis.problem = $scope.uploadResult.problem;

@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
   describe('the add analysisController', function() {
     var scope, analysisResource, modalInstance,

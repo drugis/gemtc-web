@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'services'], function() {
   describe('the meta-regression service', function() {
 

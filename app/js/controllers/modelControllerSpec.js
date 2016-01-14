@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'controllers'], function() {
   describe('the modelController', function() {
     var scope,
@@ -26,7 +27,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       modelserviceMock,
       analysisServiceMock,
       stateMock,
-      modalMock;
+      modalMock,
+      pataviTaskIdDeferred,
+      pataviTaskIdResult;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -124,7 +127,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         };
         scope.model.regressor = {
           variable: {}
-        }
+        };
         modelDeferred.resolve(mockModel);
         scope.$apply();
       });

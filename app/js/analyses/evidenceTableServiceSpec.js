@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('The evidence service', function() {
 

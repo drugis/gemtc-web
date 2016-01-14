@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('the analysesController', function() {
     var scope, analysisResource , modal;
@@ -38,7 +39,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     describe('when createAnalysisDialog isCalled', function() {
       beforeEach(function(){
         scope.createAnalysisDialog();
-      })
+      });
       it('should open the dialog', function() {
         expect(modal.open).toHaveBeenCalled();
       });
