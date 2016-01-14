@@ -3,7 +3,7 @@
 var tests = [];
 for (var file in window.__karma__.files) {
   if (window.__karma__.files.hasOwnProperty(file)) {
-    if (file.indexOf("Spec.js") != -1 && file.indexOf("bower_components") == -1 && file.indexOf("node_modules") == -1) {
+    if (file.indexOf("Spec.js") !== -1 && file.indexOf("bower_components") === -1 && file.indexOf("node_modules") === -1) {
       tests.push(file);
     }
   }
