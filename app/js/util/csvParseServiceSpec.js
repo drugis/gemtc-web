@@ -192,6 +192,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       });
 
       it('should parse only relative effects data', function() {
+        //study,treatment,re.diff,re.diff.se,re.base.se
         // '1,A,NA,NA,0.5035062' +
         // '1,C,-0.31,0.668089651,NA' +
         // '2,A,NA,NA,0.2821224' +

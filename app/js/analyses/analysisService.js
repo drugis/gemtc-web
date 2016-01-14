@@ -55,17 +55,35 @@ define(['angular', 'lodash'], function(angular, _) {
     function problemToStudyMap(problemArg) {
       var problem = angular.copy(problemArg);
       var treatmentsMap = _.keyBy(problem.treatments, 'id');
-      return _.reduce(problem.entries, function(studies, entry) {
+      var studyMap = _.reduce(problem.entries, function(studies, entry) {
         if (!studies[entry.study]) {
           studies[entry.study] = {
             arms: {}
           };
         }
-        entry.treatment = treatmentsMap[entry.treatment];
-        studies[entry.study].arms[entry.treatment.name] = _.omit(entry, 'study', 'treatment');
+        studies[entry.study].arms[treatmentsMap[entry.treatment].name] = _.omit(entry, 'study', 'treatment');
 
         return studies;
       }, {});
+
+      if (problem.relativeEffectsData) {
+        studyMap =  _.reduce(problem.relativeEffectsData.data, function(studies, study, studyName) {
+          var studyEntry = {
+            arms: {}
+          };
+          var baseArmName = treatmentsMap[study.baseArm.treatment].name;
+          studyEntry.arms[baseArmName] = _.omit(study.baseArm, 'treatment');
+
+          _.forEach(study.otherArms, function(arm) {
+            var armName = treatmentsMap[arm.treatment].name;
+            studyEntry.arms[armName] = _.omit(arm, 'treatment');
+          });
+
+          studies[studyName] = studyEntry;
+          return studies;
+        }, studyMap);
+      }
+      return studyMap;
     }
 
 
@@ -267,7 +285,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function createLikelihoodLinkOptions(problem) {
       return _.map(likelihoodLinkSettings, function(setting) {
         var isIncompatible = problem.entries.find(function(entry) {
-          return _.every(setting.columns, function(columnNames){
+          return _.every(setting.columns, function(columnNames) {
             return _.intersection(_.keys(entry), columnNames).length !== columnNames.length;
           });
         });
