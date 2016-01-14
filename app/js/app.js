@@ -62,7 +62,7 @@ define(
         });
 
         $rootScope.$on("$stateChangeSuccess",
-          function(event, toState, toParams, fromState, fromParams) {
+          function(event, toState) {
             $rootScope.currentStateName = toState.name;
             delete $rootScope.error;
           }
