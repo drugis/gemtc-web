@@ -10,16 +10,16 @@ define([], function() {
       restrict: 'E',
       // using template because loading teplateUrl irritating in submodule
       templateUrl: gemtcRootPath + 'js/util/graphModalDirective/graphModalDirective.html',
-      link: function(scope, element) {
+      link: function(scope) {
 
-        scope.openModal = function(selectedComparison) {
+        scope.openModal = function() {
           $modal.open({
             templateUrl: gemtcRootPath + 'js/util/graphModalDirective/plotNavigation.html',
             scope: scope,
             windowClass: 'small',
             controller: 'PlotNavigationController'
           });
-        }
+        };
       }
     };
   };
