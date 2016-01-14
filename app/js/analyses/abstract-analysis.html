@@ -3,24 +3,28 @@
   <li class="current active">{{analysis.title}}</li>
 </ul>
 <div class="row">
-	<div class="columns center large-12">
-		<h1 id="analysis-header"><a ui-sref="analyses">Analysis</a></h1>
-		<div ui-view="analysis"></div>
-		<hr>
-	</div>
+  <div class="columns center large-12">
+    <h1 id="analysis-header"><a ui-sref="analyses">Analysis</a></h1>
+    <div ui-view="analysis"></div>
+    <hr>
+  </div>
 </div>
 <div class="row" data-equalizer>
-	<div class="columns large-8">
-		<div ui-view="models"></div>
-	</div>
-	<div id="network-graph-container" class="columns large-4">
-		<div ui-view="networkGraph"></div>
-	</div>
+  <div class="columns large-8">
+    <div ui-view="models"></div>
+  </div>
+  <div id="network-graph-container" class="columns large-4">
+    <div ui-view="networkGraph"></div>
+  </div>
 </div>
 <div class="row">
-	<div class="columns large-12">
-		<hr>
-		<div ui-view="evidenceTable"></div>
-	</div>
+  <div class="columns large-12">
+    <hr>
+    <div ui-view="evidenceTable"></div>
+  </div>
 </div>
-
+<div class="row">
+  <div class="columns large-12">
+    <div ui-view="relativeEffectTable"></div>
+  </div>
+</div>
