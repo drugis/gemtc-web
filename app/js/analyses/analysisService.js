@@ -266,15 +266,15 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function createLikelihoodLinkOptions(problem) {
       return _.map(likelihoodLinkSettings, function(setting) {
-        var isCompatible = _.some(setting.columns, function(columns) {
-          return _.every(columns, function(columnName) {
-            return problem.entries[0].hasOwnProperty(columnName);
+        var isIncompatible = problem.entries.find(function(entry) {
+          return _.every(setting.columns, function(columnNames){
+            return _.intersection(_.keys(entry), columnNames).length !== columnNames.length;
           });
         });
 
         var option = _.pick(setting, ['likelihood', 'link', 'scale', 'missingColumnsLabel', 'analysisScale']);
         option.label = option.likelihood + '/' + option.link + ' (' + option.scale + ')';
-        option.compatibility = isCompatible ? 'compatible' : 'incompatible';
+        option.compatibility = isIncompatible ? 'incompatible' : 'compatible';
         return option;
       });
     }

@@ -2,20 +2,21 @@
 define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
   var dependencies = [];
 
+  var STUDY_TREATMENT = [
+    'study',
+    'treatment'
+  ]
+
   var ENTRY_COLUMN_OPTIONS = [
     'mean',
     'std.dev',
     'std.err',
     'sampleSize',
     'responders',
-    'exposure',
-    'study',
-    'treatment'
+    'exposure'
   ];
 
   var RELATIVE_EFFECTS_COLUMN_OPTIONS = [
-    'study',
-    'treatment',
     're.diff',
     're.diff.se',
     're.base.se'
@@ -134,9 +135,9 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
     }
 
     function extractCovariates(structuredLines) {
-      var standardProperties = ENTRY_COLUMN_OPTIONS.concat(RELATIVE_EFFECTS_COLUMN_OPTIONS);
+      var standardProperties = ENTRY_COLUMN_OPTIONS.concat(RELATIVE_EFFECTS_COLUMN_OPTIONS, STUDY_TREATMENT);
       return _.reduce(structuredLines, function(accum, line) {
-        var covariates = _.reduce(line, function(accum, value, key){
+        var covariates = _.reduce(line, function(accum, value, key) {
           if (!_.includes(standardProperties, key)) {
             accum[key] = value;
           }
@@ -260,20 +261,27 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
         return arm;
       });
 
+      function hasEntryColumn(entryCandidate) {
+        return _.keys(entryCandidate).find(function(columnName) {
+          return _.includes(ENTRY_COLUMN_OPTIONS, columnName);
+        });
+      }
+
       function isEntry(entryCandidate) {
-        return !_.includes(_.values(entryCandidate), 'NA');
+        return !_.includes(_.values(entryCandidate), 'NA') && hasEntryColumn(entryCandidate)
       }
 
       function lineToEntry(line) {
-        return _.pick(line, ENTRY_COLUMN_OPTIONS);
+        return _.pick(line, ENTRY_COLUMN_OPTIONS.concat(STUDY_TREATMENT));
       }
 
       function isRelativeEffect(line) {
-        return _.includes(_.values(lineToEntry(line)), 'NA');
+        var entryCandidate = lineToEntry(line);
+        return _.includes(_.values(entryCandidate), 'NA') || !hasEntryColumn(entryCandidate);
       }
 
       function lineToRelativeEffect(line) {
-        return _.pick(line, RELATIVE_EFFECTS_COLUMN_OPTIONS);
+        return _.pick(line, RELATIVE_EFFECTS_COLUMN_OPTIONS.concat(STUDY_TREATMENT));
       }
 
       function addToRelativeEffectData(accum, entry) {
@@ -281,21 +289,21 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
           return entry['re.diff'] === 'NA' && entry['re.diff.se'] === 'NA';
         }
 
-        if(!accum.data) {
-          accum.data  = {};
+        if (!accum.data) {
+          accum.data = {};
         }
 
-        if(!accum.data[entry.study]) {
+        if (!accum.data[entry.study]) {
           accum.data[entry.study] = {
             otherArms: []
           };
         }
 
-        if(isBaseEntry(entry)) {
+        if (isBaseEntry(entry)) {
           var baseArm = {
             treatment: entry.treatment
           };
-          if (entry['re.base.se' !== undefined]) {
+          if (entry['re.base.se'] !== undefined) {
             baseArm.baseArmStandardError = entry['re.base.se'];
           }
           accum.data[entry.study].baseArm = baseArm;
@@ -313,7 +321,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
         .map(lineToEntry)
         .filter(isEntry);
 
-       var relativeEffectEntries =  structuredLines
+      var relativeEffectEntries = structuredLines
         .filter(isRelativeEffect)
         .map(lineToRelativeEffect);
 

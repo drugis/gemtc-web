@@ -150,7 +150,6 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
     });
 
-
     describe('createPairwiseOptions', function() {
       var options;
       var mockProblem = {
@@ -601,12 +600,11 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
           expect(nodeSplitOptions.length).toBe(1);
         });
       });
-
     });
 
     describe('createLikelihoodLinkOptions', function() {
 
-      it('should create 5 options having a title, linkelihood and compatibility', function() {
+      it('should create 5 options having a title, likelihood and compatibility', function() {
         var problem = {
           "entries": [{
             "study": "Rudolph and Feiger, 1999",
@@ -640,7 +638,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
 
 
-      it('should create 5 options having a title, linkelihood and compatibility', function() {
+      it('should create 5 options having a title, likelihood and compatibility', function() {
 
         var problem = {
           "entries": [{
@@ -658,6 +656,22 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         expect(likelihoodLinkOptions[2].compatibility).toBe('incompatible');
         expect(likelihoodLinkOptions[3].compatibility).toBe('incompatible');
         expect(likelihoodLinkOptions[4].compatibility).toBe('incompatible');
+      });
+
+      it('should allow everything for zero entries (ie. most likely a relative effects problem)', function() {
+
+        var problem = {
+          entries: []
+        };
+
+        var likelihoodLinkOptions = analysisService.createLikelihoodLinkOptions(problem);
+
+        expect(likelihoodLinkOptions[0].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[1].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[2].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[3].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[4].compatibility).toBe('compatible');
+
       });
     });
 
