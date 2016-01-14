@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('The analysis service', function() {
 
@@ -331,7 +332,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     });
 
     describe('estimateRunLength for a random-effects network model', function() {
-      var options;
+      var runLength;
       var problem = {
         entries: [{
           study: "Study1"
@@ -376,7 +377,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     });
 
     describe('estimateRunLength for a random-effects pairwise model', function() {
-      var options;
+      var runLength;
       var problem = {
         entries: [{
           study: "Study1",
@@ -439,7 +440,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     });
 
     describe('estimateRunLength for a fixed-effect network model', function() {
-      var options;
+      var runLength;
       var problem = {
         entries: [{
           study: "Study1"

@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'util/util'], function() {
   describe('the problem validity service', function() {
 
