@@ -35,9 +35,19 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
+    function isAbsoluteEffectStudy(study) {
+      return !!study.arms.find(function(arm) {
+        return arm.data.hasOwnProperty('sampleSize') ||
+          arm.data.hasOwnProperty('responders') ||
+          arm.data.hasOwnProperty('mean') ||
+          arm.data.hasOwnProperty('stdDev');
+      });
+    }
+
     function studyListToEvidenceRows(studyList, studyLevelCovariates) {
       var tableRows = [];
-      _.forEach(studyList, function(study) {
+      var filteredStudies = studyList.filter(isAbsoluteEffectStudy);
+      _.forEach(filteredStudies, function(study) {
         _.forEach(study.arms, function(arm) {
           var tableRow = {
             studyTitle: study.title,
