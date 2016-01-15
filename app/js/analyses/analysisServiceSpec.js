@@ -880,7 +880,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
     describe('createLikelihoodLinkOptions', function() {
 
-      it('should create 5 options having a title, likelihood and compatibility', function() {
+      it('should create 5 options for dichotomous studies, having a title, likelihood and compatibility', function() {
         var problem = {
           'entries': [{
             'study': 'Rudolph and Feiger, 1999',
@@ -914,7 +914,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
 
 
-      it('should create 5 options having a title, likelihood and compatibility', function() {
+      it('should create 5 options for continuous studies, having a title, likelihood and compatibility', function() {
 
         var problem = {
           'entries': [{
@@ -947,6 +947,30 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         expect(likelihoodLinkOptions[2].compatibility).toBe('compatible');
         expect(likelihoodLinkOptions[3].compatibility).toBe('compatible');
         expect(likelihoodLinkOptions[4].compatibility).toBe('compatible');
+
+      });
+
+      it('should only allow options that fit the selected scale in the case of mixed absolute/relative data', function() {
+        var problem = {
+          'entries': [{
+            'study': 'Rudolph and Feiger, 1999',
+            'treatment': 2,
+            'sampleSize': 103,
+            'responders': 53
+          }],
+          relativeEffectData: {
+            scale: 'mean difference',
+            data: {}
+          }
+        };
+
+        var likelihoodLinkOptions = analysisService.createLikelihoodLinkOptions(problem);
+
+        expect(likelihoodLinkOptions[0].compatibility).toBe('incompatible');
+        expect(likelihoodLinkOptions[1].compatibility).toBe('incompatible');
+        expect(likelihoodLinkOptions[2].compatibility).toBe('incompatible');
+        expect(likelihoodLinkOptions[3].compatibility).toBe('incompatible');
+        expect(likelihoodLinkOptions[4].compatibility).toBe('incompatible');
 
       });
     });
