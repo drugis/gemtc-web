@@ -4,7 +4,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
   var AnalysisService = function() {
 
-    var likelihoodLinkSettings = [{
+    var LIKELIHOOD_LINK_SETTINGS = [{
       "likelihood": "normal",
       "link": "identity",
       "scale": "mean difference",
@@ -284,13 +284,26 @@ define(['angular', 'lodash'], function(angular, _) {
       }));
     }
 
-    function createLikelihoodLinkOptions(problem) {
-      return _.map(likelihoodLinkSettings, function(setting) {
-        var isIncompatible = problem.entries.find(function(entry) {
-          return _.every(setting.columns, function(columnNames) {
-            return _.intersection(_.keys(entry), columnNames).length !== columnNames.length;
-          });
+    function hasRelativeEffectData(problem) {
+      return problem.relativeEffectData && problem.relativeEffectData.data;
+    }
+
+    function isSettingIncompatible(setting, problem) {
+      return problem.entries.find(function(entry) {
+        return _.every(setting.columns, function(columnNames) {
+          return _.intersection(_.keys(entry), columnNames).length !== columnNames.length;
         });
+      });
+    }
+
+    function createLikelihoodLinkOptions(problem) {
+      return _.map(LIKELIHOOD_LINK_SETTINGS, function(setting) {
+        var isIncompatible;
+        if (hasRelativeEffectData(problem)) {
+          isIncompatible = setting.analysisScale !== problem.relativeEffectData.scale || isSettingIncompatible(setting, problem)
+        } else {
+          isIncompatible = isSettingIncompatible(setting, problem);
+        }
 
         var option = _.pick(setting, ['likelihood', 'link', 'scale', 'missingColumnsLabel', 'analysisScale']);
         option.label = option.likelihood + '/' + option.link + ' (' + option.scale + ')';
@@ -300,7 +313,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function getScaleName(model) {
-      return _.find(likelihoodLinkSettings, function(setting) {
+      return _.find(LIKELIHOOD_LINK_SETTINGS, function(setting) {
         return setting.likelihood === model.likelihood &&
           setting.link === model.link;
       }).scale;
