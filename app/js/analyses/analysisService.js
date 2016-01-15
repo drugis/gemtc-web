@@ -120,10 +120,11 @@ define(['angular', 'lodash'], function(angular, _) {
         var intervention = {};
         intervention.name = treatment.name;
         intervention.id = treatment.id;
+        intervention.sampleSize = 0;
         if (!problem.relativeEffectData || !problem.relativeEffectData.data) {
           intervention.sampleSize = _.reduce(problem.entries, function(totalSampleSize, entry) {
             return entry.treatment === treatment.id ? totalSampleSize + entry.sampleSize : totalSampleSize;
-          }, 0);
+          }, intervention.sampleSize);
         }
         return intervention;
       }
