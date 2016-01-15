@@ -32,7 +32,7 @@
       <label for="scale-input">
         Relative effects scale
         <select
-        id="scale-input"
+        id="scale-select"
         ng-options="option.analysisScale group by option.compatibility for option in scaleOptions"
         ng-model="selectedScale"
         ng-change="addScale(selectedScale)">
