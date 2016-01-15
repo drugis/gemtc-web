@@ -5,7 +5,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
   var STUDY_TREATMENT = [
     'study',
     'treatment'
-  ]
+  ];
 
   var ENTRY_COLUMN_OPTIONS = [
     'mean',
@@ -175,7 +175,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
 
     function checkConsistency(covariates) {
       var errorMessage = '';
-      var error = _.find(covariates, function(studyCovariates, key) {
+      _.find(covariates, function(studyCovariates, key) {
         var errorColumn = checkStudyConsistency(studyCovariates);
         if (errorColumn) {
           errorMessage = 'Inconsistent covariates: study ' + key + ', column ' + errorColumn;
@@ -268,7 +268,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       }
 
       function isEntry(entryCandidate) {
-        return !_.includes(_.values(entryCandidate), 'NA') && hasEntryColumn(entryCandidate)
+        return !_.includes(_.values(entryCandidate), 'NA') && hasEntryColumn(entryCandidate);
       }
 
       function lineToEntry(line) {
