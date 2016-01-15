@@ -69,13 +69,17 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
           }
         }, {
           title: 'arm2',
-          data: {}
+          data: {
+            mean: 5.5,
+          }
         }]
       }, {
         title: 'title2',
         arms: [{
           title: 'arm3',
-          data: {}
+          data: {
+            mean: 5.5,
+          }
         }]
       }];
       var evidenceRows;
@@ -113,13 +117,23 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
           }
         }, {
           title: 'arm2',
-          data: {}
+          data: {
+            responders: 10,
+            sampleSize: 20,
+            mean: 5.5,
+            'std.dev': 0.001
+          }
         }]
       }, {
         title: 'title2',
         arms: [{
           title: 'arm3',
-          data: {}
+          data: {
+            responders: 10,
+            sampleSize: 20,
+            mean: 5.5,
+            'std.dev': 0.001
+          }
         }]
       }];
       var studyLevelCovariates = {
