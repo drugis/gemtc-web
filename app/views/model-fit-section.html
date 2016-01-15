@@ -37,7 +37,8 @@
     </div>
   </div>
 
-  <div class="row" ng-if="result.results">
+
+  <div class="row" ng-if="result.results && absoluteDevianceStatisticsTable.length > 0">
     <div class="columns large-12 medium-12 small-12">
       <table export>
         <thead>
@@ -50,9 +51,30 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="row in devianceStatisticsTable">
+          <tr ng-repeat="row in absoluteDevianceStatisticsTable">
             <td ng-if="row.rowSpan" rowspan="{{row.rowSpan}}" style="vertical-align: top;">{{::row.studyName}}</td>
             <td>{{::row.armName}}</td>
+            <td  class="text-center">{{::row.deviance | number}}</td>
+            <td  class="text-center">{{::row.leverage | number}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row" ng-if="result.results && relativeDevianceStatisticsTable.length > 0">
+    <div class="columns large-12 medium-12 small-12">
+      <table export>
+        <thead>
+          <caption>Residual deviance of relative effects per study <data-inline-help help-key="residual-deviance"></data-inline-help></caption>
+          <tr>
+            <th class="large-5">Study</th>
+            <th>Residual deviance</th>
+            <th>Leverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="row in relativeDevianceStatisticsTable">
+            <td  style="vertical-align: top;">{{::row.studyName}}</td>
             <td  class="text-center">{{::row.deviance | number}}</td>
             <td  class="text-center">{{::row.leverage | number}}</td>
           </tr>

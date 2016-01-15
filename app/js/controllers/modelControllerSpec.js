@@ -84,7 +84,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService = jasmine.createSpyObj('PataviService', ['run']);
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
-      devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildTable']);
+      devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildAbsoluteTable', 'buildRelativeTable']);
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['buildDiagnosticMap', 'compareDiagnostics']);
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
       stateMock = jasmine.createSpyObj('$state', ['reload']);
