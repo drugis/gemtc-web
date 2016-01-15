@@ -63,7 +63,7 @@ define(['lodash'], function(_) {
     }
 
     function nameRankProbabilities(rankProbabilities, treatments) {
-      return _.reduce(_.pairs(rankProbabilities), function(memo, pair) {
+      return _.reduce(_.toPairs(rankProbabilities), function(memo, pair) {
         var treatmentName = _.find(treatments, function(treatment) {
           return treatment.id.toString() === pair[0];
         }).name;
@@ -142,8 +142,7 @@ define(['lodash'], function(_) {
             };
           });
 
-          if (ModelService.isVariableBinary($scope.model.regressor.variable, $scope.problem)) {
-
+          if ($scope.model.regressor && ModelService.isVariableBinary($scope.model.regressor.variable, $scope.problem)) {
             $scope.rankProbabilitiesByLevel = filterCentering($scope.rankProbabilitiesByLevel);
             $scope.relativeEffectsTables = filterCentering($scope.relativeEffectsTables);
             $scope.relativeEffectPlots = filterCentering($scope.relativeEffectPlots);
@@ -154,13 +153,16 @@ define(['lodash'], function(_) {
             $scope.relativeEffectsTable = findCentering($scope.relativeEffectsTables);
             $scope.relativeEffectPlot = findCentering($scope.relativeEffectPlots);
             $scope.rankProbabilities = findCentering($scope.rankProbabilitiesByLevel);
-            $scope.relativeEffectsTable.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
-            $scope.relativeEffectPlot.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
-            $scope.rankProbabilities.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
+            if ($scope.model.regressor) {
+              $scope.relativeEffectsTable.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
+              $scope.relativeEffectPlot.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
+              $scope.rankProbabilities.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
+            }
           }
         } // end not nodesplit
 
-        $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
+        $scope.absoluteDevianceStatisticsTable = DevianceStatisticsService.buildAbsoluteTable(result.results.devianceStatistics, problem);
+        $scope.relativeDevianceStatisticsTable = DevianceStatisticsService.buildRelativeTable(result.results.devianceStatistics);
         if ($scope.model.regressor) {
           $scope.controlTreatment = _.find(problem.treatments, function(treatment) {
             return treatment.id == $scope.model.regressor.control;
