@@ -60,8 +60,8 @@ pwforest <- function(result, t1, t2, ...) {
 
 plotDeviance <- function(result) {
   model <- result$model
-  fit.ab <- apply(result$deviance$fit.ab, 1, sum, na.rm=TRUE)
-  dev.ab <- apply(result$deviance$dev.ab, 1, sum, na.rm=TRUE)
+  fit.ab <- if (!is.null(result$deviance$fit.ab)) apply(result$deviance$fit.ab, 1, sum, na.rm=TRUE)
+  dev.ab <- if (!is.null(result$deviance$dev.ab)) apply(result$deviance$dev.ab, 1, sum, na.rm=TRUE)
   lev.ab <- dev.ab - fit.ab
   fit.re <- result$deviance$fit.re
   dev.re <- result$deviance$dev.re
@@ -229,24 +229,55 @@ gemtc <- function(params) {
   times$init <- system.time({
     ## incoming information
     #  entries
-    data.ab <- do.call(rbind, lapply(params[['entries']],
-      function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
+    data.ab <- do.call(rbind, lapply(params[['entries']], function(x) {
+      as.data.frame(x, stringsAsFactors=FALSE)
+    }))
+
+    # create relative effects
+    relEffects <- params[['relativeEffectData']]
+    dataToRow <- function(data, study) {
+      dataAsList <- as.list(data)
+      row <- data.frame(
+        study=as.character(study),
+        treatment=as.character(data[['treatment']]),
+        diff=nullCheckWithDefault(dataAsList[['meanDifference']], NA),
+        std.err=nullCheckWithDefault(dataAsList[['standardError']], NA),
+        stringsAsFactors=FALSE)
+
+      if(!is.null(dataAsList[['baseArmStandardError']])) {
+        row[['std.err']] <- dataAsList[['baseArmStandardError']]
+      }
+      row
+    }
+    relEffectsData <- as.list(relEffects)[['data']]
+    data.re <- data.frame(study=character(0), treatment=character(0), diff=numeric(0), std.err=numeric(0), stringsAsFactors=FALSE)
+    for (study in names(relEffectsData)) {
+      baseRow <- dataToRow(relEffectsData[[study]][['baseArm']], study)
+      x <- lapply(relEffectsData[[study]][['otherArms']], function(x) {
+        dataToRow(x, study)
+      })
+      data.re <- rbind(data.re, baseRow, do.call(rbind, x))
+    }
+    if(dim(data.re)[1] == 0) {
+      data.re <- NULL
+    }
+
     # linear model or fixed?
     linearModel <- nullCheckWithDefault(params[['linearModel']], 'random')
 
-    treatments <- do.call(rbind, lapply(params[['treatments']],
-      function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
+    treatments <- do.call(rbind, lapply(params[['treatments']], function(x) {
+      data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE)
+    }))
 
     covars <- params[['studyLevelCovariates']]
-    studies <- do.call(rbind, lapply(names(covars),
-      function(studyName) {
+    studies <- do.call(rbind, lapply(names(covars), function(studyName) {
         values <- c(list("study"=studyName), covars[[studyName]])
         values[sapply(values, is.null)] <- NA_real_
         do.call(data.frame, c(values, list(stringsAsFactors=FALSE)))
       }
     ))
 
-    network <- mtc.network(data.ab=data.ab, treatments=treatments, studies=studies)
+    network <- mtc.network(data.ab=data.ab, data.re=data.re, treatments=treatments, studies=studies)
     mtc.model.params <- list(network=network, linearModel=linearModel)
     if(!is.null(params[['likelihood']])) {
       mtc.model.params <- c(mtc.model.params, list('likelihood' = params[['likelihood']]))
@@ -467,7 +498,14 @@ report('summary', 1.0)
     summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
     deviance <- result[['deviance']]
     summary[['devianceStatistics']][['perArmDeviance']] <- wrap.arms(deviance[['dev.ab']], model[['network']])
+    print(model[['network']][['data.re']][['study']])
+    relEffectStudyNames <- rle(as.character(model[['network']][['data.re']][['study']]))[['values']]
+    names(deviance[['dev.re']]) <- relEffectStudyNames
+    summary[['devianceStatistics']][['relativeDeviance']] <- if(length(deviance[['dev.re']]) > 0)  deviance[['dev.re']] else NULL
     summary[['devianceStatistics']][['perArmLeverage']] <- wrap.arms(deviance[['dev.ab']] - deviance[['fit.ab']], model[['network']])
+    relativeLeverage <- deviance[['dev.re']] - deviance[['fit.re']]
+    names(relativeLeverage) <- relEffectStudyNames
+    summary[['devianceStatistics']][['relativeLeverage']] <- if(length(relativeLeverage) > 0) relativeLeverage else NULL
     summary[['residualDeviance']] <- deviance[['Dbar']]
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
