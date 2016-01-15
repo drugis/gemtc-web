@@ -254,7 +254,7 @@ define(['angular', 'lodash'], function(angular, _) {
               return study.title === studyToRemove.title;
             });
           })
-        }
+        };
       });
       return {
         edges: strippedEdges,
@@ -299,8 +299,8 @@ define(['angular', 'lodash'], function(angular, _) {
     function createLikelihoodLinkOptions(problem) {
       return _.map(LIKELIHOOD_LINK_SETTINGS, function(setting) {
         var isIncompatible;
-        if (hasRelativeEffectData(problem)) {
-          isIncompatible = setting.analysisScale !== problem.relativeEffectData.scale || isSettingIncompatible(setting, problem)
+        if (hasRelativeEffectData(problem) && problem.relativeEffectData.scale) {
+          isIncompatible = setting.analysisScale !== problem.relativeEffectData.scale || isSettingIncompatible(setting, problem);
         } else {
           isIncompatible = isSettingIncompatible(setting, problem);
         }
