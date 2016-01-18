@@ -1,6 +1,6 @@
 'use strict';
 var gulp = require('gulp');
-var jshint = require('  gulp-jshint');
+var jshint = require('gulp-jshint');
 var prettify = require('gulp-jsbeautifier');
 
 var myFiles = ['./app/js/**/*.js', '!./app/js/bower_components/**/*.js'];
