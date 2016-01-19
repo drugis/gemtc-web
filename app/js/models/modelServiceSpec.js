@@ -124,7 +124,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
             }
           },
           type: 'pairwise'
-        }
+        };
         cleanedModel.outcomeScale = 123456;
         expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
       });
@@ -162,7 +162,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
           id: 1
         };
         frontEndModel.treatmentInteraction = 'unrelated';
-        frontEndModel.levels = [10, 20, 30] ;
+        frontEndModel.levels = [10, 20, 30];
 
         cleanedModel.modelType = {
           type: 'regression',
@@ -176,6 +176,34 @@ define(['angular', 'angular-mocks', 'services'], function() {
 
 
         expect(modelService.cleanModel(frontEndModel)).toEqual(cleanedModel);
+      });
+    });
+
+    describe('getBinaryCovariateNames', function() {
+      var problem = {
+        'studyLevelCovariates': {
+          'Alves et al, 1999': {
+            'BLINDING_AT_LEAST_DOUBLE_BLIND': 1.0,
+            'LENGTH_OF_FOLLOW_UP': 30.0,
+            'MULTI_CENTER_STUDY': 1.0
+          },
+          'Boyer et al, 1998': {
+            'BLINDING_AT_LEAST_DOUBLE_BLIND': 1.0,
+            'LENGTH_OF_FOLLOW_UP': 30.0,
+            'MULTI_CENTER_STUDY': 1.0
+          },
+          'Behnke et al, 2003': {
+            'BLINDING_AT_LEAST_DOUBLE_BLIND': 1.0,
+            'LENGTH_OF_FOLLOW_UP': 30.0,
+            'MULTI_CENTER_STUDY': 1.0
+          }
+        }
+      };
+      it('filter the problem covariates and return only the binary ones', function() {
+        var binaryCovariates = modelService.getBinaryCovariateNames(problem);
+        expect(binaryCovariates).toEqual(['BLINDING_AT_LEAST_DOUBLE_BLIND',
+          'MULTI_CENTER_STUDY'
+        ]);
       });
     });
   });

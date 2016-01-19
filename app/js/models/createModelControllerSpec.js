@@ -10,7 +10,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       modelSaveDefer,
       problemMock,
       modelSaveResultMock,
-      modelServiceMock = jasmine.createSpyObj('ModelService', ['cleanModel', 'createModelBatch']),
+      modelServiceMock = jasmine.createSpyObj('ModelService', ['cleanModel',
+       'createModelBatch', 'isVariableBinary', 'getBinaryCovariateNames']),
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', [
         'createPairwiseOptions',
@@ -115,7 +116,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         expect(scope.model.likelihoodLink).toEqual(likelihoodLinkOptionsMock[1]);
       });
       it('should place covariate options on the scope', function() {
-        expect(scope.covariateOptions).toEqual(['COVARIATE_1', 'COVARIATE_2'])
+        expect(scope.covariateOptions).toEqual(['COVARIATE_1', 'COVARIATE_2']);
       });
 
     });
@@ -336,10 +337,54 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
               'my cov': null
             }
           }
-        }
+        };
 
         expect(scope.isAddButtonDisabled(model, problem)).toBeTruthy();
       });
+
+      it('should return false if sensitivity weightingFactor is invalid', function() {
+        var model = {
+          title: 'title',
+          burnInIterations: 1000,
+          inferenceIterations: 100,
+          thinningFactor: 10,
+          modelType: {
+            mainType : 'consistency'
+          },
+          sensitivity: {
+            weightingFactor: undefined
+          }
+        };
+
+        scope.estimateRunLength = 299;
+        scope.isAddingModel = false;
+        scope.isWeighted = true;
+        model.likelihoodLink = {
+          compatibility: 'compatibility'
+        };
+        model.outcomeScale = {
+          outcomeScale: {
+            value: 1,
+            type: 'fixed'
+          }
+        };
+
+        var problem = {
+          studyLevelCovariates: {
+            'study 1': {
+              SOME_COVARIATE: 1,
+              'my cov': 1
+            },
+            'study 2': {
+              SOME_COVARIATE: null,
+              'my cov': null
+            }
+          }
+        };
+
+        expect(scope.isAddButtonDisabled(model, problem)).toBe(true);
+      });
+
     });
 
 
