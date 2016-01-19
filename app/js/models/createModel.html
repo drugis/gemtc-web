@@ -133,7 +133,7 @@
   <!-- end model type section -->
 
   <div class="row section" ng-show="binaryCovariateNames.length > 0">
-    <div class="columns large-6 medium-6 small-12">
+    <div class="columns large-12 medium-12 small-12">
       <label class="form-item-header">Sensitivity analysis</label>
       <input id="adjustment-checkbox" type="checkbox" ng-model="isWeighted" ng-change="changeIsWeighted()" ng-disabled="binaryCovariateNames.length === 0">
       <label for="adjustment-checkbox">Design adjusted model (variance inflation)</label>
@@ -141,7 +141,7 @@
         <em>Not possible: no binary covariates.</em>
       </div>
       <div class="row" ng-show="isWeighted">
-        <div class="colums large-6 medium-6 small-12 large-offset-1 medium-offset-1">
+        <div class="columns large-5 medium-5 small-12 large-offset-1 medium-offset-1">
           <label>Ajustment factor
             <select ng-options="option for option in binaryCovariateNames" ng-model="model.sensitivity.adjustmentFactor" id="likelihood-link-select"></select>
           </label>
@@ -158,8 +158,44 @@
               <label>
           </div>
         </div>
+        <div class="columns large-centered medium-cetered large-6 medium-6 small-12">
+          <table>
+            <thead>
+              <tr>
+                 <th>{{model.sensitivity.adjustmentFactor}}</th>
+                 <th>Weight</th>
+                 <th>Inflation factor</th>
+              </tr>
+             </thead>
+             <tbody>
+               <tr>
+                 <td>
+                   0
+                 </td>
+                 <td>
+                   {{model.sensitivity.inflationValue == 0 ? model.sensitivity.weightingFactor : 1}}
+                 </td>
+                 <td>
+                   {{model.sensitivity.inflationValue == 0 ? 1 / model.sensitivity.weightingFactor : 1}}
+                 </td>
+               </tr>
+               <tr>
+                 <td>
+                   1
+                 </td>
+                 <td>
+                   {{model.sensitivity.inflationValue == 1 ? model.sensitivity.weightingFactor : 1}}
+                 </td>
+                 <td>
+                    {{model.sensitivity.inflationValue == 1 ? 1 / model.sensitivity.weightingFactor : 1}}
+                 </td>
+               </tr>
+             </tbody>
+          </table>
+        </div>
       </div>
     </div>
+
   </div>
 
   <div class="row ">
