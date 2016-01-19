@@ -19,10 +19,12 @@ define(['lodash'], function(_) {
         $scope.uploadResult = FileUploadService.processFile($scope.problemFile);
         if ($scope.uploadResult.isValid) {
           $scope.analysis.problem = $scope.uploadResult.problem;
-          $scope.scaleOptions = _.uniqBy(AnalysisService.createLikelihoodLinkOptions($scope.analysis.problem), 'analysisScale');
-          $scope.selectedScale = $scope.scaleOptions.find(function(option) {
-            return option.compatibility === 'compatible';
-          });
+          if ($scope.problemFile.extension === 'csv') {
+            $scope.scaleOptions = _.uniqBy(AnalysisService.createLikelihoodLinkOptions($scope.analysis.problem), 'analysisScale');
+            $scope.selectedScale = $scope.scaleOptions.find(function(option) {
+              return option.compatibility === 'compatible';
+            });
+          }
         }
       }
     });
