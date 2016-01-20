@@ -132,7 +132,7 @@
   </div>
   <!-- end model type section -->
 
-  <div class="row section" ng-show="binaryCovariateNames.length > 0">
+  <div class="row section">
     <div class="columns large-12 medium-12 small-12">
       <label class="form-item-header">Sensitivity analysis</label>
       <input id="adjustment-checkbox" type="checkbox" ng-model="isWeighted" ng-change="changeIsWeighted()" ng-disabled="binaryCovariateNames.length === 0">
@@ -155,11 +155,13 @@
           </label>
           <div>
             <label ng-hide="model.sensitivity.weightingFactor !== undefined" class="alert">Must be number between zero and one
-              <label>
+              </label>
           </div>
         </div>
-        <div class="columns large-centered medium-cetered large-6 medium-6 small-12">
-          <table>
+      </div>
+      <div class="row" ng-show="isWeighted">
+        <div class="columns large-5 medium-5 small-12 large-offset-1 medium-offset-1">
+          <table width="100%">
             <thead>
               <tr>
                  <th>{{model.sensitivity.adjustmentFactor}}</th>
