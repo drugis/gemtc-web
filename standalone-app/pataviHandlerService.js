@@ -1,3 +1,4 @@
+'use strict';
 var
   pataviTaskRepository = require('./pataviTaskRepository'),
   _ = require('lodash');
@@ -16,7 +17,8 @@ var modelSettings = [
   'link',
   'outcomeScale',
   'heterogeneityPrior',
-  'regressor'];
+  'regressor',
+  'sensitivity'];
 
 function createPataviTask(analysis, model, callback) {
   var problemPlusModelSettings = _.extend(analysis.problem, _.pick(model, modelSettings));
