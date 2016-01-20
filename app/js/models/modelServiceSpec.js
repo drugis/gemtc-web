@@ -206,5 +206,44 @@ define(['angular', 'angular-mocks', 'services'], function() {
         ]);
       });
     });
+
+    describe('isProblemWithCovariates', function() {
+      it('should return true if the problem has covariates', function() {
+        var problem = {
+          studyLevelCovariates: {
+            'Alves et al, 1999': {
+              'BLINDING_AT_LEAST_DOUBLE_BLIND': 1.0,
+              'LENGTH_OF_FOLLOW_UP': 30.0,
+              'MULTI_CENTER_STUDY': 1.0
+            },
+            'Boyer et al, 1998': {
+              'BLINDING_AT_LEAST_DOUBLE_BLIND': 1.0,
+              'LENGTH_OF_FOLLOW_UP': 30.0,
+              'MULTI_CENTER_STUDY': 1.0
+            },
+            'Behnke et al, 2003': {
+              'BLINDING_AT_LEAST_DOUBLE_BLIND': 1.0,
+              'LENGTH_OF_FOLLOW_UP': 30.0,
+              'MULTI_CENTER_STUDY': 1.0
+            }
+          }
+        };
+        expect(modelService.isProblemWithCovariates(problem)).toBe(true);
+      });
+      it('should return false if the problem has no covariates', function() {
+        var problem = {
+          entries: [{}],
+          studyLevelCovariates: {
+            'Alves et al, 1999': {
+            },
+            'Boyer et al, 1998': {
+            },
+            'Behnke et al, 2003': {
+            }
+          }
+        };
+        expect(modelService.isProblemWithCovariates(problem)).toBe(false);
+      });
+    });
   });
 });
