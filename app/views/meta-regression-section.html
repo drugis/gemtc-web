@@ -25,15 +25,19 @@
             Coefficient
           </th>
           <th>
-            beta (Etanercept)
-          </th>
-          <th>
             Median (95% CrI)
           </th>
         </tr>
       </thead>
       <tbody>
-
+        <tr ng-repeat="item in covariateQuantiles">
+          <td>
+            {{item.label}}
+          </td>
+          <td>
+            {{item.value['50%'] | number:3}} ({{item.value['2.5%'] | number:3}} - {{item.value['97.5%'] | number:3}})
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
