@@ -20,17 +20,24 @@ pwforest <- function(result, t1, t2, ...) {
   model <- result$model
   network <- model$network
 
+  alpha <- model$data$alpha
+
   studies <- gemtc:::mtc.studies.list(network)$values
   studies <- studies[sapply(studies, function(study) {
     t1 %in% gemtc:::mtc.study.design(network, study) &&
-    t2 %in% gemtc:::mtc.study.design(network, study)
+    t2 %in% gemtc:::mtc.study.design(network, study) &&
+    (is.null(alpha) || alpha[study] > 0)
   })]
-
 
   data <- network$data.ab
   columns <- ll.call("required.columns.ab", model)
   study.effect <- lapply(studies, function(study) {
-    ll.call('mtc.rel.mle', model, as.matrix(data[data$study == study & (data$treatment == t1 | data$treatment == t2), columns]), correction.force=FALSE, correction.type="reciprocal", correction.magnitude=0.1)
+    est <- ll.call('mtc.rel.mle', model, as.matrix(data[data$study == study & (data$treatment == t1 | data$treatment == t2), columns]), correction.force=FALSE, correction.type="reciprocal", correction.magnitude=0.1)
+    if (is.null(alpha)) {
+      est
+    } else {
+      c(est['mean'], 'sd'=unname(sqrt(1/alpha[study])*est['sd']))
+    }
   })
 
   pooled.effect <- as.matrix(as.mcmc.list(relative.effect(result, t1=t1, t2=t2, preserve.extra=FALSE)))
