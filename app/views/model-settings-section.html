@@ -1,5 +1,5 @@
   <div class="row">
-    <div class="columns columns large-7 medium-8 small-12">
+    <div class="columns columns large-9 medium-11 small-12">
       <h4 ng-if="!result.results" class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
       <div ng-if="result.results" style="padding-top: 1rem;">
         <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 " class="row">Go to node-split overview</a>
@@ -65,6 +65,15 @@
             <tr ng-if="model.linearModel === 'random'" >
               <td class="large-6 text-right"><strong>heterogeneity prior</strong></td>
               <td><heterogeneity-prior prior="result.results.heterogeneityPrior"></heterogeneity-prior> <data-inline-help help-key="heterogeneity-prior-distribution"></data-inline-help></td>
+            </tr>
+            <tr ng-if="model.sensitivity">
+              <td class="large-6 text-right" style="vertical-align:top;"><strong>design adjustment</strong></td>
+              <td>
+                <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;  margin-bottom: 0;">
+                  <li style="padding-bottom: 0.5rem">adjustment for: {{model.sensitivity.adjustmentFactor}} = {{model.sensitivity.inflationValue}}</li>
+                  <li>weighting factor : {{model.sensitivity.weightingFactor}}</li>
+                </ul>
+              </td>
             </tr>
             <tr>
               <td class="large-6 text-right" style="vertical-align:top;"><strong>run-length</strong></td>
