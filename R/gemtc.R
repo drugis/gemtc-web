@@ -286,7 +286,7 @@ gemtc <- function(params) {
       }
     ))
     if(!is.null(params[['sensitivity']])) {
-      adjustmentFactor <- params[['sensitivity']][['adjustmentFactor']]
+      adjustmentFactor <- make.names(params[['sensitivity']][['adjustmentFactor']])
       inflationValue <- params[['sensitivity']][['inflationValue']]
       weightingFactor <- params[['sensitivity']][['weightingFactor']]
       weightingVector <- unlist(lapply(studies[[adjustmentFactor]], function(x) {
