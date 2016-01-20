@@ -83,11 +83,19 @@ define(['angular', 'lodash'], function(angular, _) {
       }
     }
 
+    function isProblemWithCovariates(problem){
+      var studies = _.keys(problem.studyLevelCovariates);
+      if (studies.length) {
+        return Object.keys(problem.studyLevelCovariates[studies[0]]).length > 0;
+      }
+    }
+
     return {
       cleanModel: cleanModel,
       createModelBatch: createModelBatch,
       isVariableBinary: isVariableBinary,
-      getBinaryCovariateNames: getBinaryCovariateNames
+      getBinaryCovariateNames: getBinaryCovariateNames,
+      isProblemWithCovariates: isProblemWithCovariates
     };
   };
 
