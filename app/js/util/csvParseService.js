@@ -82,28 +82,50 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
           }, '')
         };
       } else {
-        if (parseResult.meta.delimiter === ';') {
-          parseResult.data = normaliseData(parseResult.data);
+        var normalisedData = normaliseData(parseResult.data);
+        if (normalisedData.isValid) {
+          return parseLines(normalisedData.data);
+        } else {
+          return normalisedData;
         }
-        return parseLines(parseResult.data);
       }
     }
 
     function normaliseData(data) {
-      function stringToNumber(datum) {
+      var isValid = true;
+
+      function stringToDatum(datum) {
         if (isNumeric(datum)) {
           return datum;
         } else {
-          return parseFloat(datum.replace(',', '.'));
+          if (datum === null || datum.trim() === '') {
+            return null;
+          } else if (datum.trim() === 'NA') {
+            return 'NA';
+          } else {
+            var parsedVal = parseFloat(datum.trim().replace(',', '.'));
+            if (isNaN(parsedVal)) {
+              isValid = false;
+            }
+            return parsedVal;
+          }
         }
       }
-      var header = data[0];
-      var normalisedRows = _.map(data.slice(1, data.length), function(dataLine) {
-        var studyAndTreatment = dataLine.slice(0, 2);
-        var numericalData = dataLine.slice(2, dataLine.length);
-        return studyAndTreatment.concat(_.map(numericalData, stringToNumber));
+
+      var header = _.map(data[0], function(col) {
+        return col.trim()
       });
-      return [].concat([header], normalisedRows);
+      var normalisedRows = _.map(data.slice(1, data.length), function(dataLine) {
+        var study = dataLine[0].toString().trim();
+        var treatment = dataLine[1].toString().trim();
+        var numericalData = dataLine.slice(2, dataLine.length);
+        return [study, treatment].concat(_.map(numericalData, stringToDatum));
+      });
+      return {
+        isValid: isValid,
+        message: isValid ? '' : 'Error: non-numeric data in data column',
+        data: [].concat([header], normalisedRows)
+      }
     }
 
     /**
@@ -164,7 +186,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       var covValues = {};
       _.find(studyArms, function(arm) {
         return errorColumn = _.find(covariateNames, function(covariateName) {
-          if (covValues[covariateName] !== undefined && arm[covariateName] !== null && arm[covariateName] !== covValues[covariateName]) {
+          if (covValues[covariateName] !== undefined && covValues[covariateName] && arm[covariateName] !== null && arm[covariateName] !== covValues[covariateName]) {
             return true;
           }
           covValues[covariateName] = arm[covariateName];

@@ -8,6 +8,11 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       '"1","C",-1.53,4.28,95,31,1\n' +
       '"2","A",-0.7,3.7,172,,0\n' +
       '"2","B",-2.4,3.4,173,,0\n';
+    var validAbsoluteCsvWithStupidSpaces = '"study ","treatment","mean","std.dev","sampleSize","LENGTH_OF_FOLLOW_UP","BLINDING_AT_LEAST_DOUBLE_BLIND"\n' +
+      '"1","A",-1.22,3.7,54,31,1\n' +
+      '"1","C", -1.53 ,4.28,95,31,1\n' +
+      '"2","A",-0.7,3.7,172,  ,0\n' +
+      '"2","B",-2.4,3.4, 173,,0\n';
 
     var validEuropeanAbsoluteCsv = '"study";"treatment";"mean";"std.dev";"sampleSize"\n' +
       '"1";"A";-1,22;3,7;54\n' +
@@ -81,6 +86,46 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(typeof parseResult.problem.entries[0].study).toBe('string');
       });
 
+      it('should parse valid absolute csv with erroneous spaces', function() {
+
+        var parseResult = csvParseService.parse(validAbsoluteCsvWithStupidSpaces);
+        var expectedTreatments = [{
+          id: 1,
+          name: 'A'
+        }, {
+          id: 2,
+          name: 'B'
+        }, {
+          id: 3,
+          name: 'C'
+        }];
+        var expectedFirstEntry = {
+          study: '1',
+          treatment: 1,
+          mean: -1.22,
+          'std.dev': 3.7,
+          sampleSize: 54
+        };
+
+        var expectedCovariates = {
+          "1": {
+            "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
+            "LENGTH_OF_FOLLOW_UP": 31
+          },
+          "2": {
+            "BLINDING_AT_LEAST_DOUBLE_BLIND": 0.0,
+            "LENGTH_OF_FOLLOW_UP": null
+          }
+        };
+
+        expect(parseResult.isValid).toBe(true);
+        expect(parseResult.problem.treatments).toEqual(expectedTreatments);
+        expect(parseResult.problem.entries.length).toEqual(4);
+        expect(parseResult.problem.entries[0]).toEqual(expectedFirstEntry);
+        expect(parseResult.problem.studyLevelCovariates).toBeDefined();
+        expect(parseResult.problem.studyLevelCovariates).toEqual(expectedCovariates);
+        expect(typeof parseResult.problem.entries[0].study).toBe('string');
+      });
       it('should parse valid Euro-peen absolute csv', function() {
 
         var parseResult = csvParseService.parse(validEuropeanAbsoluteCsv);
@@ -158,7 +203,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
           '"S2","B",-2.4,3.4,173,two\n';
         var parseResult = csvParseService.parse(validCsvOneCovariate);
         expect(parseResult.isValid).toBe(false);
-        expect(parseResult.message).toBe('Non-numeric covariate: study S1, column LENGTH_OF_FOLLOW_UP');
+        expect(parseResult.message).toBe('Error: non-numeric data in data column');
       });
 
       it('should parse mixed absolute and relative effects data', function() {

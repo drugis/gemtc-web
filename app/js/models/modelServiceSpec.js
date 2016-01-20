@@ -234,12 +234,9 @@ define(['angular', 'angular-mocks', 'services'], function() {
         var problem = {
           entries: [{}],
           studyLevelCovariates: {
-            'Alves et al, 1999': {
-            },
-            'Boyer et al, 1998': {
-            },
-            'Behnke et al, 2003': {
-            }
+            'Alves et al, 1999': {},
+            'Boyer et al, 1998': {},
+            'Behnke et al, 2003': {}
           }
         };
         expect(modelService.isProblemWithCovariates(problem)).toBe(false);
