@@ -16,7 +16,7 @@
 
   <div class="row section">
     <div class="large-4 small-12 columns">
-      <label class="form-item-header">Fixed/Random effect(s)
+      <label class="form-item-header">Fixed/random effect(s)
         <inline-help help-key="effects-type"></inline-help>
         <div class="stacked-radio">
           <input type="radio" value="random" ng-model="model.linearModel" ng-change="effectsTypeChange()" id="random-effect-radio">
@@ -32,7 +32,7 @@
 
   <div class="row section">
     <div class="large-6 small-12 columns">
-      <label class="form-item-header">Model Type
+      <label class="form-item-header">Model type
         <inline-help help-key="model-type"></inline-help>
       </label>
       <div class="stacked-radio">
@@ -136,10 +136,8 @@
     <div class="columns large-12 medium-12 small-12">
       <label class="form-item-header">Sensitivity analysis</label>
       <input id="adjustment-checkbox" type="checkbox" ng-model="isWeighted" ng-change="changeIsWeighted()" ng-disabled="binaryCovariateNames.length === 0">
-      <label for="adjustment-checkbox">Design adjusted model (variance inflation)</label>
-      <div ng-show="binaryCovariateNames.length === 0">
-        <em>Not possible: no binary covariates.</em>
-      </div>
+      <label for="adjustment-checkbox">Design adjusted model (variance inflation) <em ng-show="binaryCovariateNames.length === 0">(Not possible: no binary covariates)</em>
+</label>
       <div class="row" ng-show="isWeighted">
         <div class="columns large-5 medium-5 small-12 large-offset-1 medium-offset-1">
           <label>Ajustment factor
@@ -211,7 +209,7 @@
 
   <div class="row section">
     <div class="columns large-6 medium-6 small-12">
-      <label class="form-item-header">Likelihood/Link
+      <label class="form-item-header">Likelihood/link
         <inline-help help-key="likelihood-link"></inline-help>
       </label>
       <label>Select a likelihood/link type
