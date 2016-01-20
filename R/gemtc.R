@@ -67,7 +67,9 @@ plotDeviance <- function(result) {
   dev.re <- result$deviance$dev.re
   lev.re <- dev.re - fit.re
   nd <- model$data$na
-  nd[-(1:model$data$ns.a)] <- nd[-(1:model$data$ns.a)] - 1
+  studies.re <- c(model$data$studies.r2, model$data$studies.rm)
+  nd[studies.re] <- nd[studies.re] - 1
+  nd <- nd[model$data$studies] # eliminate studies ignored in the likelihood (power-adjusted analyses)
   w <- sqrt(c(dev.ab, dev.re) / nd)
   lev <- c(lev.ab, lev.re) / nd
 
@@ -276,8 +278,20 @@ gemtc <- function(params) {
         do.call(data.frame, c(values, list(stringsAsFactors=FALSE)))
       }
     ))
+    if(!is.null(params[['sensitivity']])) {
+      adjustmentFactor <- params[['sensitivity']][['adjustmentFactor']]
+      inflationValue <- params[['sensitivity']][['inflationValue']]
+      weightingFactor <- params[['sensitivity']][['weightingFactor']]
+      weightingVector <- unlist(lapply(studies[[adjustmentFactor]], function(x) {
+        if (x == inflationValue) weightingFactor else 1
+      }))
+      studies[['powerAdjust']] <- weightingVector
+    }
 
+    # create network
     network <- mtc.network(data.ab=data.ab, data.re=data.re, treatments=treatments, studies=studies)
+
+    #determine model parameters
     mtc.model.params <- list(network=network, linearModel=linearModel)
     if(!is.null(params[['likelihood']])) {
       mtc.model.params <- c(mtc.model.params, list('likelihood' = params[['likelihood']]))
@@ -287,6 +301,9 @@ gemtc <- function(params) {
     }
     if (!is.null(params[['outcomeScale']])) {
       mtc.model.params <- c(mtc.model.params, list('om.scale' = params[['outcomeScale']]))
+    }
+    if(!is.null(params[['sensitivity']])) {
+      mtc.model.params <- c(mtc.model.params, list(powerAdjust="powerAdjust"))
     }
     if(modelType == 'node-split') {
       t1 <- params[['modelType']][['details']][['from']][['id']]
@@ -522,4 +539,3 @@ report('summary', 1.0)
     update(list(progress=100))
     summary
 }
-

@@ -1,3 +1,4 @@
+'use strict';
 var assert = require('assert'),
   sinon = require('sinon'),
   proxyquire = require('proxyquire');
@@ -23,8 +24,9 @@ describe('the model service', function() {
         assert(error);
         done();
       });
-    })
+    });
   });
+  
   describe('for correct runlength settings', function() {
     beforeEach(function() {
       sinon.stub(modelRepository, 'update').onCall(0).yields(null);
@@ -46,6 +48,6 @@ describe('the model service', function() {
         assert(modelRepository.update.calledWith(newModel));
         done();
       });
-    })
+    });
   });
 });
