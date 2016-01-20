@@ -54,6 +54,7 @@ define(['angular', 'lodash'], function(angular, _) {
         $scope.model.nodeSplitComparison = $scope.nodeSplitOptions[0];
       }
       $scope.binaryCovariateNames = ModelService.getBinaryCovariateNames(problem);
+      $scope.isProblemWithCovariates = ModelService.isProblemWithCovariates(problem);
       $scope.likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
       var compatible = $scope.likelihoodLinkOptions.filter(function(option) {
         return option.compatibility === "compatible";
