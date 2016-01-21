@@ -62,7 +62,7 @@ define(
         });
 
         $rootScope.$on("$stateChangeSuccess",
-          function(event, toState, toParams, fromState, fromParams) {
+          function(event, toState) {
             $rootScope.currentStateName = toState.name;
             delete $rootScope.error;
           }
@@ -107,6 +107,10 @@ define(
               'evidenceTable': {
                 templateUrl: '/js/analyses/evidenceTable.html',
                 controller: 'EvidenceTableController'
+              },
+              'relativeEffectTable': {
+                templateUrl: '/js/analyses/relativeEffectTable.html',
+                controller: 'RelativeEffectTableController'
               }
             }
           })

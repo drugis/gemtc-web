@@ -1,7 +1,8 @@
+'use strict';
 define(['angular', 'angular-mocks', 'util/util'], function() {
   describe('the problem validity service', function() {
 
-    var problemValidityService
+    var problemValidityService;
 
     beforeEach(module('gemtc.util'));
 
@@ -18,7 +19,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       });
 
       it('should return false for undefined problems ', function() {
-        var undefinedProblem = undefined;
+        var undefinedProblem;
         var result = problemValidityService.getValidity(undefinedProblem);
         expect(result.isValid).toBe(false);
         expect(result.message).toContain('The problem file is empty.');
@@ -55,30 +56,148 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
             id: 1,
             name: 'treatment 1'
           }]
-        }
+        };
         var result = problemValidityService.getValidity(problem);
         expect(result.isValid).toBe(true);
       });
 
-      it('should return true for a valid problem', function() {
+      it('should return true for a valid relative effects data problem', function() {
         var problem = {
           entries: [{
             study: 1,
             treatment: 1
-          },
-          {
-            treatment: 1,
-            study: 1,
           }],
+          relativeEffectData: {
+            scale: "mean difference",
+            data: {
+              2: {
+                baseArm: {
+                  treatment: 1,
+                  baseArmStandardError: 0.3
+                },
+                otherArms: []
+              }
+            }
+          },
           treatments: [{
             id: 1,
             name: 'treatment 1'
           }]
-        }
+        };
         var result = problemValidityService.getValidity(problem);
         expect(result.isValid).toBe(true);
       });
 
+      it('should return false for a problem in which a study has both relative effects and absolute data', function() {
+        var problem = {
+          entries: [{
+            study: 1,
+            treatment: 1
+          }],
+          relativeEffectData: {
+            data: {
+              1: {
+                baseArm: {
+                  treatment: 1,
+                  baseArmStandardError: 0.3
+                },
+                otherArms: []
+              }
+            }
+          },
+          treatments: [{
+            id: 1,
+            name: 'treatment 1'
+          }]
+        };
+        var result = problemValidityService.getValidity(problem);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain(' Studies may not have both relative effects data and absolute data');
+      });
+
+      it('should return false for a relative effect problem in which a study has more than 2 arms but no base arm standardError', function() {
+        var problem = {
+          entries: [],
+          relativeEffectData: {
+            scale: "mean difference",
+            data: {
+              2: {
+                baseArm: {
+                  treatment: 1,
+                },
+                otherArms: [{
+                  treatment: 1,
+                  meanDifference: 2,
+                  standardError: 3
+                }, {
+                  treatment: 1,
+                  meanDifference: 2,
+                  standardError: 3
+                }]
+              }
+            }
+          },
+          treatments: [{
+            id: 1,
+            name: 'treatment 1'
+          }]
+        };
+        var result = problemValidityService.getValidity(problem);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain(' Relative effects data must contain baseArmStandardError if the study contains more than 2 arms');
+      });
+
+      it('should return false for malformed relativeEffectData', function() {
+        var problem = {
+          entries: [],
+          relativeEffectData: {
+            scale: "mean difference",
+            data: {
+              2: {
+                baseArm: {
+                  treatment: 1,
+                },
+                otherArms: [{}]
+              }
+            }
+          },
+          treatments: [{
+            id: 1,
+            name: 'treatment 1'
+          }]
+        };
+        var result = problemValidityService.getValidity(problem);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain(' Relative effects data must have at least a study and a treatment, and for non-base arms a mean difference and standard error.');
+      });
+
+      it('should return false for an incorrect scale if there is relative effects data', function() {
+        var problem = {
+          entries: [],
+          relativeEffectData: {
+            scale: "jan de behanger",
+            data: {
+              2: {
+                baseArm: {
+                  treatment: 1,
+                },
+                otherArms: [{
+                  treatment: 1,
+                  meanDifference: 2,
+                  standardError: 3
+                }]
+              }
+            }
+          },
+          treatments: [{
+            id: 1,
+            name: 'treatment 1'
+          }]
+        };
+        var result = problemValidityService.getValidity(problem);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain(' Relative effects data must define a valid scale.');
+      });
 
       it('should return false for a malformed entry', function() {
         var problem = {
@@ -103,7 +222,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
             study: 5,
             stddev: 0.3,
             sampleSize: 30
-          },{
+          }, {
             treatment: 1,
             study: 5,
             rate: 0.3,
@@ -146,7 +265,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
 
     });
 
-    describe('parse', function () {
+    describe('parse', function() {
       it('should return false for a null string object ', function() {
         var nullString = null;
         var result = problemValidityService.parse(nullString);

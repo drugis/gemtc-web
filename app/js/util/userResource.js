@@ -1,3 +1,4 @@
+'use strict';
 define(['angular-resource'], function() {
 
   var dependencies = ['$resource'];

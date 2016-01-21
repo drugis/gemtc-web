@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('The evidence service', function() {
 
@@ -52,7 +53,6 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         expect(studyArray[0].arms[0].title).toBeDefined();
         expect(studyArray[0].arms[0].data).toBeDefined();
       });
-
     });
 
     describe('studyListToEvidenceRows with no covariates', function() {
@@ -69,13 +69,17 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
           }
         }, {
           title: 'arm2',
-          data: {}
+          data: {
+            mean: 5.5,
+          }
         }]
       }, {
         title: 'title2',
         arms: [{
           title: 'arm3',
-          data: {}
+          data: {
+            mean: 5.5,
+          }
         }]
       }];
       var evidenceRows;
@@ -97,7 +101,6 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         expect(evidenceRows[0].evidence.mean).toEqual(5.5);
         expect(evidenceRows[0].evidence.stdDev).toEqual(0.001);
       });
-
     });
 
     describe('studyListToEvidenceRows with covariates', function() {
@@ -114,13 +117,23 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
           }
         }, {
           title: 'arm2',
-          data: {}
+          data: {
+            responders: 10,
+            sampleSize: 20,
+            mean: 5.5,
+            'std.dev': 0.001
+          }
         }]
       }, {
         title: 'title2',
         arms: [{
           title: 'arm3',
-          data: {}
+          data: {
+            responders: 10,
+            sampleSize: 20,
+            mean: 5.5,
+            'std.dev': 0.001
+          }
         }]
       }];
       var studyLevelCovariates = {
@@ -163,7 +176,6 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         expect(evidenceRows[0].covariatesColumns.length).toBe(2);
         expect(evidenceRows[0].covariatesColumns).toEqual(expectedFirstCovariates);
       });
-
     });
 
     describe('determineOutcomeType', function() {
@@ -216,6 +228,129 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         var outcomeType;
         outcomeType = evidenceTableService.determineOutcomeType(studyList);
         expect(outcomeType).toEqual('continuous');
+      });
+    });
+
+
+    describe('buildTableRows', function() {
+
+      it('should build the table rows', function() {
+        var problem = {
+          'entries': [{
+            'study': 'Rudolph and Feiger, 1999',
+            'treatment': 2,
+            'responders': 58,
+            'sampleSize': 100
+          }, {
+            'study': 'Rudolph and Feiger, 1999',
+            'treatment': 3,
+            'responders': 53,
+            'sampleSize': 103
+          }, {
+            'study': 'De Wilde et al, 1993',
+            'treatment': 3,
+            'responders': 24,
+            'sampleSize': 37
+          }, {
+            'study': 'De Wilde et al, 1993',
+            'treatment': 2,
+            'responders': 25,
+            'sampleSize': 41
+          }],
+          'treatments': [{
+            'id': 2,
+            'name': 'Fluoxetine'
+          }, {
+            'id': 3,
+            'name': 'Paroxetine'
+          }, {
+            'id': 4,
+            'name': 'Sertraline'
+          }],
+          relativeEffectData: {
+            scale: "log odds ratio",
+            data: {
+              'Schone and Ludwig, 1993': {
+                baseArm: {
+                  treatment: 2
+                },
+                otherArms: [{
+                  treatment: 3,
+                  meanDifference: 0.39,
+                  standardError: 0.02
+                }]
+              },
+              'Aberg-Wistedt et al, 2000': {
+                baseArm: {
+                  treatment: 3,
+                  baseArmStandardError: 0.23
+                },
+                otherArms: [{
+                  treatment: 2,
+                  meanDifference: 0.33,
+                  standardError: 0.03
+                }, {
+                  treatment: 4,
+                  meanDifference: 0.35,
+                  standardError: 0.04
+                }]
+              }
+            }
+          },
+          'studyLevelCovariates': {
+            'De Wilde et al, 1993': {
+              'LENGTH_OF_FOLLOW_UP': 10,
+              'BLINDING_AT_LEAST_DOUBLE_BLIND': 1
+            },
+            'Schone and Ludwig, 1993': {
+              'LENGTH_OF_FOLLOW_UP': 20,
+              'BLINDING_AT_LEAST_DOUBLE_BLIND': 1
+            },
+            'Rudolph and Feiger, 1999': {
+              'LENGTH_OF_FOLLOW_UP': 25,
+              'BLINDING_AT_LEAST_DOUBLE_BLIND': 0
+            },
+            'Aberg-Wistedt et al, 2000': {
+              'LENGTH_OF_FOLLOW_UP': 30,
+              'BLINDING_AT_LEAST_DOUBLE_BLIND': 0
+            }
+          }
+        };
+        var expectedFirstBaseRow = {
+          studyTitle: 'Schone and Ludwig, 1993',
+          treatmentTitle: 'Fluoxetine',
+          baseArmStandardError: undefined,
+          studyRowSpan: 2,
+          showStudyColumn: true,
+          covariatesColumns: [{
+            data: 20,
+            headerTitle: 'LENGTH_OF_FOLLOW_UP'
+          }, {
+            data: 1,
+          headerTitle: 'BLINDING_AT_LEAST_DOUBLE_BLIND'
+          }]
+        };
+
+        var expecetdFirstOtherArmRow = {
+          studyTitle: 'Schone and Ludwig, 1993',
+          treatmentTitle: 'Paroxetine',
+          meanDifference: 0.39,
+          standardError: 0.02,
+          studyRowSpan: 2,
+          showStudyColumn: false,
+          covariatesColumns: [{
+            data: 20,
+            headerTitle: 'LENGTH_OF_FOLLOW_UP'
+          }, {
+            data: 1,
+            headerTitle: 'BLINDING_AT_LEAST_DOUBLE_BLIND'
+          }]
+        };
+
+        var tableRows = evidenceTableService.buildRelativeEffectDataRows(problem);
+        expect(tableRows.length).toBe(5);
+        expect(tableRows[0]).toEqual(expectedFirstBaseRow);
+        expect(tableRows[1]).toEqual(expecetdFirstOtherArmRow);
       });
 
     });

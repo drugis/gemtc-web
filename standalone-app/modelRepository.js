@@ -1,9 +1,10 @@
-var logger = require('./logger');
-var dbUtil = require('./dbUtil');
-var _ = require('lodash');
-var db = require('./db')(dbUtil.gemtcDBUrl);
-var columnString = 'title, analysisId, linearModel, burn_in_iterations, inference_iterations, ' +
-    ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior, regressor';
+'use strict';
+var logger = require('./logger'),
+  dbUtil = require('./dbUtil'),
+  _ = require('lodash'),
+  db = require('./db')(dbUtil.buildGemtcDBUrl()),
+  columnString = 'title, analysisId, linearModel, burn_in_iterations, inference_iterations, ' +
+  ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior, regressor, sensitivity';
 
 module.exports = {
   create: createModel,
@@ -27,7 +28,8 @@ function mapModelRow(modelRow) {
     likelihood: modelRow.likelihood,
     link: modelRow.link,
     heterogeneityPrior: modelRow.heterogeneity_prior,
-    regressor: modelRow.regressor
+    regressor: modelRow.regressor,
+    sensitivity: modelRow.sensitivity
   };
 
   if (modelRow.outcome_scale) {
@@ -40,8 +42,9 @@ function mapModelRow(modelRow) {
 function findByAnalysis(analysisId, callback) {
   logger.debug('modelRepository.findByAnalysis, where analysisId = ' + analysisId);
   db.query(
-    ' SELECT id, taskId, ' + columnString + 
-    ' FROM model WHERE analysisId=$1', [analysisId], function(error, result) {
+    ' SELECT id, taskId, ' + columnString +
+    ' FROM model WHERE analysisId=$1', [analysisId],
+    function(error, result) {
       if (error) {
         logger.error('error finding models by analysisId, error: ' + error);
         callback(error);
@@ -56,7 +59,7 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
 
   db.query(
     ' INSERT INTO model (' + columnString + ') ' +
-    ' VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id', [
+    ' VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id', [
       newModel.title,
       analysisId,
       newModel.linearModel,
@@ -68,7 +71,8 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
       newModel.link,
       newModel.outcomeScale,
       newModel.heterogeneityPrior,
-      newModel.regressor
+      newModel.regressor,
+      newModel.sensitivity
     ],
     function(error, result) {
       if (error) {
@@ -83,19 +87,20 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
 function getModel(modelId, callback) {
   db.query(
     ' SELECT id, taskId, ' + columnString +
-    ' FROM model WHERE id=$1', [modelId], function(error, result) {
-    if (error) {
-      logger.error('error retrieving model, error: ' + error);
-      callback(error);
-    } else {
-      logger.debug('ModelRepository.getModel return model = ' + JSON.stringify(result.rows[0]));
-      callback(error, mapModelRow(result.rows[0]));
-    }
-  });
+    ' FROM model WHERE id=$1', [modelId],
+    function(error, result) {
+      if (error) {
+        logger.error('error retrieving model, error: ' + error);
+        callback(error);
+      } else {
+        logger.debug('ModelRepository.getModel return model = ' + JSON.stringify(result.rows[0]));
+        callback(error, mapModelRow(result.rows[0]));
+      }
+    });
 }
 
 function setTaskId(modelId, taskId, callback) {
-  db.query('UPDATE model SET taskId=$2 WHERE id = $1', [modelId, taskId], function(error, result) {
+  db.query('UPDATE model SET taskId=$2 WHERE id = $1', [modelId, taskId], function(error) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);
@@ -111,7 +116,7 @@ function update(newModel, callback) {
     newModel.burnInIterations,
     newModel.inferenceIterations,
     newModel.thinningFactor
-  ], function(error, result) {
+  ], function(error) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);

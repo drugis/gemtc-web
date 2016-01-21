@@ -10,7 +10,7 @@ require.config({
     'domReady': 'bower_components/requirejs-domready/domReady',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'modernizr': 'bower_components/modernizr/modernizr',
-    'lodash': 'bower_components/lodash/lodash.min',
+    'lodash': 'bower_components/lodash/dist/lodash.min',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/build/nv.d3.min',
     'moment': 'bower_components/moment/min/moment.min',

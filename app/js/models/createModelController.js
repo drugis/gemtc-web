@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'moment'], function(_, moment) {
+define(['angular', 'lodash'], function(angular, _) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state',
     'ModelResource', 'ModelService', 'AnalysisService', 'ProblemResource'
   ];
@@ -34,6 +34,11 @@ define(['lodash', 'moment'], function(_, moment) {
     $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
     $scope.heterogeneityPriorTypechange = heterogeneityPriorTypechange;
     $scope.heterogeneityParamsChange = heterogeneityParamsChange;
+    $scope.covariateChange = covariateChange;
+    $scope.changeIsWeighted = changeIsWeighted;
+    $scope.addLevel = addLevel;
+    $scope.addLevelOnEnter = addLevelOnEnter;
+    $scope.levelAlreadyPresent = levelAlreadyPresent;
     $scope.isNumber = isNumber;
     $scope.cleanModel = modelDefer;
     $scope.problem = ProblemResource.get($stateParams);
@@ -48,13 +53,14 @@ define(['lodash', 'moment'], function(_, moment) {
       if ($scope.nodeSplitOptions.length > 0) {
         $scope.model.nodeSplitComparison = $scope.nodeSplitOptions[0];
       }
-
+      $scope.binaryCovariateNames = ModelService.getBinaryCovariateNames(problem);
+      $scope.isProblemWithCovariates = ModelService.isProblemWithCovariates(problem);
       $scope.likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
       var compatible = $scope.likelihoodLinkOptions.filter(function(option) {
-        return option.compatibility === "compatible"
+        return option.compatibility === "compatible";
       });
       var incompatible = $scope.likelihoodLinkOptions.filter(function(option) {
-        return option.compatibility === "incompatible"
+        return option.compatibility === "incompatible";
       });
       $scope.likelihoodLinkOptions = compatible.concat(incompatible);
       $scope.model.likelihoodLink = compatible[0];
@@ -63,6 +69,7 @@ define(['lodash', 'moment'], function(_, moment) {
         $scope.covariateOptions = buildCovariateOptions(problem);
         $scope.model.covariateOption = $scope.covariateOptions[0];
         $scope.model.metaRegressionControl = problem.treatments[0];
+        covariateChange();
       }
       return problem;
     });
@@ -73,7 +80,16 @@ define(['lodash', 'moment'], function(_, moment) {
       } else {
         $scope.model.heterogeneityPrior = {
           type: 'automatic'
-        }
+        };
+      }
+    }
+
+    function covariateChange() {
+      $scope.variableIsBinary = ModelService.isVariableBinary($scope.model.covariateOption, $scope.problem);
+      if ($scope.variableIsBinary && $scope.model.modelType.mainType === 'regression') {
+        $scope.model.levels = [0, 1];
+      } else {
+        $scope.model.levels = [];
       }
     }
 
@@ -82,8 +98,7 @@ define(['lodash', 'moment'], function(_, moment) {
     }
 
     function modelTypeChange() {
-      var mainType = $scope.model.modelType.mainType,
-        subType = $scope.model.modelType.subType;
+      var mainType = $scope.model.modelType.mainType;
 
       if (mainType === 'network') {
         $scope.model.modelType.subType = '';
@@ -93,6 +108,10 @@ define(['lodash', 'moment'], function(_, moment) {
       }
       if (mainType === 'node-split') {
         $scope.model.modelType.subType = 'all-node-split';
+      }
+      if (mainType === 'regression') {
+        $scope.model.modelType.subType = '';
+        covariateChange();
       }
     }
 
@@ -118,9 +137,21 @@ define(['lodash', 'moment'], function(_, moment) {
       } else if ($scope.model.heterogeneityPrior.type === 'standard-deviation') {
         $scope.isValidHeterogeneityPrior = (values.lower >= 0 && values.upper >= 0);
       } else if ($scope.model.heterogeneityPrior.type === 'variance') {
-        $scope.isValidHeterogeneityPrior = (values.stdDev >= 0)
+        $scope.isValidHeterogeneityPrior = (values.stdDev >= 0);
       } else if ($scope.model.heterogeneityPrior.type === 'precision') {
-        $scope.isValidHeterogeneityPrior = (values.rate >= 0 && values.shape >= 0)
+        $scope.isValidHeterogeneityPrior = (values.rate >= 0 && values.shape >= 0);
+      }
+    }
+
+    function changeIsWeighted() {
+      if (!$scope.isWeighted) {
+        delete $scope.model.sensitivity;
+      } else {
+        $scope.model.sensitivity = {
+          inflationValue: 0,
+          weightingFactor: 0.5,
+          adjustmentFactor: $scope.binaryCovariateNames[0]
+        };
       }
     }
 
@@ -130,8 +161,29 @@ define(['lodash', 'moment'], function(_, moment) {
       });
     }
 
-    function isAddButtonDisabled(model, problem) {
 
+
+    function addLevel(newLevel) {
+      $scope.model.levels.push(newLevel);
+      $scope.model.levels.sort(function(a, b) {
+        return a - b;
+      });
+      $scope.newLevel = undefined;
+    }
+
+    function addLevelOnEnter($event, newLevel) {
+      if ($event.which === 13 && !levelAlreadyPresent(newLevel)) { // 13 == enter key
+        addLevel(newLevel);
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+    }
+
+    function levelAlreadyPresent(newLevel) {
+      return _.includes($scope.model.levels, newLevel);
+    }
+
+    function isAddButtonDisabled(model, problem) {
       $scope.selectedCovariateValueHasNullValues = model.modelType.mainType === 'regression' && variableHasNAValues(model.covariateOption, problem);
 
       return !model ||
@@ -140,8 +192,10 @@ define(['lodash', 'moment'], function(_, moment) {
         !model.likelihoodLink ||
         model.likelihoodLink.compatibility === 'incompatible' ||
         model.outcomeScale.value <= 0 ||
-        (model.outcomeScale.type === 'fixed' && !angular.isNumber(model.outcomeScale.value))
-        || $scope.selectedCovariateValueHasNullValues;
+        (model.outcomeScale.type === 'fixed' &&
+          !angular.isNumber(model.outcomeScale.value)) ||
+        $scope.selectedCovariateValueHasNullValues ||
+        !!($scope.isWeighted && model.sensitivity.weightingFactor === undefined);
     }
 
     function isNumber(value) {
@@ -152,7 +206,6 @@ define(['lodash', 'moment'], function(_, moment) {
       $scope.isAddingModel = true;
       if (model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split') {
         var modelsToCreate = ModelService.createModelBatch(model, $scope.comparisonOptions, $scope.nodeSplitOptions);
-        var cleanModels = _.map(modelsToCreate, ModelService.cleanModel);
         var creationPromises = _.map(modelsToCreate, function(modelToCreate) {
           return createAndPostModel(modelToCreate, function() {});
         });
@@ -161,7 +214,7 @@ define(['lodash', 'moment'], function(_, moment) {
           $state.go('networkMetaAnalysis', $stateParams);
         });
       } else {
-        createAndPostModel(model, function(result, headers) {
+        createAndPostModel(model, function(result) {
           $scope.isAddingModel = false;
           $state.go('model', _.extend($stateParams, {
             modelId: result.id

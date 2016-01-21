@@ -3,9 +3,9 @@ define(['lodash'], function(_) {
   var dependencies = [];
 
   var DevianceStatisticsService = function() {
-    function buildTable(devianceStatistics, problem) {
+    function buildAbsoluteTable(devianceStatistics, problem) {
       var table = [],
-        treatmentMap = _.indexBy(problem.treatments, 'id'),
+        treatmentMap = _.keyBy(problem.treatments, 'id'),
         studyMap = _.transform(problem.entries, function(result, entry) {
           var studyName = entry.study;
           result[studyName] = result[studyName] ? result[studyName].concat(entry) : [entry];
@@ -32,8 +32,20 @@ define(['lodash'], function(_) {
 
       return table;
     }
+
+    function buildRelativeTable(devianceStatistics) {
+      return _.map(devianceStatistics.relativeDeviance, function(value, key) {
+        return {
+          studyName: key,
+          deviance: value,
+          leverage: devianceStatistics.relativeLeverage[key]
+        };
+      });
+    }
+
     return {
-      buildTable: buildTable
+      buildAbsoluteTable: buildAbsoluteTable,
+      buildRelativeTable: buildRelativeTable
     };
   };
 

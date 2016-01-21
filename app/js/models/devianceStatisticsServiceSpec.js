@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'services'], function() {
   describe('the deviance statistics service', function() {
     beforeEach(module('gemtc.models'));
@@ -6,7 +7,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
     beforeEach(inject(function(DevianceStatisticsService) {
       devianceStatisticsService = DevianceStatisticsService;
     }));
-    describe('buildTable function', function() {
+    describe('buildAbsoluteTable function', function() {
       it('should create one row per study arm', function() {
         var testProblem = {
           'entries': [{
@@ -159,8 +160,8 @@ define(['angular', 'angular-mocks', 'services'], function() {
               '5': 0.25911
             }
           }
-        }
-        var result = devianceStatisticsService.buildTable(testStatistics, testProblem);
+        };
+        var result = devianceStatisticsService.buildAbsoluteTable(testStatistics, testProblem);
         expect(result.length).toBe(testProblem.entries.length);
         if (result[1].armName === 'Fluoxetine') {
           expect(result[1].studyName).toBe('Aberg-Wistedt et al, 2000');
@@ -177,6 +178,40 @@ define(['angular', 'angular-mocks', 'services'], function() {
         }
         expect(result[0].rowSpan).toBe(2);
         expect(result[1].rowSpan).not.toBeDefined();
+      });
+    });
+    describe('buildRelativeTable function', function() {
+      it('should create one row per study', function() {
+
+        var testStatistics = {
+          relativeDeviance: {
+            'jansen und fransen': 4,
+            'pietchen und fritzchen': 5,
+            'valkenhoeffe und schtroehmberg': 6
+          },
+          relativeLeverage: {
+            'jansen und fransen': 7,
+            'pietchen und fritzchen': 8,
+            'valkenhoeffe und schtroehmberg': 9
+          }
+        };
+        var expectedTable = [{
+          studyName: 'jansen und fransen',
+          deviance: 4,
+          leverage: 7
+        }, {
+          studyName: 'pietchen und fritzchen',
+          deviance: 5,
+          leverage: 8
+        }, {
+          studyName: 'valkenhoeffe und schtroehmberg',
+          deviance: 6,
+          leverage: 9
+        }];
+
+        var result = devianceStatisticsService.buildRelativeTable(testStatistics);
+        expect(result.length).toBe(3);
+        expect(result).toEqual(expectedTable);
       });
     });
   });

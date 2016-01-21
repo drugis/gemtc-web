@@ -5,7 +5,7 @@ define(['angular', 'lodash'], function(angular, _) {
   var ProblemValidityService = function() {
 
     function refersToExtantTreatment(entry, treatments) {
-      return _.find(treatments, function(treatment) {
+      return !!_.find(treatments, function(treatment) {
         return treatment.id === entry.treatment;
       });
     }
@@ -13,7 +13,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function areTreatmentsValid(treatments) {
       var isValid = true;
       angular.forEach(treatments, function(treatment) {
-        isValid = treatment.id && treatment.name;
+        isValid = treatment.id !== undefined && treatment.name;
       });
       return isValid;
     }
@@ -23,8 +23,8 @@ define(['angular', 'lodash'], function(angular, _) {
       var firstColumnProperties = _.keys(entries[0]).sort().join('');
 
       return !_.find(entries, function(entry) {
-          return _.keys(entry).sort().join('') !== firstColumnProperties;
-        });
+        return _.keys(entry).sort().join('') !== firstColumnProperties;
+      });
 
     }
 
@@ -37,7 +37,45 @@ define(['angular', 'lodash'], function(angular, _) {
       return isValid;
     }
 
-    /*
+    function hasMixedStudyEntry(problem) {
+      return !!_.find(problem.entries, function(entry) {
+        return _.includes(_.keys(problem.relativeEffectData.data), entry.study.toString());
+      });
+    }
+
+    /**
+     * A single base (reference) arm per study ("baseArm"),
+     * which has a treatment and a "baseArmStandardError".
+     *  The "baseArmStandardError" may be missing only if the study has < 3 arms.
+     **/
+    function hasMissingBaseArm(problem) {
+      return !!_.find(_.values(problem.relativeEffectData.data), function(effect) {
+        return !effect.baseArm.baseArmStandardError && effect.otherArms.length >= 2; // 3 minus base arm
+      });
+    }
+
+    /**
+     * the base arm should have at least a study and treatment
+     * the other arms should also have a mean difference and standard error.
+     **/
+    function hasMalformedRelativeEntry(problem) {
+      function isRelativeEntryMalformed(entry) {
+        return entry.treatment === undefined ||
+          entry.meanDifference === undefined || entry.standardError === undefined ||
+          !refersToExtantTreatment(entry, problem.treatments);
+      }
+      return !!_.values(problem.relativeEffectData.data).find(function(study) {
+        return study.baseArm === undefined || study.baseArm.treatment === undefined ||
+          !refersToExtantTreatment(study.baseArm, problem.treatments) ||
+          _.find(study.otherArms, isRelativeEntryMalformed);
+      });
+    }
+
+    function isAllowedScale(scale) {
+      return ['log odds ratio', 'log risk ratio', 'log hazard ratio', 'mean difference'].indexOf(scale) > -1;
+    }
+
+    /**
      * The client should check the input JSON for validity.
      * It must contain the 'entries' and 'treatment" fields.
      * The "treatment" field must contain a list of {"id": $id, "name": $name} objects.
@@ -45,7 +83,7 @@ define(['angular', 'lodash'], function(angular, _) {
      * Each data row must contain at least the "study" and "treatment" columns.
      * The "treatment" column must refer to a numeric ID present in the treatments list.
      * Each data row must have the same columns as the first data row.
-     */
+     **/
     function getValidity(problem) {
       var result = {
         problem: problem,
@@ -75,15 +113,36 @@ define(['angular', 'lodash'], function(angular, _) {
           result.isValid = false;
           result.message += ' The treatments field must contain a list of objects that all have name and id';
         }
+
+        if (problem.relativeEffectData) {
+          if (hasMalformedRelativeEntry(problem)) {
+            result.isValid = false;
+            result.message += ' Relative effects data must have at least a study and a treatment, and for non-base arms a mean difference and standard error.';
+          } else {
+            if (hasMixedStudyEntry(problem)) {
+              result.isValid = false;
+              result.message += ' Studies may not have both relative effects data and absolute data';
+            }
+            if (hasMissingBaseArm(problem)) {
+              result.isValid = false;
+              result.message += ' Relative effects data must contain baseArmStandardError if the study contains more than 2 arms';
+            }
+            if (!problem.relativeEffectData.scale || !isAllowedScale(problem.relativeEffectData.scale)) {
+              result.isValid = false;
+              result.message += ' Relative effects data must define a valid scale.';
+            }
+          }
+        }
+
       }
       return result;
     }
 
     function parse(inputString) {
       var isValidJsonString = inputString && ((typeof inputString) === 'string') && /^[\],:{}\s]*$/.test(
-          inputString.replace(/\\["\\\/bfnrtu]/g, '@')
-            .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
-            .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
+        inputString.replace(/\\["\\\/bfnrtu]/g, '@')
+        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+        .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
       );
 
       if (isValidJsonString) {
