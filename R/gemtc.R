@@ -298,8 +298,6 @@ gemtc <- function(params) {
     # create network
     network <- mtc.network(data.ab=data.ab, data.re=data.re, treatments=treatments, studies=studies)
 
-    return(network)
-
     #determine model parameters
     mtc.model.params <- list(network=network, linearModel=linearModel)
     if(!is.null(params[['likelihood']])) {
