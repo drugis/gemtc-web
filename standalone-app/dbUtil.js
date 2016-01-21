@@ -1,9 +1,10 @@
+'use strict';
 var logger = require('./logger');
 
 module.exports = {
   pataviDBUrl: buildPataviDBUrl(),
   gemtcDBUrl: buildGemtcDBUrl()
-}
+};
 
 function buildPataviDBUrl() {
   var env = process.env;

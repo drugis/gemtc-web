@@ -14,20 +14,20 @@
     <button id="add-model-btn" ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add new model</button>
     <h5>Primary model</h5>
     <div class="panel ">
-      <em ng-show="!primaryModel">No primary model has been set</em>
-      <div class="row" ng-show="!primaryModel">
+      <em ng-show="!analysis.primaryModel">No primary model has been set</em>
+      <div class="row" ng-show="primaryModel">
         <div class="columns large-4">
           <label>Title</label>
           <label>Type</label>
-          <label>computed</label> 
+          <label>computed</label>
         </div>
         <div class="columns large-4 end">
-          <div>mock name</div>
-          <div>mock type</div>
-          <div>mock completed</div>
+          <div>{{primaryModel.title}}</div>
+          <div>{{primaryModel.modelType.type}}</div>
+          <div><i class="fa fa-check" style="color:green;" ng-if="primaryModel.hasResult" /></div>
         </div>
       </div>
-      <button class="tiny alert" ng-show="!model.isPrimary">unset as primary</button>
+      <button ng-if="primaryModel" ng-click="unsetPrimary(primaryModel)" class="tiny alert" ng-show="!model.isPrimary">unset as primary</button>
     </div>
   </div>
 </div>
@@ -47,9 +47,10 @@
         <!-- class="on-hover clickable"  -->
         <tr ng-repeat="model in models | orderBy:'title'">
           <td class="button-cell">
-            <a ng-click="gotoModel(model)">{{model.title}}</a> 
-            <button 
-              class="tiny right" 
+            <a ng-click="gotoModel(model)">{{model.title}}</a>
+            <button
+              ng-show="analysis.primaryModel !== model.id"
+              class="tiny right"
               ng-show="!model.isPrimary"
               ng-click="setAsPrimary(model)">set as primary</button>
           </td>
