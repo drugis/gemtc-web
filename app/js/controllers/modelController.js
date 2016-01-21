@@ -165,7 +165,7 @@ define(['lodash'], function(_) {
         $scope.relativeDevianceStatisticsTable = DevianceStatisticsService.buildRelativeTable(result.results.devianceStatistics);
         if ($scope.model.regressor) {
           $scope.controlTreatment = _.find(problem.treatments, function(treatment) {
-            return treatment.id === $scope.model.regressor.control;
+            return treatment.id === Number($scope.model.regressor.control);
           });
 
           // build cov plot options
