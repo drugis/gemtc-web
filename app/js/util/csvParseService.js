@@ -2,15 +2,24 @@
 define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
   var dependencies = [];
 
+  var STUDY_TREATMENT = [
+    'study',
+    'treatment'
+  ];
+
   var ENTRY_COLUMN_OPTIONS = [
     'mean',
     'std.dev',
     'std.err',
     'sampleSize',
     'responders',
-    'exposure',
-    'study',
-    'treatment'
+    'exposure'
+  ];
+
+  var RELATIVE_EFFECTS_COLUMN_OPTIONS = [
+    're.diff',
+    're.diff.se',
+    're.base.se'
   ];
 
   function isNumeric(n) {
@@ -48,7 +57,6 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       }]
     }
   **/
-
   var CSVParseService = function() {
 
     /**
@@ -70,32 +78,54 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
         return {
           isValid: false,
           message: _.reduce(parseResult.errors, function(accum, error) {
-            return accum + error.message + ';'
+            return accum + error.message + ';';
           }, '')
-        }
+        };
       } else {
-        if (parseResult.meta.delimiter === ';') {
-          parseResult.data = normaliseData(parseResult.data)
+        var normalisedData = normaliseData(parseResult.data);
+        if (normalisedData.isValid) {
+          return parseLines(normalisedData.data);
+        } else {
+          return normalisedData;
         }
-        return parseLines(parseResult.data);
       }
     }
 
     function normaliseData(data) {
-      function stringToNumber(datum) {
+      var isValid = true;
+
+      function stringToDatum(datum) {
         if (isNumeric(datum)) {
           return datum;
         } else {
-          return parseFloat(datum.replace(',', '.'));
+          if (datum === null || datum.trim() === '') {
+            return null;
+          } else if (datum.trim() === 'NA') {
+            return 'NA';
+          } else {
+            var parsedVal = parseFloat(datum.trim().replace(',', '.'));
+            if (isNaN(parsedVal)) {
+              isValid = false;
+            }
+            return parsedVal;
+          }
         }
       }
-      var header = data[0];
-      var normalisedRows = _.map(data.slice(1, data.length), function(dataLine) {
-        var studyAndTreatment = dataLine.slice(0, 2);
-        var numericalData = dataLine.slice(2, dataLine.length);
-        return studyAndTreatment.concat(_.map(numericalData, stringToNumber));
+
+      var header = _.map(data[0], function(col) {
+        return col.trim()
       });
-      return [].concat([header], normalisedRows);
+      var normalisedRows = _.map(data.slice(1, data.length), function(dataLine) {
+        var study = dataLine[0].toString().trim();
+        var treatment = dataLine[1].toString().trim();
+        var numericalData = dataLine.slice(2, dataLine.length);
+        return [study, treatment].concat(_.map(numericalData, stringToDatum));
+      });
+      return {
+        isValid: isValid,
+        message: isValid ? '' : 'Error: non-numeric data in data column',
+        data: [].concat([header], normalisedRows)
+      }
     }
 
     /**
@@ -127,8 +157,14 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
     }
 
     function extractCovariates(structuredLines) {
+      var standardProperties = ENTRY_COLUMN_OPTIONS.concat(RELATIVE_EFFECTS_COLUMN_OPTIONS, STUDY_TREATMENT);
       return _.reduce(structuredLines, function(accum, line) {
-        var covariates = _.omit(line, ENTRY_COLUMN_OPTIONS);
+        var covariates = _.reduce(line, function(accum, value, key) {
+          if (!_.includes(standardProperties, key)) {
+            accum[key] = value;
+          }
+          return accum;
+        }, {});
         covariates = _.mapValues(covariates, emptyStringToNull);
         if (!accum[line.study]) {
           accum[line.study] = [];
@@ -150,10 +186,10 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       var covValues = {};
       _.find(studyArms, function(arm) {
         return errorColumn = _.find(covariateNames, function(covariateName) {
-          if (covValues[covariateName] !== undefined && arm[covariateName] !== null && arm[covariateName] !== covValues[covariateName]) {
+          if (covValues[covariateName] !== undefined && covValues[covariateName] && arm[covariateName] !== null && arm[covariateName] !== covValues[covariateName]) {
             return true;
           }
-          covValues[covariateName] = arm[covariateName]
+          covValues[covariateName] = arm[covariateName];
         });
       });
       return errorColumn;
@@ -161,7 +197,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
 
     function checkConsistency(covariates) {
       var errorMessage = '';
-      var error = _.find(covariates, function(studyCovariates, key) {
+      _.find(covariates, function(studyCovariates, key) {
         var errorColumn = checkStudyConsistency(studyCovariates);
         if (errorColumn) {
           errorMessage = 'Inconsistent covariates: study ' + key + ', column ' + errorColumn;
@@ -229,24 +265,90 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
           return -1;
         }
         return 0;
-      })
+      });
       var treatmentMap = buildTreatmentMap(sortedDataLines);
 
-      function convertStudyValueToString(entry) {
-        return entry.study.toString();
+      function convertStudyValueToString(arm) {
+        return arm.study.toString();
       }
 
       var structuredLines = _.map(sortedDataLines, function(line) {
-        var entry = _.zipObject(headerLine, line);
-        entry.study = convertStudyValueToString(entry);
+        var arm = headerLine.reduce(function(accum, header, index) {
+          accum[header] = line[index];
+          return accum;
+        }, {});
+        arm.study = convertStudyValueToString(arm);
         // substitute treatment name with its ID
-        entry.treatment = treatmentMap[entry.treatment];
-        return entry;
+        arm.treatment = treatmentMap[arm.treatment];
+        return arm;
       });
 
-      var entries = _.map(structuredLines, function(line) {
-        return _.pick(line, ENTRY_COLUMN_OPTIONS);
-      });
+      function hasEntryColumn(entryCandidate) {
+        return _.keys(entryCandidate).find(function(columnName) {
+          return _.includes(ENTRY_COLUMN_OPTIONS, columnName);
+        });
+      }
+
+      function isEntry(entryCandidate) {
+        return !_.includes(_.values(entryCandidate), 'NA') && hasEntryColumn(entryCandidate);
+      }
+
+      function lineToEntry(line) {
+        return _.pick(line, ENTRY_COLUMN_OPTIONS.concat(STUDY_TREATMENT));
+      }
+
+      function isRelativeEffect(line) {
+        var entryCandidate = lineToEntry(line);
+        return _.includes(_.values(entryCandidate), 'NA') || !hasEntryColumn(entryCandidate);
+      }
+
+      function lineToRelativeEffect(line) {
+        return _.pick(line, RELATIVE_EFFECTS_COLUMN_OPTIONS.concat(STUDY_TREATMENT));
+      }
+
+      function addToRelativeEffectData(accum, entry) {
+        function isBaseEntry(entry) {
+          return entry['re.diff'] === 'NA' && entry['re.diff.se'] === 'NA';
+        }
+
+        if (!accum.data) {
+          accum.data = {};
+        }
+
+        if (!accum.data[entry.study]) {
+          accum.data[entry.study] = {
+            otherArms: []
+          };
+        }
+
+        if (isBaseEntry(entry)) {
+          var baseArm = {
+            treatment: entry.treatment
+          };
+          if (entry['re.base.se'] !== undefined) {
+            baseArm.baseArmStandardError = entry['re.base.se'];
+          }
+          accum.data[entry.study].baseArm = baseArm;
+        } else {
+          accum.data[entry.study].otherArms.push({
+            treatment: entry.treatment,
+            meanDifference: entry['re.diff'],
+            standardError: entry['re.diff.se']
+          });
+        }
+        return accum;
+      }
+
+      var entries = structuredLines
+        .map(lineToEntry)
+        .filter(isEntry);
+
+      var relativeEffectEntries = structuredLines
+        .filter(isRelativeEffect)
+        .map(lineToRelativeEffect);
+
+      var relativeEffectData = _.reduce(relativeEffectEntries, addToRelativeEffectData, {});
+
 
       var studyLevelCovariates = extractCovariates(structuredLines);
 
@@ -261,13 +363,14 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       if (parseResult.isValid) {
         var numericErrorMesasge = checkNumeric(studyLevelCovariates, parseResult);
         parseResult.isValid = !numericErrorMesasge;
-        parseResult.message = !numericErrorMesasge ? '' : numericErrorMesasge
+        parseResult.message = !numericErrorMesasge ? '' : numericErrorMesasge;
       }
 
       parseResult.problem = {
         entries: entries,
         treatments: buildTreatments(treatmentMap),
-        studyLevelCovariates: studyLevelCovariates
+        studyLevelCovariates: studyLevelCovariates,
+        relativeEffectData: relativeEffectData
       };
 
       return parseResult;

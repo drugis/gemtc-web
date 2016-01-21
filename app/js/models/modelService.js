@@ -24,9 +24,11 @@ define(['angular', 'lodash'], function(angular, _) {
           coefficient: frontEndModel.treatmentInteraction,
           control: frontEndModel.metaRegressionControl.id.toString()
         };
+        model.regressor.levels = frontEndModel.levels;
         delete model.covariateOption;
         delete model.metaRegressionControl;
         delete model.treatmentInteraction;
+        delete model.levels;
       }
       model.modelType = _.omit(model.modelType, 'mainType', 'subType');
       model.modelType.type = frontEndModel.modelType.mainType;
@@ -45,14 +47,14 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function createModelBatch(modelBase, comparisonOptions, nodeSplitOptions) {
-      if (modelBase.modelType.mainType == 'pairwise') {
+      if (modelBase.modelType.mainType === 'pairwise') {
         return _.map(comparisonOptions, function(comparisonOption) {
           var newModel = _.cloneDeep(modelBase);
           newModel.title = modelBase.title + ' (' + comparisonOption.from.name + ' - ' + comparisonOption.to.name + ')';
           newModel.pairwiseComparison = comparisonOption;
           return newModel;
         });
-      } else if (modelBase.modelType.mainType == 'node-split') {
+      } else if (modelBase.modelType.mainType === 'node-split') {
         return _.map(nodeSplitOptions, function(nodeSplitOption) {
           var newModel = _.cloneDeep(modelBase);
           newModel.title = modelBase.title + ' (' + nodeSplitOption.from.name + ' - ' + nodeSplitOption.to.name + ')';
@@ -62,9 +64,38 @@ define(['angular', 'lodash'], function(angular, _) {
       }
     }
 
+    function isVariableBinary(covariateName, problem) {
+      return !_.find(problem.studyLevelCovariates, function(covariate) {
+        return covariate[covariateName] !== 0.0 && covariate[covariateName] !== 1.0 &&
+          covariate[covariateName] !== 0 && covariate[covariateName] !== 1;
+      });
+    }
+
+    function getBinaryCovariateNames(problem) {
+      var studies = _.keys(problem.studyLevelCovariates);
+      if (studies.length) {
+        var covariateNames = _.keys(problem.studyLevelCovariates[studies[0]]);
+        return _.filter(covariateNames, function(covariateName) {
+          return isVariableBinary(covariateName, problem);
+        });
+      } else {
+        return [];
+      }
+    }
+
+    function isProblemWithCovariates(problem){
+      var studies = _.keys(problem.studyLevelCovariates);
+      if (studies.length) {
+        return Object.keys(problem.studyLevelCovariates[studies[0]]).length > 0;
+      }
+    }
+
     return {
       cleanModel: cleanModel,
-      createModelBatch: createModelBatch
+      createModelBatch: createModelBatch,
+      isVariableBinary: isVariableBinary,
+      getBinaryCovariateNames: getBinaryCovariateNames,
+      isProblemWithCovariates: isProblemWithCovariates
     };
   };
 

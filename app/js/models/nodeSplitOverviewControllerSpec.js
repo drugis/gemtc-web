@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'models/models'], function() {
   describe('the nodesplit overview controller', function() {
     var scope,

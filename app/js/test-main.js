@@ -3,7 +3,7 @@
 var tests = [];
 for (var file in window.__karma__.files) {
   if (window.__karma__.files.hasOwnProperty(file)) {
-    if (file.indexOf("Spec.js") != -1 && file.indexOf("bower_components") == -1 && file.indexOf("node_modules") == -1) {
+    if (file.indexOf("Spec.js") !== -1 && file.indexOf("bower_components") === -1 && file.indexOf("node_modules") === -1) {
       tests.push(file);
     }
   }
@@ -14,7 +14,7 @@ console.log(tests);
 require.config({
   paths: {
     'jQuery': 'bower_components/jquery/jquery.min',
-    'lodash': 'bower_components/lodash/lodash.min',
+    'lodash': 'bower_components/lodash/dist/lodash.min',
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',

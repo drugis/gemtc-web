@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('the analysesController', function() {
     var scope, analysisResource , modal;
@@ -33,48 +34,14 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       it('should place createAnalysisDialog on the scope', function() {
         expect(scope.createAnalysisDialog).toBeDefined();
       });
-
-      it('should place isAddButtonDisabled on the scope', function() {
-        expect(scope.isAddButtonDisabled).toBeDefined();
-      });
     });
 
     describe('when createAnalysisDialog isCalled', function() {
       beforeEach(function(){
         scope.createAnalysisDialog();
-      })
+      });
       it('should open the dialog', function() {
         expect(modal.open).toHaveBeenCalled();
-      });
-    });
-
-    describe('when isAddButtonDisabled isCalled', function() {
-      it('with no analysis it should return true', function() {
-        expect(scope.isAddButtonDisabled(null)).toBe(true);
-      });
-
-      it('with a analysis without a title it should return true', function() {
-        expect(scope.isAddButtonDisabled({})).toBe(true);
-      });
-
-      it('with a analysis without a outcome it should return true', function() {
-        expect(scope.isAddButtonDisabled({title: 'title'})).toBe(true);
-      });
-
-      it('with a analysis without a problem it should return true', function() {
-        expect(scope.isAddButtonDisabled({title: 'title', outcome: 'outcome'}))
-        .toBe(true);
-      });
-
-      it('with a analysis while busy adding a analysis should return true', function() {
-        scope.isAddingAnalysis = true;
-        expect(scope.isAddButtonDisabled({title: 'title', outcome: 'outcome', problem: 'problem'}))
-        .toBe(true);
-      });
-
-      it('with a analysis while not busy adding a analysis should return true', function() {
-        expect(scope.isAddButtonDisabled({title: 'title', outcome: 'outcome', problem: 'problem'}))
-        .toBe(false);
       });
     });
 

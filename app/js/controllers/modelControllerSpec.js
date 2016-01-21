@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'controllers'], function() {
   describe('the modelController', function() {
     var scope,
@@ -22,9 +23,13 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       relativeEffectsTableService,
       devianceStatisticsServiceMock,
       diagnosticsService,
+      metaRegressionService,
+      modelserviceMock,
       analysisServiceMock,
       stateMock,
-      modalMock;
+      modalMock,
+      pataviTaskIdDeferred,
+      pataviTaskIdResult;
 
     beforeEach(module('gemtc.controllers'));
 
@@ -56,10 +61,15 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviResult = {
         $promise: pataviResultDeferred.promise,
         results: {
-          relativeEffects: [],
+          relativeEffects: [[]],
           rankProbabilities: [],
           tracePlot: [],
-          gelmanPlot: []
+          gelmanPlot: [],
+          regressor: {
+            modelRegressor: {
+              mu: 'mu'
+            }
+          }
         },
         logScale: true
       };
@@ -74,11 +84,15 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviService = jasmine.createSpyObj('PataviService', ['run']);
       pataviService.run.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
-      devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildTable']);
+      devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildAbsoluteTable', 'buildRelativeTable']);
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['buildDiagnosticMap', 'compareDiagnostics']);
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
       stateMock = jasmine.createSpyObj('$state', ['reload']);
       modalMock = jasmine.createSpyObj('$modal', ['open']);
+      metaRegressionService = jasmine.createSpyObj('MetaRegressionService', ['buildCovariatePlotOptions']);
+      metaRegressionService.buildCovariatePlotOptions.and.returnValue([]);
+      modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary']);
+      modelserviceMock.isVariableBinary.and.returnValue(true);
 
       $controller('ModelController', {
         $scope: scope,
@@ -93,8 +107,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         AnalysisResource: analysisResource,
         DiagnosticsService: diagnosticsService,
         AnalysisService: analysisServiceMock,
+        ModelService: modelserviceMock,
         DevianceStatisticsService: devianceStatisticsServiceMock,
-        gemtcRootPath: ''
+        gemtcRootPath: '',
+        MetaRegressionService: metaRegressionService
       });
     }));
 
@@ -108,6 +124,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       beforeEach(function() {
         scope.model.modelType = {
           type: 'network'
+        };
+        scope.model.regressor = {
+          variable: {}
         };
         modelDeferred.resolve(mockModel);
         scope.$apply();
@@ -153,9 +172,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
 
           describe('when the problem is loaded', function() {
             beforeEach(function() {
-              console.log('resolving');
               problemDeferred.resolve(mockProblem);
-              console.log('resolved');
               scope.$apply();
             });
 

@@ -20,17 +20,24 @@ pwforest <- function(result, t1, t2, ...) {
   model <- result$model
   network <- model$network
 
+  alpha <- model$data$alpha
+
   studies <- gemtc:::mtc.studies.list(network)$values
   studies <- studies[sapply(studies, function(study) {
     t1 %in% gemtc:::mtc.study.design(network, study) &&
-    t2 %in% gemtc:::mtc.study.design(network, study)
+    t2 %in% gemtc:::mtc.study.design(network, study) &&
+    (is.null(alpha) || alpha[study] > 0)
   })]
-
 
   data <- network$data.ab
   columns <- ll.call("required.columns.ab", model)
   study.effect <- lapply(studies, function(study) {
-    ll.call('mtc.rel.mle', model, as.matrix(data[data$study == study & (data$treatment == t1 | data$treatment == t2), columns]), correction.force=FALSE, correction.type="reciprocal", correction.magnitude=0.1)
+    est <- ll.call('mtc.rel.mle', model, as.matrix(data[data$study == study & (data$treatment == t1 | data$treatment == t2), columns]), correction.force=FALSE, correction.type="reciprocal", correction.magnitude=0.1)
+    if (is.null(alpha)) {
+      est
+    } else {
+      c(est['mean'], 'sd'=unname(sqrt(1/alpha[study])*est['sd']))
+    }
   })
 
   pooled.effect <- as.matrix(as.mcmc.list(relative.effect(result, t1=t1, t2=t2, preserve.extra=FALSE)))
@@ -60,14 +67,16 @@ pwforest <- function(result, t1, t2, ...) {
 
 plotDeviance <- function(result) {
   model <- result$model
-  fit.ab <- apply(result$deviance$fit.ab, 1, sum, na.rm=TRUE)
-  dev.ab <- apply(result$deviance$dev.ab, 1, sum, na.rm=TRUE)
+  fit.ab <- if (!is.null(result$deviance$fit.ab)) apply(result$deviance$fit.ab, 1, sum, na.rm=TRUE)
+  dev.ab <- if (!is.null(result$deviance$dev.ab)) apply(result$deviance$dev.ab, 1, sum, na.rm=TRUE)
   lev.ab <- dev.ab - fit.ab
   fit.re <- result$deviance$fit.re
   dev.re <- result$deviance$dev.re
   lev.re <- dev.re - fit.re
   nd <- model$data$na
-  nd[-(1:model$data$ns.a)] <- nd[-(1:model$data$ns.a)] - 1
+  studies.re <- c(model$data$studies.r2, model$data$studies.rm)
+  nd[studies.re] <- nd[studies.re] - 1
+  nd <- nd[model$data$studies] # eliminate studies ignored in the likelihood (power-adjusted analyses)
   w <- sqrt(c(dev.ab, dev.re) / nd)
   lev <- c(lev.ab, lev.re) / nd
 
@@ -115,7 +124,7 @@ plotToFile <- function(plotFunction, dataType, extension, imageCreationFunction)
 
   # read & delete plot files
   filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
-  lapply (filenames, function(filename) {
+  lapply(filenames, function(filename) {
     contents <- paste0("data:image/", dataType, ";base64,", base64encode(filename))
     file.remove(filename)
     contents
@@ -142,8 +151,9 @@ predict.t <- function(network, n.adapt, n.iter, thin) {
     'forestplot'=0.1,
     'traceplot'=0.062 * n.saved * 0.001 * n.iter / thin,
     'psrfplot'=(0.04 + 0.007 * n.saved) * 0.001 * n.iter / thin,
-    'densityplot'=1, # FIXME
+    'nodeSplitDensityPlot'=1, # FIXME
     'deviancePlot'=1, #FIXME
+    'covariateEffectPlot'=1, #FIXME
     'summary'=0.0075 * n.saved * 0.001 * n.iter / thin
   )
 }
@@ -180,6 +190,7 @@ gemtc <- function(params) {
   thin <- nullCheckWithDefault(params[['thinningFactor']], 10)
   modelType <-  nullCheckWithDefault(params[['modelType']][['type']], 'network')
   heterogeneityPriorType <- nullCheckWithDefault(params[['heterogeneityPrior']][['type']], 'automatic')
+  regressor <- as.list(params[['regressor']])
 
   progress.start <- 0
   progress.jags <- NA
@@ -227,24 +238,67 @@ gemtc <- function(params) {
   times$init <- system.time({
     ## incoming information
     #  entries
-    data.ab <- do.call(rbind, lapply(params[['entries']],
-      function(x) { as.data.frame(x, stringsAsFactors=FALSE) }))
+    data.ab <- do.call(rbind, lapply(params[['entries']], function(x) {
+      as.data.frame(x, stringsAsFactors=FALSE)
+    }))
+
+    # create relative effects
+    relEffects <- params[['relativeEffectData']]
+    dataToRow <- function(data, study) {
+      dataAsList <- as.list(data)
+      row <- data.frame(
+        study=as.character(study),
+        treatment=as.character(data[['treatment']]),
+        diff=nullCheckWithDefault(dataAsList[['meanDifference']], NA),
+        std.err=nullCheckWithDefault(dataAsList[['standardError']], NA),
+        stringsAsFactors=FALSE)
+
+      if(!is.null(dataAsList[['baseArmStandardError']])) {
+        row[['std.err']] <- dataAsList[['baseArmStandardError']]
+      }
+      row
+    }
+    relEffectsData <- as.list(relEffects)[['data']]
+    data.re <- data.frame(study=character(0), treatment=character(0), diff=numeric(0), std.err=numeric(0), stringsAsFactors=FALSE)
+    for (study in names(relEffectsData)) {
+      baseRow <- dataToRow(relEffectsData[[study]][['baseArm']], study)
+      x <- lapply(relEffectsData[[study]][['otherArms']], function(x) {
+        dataToRow(x, study)
+      })
+      data.re <- rbind(data.re, baseRow, do.call(rbind, x))
+    }
+    if(dim(data.re)[1] == 0) {
+      data.re <- NULL
+    }
+
     # linear model or fixed?
     linearModel <- nullCheckWithDefault(params[['linearModel']], 'random')
 
-    treatments <- do.call(rbind, lapply(params[['treatments']],
-      function(x) { data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE) }))
-    
+    treatments <- do.call(rbind, lapply(params[['treatments']], function(x) {
+      data.frame(id=x[['id']], description=x[['name']], stringsAsFactors=FALSE)
+    }))
+
     covars <- params[['studyLevelCovariates']]
-    studies <- do.call(rbind, lapply(names(covars),
-      function(studyName) {
+    studies <- do.call(rbind, lapply(names(covars), function(studyName) {
         values <- c(list("study"=studyName), covars[[studyName]])
         values[sapply(values, is.null)] <- NA_real_
         do.call(data.frame, c(values, list(stringsAsFactors=FALSE)))
       }
     ))
+    if(!is.null(params[['sensitivity']])) {
+      adjustmentFactor <- make.names(params[['sensitivity']][['adjustmentFactor']])
+      inflationValue <- params[['sensitivity']][['inflationValue']]
+      weightingFactor <- params[['sensitivity']][['weightingFactor']]
+      weightingVector <- unlist(lapply(studies[[adjustmentFactor]], function(x) {
+        if (x == inflationValue) weightingFactor else 1
+      }))
+      studies[['powerAdjust']] <- weightingVector
+    }
 
-    network <- mtc.network(data.ab=data.ab, treatments=treatments, studies=studies)
+    # create network
+    network <- mtc.network(data.ab=data.ab, data.re=data.re, treatments=treatments, studies=studies)
+
+    #determine model parameters
     mtc.model.params <- list(network=network, linearModel=linearModel)
     if(!is.null(params[['likelihood']])) {
       mtc.model.params <- c(mtc.model.params, list('likelihood' = params[['likelihood']]))
@@ -255,13 +309,15 @@ gemtc <- function(params) {
     if (!is.null(params[['outcomeScale']])) {
       mtc.model.params <- c(mtc.model.params, list('om.scale' = params[['outcomeScale']]))
     }
+    if(!is.null(params[['sensitivity']])) {
+      mtc.model.params <- c(mtc.model.params, list(powerAdjust="powerAdjust"))
+    }
     if(modelType == 'node-split') {
       t1 <- params[['modelType']][['details']][['from']][['id']]
       t2 <- params[['modelType']][['details']][['to']][['id']]
       mtc.model.params <- c(mtc.model.params, list(type="nodesplit", t1=t1, t2=t2))
     }
     if(modelType == 'regression') {
-      regressor <- as.list(params[['regressor']])
       regressor[['variable']] <- make.names(regressor[['variable']]) # must be valid column name for data frame
       mtc.model.params <- c(mtc.model.params, list(type="regression", regressor = regressor))
     }
@@ -280,6 +336,7 @@ gemtc <- function(params) {
       }
     }
     model <- do.call(mtc.model, mtc.model.params)
+    regressor[['modelRegressor']] <- model[['regressor']]
     update(list(progress=0))
   })
 
@@ -307,25 +364,50 @@ if(modelType != 'node-split') {
     comps <- combn(treatmentIds, 2)
     t1 <- comps[1,]
     t2 <- comps[2,]
-    releffect <- apply(comps, 2, function(comp) {
+    releffect <- list(centering=apply(comps, 2, function(comp) {
       q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE))[['summaries']][['quantiles']]
       report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
       list(t1=comp[1], t2=comp[2], quantiles=q)
-    })
+    }))
+    if(modelType == 'regression') {
+      levelReleffects <- lapply(regressor[['levels']], function(level) {
+        apply(comps, 2, function(comp) {
+          q <- summary(relative.effect(result, comp[1], comp[2], preserve.extra=FALSE, covariate=level))[['summaries']][['quantiles']]
+          report('releffect', which(comps[1,] == comp[1] & comps[2,] == comp[2]) / ncol(comps))
+          list(t1=comp[1], t2=comp[2], quantiles=q)
+        })
+      })
+      names(levelReleffects) <- regressor[['levels']]
+      releffect <- c(releffect, levelReleffects)
+    }
   })
 }
 
 times$relplot <- system.time({
   #create forest plot files for network analyses
-  if(modelType == "network" || modelType == "regression") {
-    forestPlots <- lapply(treatmentIds, function(treatmentId) {
-      plotToSvg(function() {
-        treatmentN <- which(treatmentIds == treatmentId)
-        forest(relative.effect(result, treatmentId), use.description=TRUE)
-        report('relplot', treatmentN / length(treatmentIds))
-      })
+
+  plotForestPlot <- function(treatmentId, level=NA) {
+    plotToSvg(function() {
+      treatmentN <- which(treatmentIds == treatmentId)
+      forest(relative.effect(result, treatmentId, covariate=level), use.description=TRUE)
+      report('relplot', treatmentN / length(treatmentIds))
     })
-    names(forestPlots) <- treatmentIds
+  }
+  if(modelType == "network" || modelType == "regression") {
+    centeringForestplot <- lapply(treatmentIds, plotForestPlot)
+    names(centeringForestplot) <- treatmentIds
+    forestPlots <- list(centering=centeringForestplot)
+    if(!is.null(regressor)) {
+      levelForestplots <- lapply(regressor[['levels']], function(level) {
+        levelForestplot <- lapply(treatmentIds, function(x){
+          plotForestPlot(x, level)
+        })
+        names(levelForestplot) <- treatmentIds
+        levelForestplot
+      })
+      names(levelForestplots) <- regressor[['levels']]
+      forestPlots <- c(forestPlots, levelForestplots)
+    }
   }
 })
 
@@ -335,18 +417,24 @@ times$forest <- system.time({
       forestPlot <- plotToSvg(function() {
         t1 <- as.character(params[['modelType']][['details']][['from']][['id']])
         t2 <- as.character(params[['modelType']][['details']][['to']][['id']])
-	print(paste(t1, t2, class(t1)))
         pwforest(result, t1, t2)
       })
     }
 })
 report('forestplot', 1.0)
 
+paramNames <- colnames(result[['samples']][[1]])
+
 times$traceplot <- system.time({
     #create results plot
     tracePlot <- plotToPng(function() {
       plot(result, auto.layout=FALSE)
     })
+    sel <- seq(2, length(tracePlot), by=2)
+    densityPlot <- tracePlot[sel]
+    tracePlot <- tracePlot[-sel]
+    names(densityPlot) <- paramNames
+    names(tracePlot) <- paramNames
 })
 report('traceplot', 1.0)
 
@@ -355,6 +443,7 @@ times$psrfplot <- system.time({
     gelmanPlot <- plotToPng(function() {
       gelman.plot(result, auto.layout=FALSE, ask=FALSE)
     })
+    names(gelmanPlot) <- paramNames
 })
 report('psrfplot', 1.0)
 
@@ -367,11 +456,24 @@ times$deviancePlot <- system.time({
 report('deviancePlot', 1.0)
 
 if(modelType == 'node-split') {
-  densityPlot <- plotToPng(function() {
+  nodeSplitDensityPlot <- plotToPng(function() {
     nsdensity(result)
   })
 }
-report('densityplot', 1.0)
+report('nodeSplitDensityPlot', 1.0)
+
+if(modelType == 'regression') {
+  treatmentIds <- as.character(network[['treatments']][['id']])
+  control <- as.character(model[['regressor']][['control']])
+  controlIdx <- which(treatmentIds == control)
+  t1 <- rep(control, length(treatmentIds) - 1)
+  t2 <- treatmentIds[-controlIdx]
+  covariateEffectPlot <- plotToPng(function() {
+    plotCovariateEffect(result, t1, t2)
+  })
+  names(covariateEffectPlot) <- t2
+}
+report('covariateEffectPlot', 1.0)
 
 times$summary <- system.time({
   summary <- summary(result)
@@ -391,7 +493,7 @@ report('summary', 1.0)
     summary[['outcomeScale']] <- model[['om.scale']]
     if(modelType != 'node-split') {
       summary[['relativeEffects']] <- releffect
-      summary[['rankProbabilities']] <- wrap.matrix(rank.probability(result))
+      summary[['rankProbabilities']] <- list(centering=wrap.matrix(rank.probability(result)))
     }
     summary[['alternatives']] <- names(summary[['rankProbabilities']])
     if(modelType == "network" || modelType == "regression") {
@@ -401,17 +503,39 @@ report('summary', 1.0)
       summary[['studyForestPlot']] <- forestPlot
     }
     if(modelType == 'node-split') {
-      summary[['densityPlot']] <- densityPlot
+      summary[['nodeSplitDensityPlot']] <- nodeSplitDensityPlot
+
+      diff <- as.matrix(result[['samples']][,'d.direct']) - as.matrix(result[['samples']][,'d.indirect'])
+      prob <- sum(diff > 0)/length(diff)
+      summary[['nodeSplit']] <- list(
+        diff=list(quantiles=quantile(diff, c(0.025,0.25,0.5,0.75,0.975))),
+        incons.p=2 * min(prob, 1 - prob))
     }
     if(modelType == 'regression') {
       summary[['regressor']] <- params[['regressor']]
+      summary[['regressor']][['modelRegressor']] <- regressor[['modelRegressor']]
+      summary[['covariateEffectPlot']] <- covariateEffectPlot
+      levelRankProbabilities <- lapply(regressor[['levels']], function(level) {
+        wrap.matrix(rank.probability(result, covariate=level))
+      })
+      names(levelRankProbabilities) <- regressor[['levels']]
+      summary[['rankProbabilities']] <- c(summary[['rankProbabilities']], levelRankProbabilities)
     }
-    summary[['tracePlot']] <- tracePlot
-    summary[['gelmanPlot']] <- gelmanPlot
+    summary[['convergencePlots']] <- list(
+      trace=tracePlot,
+      density=densityPlot,
+      psrf=gelmanPlot)
     summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
     deviance <- result[['deviance']]
     summary[['devianceStatistics']][['perArmDeviance']] <- wrap.arms(deviance[['dev.ab']], model[['network']])
+    print(model[['network']][['data.re']][['study']])
+    relEffectStudyNames <- rle(as.character(model[['network']][['data.re']][['study']]))[['values']]
+    names(deviance[['dev.re']]) <- relEffectStudyNames
+    summary[['devianceStatistics']][['relativeDeviance']] <- if(length(deviance[['dev.re']]) > 0)  deviance[['dev.re']] else NULL
     summary[['devianceStatistics']][['perArmLeverage']] <- wrap.arms(deviance[['dev.ab']] - deviance[['fit.ab']], model[['network']])
+    relativeLeverage <- deviance[['dev.re']] - deviance[['fit.re']]
+    names(relativeLeverage) <- relEffectStudyNames
+    summary[['devianceStatistics']][['relativeLeverage']] <- if(length(relativeLeverage) > 0) relativeLeverage else NULL
     summary[['residualDeviance']] <- deviance[['Dbar']]
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
@@ -422,9 +546,9 @@ report('summary', 1.0)
       heterogeneityPrior[['args']][2] <- heterogeneityPrior[['args']][2]^-0.5
     }
     summary[['heterogeneityPrior']] <- heterogeneityPrior
+
     print(times)
 
     update(list(progress=100))
     summary
 }
-

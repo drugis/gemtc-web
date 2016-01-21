@@ -1,17 +1,18 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'PataviService',
-    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource',
-    'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService'
+    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
+    'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService'
   ];
   var ModelController = function($scope, $modal, $state, $stateParams, gemtcRootPath, ModelResource, PataviService,
-    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, DiagnosticsService, AnalysisService,
-    DevianceStatisticsService) {
+    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, ModelService,
+    DiagnosticsService, AnalysisService, DevianceStatisticsService, MetaRegressionService) {
 
     $scope.resultsViewTemplate = gemtcRootPath + 'views/results-section.html';
     $scope.modelSettingsViewTemplate = gemtcRootPath + 'views/model-settings-section.html';
     $scope.convergenceDiagnosticsViewTemplate = gemtcRootPath + 'views/convergence-diagnostics-section.html';
     $scope.modelFitViewTemplate = gemtcRootPath + 'views/model-fit-section.html';
+    $scope.metaRegressionTemplate = gemtcRootPath + 'views/meta-regression-section.html';
 
     $scope.analysis = AnalysisResource.get($stateParams);
     $scope.progress = {
@@ -49,8 +50,20 @@ define(['lodash'], function(_) {
       return PataviTaskIdResource.get($stateParams);
     }
 
+    function findCentering(resultsWithLevels) {
+      return _.find(resultsWithLevels, function(resultWithLevel) {
+        return resultWithLevel.level === 'centering';
+      });
+    }
+
+    function filterCentering(resultsWithLevels) {
+      return _.filter(resultsWithLevels, function(resultWithLevel) {
+        return resultWithLevel.level !== 'centering';
+      });
+    }
+
     function nameRankProbabilities(rankProbabilities, treatments) {
-      return _.reduce(_.pairs(rankProbabilities), function(memo, pair) {
+      return _.reduce(_.toPairs(rankProbabilities), function(memo, pair) {
         var treatmentName = _.find(treatments, function(treatment) {
           return treatment.id.toString() === pair[0];
         }).name;
@@ -85,6 +98,8 @@ define(['lodash'], function(_) {
     }
 
 
+
+
     function pataviRunSuccessCallback(result) {
       return ProblemResource.get({
         analysisId: $stateParams.analysisId,
@@ -99,26 +114,63 @@ define(['lodash'], function(_) {
         var isLogScale = result.results.logScale;
         $scope.scaleName = AnalysisService.getScaleName($scope.model);
         $scope.diagnosticMap = DiagnosticsService.buildDiagnosticMap(
-          $scope.model.modelType.type,
-          result.results.gelmanDiagnostics,
-          $scope.problem.treatments,
-          result.results.tracePlot,
-          result.results.gelmanPlot
+          $scope.model,
+          $scope.problem,
+          $scope.result
         );
 
         var unsorted = _.values($scope.diagnosticMap);
         $scope.diagnostics = unsorted.sort(DiagnosticsService.compareDiagnostics);
 
         if ($scope.model.modelType.type !== 'node-split') {
-          var relativeEffects = result.results.relativeEffects;
-          result.results.rankProbabilities = nameRankProbabilities(result.results.rankProbabilities, problem.treatments);
-          $scope.relativeEffectsTable = RelativeEffectsTableService.buildTable(relativeEffects, isLogScale, problem.treatments);
-        }
-        $scope.devianceStatisticsTable = DevianceStatisticsService.buildTable(result.results.devianceStatistics, problem);
+          $scope.rankProbabilitiesByLevel = _.map(result.results.rankProbabilities, function(rankProbability, key) {
+            return {
+              level: key,
+              data: nameRankProbabilities(rankProbability, problem.treatments)
+            };
+          });
+          $scope.relativeEffectsTables = _.map(result.results.relativeEffects, function(relativeEffect, key) {
+            return {
+              level: key,
+              table: RelativeEffectsTableService.buildTable(relativeEffect, isLogScale, problem.treatments)
+            };
+          });
+          $scope.relativeEffectPlots = _.map(result.results.relativeEffectPlots, function(plots, key) {
+            return {
+              level: key,
+              plots: plots
+            };
+          });
+
+          if ($scope.model.regressor && ModelService.isVariableBinary($scope.model.regressor.variable, $scope.problem)) {
+            $scope.rankProbabilitiesByLevel = filterCentering($scope.rankProbabilitiesByLevel);
+            $scope.relativeEffectsTables = filterCentering($scope.relativeEffectsTables);
+            $scope.relativeEffectPlots = filterCentering($scope.relativeEffectPlots);
+            $scope.relativeEffectsTable = $scope.relativeEffectsTables[0];
+            $scope.relativeEffectPlot = $scope.relativeEffectPlots[0];
+            $scope.rankProbabilities = $scope.rankProbabilitiesByLevel[0];
+          } else {
+            $scope.relativeEffectsTable = findCentering($scope.relativeEffectsTables);
+            $scope.relativeEffectPlot = findCentering($scope.relativeEffectPlots);
+            $scope.rankProbabilities = findCentering($scope.rankProbabilitiesByLevel);
+            if ($scope.model.regressor) {
+              $scope.relativeEffectsTable.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
+              $scope.relativeEffectPlot.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
+              $scope.rankProbabilities.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
+            }
+          }
+        } // end not nodesplit
+
+        $scope.absoluteDevianceStatisticsTable = DevianceStatisticsService.buildAbsoluteTable(result.results.devianceStatistics, problem);
+        $scope.relativeDevianceStatisticsTable = DevianceStatisticsService.buildRelativeTable(result.results.devianceStatistics);
         if ($scope.model.regressor) {
           $scope.controlTreatment = _.find(problem.treatments, function(treatment) {
-            return treatment.id == $scope.model.regressor.control;
+            return treatment.id === Number($scope.model.regressor.control);
           });
+
+          // build cov plot options
+          $scope.covariateEffectPlots = MetaRegressionService.buildCovariatePlotOptions($scope.result, $scope.problem);
+          $scope.covariateEffectPlot = $scope.covariateEffectPlots[0];
         }
         $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
       });

@@ -3,7 +3,7 @@ define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modalInstance', 'DiagnosticsService'];
   var PlotNavigationController = function($scope, $modalInstance, DiagnosticsService) {
     var sortedDiagnostics = _.values($scope.diagnosticsMap).sort(DiagnosticsService.compareDiagnostics);
-    $scope.sortedLabels = _.pluck(sortedDiagnostics, 'label');
+    $scope.sortedLabels = _.map(sortedDiagnostics, 'label');
 
     $scope.type = 'tracePlot';
     $scope.selectedIndex = $scope.sortedLabels.indexOf($scope.selectedComparison.label);

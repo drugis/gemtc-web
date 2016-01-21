@@ -4,10 +4,11 @@ define(['angular', 'lodash'], function(angular, _) {
 
   var AnalysisService = function() {
 
-    var likelihoodLinkSettings = [{
+    var LIKELIHOOD_LINK_SETTINGS = [{
       "likelihood": "normal",
       "link": "identity",
       "scale": "mean difference",
+      "analysisScale": "mean difference",
       "columns": [
         ["mean", "std.err"],
         ["mean", "std.dev", "sampleSize"]
@@ -17,6 +18,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "likelihood": "binom",
       "link": "logit",
       "scale": "odds ratio",
+      "analysisScale": "log odds ratio",
       "columns": [
         ["responders", "sampleSize"]
       ],
@@ -25,6 +27,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "likelihood": "binom",
       "link": "log",
       "scale": "risk ratio",
+      "analysisScale": "log risk ratio",
       "columns": [
         ["responders", "sampleSize"]
       ],
@@ -33,6 +36,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "likelihood": "binom",
       "link": "cloglog",
       "scale": "hazard ratio",
+      "analysisScale": "log hazard ratio",
       "columns": [
         ["responders", "sampleSize"]
       ],
@@ -41,6 +45,7 @@ define(['angular', 'lodash'], function(angular, _) {
       "likelihood": "poisson",
       "link": "log",
       "scale": "hazard ratio",
+      "analysisScale": "log hazard ratio",
       "columns": [
         ["responders", "exposure"]
       ],
@@ -49,18 +54,36 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function problemToStudyMap(problemArg) {
       var problem = angular.copy(problemArg);
-      var treatmentsMap = _.indexBy(problem.treatments, 'id');
-      return _.reduce(problem.entries, function(studies, entry) {
+      var treatmentsMap = _.keyBy(problem.treatments, 'id');
+      var studyMap = _.reduce(problem.entries, function(studies, entry) {
         if (!studies[entry.study]) {
           studies[entry.study] = {
             arms: {}
           };
         }
-        entry.treatment = treatmentsMap[entry.treatment];
-        studies[entry.study].arms[entry.treatment.name] = _.omit(entry, 'study', 'treatment');
+        studies[entry.study].arms[treatmentsMap[entry.treatment].name] = _.omit(entry, 'study', 'treatment');
 
         return studies;
       }, {});
+
+      if (problem.relativeEffectData) {
+        studyMap = _.reduce(problem.relativeEffectData.data, function(studies, study, studyName) {
+          var studyEntry = {
+            arms: {}
+          };
+          var baseArmName = treatmentsMap[study.baseArm.treatment].name;
+          studyEntry.arms[baseArmName] = _.omit(study.baseArm, 'treatment');
+
+          _.forEach(study.otherArms, function(arm) {
+            var armName = treatmentsMap[arm.treatment].name;
+            studyEntry.arms[armName] = _.omit(arm, 'treatment');
+          });
+
+          studies[studyName] = studyEntry;
+          return studies;
+        }, studyMap);
+      }
+      return studyMap;
     }
 
 
@@ -97,9 +120,12 @@ define(['angular', 'lodash'], function(angular, _) {
         var intervention = {};
         intervention.name = treatment.name;
         intervention.id = treatment.id;
-        intervention.sampleSize = _.reduce(problem.entries, function(totalSampleSize, entry) {
-          return entry.treatment === treatment.id ? totalSampleSize + entry.sampleSize : totalSampleSize;
-        }, 0);
+        intervention.sampleSize = 0;
+        if (!problem.relativeEffectData || !problem.relativeEffectData.data) {
+          intervention.sampleSize = _.reduce(problem.entries, function(totalSampleSize, entry) {
+            return entry.treatment === treatment.id ? totalSampleSize + entry.sampleSize : totalSampleSize;
+          }, intervention.sampleSize);
+        }
         return intervention;
       }
 
@@ -132,9 +158,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function countRandomEffects(entries) {
       // sum of number of arms minus number of studies
-      var studies = _.uniq(entries, function(entry) {
-        return entry.study;
-      });
+      var studies = _.uniqBy(entries, 'study');
       return entries.length - studies.length;
     }
 
@@ -216,7 +240,7 @@ define(['angular', 'lodash'], function(angular, _) {
       });
 
       // check connected nodes
-      return _.any(nodesToVisit, function(nodeToVisit) {
+      return _.some(nodesToVisit, function(nodeToVisit) {
         return hasIndirectPath(startNode, nodeToVisit, network, path.concat(currentNode));
       });
     }
@@ -231,7 +255,7 @@ define(['angular', 'lodash'], function(angular, _) {
               return study.title === studyToRemove.title;
             });
           })
-        }
+        };
       });
       return {
         edges: strippedEdges,
@@ -261,23 +285,36 @@ define(['angular', 'lodash'], function(angular, _) {
       }));
     }
 
-    function createLikelihoodLinkOptions(problem) {
-      return _.map(likelihoodLinkSettings, function(setting) {
-        var isCompatible = _.any(setting.columns, function(columns) {
-          return _.every(columns, function(columnName) {
-            return problem.entries[0].hasOwnProperty(columnName);
-          });
-        });
+    function hasRelativeEffectData(problem) {
+      return problem.relativeEffectData && problem.relativeEffectData.data;
+    }
 
-        var option = _.pick(setting, ['likelihood', 'link', 'scale', 'missingColumnsLabel']);
+    function isSettingIncompatible(setting, problem) {
+      return problem.entries.find(function(entry) {
+        return _.every(setting.columns, function(columnNames) {
+          return _.intersection(_.keys(entry), columnNames).length !== columnNames.length;
+        });
+      });
+    }
+
+    function createLikelihoodLinkOptions(problem) {
+      return _.map(LIKELIHOOD_LINK_SETTINGS, function(setting) {
+        var isIncompatible;
+        if (hasRelativeEffectData(problem) && problem.relativeEffectData.scale) {
+          isIncompatible = setting.analysisScale !== problem.relativeEffectData.scale || isSettingIncompatible(setting, problem);
+        } else {
+          isIncompatible = isSettingIncompatible(setting, problem);
+        }
+
+        var option = _.pick(setting, ['likelihood', 'link', 'scale', 'missingColumnsLabel', 'analysisScale']);
         option.label = option.likelihood + '/' + option.link + ' (' + option.scale + ')';
-        option.compatibility = isCompatible ? 'compatible' : 'incompatible';
+        option.compatibility = isIncompatible ? 'incompatible' : 'compatible';
         return option;
       });
     }
 
     function getScaleName(model) {
-      return _.find(likelihoodLinkSettings, function(setting) {
+      return _.find(LIKELIHOOD_LINK_SETTINGS, function(setting) {
         return setting.likelihood === model.likelihood &&
           setting.link === model.link;
       }).scale;

@@ -36,7 +36,7 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
 
         var rankGraphData = function(data) {
           var result = [];
-          _.each(_.pairs(data), function(el) {
+          _.forEach(_.toPairs(data), function(el) {
             var key = el[0];
             var values = el[1];
             for (var i = 0; i < values.length; i++) {
@@ -56,6 +56,8 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
 
         scope.$watch('value', function(newVal, oldVal) {
           if (!newVal) return;
+          d3.selectAll("svg > *").remove();
+
           nv.addGraph(function() {
             svg.append("rect")
               .attr("width", "100%")
