@@ -64,7 +64,7 @@ function getProblem(request, response, next) {
 }
 
 function setPrimaryModel(request, response, next) {
-  logger.debug('analysisRouter.setPrimaryModel');
+  logger.info('analysisRouter.setPrimaryModel');
   var analysisId = request.params.analysisId;
   var modelId = request.query.modelId;
   analysisRepository.setPrimaryModel(analysisId, modelId, function(error) {
@@ -73,6 +73,7 @@ function setPrimaryModel(request, response, next) {
       response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
       response.end();
     }
+    response.sendStatus(statusCodes.OK)
     next();
   });
 }

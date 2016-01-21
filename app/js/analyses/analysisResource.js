@@ -12,5 +12,5 @@ define([], function() {
       }
     });
   };
-  return dependencies.concat(AnalysisResource)
+  return dependencies.concat(AnalysisResource);
 });
