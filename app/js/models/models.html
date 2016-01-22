@@ -18,13 +18,25 @@
       <div class="row" ng-show="primaryModel">
         <div class="columns large-4">
           <label>Title</label>
+        </div>
+        <div class="columns large-4 end">
+          {{primaryModel.title}}
+        </div>
+      </div>
+      <div class="row" ng-show="primaryModel">
+        <div class="columns large-4">
           <label>Type</label>
+        </div>
+        <div class="columns large-4 end">
+          {{primaryModel.modelType.type}}
+        </div>
+      </div>
+      <div class="row" ng-show="primaryModel">
+        <div class="columns large-4">
           <label>computed</label>
         </div>
         <div class="columns large-4 end">
-          <div>{{primaryModel.title}}</div>
-          <div>{{primaryModel.modelType.type}}</div>
-          <div><i class="fa fa-check" style="color:green;" ng-if="primaryModel.hasResult" /></div>
+          <div><i class="fa fa-check" style="color:green;" ng-if="primaryModel.hasResult" /><span ng-if="!primaryModel.hasResult">no</span></div>
         </div>
       </div>
       <button ng-if="primaryModel" ng-click="unsetPrimary(primaryModel)" class="tiny alert" ng-show="!model.isPrimary">unset as primary</button>
