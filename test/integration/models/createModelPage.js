@@ -26,6 +26,8 @@ CreateModelPage.prototype = {
       this.browser.click('#pairwise-model-main-type-radio').pause(300);
     } else if (type === 'node-split') {
       this.browser.click('#node-split-model-main-type-radio').pause(300);
+    } else if (type === 'regression') {
+      this.browser.click('#meta-regression-model-type-radio').pause(300)
     }
   },
   setModelSubType: function(subType) {
