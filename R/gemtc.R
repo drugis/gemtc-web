@@ -253,7 +253,7 @@ gemtc <- function(params) {
         std.err=nullCheckWithDefault(dataAsList[['standardError']], NA),
         stringsAsFactors=FALSE)
 
-      if(!is.null(dataAsList[['baseArmStandardError']])) {
+      if(!is.null(dataAsList[['baseArmStandardError']]) && dataAsList[['baseArmStandardError']] != 'NA') {
         row[['std.err']] <- dataAsList[['baseArmStandardError']]
       }
       row
