@@ -40,6 +40,8 @@ define(['lodash'], function(_) {
     function setAsPrimary(model) {
       AnalysisResource.setPrimaryModel({
         analysisId: $stateParams.analysisId,
+        id: $stateParams.analysisId,
+        projectId: $stateParams.projectId,
         modelId: model.id
       }, function() {
         console.log('done setting primary model');
@@ -48,9 +50,11 @@ define(['lodash'], function(_) {
       });
     }
 
-    function unsetPrimary(model) {
+    function unsetPrimary() {
       AnalysisResource.setPrimaryModel({
         analysisId: $stateParams.analysisId,
+        id: $stateParams.analysisId,
+        projectId: $stateParams.projectId,
         modelId: null
       }, function() {
         console.log('done setting primary model');
