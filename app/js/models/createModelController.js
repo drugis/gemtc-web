@@ -94,7 +94,13 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function buildCovariateOptions(problem) {
-      return _.keys(problem.studyLevelCovariates[problem.entries[0].study]);
+      var firstStudy;
+      if (problem.entries.length) {
+        firstStudy = problem.entries[0].study
+      } else {
+        firstStudy = _.keys(problem.relativeEffectData.data)[0];
+      }
+      return _.keys(problem.studyLevelCovariates[firstStudy]);
     }
 
     function modelTypeChange() {
