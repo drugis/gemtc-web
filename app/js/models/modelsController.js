@@ -18,8 +18,12 @@ define(['lodash'], function(_) {
       });
     }
 
+    function byName(a, b) {
+      return a.title.localeCompare(b.title);
+    }
+
     function loadModels() {
-      $scope.$parent.models = ModelResource.query($stateParams, function(result) {
+      ModelResource.query($stateParams, function(result) {
         $scope.modelsLoaded = true;
         $scope.$parent.primaryModel = result.find(function(model) {
           return model.id === $scope.analysis.primaryModel;
@@ -29,6 +33,7 @@ define(['lodash'], function(_) {
               setAsPrimary(newValue);
           }
         });
+        $scope.$parent.models =  result.sort(byName);
       });
     }
 
@@ -45,12 +50,8 @@ define(['lodash'], function(_) {
     }
 
     function setAsPrimary(primaryModel) {
-      return AnalysisResource.setPrimaryModel({
-        analysisId: $stateParams.analysisId,
-        id: $stateParams.analysisId,
-        projectId: $stateParams.projectId,
-        modelId: primaryModel ? primaryModel.id : null
-      });
+      var modelId = primaryModel ? primaryModel.id : null;
+      return AnalysisResource.setPrimaryModel(_.extend($scope.analysis, {modelId: modelId, analysisId: $scope.analysis.id}));
     }
 
   };
