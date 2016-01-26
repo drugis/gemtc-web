@@ -1,7 +1,12 @@
 <div class="row">
-	<div class="columns large-12">
-		<h5 class="subheader inline">Title: </h5><h5 id="analysisTitle" class="inline">{{::analysis.title}}<h5>
-		<h5 class="subheader inline">Outcome: </h5><h5 id="analysisOutcome" class="inline">{{::analysis.outcome.name}}<inline-help help-key="outcome"></inline-help><h5>
+	<div class="columns large-2 medium-3">
+		<h5 class="subheader">Title</h5>
+		<h5 id="analysisTitle" class="inline">{{::analysis.title}}<h5>
+		<h5 class="subheader">Outcome<inline-help help-key="outcome"></inline-help></h5>
+		<h5 id="analysisOutcome" class="inline">{{::analysis.outcome.name}}<h5>
+</div>
+<div class="columns large-2 medium-3 end">
+		<h5 class="subheader">Primary model</h5><select ng-model="$parent.primaryModel" ng-options="model.title for model in models" ></select>
+		<button ng-disabled="!primaryModel" ng-click="$parent.primaryModel = null" class="tiny alert" ng-show="!model.isPrimary">unset as primary</button>
 	</div>
 </div>
-
