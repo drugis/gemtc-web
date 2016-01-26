@@ -1,4 +1,4 @@
-<div class="row">
+  <div class="row">
   <div class="columns large-12">
     <h3>Models</h3>
     <div ng-show="!modelsLoaded" class="row">
@@ -12,36 +12,7 @@
 <div class="row" ng-show="modelsLoaded">
   <div class="columns large-8">
     <button id="add-model-btn" ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add new model</button>
-    <h5>Primary model</h5>
-    <div class="panel ">
-      <em ng-show="!analysis.primaryModel">No primary model has been set</em>
-      <div class="row" ng-show="primaryModel">
-        <div class="columns large-4">
-          <label>Title</label>
-        </div>
-        <div class="columns large-4 end">
-          {{primaryModel.title}}
-        </div>
-      </div>
-      <div class="row" ng-show="primaryModel">
-        <div class="columns large-4">
-          <label>Type</label>
-        </div>
-        <div class="columns large-4 end">
-          {{primaryModel.modelType.type}}
-        </div>
-      </div>
-      <div class="row" ng-show="primaryModel">
-        <div class="columns large-4">
-          <label>computed</label>
-        </div>
-        <div class="columns large-4 end">
-          <div><i class="fa fa-check" style="color:green;" ng-if="primaryModel.hasResult" /><span ng-if="!primaryModel.hasResult">no</span></div>
-        </div>
-      </div>
-      <button ng-if="primaryModel" ng-click="unsetPrimary(primaryModel)" class="tiny alert" ng-show="!model.isPrimary">unset as primary</button>
-    </div>
-  </div>
+</div>
 </div>
 <div class="row" ng-show="modelsLoaded">
   <div class="columns large-12">
@@ -58,13 +29,9 @@
       <tbody>
         <!-- class="on-hover clickable"  -->
         <tr ng-repeat="model in models | orderBy:'title'">
-          <td class="button-cell">
-            <a ng-click="gotoModel(model)">{{model.title}}</a>
-            <button
-              ng-show="analysis.primaryModel !== model.id"
-              class="tiny right"
-              ng-show="!model.isPrimary"
-              ng-click="setAsPrimary(model)">set as primary</button>
+          <td>
+            <a ng-click="gotoModel(model)">{{model.title}} </a>
+            <span ng-show="hasPimaryLabel(model)"> (primary model)</span>
           </td>
           <td class="text-center">{{model.modelType.type}}</td>
           <td class="text-center"><i class="fa fa-check" style="color:green;" ng-if="model.hasResult"></td>
