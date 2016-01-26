@@ -27,15 +27,14 @@ define(['lodash'], function(_) {
 
     function getCovariateSummaries(result, problem) {
       var quantiles = result.results.summaries.quantiles;
-      var treatmentsById = _.keyBy(problem.treatments, 'id');
       var covariateSummaries = [];
       Object.keys(quantiles).forEach(function(key){
         if (key === 'B') {
          covariateSummaries.push({key: key, label: 'beta (covariate)', value: quantiles[key]});
         }
         else if (key.slice(0, 5) === 'beta[') {
-          var treatmentId = key.substring(key.indexOf('[') + 1, key.length - 1);
-          covariateSummaries.push({key: key, label: 'beta (' + treatmentsById[treatmentId].name + ')', value: quantiles[key]});
+          var treatmentIndex = Number(key.substring(key.indexOf('[') + 1, key.length - 1)) -1 ;
+          covariateSummaries.push({key: key, label: 'beta (' + problem.treatments[treatmentIndex].name + ')', value: quantiles[key]});
          }
       });
       return covariateSummaries;
