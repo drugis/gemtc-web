@@ -32,6 +32,14 @@
         <td><strong>Indirect estimate </strong><data-inline-help help-key="indirect-estimate"></data-inline-help></td>
         <td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
       </tr>
+      <tr>
+        <td><strong>Inconsistency factor</strong></td>
+        <td>{{::result.results.nodeSplit.diff.quantiles['50%'] | number: 3}} ({{::result.results.nodeSplit.diff.quantiles['2.5%'] | number: 3}}, {{::result.results.nodeSplit.diff.quantiles['97.5%'] | number: 3}})</td>
+      </tr>
+      <tr>
+        <td><strong>Inconsistency P-value</strong></td>
+        <td>{{::result.results.nodeSplit['incons.p'] | number: 3}}</td>
+      </tr>
     </table>
   </div>
 </div>
