@@ -2,7 +2,7 @@
 var logger = require('./logger'),
   dbUtil = require('./dbUtil'),
   _ = require('lodash'),
-  db = require('./db')(dbUtil.buildGemtcDBUrl()),
+  db = require('./db')(dbUtil.gemtcDBUrl),
   columnString = 'title, analysisId, linearModel, burn_in_iterations, inference_iterations, ' +
   ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior, regressor, sensitivity';
 
