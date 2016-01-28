@@ -1,3 +1,4 @@
+'use strict';
 var login = require('./util/login');
 var AnalysesPage = require('./analyses/analysesPage');
 var AnalysisOverviewPage = require('./analyses/analysisOverviewPage');
@@ -30,6 +31,8 @@ module.exports = {
     createModelPage.waitForPageToLoad();
     createModelPage.setTitle('Nightwatch covariate model');
     createModelPage.setModelMainType('regression');
+    browser.pause(300);
+    createModelPage.setCovariate();
     createModelPage.setRunLength(burnInIterations, inferenceIterations, thinningFactor);
     browser.pause(300);
     createModelPage.createModel();

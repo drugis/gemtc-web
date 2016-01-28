@@ -1,3 +1,4 @@
+'use strict';
 function CreateModelPage(browser) {
   this.browser = browser;
 }
@@ -15,7 +16,7 @@ CreateModelPage.prototype = {
   setEffectsType: function(type) {
     if (type === 'random') {
       this.browser.click('#random-effect-radio').pause(300);
-    } else if (type == 'fixed') {
+    } else if (type === 'fixed') {
       this.browser.click('#fixed-effect-radio').pause(300);
     }
   },
@@ -27,7 +28,7 @@ CreateModelPage.prototype = {
     } else if (type === 'node-split') {
       this.browser.click('#node-split-model-main-type-radio').pause(300);
     } else if (type === 'regression') {
-      this.browser.click('#meta-regression-model-type-radio').pause(300)
+      this.browser.click('#meta-regression-model-type-radio').pause(300);
     }
   },
   setModelSubType: function(subType) {
@@ -51,6 +52,11 @@ CreateModelPage.prototype = {
   setLikelihoodAndLink: function() {
     this.browser
       .click('#likelihood-link-select')
+      .keys(['\uE015', '\uE004']); //down then tab
+  },
+  setCovariate: function() {
+    this.browser
+      .click('#covariate-select')
       .keys(['\uE015', '\uE004']); //down then tab
   },
   setHeterogeneity: function(type, settings) {
