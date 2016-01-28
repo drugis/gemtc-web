@@ -141,7 +141,7 @@
       <div class="row" ng-show="isWeighted">
         <div class="columns large-5 medium-5 small-12 large-offset-1 medium-offset-1">
           <label>Ajustment factor
-            <select ng-options="option for option in binaryCovariateNames" ng-model="model.sensitivity.adjustmentFactor" id="likelihood-link-select"></select>
+            <select ng-options="option for option in binaryCovariateNames" ng-model="model.sensitivity.adjustmentFactor" id="adjustment-factor-select"></select>
           </label>
           <label>Value to inflate variance for</label>
           <input id="inflation-value-radio-0" type="radio" ng-model="model.sensitivity.inflationValue" ng-checked="true" value="0">
