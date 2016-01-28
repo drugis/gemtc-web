@@ -25,8 +25,8 @@ define(['lodash'], function(_) {
         } else if (key === 'B') {
           return 'beta (covariate)';
         } else if (key.slice(0, 5) === 'beta[') {
-          var treatmentId = key.substring(key.indexOf('[') + 1, key.length - 1);
-          return 'beta (' + treatmentsById[treatmentId].name + ')';
+          var treatmentIndex = Number(key.substring(key.indexOf('[') + 1, key.length - 1)) - 1;
+          return 'beta (' + treatments[treatmentIndex].name + ')';
         } else {
           var splitKey = key.split('.');
           var treatment1Id = splitKey[1];
@@ -53,7 +53,7 @@ define(['lodash'], function(_) {
 
     function buildDiagnosticMap(model, problem, result) {
       var labelledDiagnostics = labelDiagnostics(model.modelType.type, result.results.gelmanDiagnostics, problem.treatments);
-      var diagnosticMap = labelledDiagnostics.reduce(function(accum, diagnostic, index) {
+      var diagnosticMap = labelledDiagnostics.reduce(function(accum, diagnostic) {
         diagnostic.tracePlot = result.results.convergencePlots.trace[diagnostic.key];
         diagnostic.densityPlot = result.results.convergencePlots.density[diagnostic.key];
         diagnostic.psrfPlot = result.results.convergencePlots.psrf[diagnostic.key];
