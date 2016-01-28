@@ -4,7 +4,7 @@ define([], function() {
   var AnalysisResource = function($resource) {
     return $resource('/analyses/:analysisId', {
       analysisId: '@analysisId',
-      modelId: '@modelId'
+      modelId: '@modelId' // set query param
     }, {
       setPrimaryModel: {
         url: '/analyses/:analysisId/setPrimaryModel',

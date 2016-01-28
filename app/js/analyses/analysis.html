@@ -1,7 +1,24 @@
 <div class="row">
-	<div class="columns large-12">
-		<h5 class="subheader inline">Title: </h5><h5 id="analysisTitle" class="inline">{{::analysis.title}}<h5>
-		<h5 class="subheader inline">Outcome: </h5><h5 id="analysisOutcome" class="inline">{{::analysis.outcome.name}}<inline-help help-key="outcome"></inline-help><h5>
-	</div>
+  <div class="columns large-4 medium-5">
+    <h5 class="subheader">Title</h5>
+    <h5 id="analysisTitle" class="inline">{{::analysis.title}}</h5>
+        <h5 class="subheader">Outcome
+          <inline-help help-key="outcome"></inline-help>
+        </h5>
+        <h5 id="analysisOutcome" class="inline">{{::analysis.outcome.name}}
+        </h5>
+  </div>
+  <div class="columns large-4 medium-8 end">
+    <h5 class="subheader">Primary model</h5>
+    <div ng-hide="!models.length" class="row collapse">
+      <div class="small-9 columns">
+        <select ng-model="$parent.primaryModel" ng-options="model.title for model in models"></select>
+      </div>
+      <div class="small-3 columns">
+        <button ng-disabled="!primaryModel" ng-click="$parent.primaryModel = null" class=" alert postfix"
+        ng-show="!model.isPrimary">Unset</button>
+      </div>
+    </div>
+    <div ng-show="!models.length"><em>No models have been created</em></div>
+  </div>
 </div>
-

@@ -57,6 +57,10 @@ define(['angular', 'angular-mocks', 'services'], function() {
           'd.direct': {
             'Point est.': 1.0009,
             'Upper C.I.': 1.0013
+          },
+          'beta[2]': {
+            'Point est.': 1.1234,
+            'Upper C.I.': 1.5678
           }
         };
 
@@ -114,6 +118,15 @@ define(['angular', 'angular-mocks', 'services'], function() {
             tracePlot: 'k',
             densityPlot: 'l',
             psrfPlot: 'f'
+          },
+          'beta (Paroxetine)': {
+            key: 'beta[2]',
+            label: 'beta (Paroxetine)',
+            'Point est.': 1.1234,
+            'Upper C.I.': 1.5678,
+            tracePlot: undefined,
+            densityPlot: undefined,
+            psrfPlot: undefined
           }
         };
         var model = {

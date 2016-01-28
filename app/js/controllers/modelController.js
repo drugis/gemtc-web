@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService'
@@ -97,9 +97,6 @@ define(['lodash'], function(_) {
       });
     }
 
-
-
-
     function pataviRunSuccessCallback(result) {
       return ProblemResource.get({
         analysisId: $stateParams.analysisId,
@@ -171,6 +168,8 @@ define(['lodash'], function(_) {
           // build cov plot options
           $scope.covariateEffectPlots = MetaRegressionService.buildCovariatePlotOptions($scope.result, $scope.problem);
           $scope.covariateEffectPlot = $scope.covariateEffectPlots[0];
+
+          $scope.covariateQuantiles = MetaRegressionService.getCovariateSummaries($scope.result, $scope.problem);
         }
         $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
       });

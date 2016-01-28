@@ -73,7 +73,7 @@ function setPrimaryModel(request, response, next) {
       response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
       response.end();
     }
-    response.sendStatus(statusCodes.OK)
+    response.sendStatus(statusCodes.OK);
     next();
   });
 }

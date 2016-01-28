@@ -201,12 +201,13 @@
 
         \[
         \begin{array}{rcl}
-        Y_{ik} &=& \left\{ \begin{array}{lcl} \mu_{ib} & if & b = k \\
+        Y_{ik} & \sim & \mathcal{N}(\theta_{ik}, s^2_{ik}) \\
+        \theta_{ik} &=& \left\{ \begin{array}{lcl} \mu_{ib} & if & b = k \\
         \mu_{ib} + \delta_{ibk} & if & b > k   \end{array} \right. \\
         \delta_{ibk} & \sim & \mathcal{N}(d_{bk}, \tau_{bk}^2),
         \end{array}
         \]
-        <p>where, similarly as in <a href="#network-meta-analysis-contrast-level">the model for contrast level data</a>, the true effects \( \delta_{ibk} \) follow a common distribution with the mean expressed in terms of indirect effects \( d_{bk} = d_{1k} - d_{1b} \) with prior distributions \( d_{1k} \sim \mathcal{N} (0.0, 103), d_{11} = 0 and _tau_{bk}^2 = \tau^2 \).
+        <p>where, similarly as in <a href="#network-meta-analysis-contrast-level">the model for contrast level data</a>, the true effects \( \delta_{ibk} \) follow a common distribution with the mean expressed in terms of indirect effects \( d_{bk} = d_{1k} - d_{1b} \) with prior distributions \( d_{1k} \sim \mathcal{N} (0.0, 103) \), \( d_{11} = 0 \). The between-studies variances \( \tau_{bk}^2 \) are typically assumed to be homogeneous across treatment contrasts \( \tau_{bk}^2=\tau^2 \).</p>
 
 
         <h4 id="network-meta-analysis-binomially-distributed">Network meta-analysis of binomially distributed outcomes</h4>

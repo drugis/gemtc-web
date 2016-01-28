@@ -9,8 +9,7 @@ define(['lodash'], function(_) {
     $scope.loadModels = loadModels;
     $scope.gotoCreateModel = gotoCreateModel;
     $scope.gotoModel = gotoModel;
-    $scope.unsetPrimary = unsetPrimary;
-
+    $scope.hasPimaryLabel = hasPimaryLabel;
     $scope.loadModels();
 
     function modelParams(model) {
@@ -19,15 +18,24 @@ define(['lodash'], function(_) {
       });
     }
 
-    function loadModels() {
-      $scope.models = ModelResource.query($stateParams, function(result) {
-        $scope.modelsLoaded = true;
-        $scope.primaryModel = result.find(function(model) {
-          return model.id === $scope.analysis.primaryModel;
-        });
-      });
+    function byName(a, b) {
+      return a.title.localeCompare(b.title);
     }
 
+    function loadModels() {
+      ModelResource.query($stateParams, function(result) {
+        $scope.modelsLoaded = true;
+        $scope.$parent.primaryModel = result.find(function(model) {
+          return model.id === $scope.analysis.primaryModel;
+        });
+        $scope.$watch('$parent.primaryModel', function(newValue, oldValue){
+          if(oldValue !== newValue) {
+              setAsPrimary(newValue);
+          }
+        });
+        $scope.$parent.models =  result.sort(byName);
+      });
+    }
 
     function gotoCreateModel() {
       $state.go('createModel', $stateParams);
@@ -37,30 +45,13 @@ define(['lodash'], function(_) {
       $state.go('model', $scope.modelParams(model));
     }
 
-    function setAsPrimary(model) {
-      AnalysisResource.setPrimaryModel({
-        analysisId: $stateParams.analysisId,
-        id: $stateParams.analysisId,
-        projectId: $stateParams.projectId,
-        modelId: model.id
-      }, function() {
-        console.log('done setting primary model');
-        $scope.analysis.primaryModel = model.id;
-        $scope.primaryModel = model;
-      });
+    function hasPimaryLabel(model) {
+      return model && $scope.$parent.primaryModel && model.id === $scope.$parent.primaryModel.id;
     }
 
-    function unsetPrimary() {
-      AnalysisResource.setPrimaryModel({
-        analysisId: $stateParams.analysisId,
-        id: $stateParams.analysisId,
-        projectId: $stateParams.projectId,
-        modelId: null
-      }, function() {
-        console.log('done setting primary model');
-        $scope.analysis.primaryModel = null;
-        $scope.primaryModel = null;
-      });
+    function setAsPrimary(primaryModel) {
+      var modelId = primaryModel ? primaryModel.id : null;
+      return AnalysisResource.setPrimaryModel(_.extend($scope.analysis, {modelId: modelId, analysisId: $scope.analysis.id}));
     }
 
   };

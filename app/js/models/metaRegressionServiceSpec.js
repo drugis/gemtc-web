@@ -14,7 +14,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
 
     describe('buildCovariatePlotOptions', function() {
 
-      it('should combine the plots with the treatmentNames and sort te result by treatmentName', function() {
+      it('should combine the plots with the treatmentNames and sort the result by treatmentName', function() {
         var treatments = [{
           id: 2,
           name: 'Fluoxetine'
@@ -28,7 +28,6 @@ define(['angular', 'angular-mocks', 'services'], function() {
           id: 3,
           name: 'Sertraline'
         }];
-
         var result = {
           results: {
             covariateEffectPlot: {
@@ -38,11 +37,9 @@ define(['angular', 'angular-mocks', 'services'], function() {
             }
           }
         };
-
         var problem = {
           treatments: treatments
         };
-
         var expected = [{
           treatmentName: 'Fluoxetine',
           plot: '2'
@@ -60,6 +57,53 @@ define(['angular', 'angular-mocks', 'services'], function() {
 
       });
 
+    });
+
+    describe('getCovariateSummaries', function() {
+      it('should get the beta summaries', function() {
+
+        var treatments = [{
+          id: 2,
+          name: 'Fluoxetine'
+        }, {
+          id: 5,
+          name: 'Paroxetine'
+        }, {
+          id: 4,
+          name: 'Venlafaxine'
+        }, {
+          id: 3,
+          name: 'Sertraline'
+        }];
+        var result = {
+          results: {
+            summaries: {
+              quantiles: {
+                'd.2.3': {},
+                'd.2.4': {},
+                'd.2.5': {},
+                'sd.d': {},
+                'B': {
+                  something: 'something'
+                }
+              }
+            }
+          }
+        };
+        var problem = {
+          treatments: treatments
+        };
+        var expected = [{
+          key: 'B',
+          label: 'beta (covariate)',
+          value: {
+            something: 'something'
+          }
+        }];
+
+        var covariateSummaries = metaRegressionService.getCovariateSummaries(result, problem);
+        expect(covariateSummaries).toEqual(expected);
+      });
     });
 
   });

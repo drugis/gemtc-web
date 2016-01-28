@@ -4,6 +4,12 @@ define(['angular', 'lodash'], function(angular, _) {
 
   var ModelService = function() {
 
+    function findPrimaryModel(analysis, models) {
+      return models.find(function(model) {
+        return model.id === analysis.primaryModel;
+      });
+    }
+
     function cleanModel(frontEndModel) {
       var model = _.cloneDeep(frontEndModel);
       if (frontEndModel.modelType.mainType === 'node-split') {
@@ -91,6 +97,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     return {
+      findPrimaryModel: findPrimaryModel,
       cleanModel: cleanModel,
       createModelBatch: createModelBatch,
       isVariableBinary: isVariableBinary,
