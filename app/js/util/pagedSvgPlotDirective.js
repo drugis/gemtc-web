@@ -10,13 +10,15 @@ define([], function() {
       restrict: 'E',
       // using template because loading teplateUrl irritating in submodule
       templateUrl: gemtcRootPath + 'js/util/pagedSvgPlotDirective.html',
-      link: function(scope, element) {
+      link: function(scope) {
         scope.selectNextPage = selectNextPage;
         scope.selectPreviousPage = selectPreviousPage;
         resetPage();
 
         scope.$watch('pages', function(newValue, oldValue) {
-          if (newValue === oldValue) return;
+          if (newValue === oldValue){
+            return;
+          }
           resetPage();
         });
 
