@@ -38,13 +38,19 @@ define(['angular', 'lodash'], function(angular, _) {
       }
       model.modelType = _.omit(model.modelType, 'mainType', 'subType');
       model.modelType.type = frontEndModel.modelType.mainType;
-      model.likelihood = frontEndModel.likelihoodLink.likelihood;
-      model.link = frontEndModel.likelihoodLink.link;
-      if (frontEndModel.outcomeScale.type === 'heuristically') {
-        delete model.outcomeScale;
-      } else {
-        model.outcomeScale = frontEndModel.outcomeScale.value;
+      if (frontEndModel.likelihoodLink) {
+        model.likelihood = frontEndModel.likelihoodLink.likelihood;
+        model.link = frontEndModel.likelihoodLink.link;
       }
+
+      if (frontEndModel.outcomeScale) {
+        if (frontEndModel.outcomeScale.type === 'heuristically') {
+          delete model.outcomeScale;
+        } else {
+          model.outcomeScale = frontEndModel.outcomeScale.value;
+        }
+      }
+
       if (model.heterogeneityPrior && model.heterogeneityPrior.type === 'automatic') {
         delete model.heterogeneityPrior;
       }
@@ -89,7 +95,7 @@ define(['angular', 'lodash'], function(angular, _) {
       }
     }
 
-    function isProblemWithCovariates(problem){
+    function isProblemWithCovariates(problem) {
       var studies = _.keys(problem.studyLevelCovariates);
       if (studies.length) {
         return Object.keys(problem.studyLevelCovariates[studies[0]]).length > 0;

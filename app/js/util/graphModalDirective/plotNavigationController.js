@@ -12,16 +12,16 @@ define(['lodash'], function(_) {
     $scope.previousComparison = function() {
       --$scope.selectedIndex;
       $scope.comparisonLabel = $scope.sortedLabels[$scope.selectedIndex];
-    }
+    };
     $scope.nextComparison = function() {
       ++$scope.selectedIndex;
       $scope.comparisonLabel = $scope.sortedLabels[$scope.selectedIndex];
-    }
+    };
 
     $scope.cancel = function() {
       $modalInstance.dismiss('cancel');
     };
 
-  }
+  };
   return dependencies.concat(PlotNavigationController);
 });

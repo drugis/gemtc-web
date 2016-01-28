@@ -6,9 +6,6 @@ define(['angular', 'lodash'], function(angular, _) {
   var CreateModelController = function($scope, $q, $stateParams, $state,
     ModelResource, ModelService, AnalysisService, ProblemResource) {
 
-    var modelDefer = $q.defer();
-    modelDefer.$promise = modelDefer.promise;
-
     $scope.model = {
       linearModel: 'random',
       modelType: {
@@ -40,7 +37,6 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.addLevelOnEnter = addLevelOnEnter;
     $scope.levelAlreadyPresent = levelAlreadyPresent;
     $scope.isNumber = isNumber;
-    $scope.cleanModel = modelDefer;
     $scope.problem = ProblemResource.get($stateParams);
     $scope.selectedCovariateValueHasNullValues = false;
 
@@ -64,7 +60,6 @@ define(['angular', 'lodash'], function(angular, _) {
       });
       $scope.likelihoodLinkOptions = compatible.concat(incompatible);
       $scope.model.likelihoodLink = compatible[0];
-      modelDefer.resolve(ModelService.cleanModel($scope.model));
       if (problem.studyLevelCovariates) {
         $scope.covariateOptions = buildCovariateOptions(problem);
         $scope.model.covariateOption = $scope.covariateOptions[0];
@@ -96,7 +91,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function buildCovariateOptions(problem) {
       var firstStudy;
       if (problem.entries.length) {
-        firstStudy = problem.entries[0].study
+        firstStudy = problem.entries[0].study;
       } else {
         firstStudy = _.keys(problem.relativeEffectData.data)[0];
       }
@@ -166,8 +161,6 @@ define(['angular', 'lodash'], function(angular, _) {
         return covariate[covariateName] === null;
       });
     }
-
-
 
     function addLevel(newLevel) {
       $scope.model.levels.push(newLevel);

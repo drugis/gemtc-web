@@ -7,8 +7,8 @@
   "globals_path" : "",
 
   "selenium" : {
-    "start_process" : true,
-    "server_path" : "selenium-server-standalone-2.45.0.jar",
+    "start_process" : false,
+    "server_path" : "selenium-server-standalone-2.50.0.jar",
     "log_path" : "",
     "host" : "127.0.0.1",
     "port" : 4444,
@@ -28,19 +28,7 @@
         "path" : ""
       },
       "desiredCapabilities": {
-        "browserName": "chrome",
-        "javascriptEnabled": true,
-        "acceptSslCerts": true,
-        "chromeOptions" : {
-        "args" : ["--incognito"]
-        },
-        "phantomjs.binary.path" : "/usr/bin/phantomjs"
-      }
-    },
-
-    "chrome" : {
-      "desiredCapabilities": {
-        "browserName": "chrome",
+        "browserName": "firefox",
         "javascriptEnabled": true,
         "acceptSslCerts": true,
         "chromeOptions" : {
