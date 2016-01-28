@@ -113,7 +113,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       }
 
       var header = _.map(data[0], function(col) {
-        return col.trim()
+        return col.trim();
       });
       var normalisedRows = _.map(data.slice(1, data.length), function(dataLine) {
         var study = dataLine[0].toString().trim();
@@ -125,7 +125,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
         isValid: isValid,
         message: isValid ? '' : 'Error: non-numeric data in data column',
         data: [].concat([header], normalisedRows)
-      }
+      };
     }
 
     /**
@@ -185,12 +185,13 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       var errorColumn;
       var covValues = {};
       _.find(studyArms, function(arm) {
-        return errorColumn = _.find(covariateNames, function(covariateName) {
+        errorColumn = _.find(covariateNames, function(covariateName) {
           if (covValues[covariateName] !== undefined && covValues[covariateName] && arm[covariateName] !== null && arm[covariateName] !== covValues[covariateName]) {
             return true;
           }
           covValues[covariateName] = arm[covariateName];
         });
+        return errorColumn;
       });
       return errorColumn;
     }

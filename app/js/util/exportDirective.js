@@ -8,8 +8,8 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
         fileName: '=',
         dontFloatSibling: '='
       },
-      link: function(scope, element, attrs) {
-        
+      link: function(scope, element) {
+
         var btnElement = $compile('<button ng-click="exportElement()" class="export-button info small">Export</button>')(scope);
         element.after(btnElement);
         if(!scope.dontFloatSibling) {
@@ -23,7 +23,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
         } else if (element.find('svg').length > 0) {
           scope.exportElement = _.partial(exportSvg, element.find('svg'));
         }
-        
+
         function showCopyPasteMessage() {
           $modal.open({
             templateUrl: './js/util/copyDialog.html',
@@ -43,7 +43,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
               width: sourceImage.width,
               height: sourceImage.height
             });
-          var context = $canvasElement[0].getContext("2d")
+          var context = $canvasElement[0].getContext("2d");
           context.drawImage(sourceImage, 0, 0);
 
           var a = document.createElement("a");
@@ -76,7 +76,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
 
           var imgsrc = 'data:image/svg+xml;base64,' + btoa(html);
           var $img = jQuery('<img />', {
-            src: imgsrc 
+            src: imgsrc
           });
           return $img;
         }
