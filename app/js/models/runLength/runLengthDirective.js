@@ -1,5 +1,5 @@
 'use strict';
-define(['moment'], function(moment) {
+define(['moment', 'lodash'], function(moment, _) {
   var dependencies = ['$q', 'gemtcRootPath', 'AnalysisService', 'ModelService'];
   var RunLengthDirective = function($q, gemtcRootPath, AnalysisService, ModelService) {
     return {
@@ -17,29 +17,41 @@ define(['moment'], function(moment) {
         $scope.isRunlengthDivisibleByThinningFactor = isRunlengthDivisibleByThinningFactor;
         $scope.checkValidRunLength = checkValidRunLength;
 
-        $scope.model.$promise.then(function(model) {
-          $scope.model = model;
-        })
+        var asyncTasks = [$scope.problem.$promise];
+        if ($scope.model.$promise) {
+          asyncTasks.push($scope.model.$promise);
+        }
 
-        $q.all([$scope.model.$promise, $scope.problem.$promise]).then(function() {
+        /*
+         * createModel supplies a frontEndModel that needs to be cleaned,
+         * the results controller supplies a cleaned model
+        */
+        function cleanModelIfNeeded(model) {
+          if($scope.model.modelType.mainType){
+            return  ModelService.cleanModel($scope.model);
+          }
+          return model;
+        }
+
+        $q.all(asyncTasks).then(function() {
           $scope.$watch('model', function() {
-            estimateHumanizedRunLength();
-            checkValidRunLength($scope.model);
-          }, true); // deep watch 
+            estimateHumanizedRunLength($scope.problem, $scope.model);
+            checkValidRunLength();
+          }, true); // deep watch
         });
 
-        function estimateHumanizedRunLength() {
-          if (($scope.model.modelType.mainType === 'pairwise' && $scope.model.modelType.subType === 'all-pairwise') ||
-            ($scope.model.modelType.mainType === 'node-split' && $scope.model.modelType.subType === 'all-node-split')
+        function estimateHumanizedRunLength(problem, model) {
+          if ((model.modelType.mainType === 'pairwise' && model.modelType.subType === 'all-pairwise') ||
+            (model.modelType.mainType === 'node-split' && model.modelType.subType === 'all-node-split')
           ) {
-            var comparisonOptions = AnalysisService.createPairwiseOptions($scope.problem);
-            var nodeSplitOptions = AnalysisService.createNodeSplitOptions($scope.problem);
-            var modelBatch = createModelBatch($scope.model, comparisonOptions, nodeSplitOptions);
+            var comparisonOptions = AnalysisService.createPairwiseOptions(problem);
+            var nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
+            var modelBatch = ModelService.createModelBatch(model, comparisonOptions, nodeSplitOptions);
             $scope.estimatedRunLength = _.max(_.map(modelBatch, function(model) {
-              return AnalysisService.estimateRunLength($scope.problem, model);
+              return AnalysisService.estimateRunLength(problem, cleanModelIfNeeded(model));
             }));
           } else {
-            $scope.estimatedRunLength = AnalysisService.estimateRunLength($scope.problem, $scope.model);
+            $scope.estimatedRunLength = AnalysisService.estimateRunLength(problem, cleanModelIfNeeded(model));
           }
           $scope.estimatedRunLengthHumanized = moment.duration($scope.estimatedRunLength, 'seconds').humanize();
         }

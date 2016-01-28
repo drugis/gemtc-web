@@ -83,7 +83,7 @@ define(['lodash', 'angular'], function(_, angular) {
             return $scope.problem;
           },
           model: function() {
-            return angular.copy($scope.model);
+            return $scope.model;
           },
           successCallback: function() {
             return function() {
