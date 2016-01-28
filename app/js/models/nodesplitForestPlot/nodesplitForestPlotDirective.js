@@ -1,13 +1,13 @@
 'use strict';
 define(['d3'], function(d3) {
-  var dependencies = ['gemtcRootPath'];
-  var NodesplitForestPlot = function(gemtcRootPath) {
+  var dependencies = [];
+  var NodesplitForestPlot = function() {
     return {
       restrict: 'E',
       scope: {
         estimates: '='
       },
-      link: function(scope, element, attrs) {
+      link: function(scope, element) {
         var margin = 10,
           topMargin = 10,
           rowHeight = 14,
@@ -34,7 +34,6 @@ define(['d3'], function(d3) {
           svg.selectAll('*').remove();
 
           var estimates = scope.estimates,
-            width = d3.select(element[0]).node().offsetWidth - margin,
             minLower = d3.min(estimates, function(d) {
               return d.lower;
             }),
