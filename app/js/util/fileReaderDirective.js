@@ -10,7 +10,6 @@ define([], function() {
       restrict: 'E',
       template: '<input id="problem-file-upload" type="file">',
       link: function(scope, element) {
-        var file;
         var acceptTypes = scope.acceptTypes();
         element.find('input').attr('accept', acceptTypes);
 
@@ -29,7 +28,9 @@ define([], function() {
             }
             var reader = new FileReader();
             reader.onload = onLoad;
-            file && reader.readAsText(file);
+            if(file){
+              reader.readAsText(file);
+            }
           });
         });
       }

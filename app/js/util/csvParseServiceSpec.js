@@ -232,7 +232,6 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
           }
         };
         var parseResult = csvParseService.parse(validMixedEffectCsv);
-        var parsedProblem = parseResult.problem;
         expect(parseResult.isValid).toBe(true);
         expect(parseResult.problem.relativeEffectData).toEqual(expectedRelativeDifferenceData);
       });
@@ -270,7 +269,6 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
           }
         };
         var parseResult = csvParseService.parse(validRelativeOnlyCsv);
-        var parsedProblem = parseResult.problem;
         expect(parseResult.isValid).toBe(true);
         expect(parseResult.problem.relativeEffectData).toEqual(expectedRelativeDifferenceData);
       });
