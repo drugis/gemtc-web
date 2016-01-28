@@ -26,7 +26,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function buildConsistencyEstimates(networkResult, comparison) {
-      var relativeEffectCosistancyEstimate = _.find(networkResult.relativeEffects, function(relativeEffect) {
+      var relativeEffectCosistancyEstimate = _.find(networkResult.relativeEffects.centering, function(relativeEffect) {
         return comparison.from.id === parseInt(relativeEffect.t1) &&
           comparison.to.id === parseInt(relativeEffect.t2);
       });

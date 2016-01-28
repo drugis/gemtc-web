@@ -68,11 +68,13 @@ define(['angular', 'lodash'], function(angular, _) {
             });
 
             $scope.networkModelResultsDefer.promise.then(function(result) {
-              row.consistencyEstimate = NodeSplitOverviewService.buildConsistencyEstimates(result, row);
+              if (result) {
+                row.consistencyEstimate = NodeSplitOverviewService.buildConsistencyEstimates(result, row);
+              }
+
             });
           }
         }
-
         return row;
       });
     }
@@ -80,7 +82,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function findNetworkModelForModel(nodeSplitModel, models) {
       return _.find(models, function(model) {
         return model.modelType.type === 'network' && isSameModelSettings(nodeSplitModel, model);
-      })
+      });
     }
 
     function isSameModelSettings(model1, model2) {
@@ -105,9 +107,9 @@ define(['angular', 'lodash'], function(angular, _) {
         .getResult(getParams)
         .$promise.then(
           function(result) {
-            return result
+            return result;
           },
-          function(error) {
+          function() {
             return $q.resolve(undefined);
           });
     }
@@ -148,12 +150,11 @@ define(['angular', 'lodash'], function(angular, _) {
               $state.go($state.current, {}, {
                 reload: true
               });
-            }
+            };
           }
         }
       });
-    };
-
+    }
 
     function openCreateNodeSplitDialog(comparison) {
       $modal.open({
@@ -177,11 +178,11 @@ define(['angular', 'lodash'], function(angular, _) {
               $state.go($state.current, {}, {
                 reload: true
               });
-            }
+            };
           }
         }
       });
-    };
+    }
 
 
   };
