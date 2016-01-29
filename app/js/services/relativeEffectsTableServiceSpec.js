@@ -84,7 +84,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
       }, {
         id: 4,
         name: 'parox'
-      }]
+      }];
       var builtTable = RelativeEffectsTableService.buildTable(mockRelativeEffects, false, treatments);
       expect(builtTable).toEqual(expectedTable);
     }));

@@ -1,9 +1,9 @@
+'use strict';
 var proxyquire = require('proxyquire');
 var chai = require('chai'),
   spies = require('chai-spies'),
   sinon = require('sinon'),
-  expect = chai.expect,
-  _ = require('lodash');
+  chaiExpect = chai.expect;
 
 chai.use(spies);
 
@@ -18,19 +18,16 @@ describe('the patavi task repository', function() {
         return dbStub;
       }
     });
-
-  })
+  });
 
   it(' should get the result', function(done) {
-
-    var template = 'SELECT result FROM patavitask WHERE id = $1';
     var resultFromQuery = {
       rows: [{
         result: '{"results": "result"}'
       }]
     };
-    var callback = function(error, data) {
-      expect(error).to.be.null;
+    var callback = function(error) {
+      chaiExpect(error).to.equal(null);
       done();
     };
     sinon.stub(dbStub, 'query').onCall(0).yields(null, resultFromQuery);
@@ -38,13 +35,11 @@ describe('the patavi task repository', function() {
   });
 
   it('should get the result when none are precent', function(done) {
-
-    var template = 'SELECT result FROM patavitask WHERE id = $1';
     var resultFromQuery = {
       rows: []
     };
-    var callback = function(error, data) {
-      expect(error).to.eql({
+    var callback = function(error) {
+      chaiExpect(error).to.eql({
         description: 'no result found'
       });
       done();
