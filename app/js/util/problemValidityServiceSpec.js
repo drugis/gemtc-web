@@ -234,7 +234,6 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
           }]
         };
         var result = problemValidityService.getValidity(problem);
-        console.log(JSON.stringify(result));
         expect(result.isValid).toBe(false);
         expect(result.message).toContain('Each entry must have the same data columns');
       });

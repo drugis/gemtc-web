@@ -4,5 +4,5 @@ define([], function() {
   var ProblemResource = function($resource) {
     return $resource('/analyses/:analysisId/problem');
   };
-  return dependencies.concat(ProblemResource)
+  return dependencies.concat(ProblemResource);
 });

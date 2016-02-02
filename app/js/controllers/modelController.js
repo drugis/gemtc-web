@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService'

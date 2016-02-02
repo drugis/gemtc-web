@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['angular', 'lodash'], function(angular, _) {
   var dependencies = ['$scope', '$modalInstance', '$stateParams', 'ModelResource', 'problem', 'baseModel', 'successCallback'];
   var CreateNetworkModelModelController = function($scope, $modalInstance, $stateParams, ModelResource, problem, baseModel, successCallback) {
 
@@ -11,7 +11,7 @@ define(['lodash'], function(_) {
     $scope.model = modelCopy;
     $scope.isCreatingModel = false;
     $scope.createNodeSplitModel = createNodeSplitModel;
-    $scope.modelTypeLabel = 'network'
+    $scope.modelTypeLabel = 'network';
 
     $scope.cancel = function() {
       $modalInstance.dismiss('cancel');

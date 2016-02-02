@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(['angular'], function(angular) {
   var dependencies = ['$window', 'NetworkPlotService'];
   var NetworkPlotDirective = function($window, NetworkPlotService) {
     return {

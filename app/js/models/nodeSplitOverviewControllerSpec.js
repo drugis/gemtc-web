@@ -151,7 +151,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         expect(scope.networkStateParams).toBe(stateParamsMock);
       });
     });
-    
+
     describe('when the scope.model resolves with a nodesplit model', function() {
       var optionsMock = [{
           label: 'comparison 1',
@@ -256,7 +256,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
 
       it('baseModelNotShown should be true', function() {
         expect(scope.baseModelNotShown).toBeTruthy();
-      })
+      });
     });
 
   });

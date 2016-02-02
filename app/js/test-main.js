@@ -9,7 +9,7 @@ for (var file in window.__karma__.files) {
   }
 }
 
-console.log(tests);
+//console.log(tests);
 
 require.config({
   paths: {

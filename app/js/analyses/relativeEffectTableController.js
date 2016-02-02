@@ -8,6 +8,6 @@ define([], function() {
       $scope.tableRows = EvidenceTableService.buildRelativeEffectDataRows(analysis.problem);
     });
 
-  }
+  };
   return dependencies.concat(RelativeEffectTableController);
 });
