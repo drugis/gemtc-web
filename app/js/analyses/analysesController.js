@@ -5,7 +5,7 @@ define([], function() {
     $scope.analysesLoaded = false;
 
     function loadAnalyses() {
-      $scope.analyses = AnalysisResource.query(function(result) {
+      $scope.analyses = AnalysisResource.query(function() {
         $scope.analysesLoaded = true;
       });
     }
@@ -19,6 +19,6 @@ define([], function() {
       });
     };
 
-  }
+  };
   return dependencies.concat(ModelController);
 });

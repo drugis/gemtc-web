@@ -5,15 +5,7 @@ define(['angular', 'angular-mocks', 'services', 'constants'], function() {
     beforeEach(module('gemtc.constants'));
 
     beforeEach(function() {
-      var mockResults = {
-        promise: 'foo'
-      };
-      var mockTask = {
-        results: mockResults
-      };
-
-      module('gemtc.services', function($provide) {
-      });
+      module('gemtc.services');
     });
 
     it('should make the run function available', inject(function($rootScope, $q, PataviService) {

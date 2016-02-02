@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-resource'], function(angular, angularResource) {
+define([], function() {
   var dependencies = ['$resource'];
   var ModelResource = function($resource) {
     return $resource('/projects/:projectId/analyses/:analysisId/models/:modelId', {

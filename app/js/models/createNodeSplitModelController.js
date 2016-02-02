@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['angular', 'lodash'], function(angular, _) {
   var dependencies = ['$scope', '$modalInstance', '$stateParams', 'ModelResource', 'problem', 'baseModel', 'comparison', 'successCallback'];
   var CreateNodeSplitModelController = function($scope, $modalInstance, $stateParams, ModelResource, problem, baseModel, comparison, successCallback) {
 

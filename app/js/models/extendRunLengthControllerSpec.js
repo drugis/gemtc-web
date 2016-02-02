@@ -1,7 +1,8 @@
-define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
+'use strict';
+define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'],
+ function(angular, angularMocks) {
   describe('the extend runlength controller', function() {
     var scope,
-      q,
       stateParamsMock,
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['estimateRunLength']),
@@ -17,7 +18,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
     beforeEach(module('gemtc.models'));
 
-    beforeEach(inject(function($rootScope, $controller, $q) {
+    beforeEach(angularMocks.inject(function($rootScope, $controller) {
       scope = $rootScope;
       $controller('ExtendRunLengthController', {
         $scope: scope,
@@ -46,11 +47,11 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         expect(scope.isRunLengthsAbovePrevious).toBeDefined();
       });
       it('should return true if the settings are higher', function() {
-        modelMock.burnInIterations = modelMock.burnInIterations + 1
+        modelMock.burnInIterations = modelMock.burnInIterations + 1;
         expect(scope.isRunLengthsAbovePrevious()).toBe(true);
       });
       it('should return false if the settings are lower', function() {
-        modelMock.burnInIterations = modelMock.burnInIterations - 1
+        modelMock.burnInIterations = modelMock.burnInIterations - 1;
         expect(scope.isRunLengthsAbovePrevious()).toBe(false);
       });
     });

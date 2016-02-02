@@ -94,12 +94,6 @@ define(['angular', 'lodash'], function(angular, _) {
       );
     }
 
-    function getModelResult(modelId) {
-      var getParams = $stateParams;
-      getParams.modelId = modelId;
-      return ModelResource.getResult(getParams);
-    }
-
     function findModelResult(modelId) {
       var getParams = angular.copy($stateParams);
       getParams.modelId = modelId;

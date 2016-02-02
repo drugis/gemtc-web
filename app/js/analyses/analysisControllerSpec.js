@@ -5,16 +5,16 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
     beforeEach(module('gemtc.analyses'));
 
-    beforeEach(inject(function($rootScope, $controller, $q) {
+    beforeEach(inject(function($rootScope, $controller) {
       scope = $rootScope;
 
-      // we all have one 
+      // we all have one
       scope.$parent = {};
 
       var analyisMock = 'analysisMock';
       stateParamsMock = {
         analyisId: -1
-      }
+      };
       networkPlotService = jasmine.createSpyObj('NetworkPlotService', ['bla']);
 
       analysisResource = jasmine.createSpyObj('AnalysisResource', ['get']);

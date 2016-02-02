@@ -6,6 +6,6 @@ define([], function() {
     $scope.analysis.$promise.then(function(analysis) {
       $scope.networkGraph.network = AnalysisService.transformProblemToNetwork(analysis.problem);
     });
-  }
+  };
   return dependencies.concat(NetworkGraphController);
 });

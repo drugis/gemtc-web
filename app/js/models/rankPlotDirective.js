@@ -14,7 +14,7 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
           .attr("height", "100%")
           .style('font-size', '12px');
 
-        scope.$on('$locationChangeStart', function(event) {
+        scope.$on('$locationChangeStart', function() {
           window.onresize = null;
         });
 
@@ -54,8 +54,10 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
           return result;
         };
 
-        scope.$watch('value', function(newVal, oldVal) {
-          if (!newVal) return;
+        scope.$watch('value', function(newVal) {
+          if (!newVal) {
+           return;
+         }
           d3.selectAll("svg > *").remove();
 
           nv.addGraph(function() {

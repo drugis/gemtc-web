@@ -1,8 +1,8 @@
 'use strict';
 define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
-  var dependencies = ['AnalysisService'];
+  var dependencies = [];
 
-  var NetworkPlotService = function(AnalysisService) {
+  var NetworkPlotService = function() {
 
     function drawEdge(enter, fromId, toId, width, circleData) {
       enter.append('line')
@@ -19,7 +19,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       return (y - 1) / (y + 1);
     }
 
-    function drawNetwork(network, width, height) {
+    function drawNetwork(network, width) {
       var n = network.interventions.length;
       var angle = 2.0 * Math.PI / n;
       var originX = width / 2;
