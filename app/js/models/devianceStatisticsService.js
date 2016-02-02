@@ -4,14 +4,8 @@ define(['lodash'], function(_) {
 
   var DevianceStatisticsService = function() {
     function buildAbsoluteTable(devianceStatistics, problem) {
-      var table = [],
-        treatmentMap = _.keyBy(problem.treatments, 'id'),
-        studyMap = _.transform(problem.entries, function(result, entry) {
-          var studyName = entry.study;
-          result[studyName] = result[studyName] ? result[studyName].concat(entry) : [entry];
-          return result;
-        });
-
+      var table = [];
+      var treatmentMap = _.keyBy(problem.treatments, 'id');
 
       _.each(devianceStatistics.perArmDeviance, function(deviance, study) {
         var firstStudyRow = true;
@@ -22,8 +16,8 @@ define(['lodash'], function(_) {
             deviance: devianceEntry,
             leverage: devianceStatistics.perArmLeverage[study][treatmentId]
           };
-          if(firstStudyRow) {
-             row.rowSpan =   Object.keys(deviance).length;
+          if (firstStudyRow) {
+            row.rowSpan = Object.keys(deviance).length;
           }
           table.push(row);
           firstStudyRow = false;
