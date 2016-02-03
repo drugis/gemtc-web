@@ -9498,13 +9498,7 @@ table.layout-table td {
   font-weight: bold;
 }
 
-/* line 58, ../sass/_gemtc-drugis-base.scss */
-.top-bar-section ul.top-bar-content {
-  padding-top: 5px;
-  margin-left: 4rem;
-}
-
-/* line 63, ../sass/_gemtc-drugis-base.scss */
+/* line 57, ../sass/_gemtc-drugis-base.scss */
 .breadcrumbs.fixed {
   margin-top: 52px;
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
