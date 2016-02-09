@@ -78,7 +78,10 @@
 										  <li><a href="#run-length-convergence">Run length and convergence</a></li>
 
 
-										  <li class="heading"><a href="#node-splitting-analysis" style="padding-left : 0;">Node-splitting analysis of inconsistency</a></li>
+										  <li class="heading"><a href="#advanced-models" style="padding-left : 0;">Advanced models</a></li>
+										  <li><a href="#node-splitting-analysis">Node-splitting analysis of inconsistency</a></li>
+										  <li><a href="#network-meta-regression">Network meta-regression</a></li>
+										  <li><a href="#design-adjustment">Design adjustment</a></li>
 
 
 											<li class="heading"><a href="#gemtc-network-meta-analysis" style="padding-left : 0;">Network meta-analysis in GeMTC</a></li>
@@ -121,7 +124,7 @@
             <a title="J.P. Jansen et al. (2011). Interpreting Indirect Treatment Comparisons and Network Meta-Analysis for Health-Care Decision Making: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 1. Value in Health." href="http://dx.doi.org/10.1016/j.jval.2011.04.002">ISPOR 1</a>,
             <a title="D.C. Hoaglin et al. (2011). Conducting Indirect-Treatment-Comparison and Network-Meta-Analysis Studies: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 2. Value in Health." href="http://dx.doi.org/10.1016/j.jval.2011.01.011">ISPOR 2</a>
           </li>
-          <li>Evaluating the quality of evidence from a network meta-analysis: <a href="10.1371/journal.pone.0099682" title="Evaluating the Quality of Evidence from a Network Meta-Analysis">Salanti et al. (2014)</a></li>
+          <li>Evaluating the quality of evidence from a network meta-analysis: <a href="http://dx.doi.org/10.1371/journal.pone.0099682" title="G. Salanti et al. (2014). Evaluating the Quality of Evidence from a Network Meta-Analysis. PLOS ONE.">Salanti et al. (2014)</a></li>
         </ul>
 
         <p>
@@ -414,7 +417,11 @@
 
         <p>In the density plots above, the figure on the left has outlying values in the tail of the distribution (the small vertical lines at the bottom, indicating sampled values), and doesn’t have an entirely regular shape. The density on the right is much smoother and has a more expected tapering off of extreme values in the tails.</p>
 
-        <h2 id="node-splitting-analysis">Node-splitting analysis of inconsistency</h2>
+        <h2 id="advanced-models">Advanced models</h2>
+
+        <p>GeMTC supports a number of extensions of the basic network meta-analysis model, specifically: <a href="#node-splitting-analysis">node-splitting models</a> for the analysis of inconsistency, <a href="#network-meta-regression">network meta-regression models</a> to explain and adjust for heterogeneity and inconsistency, and <a href="#design-adjustment">design adjustment models</a> to down-weight studies of different design.</p>
+
+        <h3 id="node-splitting-analysis">Node-splitting analysis of inconsistency</h3>
 
         <p>The node-splitting approach to assessing the inconsistency of a network of interventions was introduced by <a href="http://dx.doi.org/10.1002/sim.3767" title="S. Dias et al. (2010). Checking consistency in mixed treatment comparison meta-analysis. Statistics in Medicine.">Dias et al. (2010)</a>. The method focuses on one treatment comparison at a time. In this approach the direct evidence for a specific treatment comparison (i.e. the evidence coming from RCTs that directly perform this comparison) is contrasted with the indirect evidence coming from the rest of the network. </p>
 
@@ -425,6 +432,56 @@
         <div style="text-align: center; margin-bottom: 1em;">
           <img src="img/network.png" alt="networkgraph nodesplit example" style=" padding: 5px; border: 1px solid gray;">
         </div>
+
+        <h3 id="network-meta-regression">Network meta-regression</h3>
+
+        <p>A meta-regression model is used to assess how a covariate \(x\) interacts with the treatment effects, and can thus be useful to explain sources of heterogeneity or inconsistency.
+        The covariate \(x\) could be a binary indicator (e.g. 1 if the study included severely ill patients, 0 if it does not), or a continuous variable (e.g. mean disease duration prior to entering the study).
+        As with meta-analysis generally, meta-regression is observational, and therefore sensitive to confounding and other sources of bias.</p>
+        <p>To start, we choose a control treatment \(c\) for which we take the effect of the covariate to be neutral, and introduce coefficients \(\beta_{ck} (k \neq c)\) for the other treatments. The linear model for the treatment effect \(\theta_{ik}\) of treatment \(k\) in study \(i\) is then:
+        \[
+        \theta_{ik} = \mu_{ib} + \delta_{ibk} + \beta_{bk} x_i =  \mu_{ib} + \delta_{ibk} + (\beta_{ck} - \beta_{cb}) x_i\; (k \neq b)
+        \]
+        Where \(x_i\) is the covariate level observed for study \(i\) (see <a href="#model-structure">Model structure</a> for the definition of the other variables).</p>
+
+        <p>Currently, two types of treatment-interaction model can be specified:</p>
+        <ul>
+          <li>Shared coefficient: all non-control treatments share the same coefficient \(\beta_{ck} = \beta\).</li>
+          <li>Unrelated coefficients: each non-control treatment has an independent coefficient \(\beta_{ck}\).</li>
+        </ul>
+        <p>For continuous covariates, the user can additionally input covariate levels of interest. Summary statistics (treatment effects, rank probabilities) will be generated at these levels of interest, as well as at the mean of the observed values.</p>
+        <p>
+        <p>To create a meta-regression model, the dataset must contain one or more covariates. Meta-regression can then be chosen as the Model type, and the meta-regression settings are specified as follows:</p>
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/regression-settings.png" style=" padding: 5px; border: 1px solid gray;">
+        </div>
+        <p>The normal network meta-analysis outputs (the league table, relative effects plots, and rank probabilities) can be viewed at any of the specified covariate levels of interest.
+        In addition, the meta-regression section will display plots of fitted treatment effects versus the covariate level, with credible intervals, for each treatment.
+        A table summarizes the estimates of the regression coefficients.
+        Covariate values are automatically centered and standardized, as displayed in the model settings panel at the top of the results page.</p>
+
+        <h3 id="design-adjustment">Design adjustment</h3>
+
+        <p>The design adjusted model allows evidence from certain studies (e.g. observational studies) to be down-weighted relative to other studies (e.g. randomized trials).
+        This is done using a <em>variance inflation</em> or <em>power prior</em> approach.
+        For normally distributed data, we replace the likelihood
+        \[
+        Y_{ik} \sim \mathcal{N}(\theta_{ik}, s_{ik}^2)
+        \]
+        by an inflated version
+        \[
+        Y_{ik} \sim \mathcal{N}(\theta_{ik}, s_{ik}^2/\alpha_i)
+        \]
+        where \(\alpha_i\) is the weight of study \(i\); \(\alpha_i = 1\) assigns full weight to that study and \(\alpha_i = 0\) excludes it from the analysis.
+        For example, we might want to inflate the variance of observational studies by a factor 2.
+        To do this, we set \(\alpha_i = 0.5\) for those studies.
+        A similar adjustment can be applied to data with other likelihoods (e.g. Binomial), where the log-likelihood is multiplied by the adjustment factor \(\alpha_i\).</p>
+
+        <p>To create a design-adjusted analysis, you need a dataset with a binary covariate, and must select "Design adjusted model (variance inflation)" under the "Sensitivity analysis" section of the model creation screen:</p>
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/design-adjust-settings.png" style=" padding: 5px; border: 1px solid gray;">
+        </div>
+        <p>Design adjustment can be applied to any of the model types, and the set-up using a binary covariate allows you to easily try different levels of down-weighting.</p>
 
         <h2 id="gemtc-network-meta-analysis">Network meta-analysis in GeMTC</h2>
 
@@ -466,6 +523,38 @@
           "7","D",-1.8,2.48,154
           "7","E",-2.1,2.99,143
         </pre>
+
+        <h4 id="gemtc-data-covariates">Including covariates in the dataset</h4>
+
+        <p>To include covariates in a dataset, simply add additional columns to the CSV file, but do not to use any of the column names already recognized by GeMTC (study, treatment, mean, etc.).
+        Covariates are currently only considered at the study level.
+        Therefore, you can include these data in one of two different ways:</p>
+        <ul>
+          <li>Specify the covariate value for only one of the study arms, and leave it as missing or "NA" for the others.</li>
+          <li>Specify the covariate value for all arms of the study, making sure that each arm within a study has the same value as the other arms.</li>
+        </ul>
+
+        <h4 id="gemtc-data-contrast-based">Including contrast-based data</h4>
+
+        <p>Contrast based data (e.g. log odds ratios) can also be analyzed in GeMTC.
+        Datasets can contain both contrast-based and arm-based data, but any single study must be either completely contrast-based or completely arm-based.
+        Contrast based data are effect estimates and their standard errors on a specific scale (e.g. mean difference or log-odds ratio); that scale must be specified when uploading contrast-based data.</p>
+
+        <p>Contrast-based data are also specified using the one arm per row format.
+        For every arm except the base arm, specify the effect estimate and its standard error in the columns "re.diff" and "re.diff.se".
+        For the base arm, these columns must be left as missing or "NA".</p>
+        
+        <p>In multi-arm (that is, more than 2 arms) trials, the treatment contrasts are correlated.
+        This must be accounted for in the likelihood.
+        To do this, the standard error of the (absolute) effect in the base arm must be specified in the column "re.base.se".
+        For example, if the outcome scale is the log-odds ratio, this is the standard error of the absolute log-odds in the base arm.
+        By a convenient statistical coincidence, the standard error of the base arm squared is equal to the covariance between the treatment contrasts.
+        Thus, if the covariance is known, set "re.base.se" to the square root of the covariance.</p>
+
+        <p>There are a number of caveats when using contrast-based data.
+        First, as the number of participants is not known for this data, the size of nodes in the evidence graph does not reflect the number of participants.
+        Second, the scale at which the relative effects were computed will restrict the available likelihoods.
+        Third, model fit statistics for contrast-based data are not computed at the arm level, but at the study level.</p>
 
         <h3 id="analyses-and-models">Analyses and models</h3>
         <p>An analysis consists of a set of data together with all the models that have been run on these data. After creating an analysis, the analysis screen shows the evidence network, the models, the evidence table, and a button to create more models:</p>
