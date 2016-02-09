@@ -1,9 +1,10 @@
+'use strict';
+var testUrl = process.env.GEMTC_NIGHTWATCH_URL ? process.env.GEMTC_NIGHTWATCH_URL : 'https://gemtc-test.drugis.org';
 var login = require('./util/login');
 var AnalysesPage = require('./analyses/analysesPage');
 var AnalysisOverviewPage = require('./analyses/analysisOverviewPage');
 var CreateModelPage = require('./models/createModelPage');
 var ModelResultPage = require('./models/modelResultPage');
-var assert = require('assert');
 
 var analysisTitle = 'my title';
 var analysisOutcomeTitle = 'my outcome';
@@ -18,7 +19,7 @@ module.exports = {
     var inferenceIterations = 52;
     var thinningFactor = 1;
 
-    login(browser, process.env.GEMTC_NIGHTWATCH_URL);
+    login(browser, testUrl);
 
     analysesPage.waitForPageToLoad();
     analysesPage.addAnalysis(analysisTitle, analysisOutcomeTitle, '/example.json');
