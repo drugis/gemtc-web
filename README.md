@@ -39,13 +39,8 @@ the file should contain a line with the following format hostname:port:database:
 
 Create the schema
 
-    psql -U gemtc -d gemtc -f changesets/create-database-changeset-1.sql
-    psql -U gemtc -d gemtc -f changesets/create-database-changeset-2.sql
-    psql -U gemtc -d gemtc -f changesets/create-database-changeset-3.sql
-    psql -U gemtc -d gemtc -f changesets/create-database-changeset-4.sql
-    psql -U gemtc -d gemtc -f changesets/create-database-changeset-6.sql
-
-    psql -U patavitask -d patavitask -f changesets/create-database-patavitask-changeset-1.sql
+    for i in create-database-changeset-*.sql; do psql -h localhost -U gemtc -d gemtc -f $i; done
+    for i in create-database-patavitaks-changeset-*.sql; do psql -h localhost -U patavitask -d patavitask -f $i; done
 
 Setup environment variables
 
