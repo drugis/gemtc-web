@@ -9,7 +9,9 @@
         </h5>
   </div>
   <div class="columns large-4 medium-8 end">
-    <h5 class="subheader">Primary model</h5>
+    <h5 class="subheader">Primary model
+      <inline-help help-key="primary-model"></inline-help>
+    </h5>
     <div ng-hide="!models.length" class="row collapse">
       <div class="small-9 columns">
         <select ng-model="$parent.primaryModel" ng-options="model.title for model in models"></select>

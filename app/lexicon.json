@@ -14,6 +14,16 @@
     "text": "There is consistency when the studies included in the evidence network are (broadly) in agreement regarding the relative effects. (In)consistency in network meta-analysis is closely related to heterogeneity in pair-wise meta-analysis (and indeed in network meta-analysis). Inconsistency refers to the difference between direct and indirect estimates, and can be assessed using node-splitting models.",
     "link": "/manual.html#heterogeneity"
   },
+  "covariate": {
+    "title": "Covariate",
+    "text": "The study design or population characteristic to adjust treatment effects for. A study-level variable defined in the dataset.",
+    "link": "/manual.html#network-meta-regression"
+  },
+  "covariate-standardization": {
+    "title": "Covariate standardization",
+    "text": "A linear transformation applied to the covariate values to improve the convergence properties of the estimation procedure. The coefficient estimates must be interpreted taking this transformation into account.",
+    "link": "/manual.html#network-meta-regression"
+  },
   "dataset-file": {
     "title": "Dataset file",
     "text": "The problem file can be in JSON or Comma-Separated Values (CSV) format. A JSON file must contain a single json object representing the problem. The problem must contain the 'entries' and 'treatments' fields. The 'treatments' field must contain a list of objects that each contain a name and id. The entries must be a list of data rows. Each data row must contain at least the 'study' and 'treatment' columns. The 'treatment' column of each entry must refer to an id present in the treatments list. Each data row must have the same columns as the first data row. A CSV file must contain a first row with column names. Each subsequent row should have the same number of columns, with values corresponding to the column at the same position in the header row. The first two columns should always be a 'study' and a 'treatment' column, in that order.",
@@ -23,6 +33,11 @@
     "title": "Density plot",
     "text": "A plot of the estimated (marginal) posterior density for a single parameter. Often used for the assessment of run-length.",
     "link": "/manual.html#run-length-convergence"
+  },
+  "design-adjustment": {
+    "title": "Design adjustment",
+    "text": "A model where studies of a particular design (e.g. observational studies) are down-weighted to account for their higher risk of bias. The weighting factor ranges between 0 (exclude completely) and 1 (weight equally).",
+    "link": "/manual.html#design-adjustment"
   },
   "deviance-information-criterion": {
     "title": "Deviance Information Criterion (DIC)",
@@ -79,6 +94,11 @@
     "text": "The iterations of the MCMC simulation that are used to draw inferences on the posterior distributions.",
     "link": "/manual.html#run-length-convergence"
   },
+  "levels": {
+    "title": "Covariate levels",
+    "text": "Specific values of interest for the covariate under analysis.",
+    "link": "/manual.html#network-meta-regression"
+  },
   "leverage": {
     "title": "Leverage",
     "text": "Leverage statistics are used to assess the influence each data point has on the model parameters. In Bayesian models, the leverage of a data point is the posterior mean of the residual deviance minus the residual deviance at the posterior mean of the fitted value for that data point.",
@@ -121,7 +141,7 @@
   },
   "network-graph": {
     "title": "Network graph",
-    "text": "A graph showing the treatments as nodes and the comparisons as connections between the nodes. Larger node sizes indicate a larger total number of participants in arms including that treatment, and thicker connections indicate a larger number of studies investigating that comparison.",
+    "text": "A graph showing the treatments as nodes and the comparisons as connections between the nodes. Larger node sizes indicate a larger total number of participants in arms including that treatment, and thicker connections indicate a larger number of studies investigating that comparison. The node sizes may be undefined if the arm sizes are unavailable (e.g. for contrast-based data).",
     "link": "/manual.html#analyses-and-models"
   },
   "node-splitting-model": {
@@ -146,13 +166,22 @@
   },
   "potential-scale-reduction-factor": {
     "title": "Potential Scale Reduction Factor (PSRF)",
-    "text": "The main outcome of the Brooks-Gelman-Rubin diagnostic for convergence of an MCMC simulation. It compares within-chain and between-chain estimates to diagnose whether the simulation has reached a stable state. Values of PSRF start out high and should approach 1 as the simulation better approximates convergence. Values below 1.05 are generally considered 'safe'",
+    "text": "The main outcome of the Brooks-Gelman-Rubin diagnostic for convergence of an MCMC simulation. It compares within-chain and between-chain estimates to diagnose whether the simulation has reached a stable state. Values of PSRF start out high and should approach 1 as the simulation better approximates convergence. Values below 1.05 are generally considered safe.",
     "link": "/manual.html#run-length-convergence"
+  },
+  "primary-model": {
+    "title": "Primary model",
+    "text": "The model the analyst believes to be most appropriate for the data at hand."
   },
   "rank-probabilities": {
     "title": "Rank probabilities",
     "text": "Rank probabilities encode the probability for each treatment to be the best, second best, etc. under the posterior distribution derived for the relative effects.",
     "link": "/manual.html#model-results"
+  },
+  "regression-control": {
+    "title": "Control treatment (regression)",
+    "text": "The control treatment is the reference for the meta-regression. Coefficients for all other treatments are relative to the control treatment.",
+    "link": "/manual.html#network-meta-regression"
   },
   "relative-effect-prior-distributions": {
     "title": "Relative effect prior distributions",
@@ -190,8 +219,13 @@
     "link": "/manual.html#run-length-convergence"
   },
   "trace-plot": {
-    "title": "Trace plot (time series plot) ",
+    "title": "Trace plot (time series plot)",
     "text": "A visualization of the random walk undertaken by each chain of the MCMC simulation. Used to assess convergence and run length.",
     "link": "/manual.html#run-length-convergence"
+  },
+  "treatment-interaction-model": {
+    "title": "Treatment-interaction model",
+    "text": "How the covariate effects interact with the treatment effects. Under unrelated coefficients, each treatment (except control) has an independent interaction term, whereas under shared coefficient, all treatments (except control) share a single interaction term.",
+    "link": "/manual.html#network-meta-regression"
   }
 }

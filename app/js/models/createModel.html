@@ -88,12 +88,15 @@
       </div>
       <div class="indent-one" ng-show="model.modelType.mainType == 'regression'">
         <label for="covariate-select">Select covariate
+          <inline-help help-key="covariate"></inline-help>
           <select id="covariate-select" ng-options="covariate for covariate in covariateOptions" ng-model="model.covariateOption" ng-change="covariateChange()"></select>
         </label>
         <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">This covariate has missing values.</div>
-        <div ng-show="variableIsBinary && model.modelType.mainType === 'regression'" style="margin-bottom: 2rem;">Variable is binary (i.e. levels are [0, 1]).</div>
+        <div ng-show="variableIsBinary && model.modelType.mainType === 'regression'" style="margin-bottom: 2rem;">Variable is binary (i.e. levels are 0 and 1).
+          <inline-help help-key="levels"></inline-help></div>
         <div ng-hide="variableIsBinary && model.modelType.mainType === 'regression'">
           <label>Levels
+            <inline-help help-key="levels"></inline-help>
             <ul ng-show="model.levels.length" class="no-bullet">
               <li ng-repeat="level in model.levels">
                 <strong>
@@ -115,7 +118,9 @@
             </div>
           </label>
         </div>
-        <label>Treatment-interaction model</label>
+        <label>Treatment-interaction model
+          <inline-help help-key="treatment-interaction-model"></inline-help>
+        </label>
         <div class="stacked-radio">
           <input type="radio" value="shared" ng-model="model.treatmentInteraction" id="treatment-interaction-type-shared-radio">
           <label for="treatment-interaction-type-shared-radio">Shared coefficient</label>
@@ -125,6 +130,7 @@
           <label for="treatment-interaction-type-unrelated-radio">Unrelated coefficients</label>
         </div>
         <label for="meta-regression-control-select">Select control treatment
+          <inline-help help-key="regression-control"></inline-help>
           <select id="meta-regression-control-select" ng-options="treatment.name for treatment in problem.treatments" ng-model="model.metaRegressionControl"></select>
         </label>
       </div>
@@ -137,6 +143,7 @@
       <label class="form-item-header">Sensitivity analysis</label>
       <input id="adjustment-checkbox" type="checkbox" ng-model="isWeighted" ng-change="changeIsWeighted()" ng-disabled="binaryCovariateNames.length === 0">
       <label for="adjustment-checkbox">Design adjusted model (variance inflation) <em ng-show="binaryCovariateNames.length === 0">(Not possible: no binary covariates)</em>
+          <inline-help help-key="design-adjustment"></inline-help>
 </label>
       <div class="row" ng-show="isWeighted">
         <div class="columns large-5 medium-5 small-12 large-offset-1 medium-offset-1">
