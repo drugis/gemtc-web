@@ -1,101 +1,146 @@
-  <div class="row">
-    <div class="columns columns large-9 medium-11 small-12">
-      <h4 ng-if="!result.results" class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
-      <div ng-if="result.results" style="padding-top: 1rem;">
-        <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 " class="row">Go to node-split overview</a>
-        <div class="panel callout">
-          <h5><strong>Model settings</strong></h5>
-          <table class="layout-table">
-            <tr>
-              <td class="large-6 text-right"><strong>model type</strong></td>
-              <td>
-                {{::model.modelType.type}}
-                <data-inline-help help-key="model-type"></data-inline-help>
-              </td>
-            </tr>
-            <tr ng-if="model.modelType.type === 'pairwise'">
-              <td class="large-6 text-right"><strong>pairwise comparison</strong></td>
-              <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
-            </tr>
-            <tr ng-if="model.modelType.type === 'node-split'">
-              <td class="large-6 text-right"><strong>split comparison</strong></td>
-              <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
-            </tr>
-            <tr ng-if="model.modelType.type === 'regression'">
-              <td class="large-5 text-right"><strong>coefficient</strong></td>
-              <td>{{::model.regressor.coefficient}}</td>
-            </tr>
-            <tr ng-if="model.modelType.type === 'regression'">
-              <td class="large-5 text-right"><strong>covariate</strong></td>
-              <td>{{::model.regressor.variable}}</td>
-            </tr>
-            <tr ng-if="model.modelType.type === 'regression' && result.results.regressor.modelRegressor.mu">
-              <td class="large-5 text-right"><strong>centering value (s.d)</strong></td>
-              <td>{{::result.results.regressor.modelRegressor.mu|number:3}} ({{::result.results.regressor.modelRegressor.sd|number:3}})</td>
-            </tr>
-            <tr ng-if="model.modelType.type === 'regression'">
-              <td class="large-5 text-right"><strong>control treatment</strong></td>
-              <td>{{::controlTreatment.name}}</td>
-            </tr>
-            <tr>
-              <td class="large-6 text-right"><strong>effects type</strong></td>
-              <td>
-                {{::result.results.linearModel}}
-                <data-inline-help help-key="effects-type"></data-inline-help>
-              </td>
-            </tr>
-            <tr>
-              <td class="large-6 text-right"><strong>outcome scale</strong></td>
-              <td ng-if="model.outcomeScale">
-                {{::model.outcomeScale}}
-                <data-inline-help help-key="outcome-scale"></data-inline-help>
-              </td>
-              <td ng-if="!model.outcomeScale">
-                {{::result.results.outcomeScale}} (imputed)
-                <data-inline-help help-key="outcome-scale"></data-inline-help>
-              </td>
-            </tr>
-            <tr>
-              <td class="large-6 text-right"><strong>likelihood / link</strong></td>
-              <td>
-                {{::result.results.likelihood}} / {{::result.results.link}}
-                <data-inline-help help-key="likelihood-link"></data-inline-help>
-              </td>
-            </tr>
-            <tr ng-if="model.linearModel === 'random'" >
-              <td class="large-6 text-right"><strong>heterogeneity prior</strong></td>
-              <td><heterogeneity-prior prior="result.results.heterogeneityPrior"></heterogeneity-prior> <data-inline-help help-key="heterogeneity-prior-distribution"></data-inline-help></td>
-            </tr>
-            <tr ng-if="model.sensitivity">
-              <td class="large-6 text-right" style="vertical-align:top;"><strong>design adjustment</strong></td>
-              <td>
-                <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;  margin-bottom: 0;">
-                  <li style="padding-bottom: 0.5rem">adjustment for: {{model.sensitivity.adjustmentFactor}} = {{model.sensitivity.inflationValue}}</li>
-                  <li>weighting factor : {{model.sensitivity.weightingFactor}}</li>
-                </ul>
-              </td>
-            </tr>
-            <tr>
-              <td class="large-6 text-right" style="vertical-align:top;"><strong>run-length</strong></td>
-              <td>
-                <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
-                  <li style="padding-bottom: 0.5rem">
-                    burn-in: {{::result.results.burnInIterations}}
-                    <data-inline-help help-key="burn-in-iterations"></data-inline-help>
-                  </li>
-                  <li style="padding-bottom: 0.5rem">
-                    inference: {{::result.results.inferenceIterations}}
-                    <data-inline-help help-key="inference-iterations"></data-inline-help>
-                  </li>
-                  <li style="padding-bottom: 0.5rem">
-                    thinning: {{::result.results.thinningFactor}}
-                    <data-inline-help help-key="thinning-factor"></data-inline-help>
-                  </li>
-                </ul>
-              </td>
-            </tr>
-          </table>
-        </div> <!-- end callout panel -->
-      </div> <!-- end setting show in result section -->
-    </div> <!-- end settings columns -->
-  </div> <!-- end settings row -->
+<div class="row">
+  <div class="columns columns large-9 medium-11 small-12">
+    <h4 ng-if="!result.results" class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
+    <div ng-if="result.results" style="padding-top: 1rem;">
+      <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 "
+      class="row">Go to node-split overview</a>
+      <div class="panel callout">
+        <h5>
+          <strong>Model settings</strong>
+        </h5>
+        <table class="layout-table">
+          <tr>
+            <td class="large-6 text-right">
+              <strong>model type</strong>
+            </td>
+            <td>
+              {{::model.modelType.type}}
+              <data-inline-help help-key="model-type"></data-inline-help>
+            </td>
+          </tr>
+          <tr ng-if="model.modelType.type === 'pairwise'">
+            <td class="large-6 text-right">
+              <strong>pairwise comparison</strong>
+            </td>
+            <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
+          </tr>
+          <tr ng-if="model.modelType.type === 'node-split'">
+            <td class="large-6 text-right">
+              <strong>split comparison</strong>
+            </td>
+            <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
+          </tr>
+          <tr ng-if="model.modelType.type === 'regression'">
+            <td class="large-5 text-right">
+              <strong>treatment-interaction model</strong>
+            </td>
+            <td>{{::model.regressor.coefficient}} coefficient(s)
+              <data-inline-help help-key="treatment-interaction-model"></data-inline-help>
+            </td>
+          </tr>
+          <tr ng-if="model.modelType.type === 'regression'">
+            <td class="large-5 text-right">
+              <strong>covariate</strong>
+            </td>
+            <td>{{::model.regressor.variable}}
+              <data-inline-help help-key="covariate"></data-inline-help>
+            </td>
+          </tr>
+          <tr ng-if="model.modelType.type === 'regression' && result.results.regressor.modelRegressor.mu">
+            <td class="large-5 text-right">
+              <strong>standardization</strong>
+            </td>
+            <td>x' = (x - {{::result.results.regressor.modelRegressor.mu|number:3}})/{{::result.results.regressor.modelRegressor.sd|number:3}}
+              <data-inline-help help-key="covariate-standardization"></data-inline-help>
+            </td>
+          </tr>
+          <tr ng-if="model.modelType.type === 'regression'">
+            <td class="large-5 text-right">
+              <strong>control treatment</strong>
+            </td>
+            <td>{{::controlTreatment.name}}
+              <data-inline-help help-key="regression-control"></data-inline-help>
+            </td>
+          </tr>
+          <tr>
+            <td class="large-6 text-right">
+              <strong>effects type</strong>
+            </td>
+            <td>
+              {{::result.results.linearModel}}
+              <data-inline-help help-key="effects-type"></data-inline-help>
+            </td>
+          </tr>
+          <tr>
+            <td class="large-6 text-right">
+              <strong>outcome scale</strong>
+            </td>
+            <td ng-if="model.outcomeScale">
+              {{::model.outcomeScale}}
+              <data-inline-help help-key="outcome-scale"></data-inline-help>
+            </td>
+            <td ng-if="!model.outcomeScale">
+              {{::result.results.outcomeScale}} (imputed)
+              <data-inline-help help-key="outcome-scale"></data-inline-help>
+            </td>
+          </tr>
+          <tr>
+            <td class="large-6 text-right">
+              <strong>likelihood / link</strong>
+            </td>
+            <td>
+              {{::result.results.likelihood}} / {{::result.results.link}}
+              <data-inline-help help-key="likelihood-link"></data-inline-help>
+            </td>
+          </tr>
+          <tr ng-if="model.linearModel === 'random'">
+            <td class="large-6 text-right">
+              <strong>heterogeneity prior</strong>
+            </td>
+            <td>
+              <heterogeneity-prior prior="result.results.heterogeneityPrior"></heterogeneity-prior>
+              <data-inline-help help-key="heterogeneity-prior-distribution"></data-inline-help>
+            </td>
+          </tr>
+          <tr ng-if="model.sensitivity">
+            <td class="large-6 text-right" style="vertical-align:top;">
+              <strong>design adjustment</strong>
+            </td>
+            <td>
+              <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;  margin-bottom: 0;">
+                <li style="padding-bottom: 0.5rem">adjustment for: {{model.sensitivity.adjustmentFactor}} = {{model.sensitivity.inflationValue}}</li>
+                <li>weighting factor : {{model.sensitivity.weightingFactor}}</li>
+              </ul>
+              <data-inline-help help-key="design-adjustment"></data-inline-help>
+            </td>
+          </tr>
+          <tr>
+            <td class="large-6 text-right" style="vertical-align:top;">
+              <strong>run-length</strong>
+            </td>
+            <td>
+              <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
+                <li style="padding-bottom: 0.5rem">
+                  burn-in: {{::result.results.burnInIterations}}
+                  <data-inline-help help-key="burn-in-iterations"></data-inline-help>
+                </li>
+                <li style="padding-bottom: 0.5rem">
+                  inference: {{::result.results.inferenceIterations}}
+                  <data-inline-help help-key="inference-iterations"></data-inline-help>
+                </li>
+                <li style="padding-bottom: 0.5rem">
+                  thinning: {{::result.results.thinningFactor}}
+                  <data-inline-help help-key="thinning-factor"></data-inline-help>
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- end callout panel -->
+    </div>
+    <!-- end setting show in result section -->
+  </div>
+  <!-- end settings columns -->
+</div>
+<!-- end settings row -->
