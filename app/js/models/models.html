@@ -11,7 +11,8 @@
 </div>
 <div class="row" ng-show="modelsLoaded">
   <div class="columns large-8">
-    <button id="add-model-btn" ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add new model</button>
+    <!-- NB ng-hide code only for ADDIS purposes (can't see others' models in gemtc standalone)-->
+    <button id="add-model-btn" ng-hide="loginUserId !== userId" tabindex="0" class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add new model</button>
 </div>
 </div>
 <div class="row" ng-show="modelsLoaded">
