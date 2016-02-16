@@ -189,7 +189,7 @@ define(['angular', 'lodash'], function(angular, _) {
         modelType = model.modelType.type;
       if (modelType === 'pairwise') {
         theProblem = reduceToPairwiseProblem(problem, model.modelType.details.from, model.modelType.details.to);
-      } else if (modelType === 'network' || modelType === 'node-split') {
+      } else if (modelType === 'network' || modelType === 'node-split' || modelType === 'regression') {
         theProblem = problem;
       }
       var nTreatments = theProblem.treatments.length;
