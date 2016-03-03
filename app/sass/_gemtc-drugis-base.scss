@@ -10,7 +10,7 @@
   margin-top: 2rem;
   div.columns, div.column {
     padding: 0;
-  }  
+  }
 }
 
 label.form-item-header {
@@ -37,10 +37,6 @@ img.paged-png {
   left:60pt;
 }
 
-.indent-one {
-  margin-left:2rem;
-}
-
 table.layout-table {
   border: none;
   td {
@@ -61,4 +57,8 @@ table.layout-table {
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.28);
   border-bottom: 1px solod rgba(0, 0, 0, 0.14);
   z-index: 50; // higher than content , but lower than nabbar foldout-menu
+}
+
+.f-topbar-fixed {
+  margin-top: 32px; // clear breadcrumbs
 }
