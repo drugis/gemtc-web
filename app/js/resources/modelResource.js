@@ -7,6 +7,11 @@ define([], function() {
       analysisId: '@analysisId',
       modelId: '@id'
     }, {
+      getConsistencyModels: {
+        url: '/projects/:projectId/consistencyModels',
+        method: 'GET',
+        isArray: true
+      },
       getResult: {
         url: '/projects/:projectId/analyses/:analysisId/models/:modelId/result',
         method: 'GET'
