@@ -5,51 +5,56 @@ define(['angular', 'lodash'], function(angular, _) {
   var AnalysisService = function() {
 
     var LIKELIHOOD_LINK_SETTINGS = [{
-      "likelihood": "normal",
-      "link": "identity",
-      "scale": "mean difference",
-      "analysisScale": "mean difference",
-      "columns": [
+      likelihood: "normal",
+      link: "identity",
+      scale: "mean difference",
+      analysisScale: "mean difference",
+      absoluteScale: 'mean',
+      columns: [
         ["mean", "std.err"],
         ["mean", "std.dev", "sampleSize"]
       ],
-      "missingColumnsLabel": "'mean' and 'std.err' or 'mean', 'std.err', and 'sampleSize'"
+      missingColumnsLabel: "'mean' and 'std.err' or 'mean', 'std.err', and 'sampleSize'"
     }, {
-      "likelihood": "binom",
-      "link": "logit",
-      "scale": "odds ratio",
-      "analysisScale": "log odds ratio",
-      "columns": [
+      likelihood: "binom",
+      link: "logit",
+      scale: "odds ratio",
+      analysisScale: "log odds ratio",
+      absoluteScale: 'log odds',
+      columns: [
         ["responders", "sampleSize"]
       ],
-      "missingColumnsLabel": "'responders' and 'sampleSize'"
+      missingColumnsLabel: "'responders' and 'sampleSize'"
     }, {
-      "likelihood": "binom",
-      "link": "log",
-      "scale": "risk ratio",
-      "analysisScale": "log risk ratio",
-      "columns": [
+      likelihood: "binom",
+      link: "log",
+      scale: "risk ratio",
+      analysisScale: "log risk ratio",
+      absoluteScale: 'log risk',
+      columns: [
         ["responders", "sampleSize"]
       ],
-      "missingColumnsLabel": "'responders' and 'sampleSize'"
+      missingColumnsLabel: "'responders' and 'sampleSize'"
     }, {
-      "likelihood": "binom",
-      "link": "cloglog",
-      "scale": "hazard ratio",
-      "analysisScale": "log hazard ratio",
-      "columns": [
+      likelihood: "binom",
+      link: "cloglog",
+      scale: "hazard ratio",
+      analysisScale: "log hazard ratio",
+      absoluteScale: 'log hazard',
+      columns: [
         ["responders", "sampleSize"]
       ],
-      "missingColumnsLabel": "'responders' and 'sampleSize'"
+      missingColumnsLabel: "'responders' and 'sampleSize'"
     }, {
-      "likelihood": "poisson",
-      "link": "log",
-      "scale": "hazard ratio",
-      "analysisScale": "log hazard ratio",
-      "columns": [
+      likelihood: "poisson",
+      link: "log",
+      scale: "hazard ratio",
+      analysisScale: "log hazard ratio",
+      absoluteScale: 'log hazard',
+      columns: [
         ["responders", "exposure"]
       ],
-      "missingColumnsLabel": "'responders' and 'exposure'"
+      missingColumnsLabel: "'responders' and 'exposure'"
     }];
 
     function problemToStudyMap(problemArg) {
