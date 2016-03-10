@@ -383,6 +383,18 @@ if(modelType != 'node-split') {
   })
 }
 
+if(modelType != 'node-split') {
+  treatmentIds <- as.character(network[['treatments']][['id']])
+  multivariateSummary <- lapply(treatmentIds, function(treatmentId){
+    x <- relative.effect(result, t1=treatmentId, preserve.extra = FALSE)
+    x <- as.matrix(x$samples)
+    mu <- apply(x, 2, mean)
+    sigma <- cov(x)
+    list(mu=mu, sigma=wrap.matrix(sigma))
+  })
+  names(multivariateSummary) <- treatmentIds
+}
+
 times$relplot <- system.time({
   #create forest plot files for network analyses
 
@@ -540,6 +552,7 @@ report('summary', 1.0)
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
     summary[['deviancePlot']] <- deviancePlot
+    summary[['multivariateSummary']] <- multivariateSummary
     heterogeneityPrior <- model[['hy.prior']]
     heterogeneityPrior[['args']] <- sapply(heterogeneityPrior[['args']], function(arg) { if (arg == 'om.scale') model[['om.scale']] else arg })
     if(heterogeneityPrior[['distr']] == 'dlnorm') {
