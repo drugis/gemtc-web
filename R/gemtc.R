@@ -93,7 +93,11 @@ plotDeviance <- function(result) {
 
 # Stolen from mcda-web, ensures the row-names of a matrix are preserved
 wrap.matrix <- function(m) {
-  l <- lapply(rownames(m), function(name) { m[name,] })
+  l <- lapply(rownames(m), function(name) {
+    row <- m[name,]
+    names(row) <- colnames(m)
+    row
+  })
   names(l) <- rownames(m)
   l
 }
