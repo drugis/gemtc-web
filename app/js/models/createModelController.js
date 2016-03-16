@@ -36,9 +36,11 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.addLevel = addLevel;
     $scope.addLevelOnEnter = addLevelOnEnter;
     $scope.levelAlreadyPresent = levelAlreadyPresent;
+    $scope.isCovariateLevelOutOfBounds = isCovariateLevelOutOfBounds;
     $scope.isNumber = isNumber;
     $scope.problem = ProblemResource.get($stateParams);
     $scope.selectedCovariateValueHasNullValues = false;
+    $scope.covariateBounds = {min: undefined, max: undefined};
 
     $scope.problem.$promise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
@@ -86,6 +88,8 @@ define(['angular', 'lodash'], function(angular, _) {
       } else {
         $scope.model.levels = [];
       }
+
+      $scope.covariateBounds = ModelService.getCovariateBounds($scope.model.covariateOption, $scope.problem);
     }
 
     function buildCovariateOptions(problem) {
@@ -180,6 +184,10 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function levelAlreadyPresent(newLevel) {
       return _.includes($scope.model.levels, newLevel);
+    }
+
+    function isCovariateLevelOutOfBounds(level) {
+      return level < $scope.covariateBounds.min || level > $scope.covariateBounds.max;
     }
 
     function isAddButtonDisabled(model, problem) {

@@ -94,8 +94,13 @@
         <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">This covariate has missing values.</div>
         <div ng-show="variableIsBinary && model.modelType.mainType === 'regression'" style="margin-bottom: 2rem;">Variable is binary (i.e. levels are 0 and 1).
           <inline-help help-key="levels"></inline-help></div>
-        <div ng-hide="variableIsBinary && model.modelType.mainType === 'regression'">
-          <label>Levels
+
+        <div ng-hide="selectedCovariateValueHasNullValues || (variableIsBinary && model.modelType.mainType === 'regression')">
+          <label>
+            Levels
+            <span ng-show="!selectedCovariateValueHasNullValues && !variableIsBinary && model.modelType.mainType === 'regression'">
+              (min level: {{covariateBounds.min}}, max level: {{covariateBounds.max}})
+                      </span>
             <inline-help help-key="levels"></inline-help>
             <ul ng-show="model.levels.length" class="no-bullet">
               <li ng-repeat="level in model.levels">
@@ -108,13 +113,21 @@
             <div class="row collapse">
               <div class="small-9 columns">
                 <label for="covariate-level">
-                  <input id="covariate-level" type="number" ng-model="newLevel" ng-keypress="addLevelOnEnter($event, newLevel)">
+                  <input id="covariate-level"
+                  type="number"
+                  ng-model="newLevel"
+                  ng-keypress="addLevelOnEnter($event, newLevel)"
+                  ng-model-options="{ debounce: 300 }"
+                  ng-change="checkCovariateBounds(newLevel)"
+                  ng-disabled="selectedCovariateValueHasNullValues || model.modelType.mainType !== 'regression'"
+                  >
                 </label>
               </div>
               <div class="small-3 columns">
-                <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel)" type="button" ng-click="addLevel(newLevel)" class="postfix">Add level</button>
+                <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel) || isCovariateLevelOutOfBounds(newLevel)" type="button" ng-click="addLevel(newLevel)" class="postfix">Add level</button>
               </div>
               <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">Level already present.</div>
+              <div ng-show="newLevel !== unedefined && isCovariateLevelOutOfBounds(newLevel)" class="alert" style="margin-bottom: 2rem;">Invalid level bounds.</div>
             </div>
           </label>
         </div>
