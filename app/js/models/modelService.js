@@ -83,6 +83,32 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
+    function getCovariateBounds(covariateName, problem) {
+      return _.reduce(problem.studyLevelCovariates, function(accum, covariate) {
+        var v = covariate[covariateName];
+        if (v === undefined) {
+          return accum;
+        }
+
+        if (accum.min === undefined) {
+          accum.min = v;
+        } else if (v < accum.min) {
+          accum.min = covariate[covariateName];
+        }
+
+        if (accum.max === undefined) {
+          accum.max = v;
+        } else if (v > accum.max) {
+          accum.max = covariate[covariateName];
+        }
+        
+        return accum;
+      }, {
+        min: undefined,
+        max: undefined
+      });
+    }
+
     function getBinaryCovariateNames(problem) {
       var studies = _.keys(problem.studyLevelCovariates);
       if (studies.length) {
@@ -108,7 +134,8 @@ define(['angular', 'lodash'], function(angular, _) {
       createModelBatch: createModelBatch,
       isVariableBinary: isVariableBinary,
       getBinaryCovariateNames: getBinaryCovariateNames,
-      isProblemWithCovariates: isProblemWithCovariates
+      isProblemWithCovariates: isProblemWithCovariates,
+      getCovariateBounds: getCovariateBounds
     };
   };
 

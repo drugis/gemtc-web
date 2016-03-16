@@ -11,7 +11,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       problemMock,
       modelSaveResultMock,
       modelServiceMock = jasmine.createSpyObj('ModelService', ['cleanModel',
-       'createModelBatch', 'isVariableBinary', 'getBinaryCovariateNames', 'isProblemWithCovariates']),
+       'createModelBatch', 'isVariableBinary', 'getBinaryCovariateNames', 'isProblemWithCovariates', 'getCovariateBounds']),
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', [
         'createPairwiseOptions',
