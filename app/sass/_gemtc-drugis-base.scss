@@ -1,3 +1,13 @@
+/////////////////////////// top nav bar ////
+body.f-topbar-fixed {
+  padding-top: 52px; // add space top of first item under nav-bar, drugis override
+}
+
+.alert-box.alert {
+  margin-top: 1.25rem; // add space between beardcrumbs
+}
+////// end top nav bar
+
 .export-button {
   margin-left: 1rem;
 }
