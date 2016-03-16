@@ -99,7 +99,7 @@
           <label>
             Levels
             <span ng-show="!selectedCovariateValueHasNullValues && !variableIsBinary && model.modelType.mainType === 'regression'">
-              (min level: {{covariateBounds.min}}, max level: {{covariateBounds.max}})
+              (observed range: {{covariateBounds.min}} to {{covariateBounds.max}})
                       </span>
             <inline-help help-key="levels"></inline-help>
             <ul ng-show="model.levels.length" class="no-bullet">
@@ -109,7 +109,7 @@
                 </strong>
               </li>
             </ul>
-            <span ng-hide="model.levels.length">Default (none defined)</span>
+            <div ng-hide="model.levels.length">Default (none defined)</div>
             <div class="row collapse">
               <div class="small-9 columns">
                 <label for="covariate-level">
@@ -127,7 +127,7 @@
                 <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel) || isCovariateLevelOutOfBounds(newLevel)" type="button" ng-click="addLevel(newLevel)" class="postfix">Add level</button>
               </div>
               <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">Level already present.</div>
-              <div ng-show="newLevel !== unedefined && isCovariateLevelOutOfBounds(newLevel)" class="alert" style="margin-bottom: 2rem;">Invalid level bounds.</div>
+              <div ng-show="newLevel !== unedefined && isCovariateLevelOutOfBounds(newLevel)" class="alert" style="margin-bottom: 2rem;">Level is outside the observed range.</div>
             </div>
           </label>
         </div>
