@@ -510,6 +510,7 @@ report('summary', 1.0)
     if(modelType != 'node-split') {
       summary[['relativeEffects']] <- releffect
       summary[['rankProbabilities']] <- list(centering=wrap.matrix(rank.probability(result)))
+      summary[['multivariateSummary']] <- multivariateSummary
     }
     summary[['alternatives']] <- names(summary[['rankProbabilities']])
     if(modelType == "network" || modelType == "regression") {
@@ -556,7 +557,6 @@ report('summary', 1.0)
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
     summary[['deviancePlot']] <- deviancePlot
-    summary[['multivariateSummary']] <- multivariateSummary
     heterogeneityPrior <- model[['hy.prior']]
     heterogeneityPrior[['args']] <- sapply(heterogeneityPrior[['args']], function(arg) { if (arg == 'om.scale') model[['om.scale']] else arg })
     if(heterogeneityPrior[['distr']] == 'dlnorm') {
