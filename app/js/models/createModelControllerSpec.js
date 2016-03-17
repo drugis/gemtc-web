@@ -327,6 +327,11 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         };
 
         var problem = {
+          entries: [{
+            study: 'study 1'
+          }, {
+            study: 'study 2'
+          }],
           studyLevelCovariates: {
             'study 1': {
               SOME_COVARIATE: 1,
