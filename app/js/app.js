@@ -16,7 +16,8 @@ define(
     'models/models',
     'util/util',
     'patavi/patavi',
-    'help-popup'
+    'help-popup',
+    'error-reporting'
   ],
   function(angular, require, $, _) {
 
@@ -32,7 +33,8 @@ define(
       'gemtc.models',
       'gemtc.util',
       'gemtc.patavi',
-      'help-directive'
+      'help-directive',
+      'errorReporting'
     ];
 
     var app = angular.module('gemtc', dependencies);
@@ -53,13 +55,13 @@ define(
           }
         };
 
-        $rootScope.$on('error', function(e, error) {
-          $rootScope.error = _.extend(error, {
-            close: function() {
-              delete $rootScope.error;
-            }
-          });
-        });
+        // $rootScope.$on('error', function(e, error) {
+        //   $rootScope.error = _.extend(error, {
+        //     close: function() {
+        //       delete $rootScope.error;
+        //     }
+        //   });
+        // });
 
         $rootScope.$on("$stateChangeSuccess",
           function(event, toState) {
@@ -74,8 +76,7 @@ define(
 
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
       function($stateProvider, $urlRouterProvider, $httpProvider) {
-
-        $httpProvider.interceptors.push('errorInterceptor');
+        
         $httpProvider.interceptors.push('sessionExpiredInterceptor');
 
         $stateProvider

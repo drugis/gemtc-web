@@ -16,13 +16,15 @@
   <navbar-directive>
   </navbar-directive>
 
-  <div ng-if="error" class="row" ng-cloak>
+  <!-- <div ng-if="error" class="row" ng-cloak>
     <div class="columns">
       <app-alert type="alert" close="error.close()" error="error"></span></app-alert>
     </div>
-  </div>
+  </div> -->
 
-  <div ui-view></div>
+  <error-reporting></error-reporting>
+
+  <div ui-view autoscroll></div>
   <div class="push"></div>
 
   <script type="text/javascript">
