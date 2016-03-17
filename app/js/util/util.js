@@ -22,7 +22,6 @@ define(function (require) {
     .controller('PlotNavigationController', require('util/graphModalDirective/plotNavigationController'))
 
     // interceptors
-    .factory('errorInterceptor', require('util/errorInterceptor'))
     .factory('sessionExpiredInterceptor', require('util/sessionExpiredInterceptor'))
 
     // services

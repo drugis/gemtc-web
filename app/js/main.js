@@ -18,7 +18,8 @@ require.config({
     'angularanimate': 'bower_components/angular-animate/angular-animate.min',
     'ngSanitize': 'bower_components/angular-sanitize/angular-sanitize.min',
     'papaparse': 'bower_components/papaparse/papaparse.min',
-    'help-popup': 'bower_components/help-popup/help-directive'
+    'help-popup': 'bower_components/help-popup/help-directive',
+    'error-reporting': 'bower_components/error-reporting/errorReportingDirective'
   },
   shim: {
     'jQuery': {
@@ -35,6 +36,9 @@ require.config({
       deps: ['angular']
     },
     'help-popup': {
+      deps: ['angular']
+    },
+    'error-reporting': {
       deps: ['angular']
     },
     'angular-resource': {
