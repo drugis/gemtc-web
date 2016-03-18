@@ -258,7 +258,10 @@ define(['angular', 'angular-mocks', 'services'], function() {
             }
           }
         };
-        expect(modelService.getCovariateBounds('LENGTH_OF_FOLLOW_UP', problem)).toEqual({min: -1, max: 30});
+        expect(modelService.getCovariateBounds('LENGTH_OF_FOLLOW_UP', problem)).toEqual({
+          min: -1,
+          max: 30
+        });
       });
 
       it('should handle missing values', function() {
@@ -268,27 +271,48 @@ define(['angular', 'angular-mocks', 'services'], function() {
               'LENGTH_OF_FOLLOW_UP': 30.0
             },
             'Boyer et al, 1998': {
+              'LENGTH_OF_FOLLOW_UP': null
             },
             'Behnke et al, 2003': {
               'LENGTH_OF_FOLLOW_UP': -5.0
             }
           }
         };
-        expect(modelService.getCovariateBounds('LENGTH_OF_FOLLOW_UP', problem)).toEqual({min: -5, max: 30});
+        expect(modelService.getCovariateBounds('LENGTH_OF_FOLLOW_UP', problem)).toEqual({
+          min: -5,
+          max: 30
+        });
+      });
+
+      it('should work for a a single value with missing values', function() {
+        var problem = {
+          studyLevelCovariates: {
+            'Alves et al, 1999': {
+              'LENGTH_OF_FOLLOW_UP': 30.0
+            }, 'Boyer et al, 1998': {
+              'LENGTH_OF_FOLLOW_UP': null
+            }
+          }
+        };
+        expect(modelService.getCovariateBounds('LENGTH_OF_FOLLOW_UP', problem)).toEqual({
+          min: 30,
+          max: 30
+        });
+
       });
 
       it('should handle missing covariates', function() {
         var problem = {
           studyLevelCovariates: {
-            'Alves et al, 1999': {
-            },
-            'Boyer et al, 1998': {
-            },
-            'Behnke et al, 2003': {
-            }
+            'Alves et al, 1999': {},
+            'Boyer et al, 1998': {},
+            'Behnke et al, 2003': {}
           }
         };
-        expect(modelService.getCovariateBounds('LENGTH_OF_FOLLOW_UP', problem)).toEqual({min: undefined, max: undefined});
+        expect(modelService.getCovariateBounds('LENGTH_OF_FOLLOW_UP', problem)).toEqual({
+          min: undefined,
+          max: undefined
+        });
       });
 
     });

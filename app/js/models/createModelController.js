@@ -161,8 +161,9 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function variableHasNAValues(covariateName, problem) {
-      return _.find(problem.studyLevelCovariates, function(covariate) {
-        return covariate[covariateName] === null;
+      var entryMap = _.keyBy(problem.entries, 'study');
+      return _.find(entryMap, function(entry) {
+        return problem.studyLevelCovariates[entry.study][covariateName] === null;
       });
     }
 
