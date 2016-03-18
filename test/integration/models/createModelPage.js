@@ -33,15 +33,19 @@ CreateModelPage.prototype = {
   },
   setModelSubType: function(subType) {
     if (subType === 'pairwise-all') {
+      this.browser.waitForElementVisible('#all-pairwise-model-type-radio', 50000);
       this.browser.click('#all-pairwise-model-type-radio').pause(300);
     } else if (subType === 'pairwise-specific') {
+      this.browser.waitForElementVisible('#pairwise-specific-type-radio', 50000);
       this.browser
         .click('#pairwise-specific-type-radio').pause(300)
         .click('#comparison-select').pause(300)
         .keys(['\uE015', '\uE004']).pause(300); //down then tab
     } else if (subType === 'node-split-all') {
+      this.browser.waitForElementVisible('#all-node-split-model-type-radio', 50000);
       this.browser.click('#all-node-split-model-type-radio').pause(300);
     } else if (subType === 'node-split-specific') {
+      this.browser.waitForElementVisible('#node-split-specific-type-radio', 50000);
       this.browser
         .click('#node-split-specific-type-radio')
         .pause(300)
