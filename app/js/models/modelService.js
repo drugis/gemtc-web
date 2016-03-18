@@ -86,10 +86,12 @@ define(['angular', 'lodash'], function(angular, _) {
     function getCovariateBounds(covariateName, problem) {
       return _.reduce(problem.studyLevelCovariates, function(accum, covariate) {
         var v = covariate[covariateName];
-        if (v === undefined) {
+        if (v === undefined || v === null) {
           return accum;
         }
 
+        // accum.min = _.min(accum.min, v);
+        // accum.max = _.max(accum.max, v);
         if (accum.min === undefined) {
           accum.min = v;
         } else if (v < accum.min) {
@@ -101,7 +103,7 @@ define(['angular', 'lodash'], function(angular, _) {
         } else if (v > accum.max) {
           accum.max = covariate[covariateName];
         }
-        
+
         return accum;
       }, {
         min: undefined,
