@@ -1,6 +1,5 @@
-/////////////////////////// top nav bar ////
-body.f-topbar-fixed {
-  padding-top: 52px; // add space top of first item under nav-bar, drugis override
+.f-topbar-fixed {
+  margin-top: 32px; // clear breadcrumbs
 }
 
 .alert-box.alert {
@@ -67,8 +66,4 @@ table.layout-table {
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.28);
   border-bottom: 1px solod rgba(0, 0, 0, 0.14);
   z-index: 50; // higher than content , but lower than nabbar foldout-menu
-}
-
-.f-topbar-fixed {
-  margin-top: 32px; // clear breadcrumbs
 }
