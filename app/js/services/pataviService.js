@@ -1,7 +1,7 @@
 'use strict';
 define(['angular', 'gemtc-web/lib/autobahn'], function(angular, ab) {
-  var dependencies = ['$q'];
-  var PataviService = function($q) {
+  var dependencies = ['$q', '$http'];
+  var PataviService = function($q, $http) {
     var BASE_URI = 'http://api.patavi.com/';
 
     var Task = function(task) {
@@ -10,30 +10,30 @@ define(['angular', 'gemtc-web/lib/autobahn'], function(angular, ab) {
       this.results = resultsPromise.promise;
 
       var uri = task.uri;
-      ab.connect(uri, function(session) {
-        console.log('Connected to ' + uri, session.sessionid());
-        // Subscribe to updates
-        session.subscribe(BASE_URI + 'status#', function(topic, event) {
-          resultsPromise.notify(event);
+      console.log(task);
+
+      function getResults(url) {
+        $http.get(url).then(function(response) {
+          resultsPromise.resolve(response.data);
         });
+      }
 
-        // Send-off RPC
-        self.results = session.call(BASE_URI + 'rpc#').then(
-          function(result) {
-            resultsPromise.resolve(result);
-            session.close();
-          },
-          function(reason, code) {
-            console.log('error', code, reason);
-            resultsPromise.reject(reason);
-            session.close();
-          }
-        );
-
-      }, function(code, reason) {
-        resultsPromise.reject(reason);
-        console.log(code, reason);
-      });
+      var socket = new WebSocket(uri.replace(/^http/, "ws") + '/updates');
+      socket.onmessage = function (event) {
+        var data = JSON.parse(event.data);
+        if (data.eventType === "done") {
+          console.log("done");
+          socket.close();
+          getResults(uri + "/results");
+        } else if (data.evenType === "failed") {
+          console.log("error", data.eventData);
+          resultsPromise.reject(data.eventData);
+          socket.close();
+        } else {
+          console.log(data);
+          resultsPromise.notify(data.eventData);
+        }
+      }
     };
 
     var run = function(task) {
