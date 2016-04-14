@@ -2,11 +2,23 @@ var logger = require('./logger');
 var dbUtil = require('./dbUtil');
 var db = require('./db')(dbUtil.pataviDBUrl);
 
+var _ = require('lodash');
+var fs = require('fs');
+var https = require('https');
+
 module.exports = {
   getResult: getResult,
   getPataviTasksStatus: getPataviTasksStatus,
   create: createPataviTask,
   deleteTask: deleteTask
+};
+
+var httpsOptions = {
+  hostname: process.env.PATAVI_HOST,
+  port: process.env.PATAVI_PORT,
+  key: fs.readFileSync(process.env.PATAVI_CLIENT_KEY),
+  cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT),
+  ca: fs.readFileSync(process.env.PATAVI_CA)
 };
 
 function getResult(taskId, callback) {
@@ -45,15 +57,22 @@ function getPataviTasksStatus(taskIds, callback) {
 
 function createPataviTask(problem, callback) {
   logger.debug('pataviTaskRepository.createPataviTask');
-  db.query("INSERT INTO patavitask (problem, method) VALUES($1, 'gemtc') RETURNING id", [
-    problem
-  ], function(error, result) {
-    if (error) {
-      callback(error);
+  var reqOptions = {
+    path: '/task?method=gemtc',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  };
+  var postReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
+    if (res.statusCode == 201 && res.headers.location) {
+      callback(null, res.headers.location);
     } else {
-      callback(null, result.rows[0].id);
+      callback('Error queueing task: server returned code ' + res.statusCode);
     }
   });
+  postReq.write(JSON.stringify(problem));
+  postReq.end();
 }
 
 function deleteTask(id, callback) {
