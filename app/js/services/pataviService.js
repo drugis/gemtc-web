@@ -2,8 +2,6 @@
 define(['angular', 'gemtc-web/lib/autobahn'], function(angular, ab) {
   var dependencies = ['$q', '$http'];
   var PataviService = function($q, $http) {
-    var BASE_URI = 'http://api.patavi.com/';
-
     var Task = function(task) {
       var resultsPromise = $q.defer();
       var self = this;
@@ -12,27 +10,26 @@ define(['angular', 'gemtc-web/lib/autobahn'], function(angular, ab) {
       var uri = task.uri;
       console.log(task);
 
-      function getResults(url) {
+      function getResults(url, done) {
         $http.get(url).then(function(response) {
-          resultsPromise.resolve(response.data);
+          done(response.data);
         });
       }
 
-      var socket = new WebSocket(uri.replace(/^http/, "ws") + '/updates');
+      var socket = new WebSocket(uri.replace(/^https/, "wss") + '/updates');
       socket.onmessage = function (event) {
         var data = JSON.parse(event.data);
         if (data.eventType === "done") {
           console.log("done");
           socket.close();
-          getResults(uri + "/results");
+          getResults(data.eventData.href, resultsPromise.resolve);
         } else if (data.evenType === "failed") {
-          console.log("error", data.eventData);
-          resultsPromise.reject(data.eventData);
+          console.log("error");
           socket.close();
-        } else {
-          console.log(data);
-          resultsPromise.notify(data.eventData);
+          getResults(data.eventData.href, resultsPromise.reject)
         }
+        console.log(data);
+        resultsPromise.notify(data.eventData);
       }
     };
 

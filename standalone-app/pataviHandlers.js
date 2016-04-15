@@ -25,7 +25,7 @@ function getPataviTask(request, response, next) {
         modelCache = model;
         if (model.taskId) {
           response.json({
-            uri: 'https://' + process.env.PATAVI_HOST + ':' + process.env.PATAVI_PORT + model.taskId
+            uri: model.taskId
           });
           callback('stop');
         } else {
@@ -41,7 +41,7 @@ function getPataviTask(request, response, next) {
       },
       function() {
         response.json({
-          uri: 'https://' + process.env.PATAVI_HOST + ':' + process.env.PATAVI_PORT + createdIdCache
+          uri: createdIdCache
         });
       }
     ],
