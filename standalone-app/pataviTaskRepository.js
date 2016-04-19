@@ -99,12 +99,14 @@ function createPataviTask(problem, callback) {
 }
 
 function deleteTask(id, callback) {
-  logger.debug('deleting patavi task');
-  db.query('DELETE FROM patavitask WHERE id=$1', [id], function(error, result) {
-    if (error) {
-      callback(error);
+  var reqOptions = urlModule.parse(id);
+  reqOptions.method = 'DELETE';
+  var deleteReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
+    if (res.statusCode == 200) {
+      callback(null);
     } else {
-      callback();
+      callback('Error deleting task: server returned code ' + res.statusCode);
     }
   });
+  deleteReq.end();
 }
