@@ -41,18 +41,22 @@ function getJson(url, callback) {
 }
 
 function getResult(taskId, callback) {
-  db.query('SELECT result FROM patavitask WHERE id = $1', [taskId], function(error, result) {
-    if (error) {
-      callback(error);
-    } else {
-      if (result.rows.length === 0 || !result.rows[0].result) {
-        callback({
-          description: "no result found"
-        });
-      } else {
-        callback(null, JSON.parse(result.rows[0].result).results);
-      }
+  logger.debug('pataviTaskRepository.getResult');
+  getJson(taskId, function(err, result) {
+    if (err) {
+      return callback(err);
     }
+    if (result.status != "done") {
+      return callback({
+        description: "no result found"
+      });
+    }
+    getJson(result._links.results.href, function(err, result) {
+      if (err) {
+        return callback(err);
+      }
+      callback(null, result.results);
+    });
   });
 }
 
