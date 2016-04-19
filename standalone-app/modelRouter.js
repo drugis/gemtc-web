@@ -23,7 +23,7 @@ function decorateWithHasResults(modelsResult, pataviResult) {
   var pataviTasks = _.indexBy(pataviResult, 'id');
   return _.map(modelsResult, function(model) {
     return _.extend(model, {
-      hasResult: pataviTasks[model.taskId].hasresult
+      hasResult: pataviTasks[model.taskId].hasResult
     });
   });
 }
