@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'gemtc-web/lib/autobahn'], function(angular, ab) {
+define([], function() {
   var dependencies = ['$q', '$http'];
   var PataviService = function($q, $http) {
     var Task = function(task) {

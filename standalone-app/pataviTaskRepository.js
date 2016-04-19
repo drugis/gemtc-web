@@ -5,6 +5,8 @@ var db = require('./db')(dbUtil.pataviDBUrl);
 var _ = require('lodash');
 var fs = require('fs');
 var https = require('https');
+var async = require('async');
+var urlModule = require('url');
 
 module.exports = {
   getResult: getResult,
@@ -20,6 +22,23 @@ var httpsOptions = {
   cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT),
   ca: fs.readFileSync(process.env.PATAVI_CA)
 };
+
+function getJson(url, callback) {
+  var opts = urlModule.parse(url);
+  opts.ca = httpsOptions.ca;
+  https.get(opts, function(res) {
+    res.setEncoding('utf8');
+    var body = '';
+    res.on('data', function(chunk) {
+      body += chunk;
+    });
+    res.on('end', function() {
+      callback(null, JSON.parse(body));
+    });
+  }).on('error', function(err) {
+    callback(err);
+  });
+}
 
 function getResult(taskId, callback) {
   db.query('SELECT result FROM patavitask WHERE id = $1', [taskId], function(error, result) {
@@ -39,19 +58,19 @@ function getResult(taskId, callback) {
 
 function getPataviTasksStatus(taskIds, callback) {
   logger.debug('pataviTaskRepository.getPataviTasksStatus');
-  if (taskIds.length === 0) {
-    callback(null, []);
+  function getTaskStatus(taskId, callback) {
+    getJson(taskId, function(err, result) {
+      if (err) {
+        return callback(err);
+      }
+      callback(null, { id: taskId, hasResult: (result.status == "done") });
+    });
   }
-  var params = taskIds.map(function(item, idx) {
-    return '$' + (idx + 1);
-  });
-  db.query('SELECT id, result IS NOT NULL as hasResult FROM patavitask WHERE id in (' + params.join(',') + ')', taskIds, function(error, result) {
-    if (error) {
-      logger.error('an error occured during: pataviTaskRepository.getPataviTasksStatus');
-      callback(error);
-    } else {
-      callback(null, result.rows);
+  async.map(taskIds, getTaskStatus, function(err, results) {
+    if (err) {
+      return callback(err);
     }
+    callback(null, results);
   });
 }
 
