@@ -63,11 +63,15 @@ First, build the R base dependencies for the gemtc worker:
 
 in the `R/r-base` directory
 
-    docker build --tag gemtc/r-base .
+    docker build --tag gemtc/r-base-amqp .
 
 Then, build the worker itself, in the `R` directory:
 
-    docker build --tag patavi/gemtc .
+    docker build --tag patavi/worker-amqp-gemtc .
+
+Run the worker:
+
+    docker run -d --link <rabbitmq-container-name>:rabbit --name amqp-gemtc patavi/worker-amqp-gemtc
 
 
 Running for the stand-alone version
