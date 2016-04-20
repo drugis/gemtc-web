@@ -1,7 +1,9 @@
 # Dockerfile for the GeMTC Patavi worker
-# You need the patavi/worker base image from http://github.com/gertvv/patavi-docker
+# You need the patavi/worker-amqp base image
 
-FROM patavi/worker
+FROM patavi/worker-amqp
+
+USER root
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-rjags
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-xml
