@@ -27,6 +27,7 @@
     "express": "^4.12.4",
     "express-session": "^1.11.2",
     "http-status-codes": "^1.0.5",
+    "lodash": "^4.11.1",
     "pg": "^4.3.0",
     "winston": "^1.0.0"
   },

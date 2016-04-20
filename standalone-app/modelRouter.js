@@ -20,7 +20,7 @@ module.exports = express.Router({
   .use('/:modelId/task', pataviTaskRouter);
 
 function decorateWithHasResults(modelsResult, pataviResult) {
-  var pataviTasks = _.indexBy(pataviResult, 'id');
+  var pataviTasks = _.keyBy(pataviResult, 'id');
   return _.map(modelsResult, function(model) {
     return _.extend(model, {
       hasResult: pataviTasks[model.taskId].hasResult
