@@ -1,24 +1,33 @@
 FROM phusion/baseimage
 
-RUN echo deb http://archive.ubuntu.com/ubuntu precise universe >> /etc/apt/sources.list
-RUN apt-get update && apt-get clean
-RUN apt-get update && apt-get install -y wget git curl zip
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
 
-## Special node repo to install non-ubuntu nodejs that includes npm
-RUN wget -q -O- "https://chrislea.com/gpgkey.txt" | apt-key add -
-RUN echo "deb http://ppa.launchpad.net/chris-lea/node.js/ubuntu saucy main" > /etc/apt/sources.list.d/chris-lea-node_js-saucy.list
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B9316A7BC7917B12
+RUN apt-get update
+RUN apt-get upgrade -y
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get clean
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q nodejs
+# Install nodejs
+RUN apt-get install -y curl
+RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
+RUN apt-get install -y nodejs
 
 RUN npm install -g bower
 RUN npm install -g forever
 
-COPY . /
+RUN apt-get install -y git # needed by angular-foundation
 
-RUN npm install
-RUN bower update --allow-root
+RUN useradd --create-home --home /var/lib/gemtc gemtc
+
+COPY . /var/lib/gemtc
+RUN chown -R gemtc.gemtc /var/lib/gemtc
+
+USER gemtc
+WORKDIR /var/lib/gemtc
+ENV HOME /var/lib/gemtc
+
+RUN npm install --production
+RUN bower update
 
 EXPOSE 3001
 
