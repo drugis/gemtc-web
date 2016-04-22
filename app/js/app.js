@@ -16,6 +16,7 @@ define(
     'models/models',
     'util/util',
     'patavi/patavi',
+    'patavi',
     'help-popup'
   ],
   function(angular, require, $, _) {
@@ -32,6 +33,7 @@ define(
       'gemtc.models',
       'gemtc.util',
       'gemtc.patavi',
+      'patavi',
       'help-directive'
     ];
 

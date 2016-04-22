@@ -30,8 +30,9 @@ define(['lodash'], function(_) {
 
     $scope.model
       .$promise
-      .then(getTaskId)
-      .then(PataviService.run)
+      .then(getTaskInfo)
+      .then(getTaskUpdatesUri)
+      .then(PataviService.listen)
       .then(pataviRunSuccessCallback,
         function(pataviError) {
           console.error('an error has occurred, error: ' + JSON.stringify(pataviError));
@@ -41,13 +42,17 @@ define(['lodash'], function(_) {
           });
         },
         function(update) {
-          if (update && $.isNumeric(update.progress)) {
-            $scope.progress.percentage = update.progress;
+          if (update && update.eventType == "progress" && update.eventData && $.isNumeric(update.eventData.progress)) {
+            $scope.progress.percentage = update.eventData.progress;
           }
         });
 
-    function getTaskId() {
-      return PataviTaskIdResource.get($stateParams);
+    function getTaskInfo() {
+      return PataviTaskIdResource.get($stateParams).$promise;
+    }
+
+    function getTaskUpdatesUri(info) {
+      return info.uri.replace(/^https/, "wss") + '/updates'; // FIXME: less hacky please
     }
 
     function findCentering(resultsWithLevels) {
