@@ -18,7 +18,8 @@ require.config({
     'angularanimate': 'bower_components/angular-animate/angular-animate.min',
     'ngSanitize': 'bower_components/angular-sanitize/angular-sanitize.min',
     'papaparse': 'bower_components/papaparse/papaparse.min',
-    'help-popup': 'bower_components/help-popup/help-directive'
+    'help-popup': 'bower_components/help-popup/help-directive',
+    'angular-patavi-client': 'bower_components/angular-patavi-client/patavi'
   },
   shim: {
     'jQuery': {
