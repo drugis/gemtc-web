@@ -16,7 +16,7 @@ define(
     'models/models',
     'util/util',
     'patavi/patavi',
-    'patavi',
+    'angular-patavi-client',
     'help-popup'
   ],
   function(angular, require, $, _) {

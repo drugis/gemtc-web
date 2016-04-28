@@ -81,7 +81,7 @@ function getPataviTasksStatus(taskIds, callback) {
 function createPataviTask(problem, callback) {
   logger.debug('pataviTaskRepository.createPataviTask');
   var reqOptions = {
-    path: '/task?method=gemtc',
+    path: '/task?service=gemtc',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

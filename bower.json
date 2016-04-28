@@ -46,9 +46,13 @@
     "requirejs-domready": "~2.0.1",
     "help-popup": "https://github.com/connorstroomberg/help-popup.git",
     "KaTeX": "katex#~0.5.1",
-    "scrollup": "~2.4.1"
+    "scrollup": "~2.4.1",
+    "angular-patavi-client": "https://github.com/gertvv/angular-patavi-client.git#1.0.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"
+  },
+  "resolutions": {
+    "angular": "~1.5.5"
   }
 }
