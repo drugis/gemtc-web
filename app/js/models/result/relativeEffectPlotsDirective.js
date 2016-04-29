@@ -39,7 +39,7 @@ define(['lodash'], function(_) {
           } else {
             scope.relativeEffectPlot = ModelService.findCentering(scope.relativeEffectPlots);
             if (scope.model.regressor) {
-              scope.relativeEffectPlot.level = 'centering (' + scope.result.results.regressor.modelRegressor.mu + ')';
+              scope.relativeEffectPlot.level = 'centering (' + scope.results.regressor.modelRegressor.mu + ')';
             }
           }
         });

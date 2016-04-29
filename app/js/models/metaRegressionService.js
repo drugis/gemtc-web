@@ -10,14 +10,14 @@ define(['lodash'], function(_) {
      **
      ** The returned list is sorted by treatmentName
      */
-    function buildCovariatePlotOptions(result, problem) {
+    function buildCovariatePlotOptions(results, problem) {
       var treatmentsById = _.keyBy(problem.treatments, 'id');
       return Object
-        .keys(result.results.covariateEffectPlot)
+        .keys(results.covariateEffectPlot)
         .map(function(key) {
           return {
             treatmentName: treatmentsById[key].name,
-            plot: result.results.covariateEffectPlot[key]
+            plot: results.covariateEffectPlot[key]
           };
         })
         .sort(function(a, b) {
@@ -25,8 +25,8 @@ define(['lodash'], function(_) {
         });
     }
 
-    function getCovariateSummaries(result, problem) {
-      var quantiles = result.results.summaries.quantiles;
+    function getCovariateSummaries(results, problem) {
+      var quantiles = results.summaries.quantiles;
       var covariateSummaries = [];
       Object.keys(quantiles).forEach(function(key){
         if (key === 'B') {

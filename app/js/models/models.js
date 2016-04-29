@@ -33,5 +33,6 @@ define(function (require) {
     .directive('relativeEffectPlots', require('models/result/relativeEffectPlotsDirective'))
     .directive('pairwiseForestPlots', require('models/result/pairwiseForestPlotsDirective'))
     .directive('nodeSplitDensityPlots', require('models/result/nodeSplitDensityPlotsDirective'))
+    .directive('metaRegressionCovPlots', require('models/result/metaRegressionCovPlotsDirective'))
     ;
 });

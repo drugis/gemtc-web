@@ -19,6 +19,7 @@ define(['lodash'], function(_) {
       percentage: 0
     };
     $scope.model = ModelResource.get($stateParams);
+    $scope.modelPr
     $scope.$parent.model = $scope.model;
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.selectedBaseline = undefined;
@@ -142,15 +143,10 @@ define(['lodash'], function(_) {
         $scope.absoluteDevianceStatisticsTable = DevianceStatisticsService.buildAbsoluteTable(result.results.devianceStatistics, problem);
         $scope.relativeDevianceStatisticsTable = DevianceStatisticsService.buildRelativeTable(result.results.devianceStatistics);
         if ($scope.model.regressor) {
-          $scope.controlTreatment = _.find(problem.treatments, function(treatment) {
+          $scope.controlTreatment = _.find($scope.problem.treatments, function(treatment) {
             return treatment.id === Number($scope.model.regressor.control);
           });
-
-          // build cov plot options
-          $scope.covariateEffectPlots = MetaRegressionService.buildCovariatePlotOptions($scope.result, $scope.problem);
-          $scope.covariateEffectPlot = $scope.covariateEffectPlots[0];
-
-          $scope.covariateQuantiles = MetaRegressionService.getCovariateSummaries($scope.result, $scope.problem);
+          $scope.covariateQuantiles = MetaRegressionService.getCovariateSummaries($scope.result.results, $scope.problem);
         }
         $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
       });
