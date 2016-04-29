@@ -18,10 +18,6 @@ define([], function() {
             scope.results = modelResultProblem[1].results;
             scope.problem = modelResultProblem[2];
 
-            if (scope.model.modelType.type === 'node-split') {
-              return;
-            }
-
             if (scope.model.regressor) {
               scope.covariateEffectPlots = MetaRegressionService.buildCovariatePlotOptions(scope.results, scope.problem);
               scope.covariateEffectPlot = scope.covariateEffectPlots[0];
