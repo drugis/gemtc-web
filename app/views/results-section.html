@@ -78,7 +78,7 @@
   </div>
 </div>
 
-<relative-effect-plots  model="model" results-promise="resultsPromise" problem-promise="problemPromise"></relative-effect-plots>
+<relative-effect-plots  model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></relative-effect-plots>
 
 <div class="row" ng-if="result.results && model.modelType.type === 'pairwise'">
   <div class="columns">
