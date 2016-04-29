@@ -31,7 +31,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       var node = d3.select($(element).get(0));
       node.selectAll('g').remove();
       node.selectAll('line').remove();
-      var svg = d3.select('.network-graph').select('svg')
+      var svg = node.select('svg')
         .attr('width', width)
         .attr('height', width);
 
