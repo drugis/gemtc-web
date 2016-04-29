@@ -28,8 +28,9 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       var radius = originY - margin / 2;
       var circleMaxSize = 30;
       var circleMinSize = 5;
-      d3.select('.network-graph', element).selectAll('g').remove();
-      d3.select('.network-graph', element).selectAll('line').remove();
+      var node = d3.select($(element).get(0));
+      node.selectAll('g').remove();
+      node.selectAll('line').remove();
       var svg = d3.select('.network-graph').select('svg')
         .attr('width', width)
         .attr('height', width);
