@@ -91,8 +91,11 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       modalMock = jasmine.createSpyObj('$modal', ['open']);
       metaRegressionService = jasmine.createSpyObj('MetaRegressionService', ['buildCovariatePlotOptions', 'getCovariateSummaries']);
       metaRegressionService.buildCovariatePlotOptions.and.returnValue([]);
-      modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary']);
+      modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary','filterCentering','findCentering']);
       modelserviceMock.isVariableBinary.and.returnValue(true);
+      modelserviceMock.filterCentering.and.callFake(function(param) {
+        return param;
+      });
 
       $controller('ModelController', {
         $scope: scope,

@@ -30,5 +30,6 @@ define(function (require) {
     .directive('runLength',require('models/runLength/runLengthDirective'))
     .directive('nodesplitForestPlot',require('models/nodesplitForestPlot/nodesplitForestPlotDirective'))
     .directive('heterogeneityPrior', require('models/heterogeneityPrior/heterogeneityPriorDirective'))
+    .directive('relativeEffectPlots', require('models/result/relativeEffectPlotsDirective'))
     ;
 });

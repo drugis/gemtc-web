@@ -28,11 +28,12 @@ define(['lodash'], function(_) {
     $scope.$parent.model = $scope.model;
     $scope.$parent.analysis = $scope.analysis;
 
-    $scope.model
+    $scope.resultsPromise = $scope.model
       .$promise
       .then(getTaskId)
-      .then(PataviService.run)
-      .then(pataviRunSuccessCallback,
+      .then(PataviService.run);
+
+    $scope.resultsPromise.then(pataviRunSuccessCallback,
         function(pataviError) {
           console.error('an error has occurred, error: ' + JSON.stringify(pataviError));
           $scope.$emit('error', {
@@ -48,18 +49,6 @@ define(['lodash'], function(_) {
 
     function getTaskId() {
       return PataviTaskIdResource.get($stateParams);
-    }
-
-    function findCentering(resultsWithLevels) {
-      return _.find(resultsWithLevels, function(resultWithLevel) {
-        return resultWithLevel.level === 'centering';
-      });
-    }
-
-    function filterCentering(resultsWithLevels) {
-      return _.filter(resultsWithLevels, function(resultWithLevel) {
-        return resultWithLevel.level !== 'centering';
-      });
     }
 
     function nameRankProbabilities(rankProbabilities, treatments) {
@@ -97,11 +86,13 @@ define(['lodash'], function(_) {
       });
     }
 
+    $scope.problemPromise = ProblemResource.get({
+      analysisId: $stateParams.analysisId,
+      projectId: $stateParams.projectId
+    }).$promise;
+
     function pataviRunSuccessCallback(result) {
-      return ProblemResource.get({
-        analysisId: $stateParams.analysisId,
-        projectId: $stateParams.projectId
-      }).$promise.then(function(problem) {
+      return $scope.problemPromise.then(function(problem) {
         $scope.problem = problem;
         $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
         $scope.result = result;
@@ -132,27 +123,17 @@ define(['lodash'], function(_) {
               table: RelativeEffectsTableService.buildTable(relativeEffect, isLogScale, problem.treatments)
             };
           });
-          $scope.relativeEffectPlots = _.map(result.results.relativeEffectPlots, function(plots, key) {
-            return {
-              level: key,
-              plots: plots
-            };
-          });
 
           if ($scope.model.regressor && ModelService.isVariableBinary($scope.model.regressor.variable, $scope.problem)) {
-            $scope.rankProbabilitiesByLevel = filterCentering($scope.rankProbabilitiesByLevel);
-            $scope.relativeEffectsTables = filterCentering($scope.relativeEffectsTables);
-            $scope.relativeEffectPlots = filterCentering($scope.relativeEffectPlots);
+            $scope.rankProbabilitiesByLevel = ModelService.filterCentering($scope.rankProbabilitiesByLevel);
+            $scope.relativeEffectsTables = ModelService.filterCentering($scope.relativeEffectsTables);
             $scope.relativeEffectsTable = $scope.relativeEffectsTables[0];
-            $scope.relativeEffectPlot = $scope.relativeEffectPlots[0];
             $scope.rankProbabilities = $scope.rankProbabilitiesByLevel[0];
           } else {
-            $scope.relativeEffectsTable = findCentering($scope.relativeEffectsTables);
-            $scope.relativeEffectPlot = findCentering($scope.relativeEffectPlots);
-            $scope.rankProbabilities = findCentering($scope.rankProbabilitiesByLevel);
+            $scope.relativeEffectsTable = ModelService.findCentering($scope.relativeEffectsTables);
+            $scope.rankProbabilities = ModelService.findCentering($scope.rankProbabilitiesByLevel);
             if ($scope.model.regressor) {
               $scope.relativeEffectsTable.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
-              $scope.relativeEffectPlot.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
               $scope.rankProbabilities.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
             }
           }
