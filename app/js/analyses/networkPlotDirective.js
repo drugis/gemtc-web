@@ -8,7 +8,7 @@ define(['angular'], function(angular) {
         sizingElementId: '='
       },
       restrict: 'E',
-      template: '<div id="network-graph"><svg></svg></div>',
+      template: '<div class="network-graph"><svg></svg></div>',
       link: function(scope, element) {
 
         /**
@@ -27,12 +27,12 @@ define(['angular'], function(angular) {
 
         scope.$watch('network', function(newValue, oldValue) {
           if (oldValue !== newValue) {
-            NetworkPlotService.drawNetwork(newValue, width, height);
+            NetworkPlotService.drawNetwork(newValue, element, width, height);
           }
         });
 
         angular.element($window).bind('resize', function() {
-          NetworkPlotService.drawNetwork(scope.network, sizingElement.width(), sizingElement.height());
+          NetworkPlotService.drawNetwork(scope.network, element,sizingElement.width(), sizingElement.height());
         });
 
       }
