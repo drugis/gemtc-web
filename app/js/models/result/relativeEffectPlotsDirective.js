@@ -4,7 +4,7 @@ define(['lodash'], function(_) {
   var relativeEffectPlotsDirective = function(gemtcRootPath, ModelService, $q) {
     return {
       scope: {
-        model: '=',
+        modelPromise: '=',
         resultsPromise: '=',
         problemPromise: '='
       },
@@ -12,13 +12,15 @@ define(['lodash'], function(_) {
       templateUrl: gemtcRootPath + 'js/models/result/relativeEffectPlots.html',
       link: function(scope) {
 
-        if (scope.model.modelType.type === 'node-split') {
-          return;
-        }
+        $q.all([scope.modelPromise, scope.resultsPromise, scope.problemPromise])
+        .then(function(modelResultProblem) {
+          scope.model = modelResultProblem[0];
+          scope.results = modelResultProblem[1].results;
+          scope.problem = modelResultProblem[2];
 
-        $q.all([scope.resultsPromise, scope.problemPromise]).then(function(resultAndProblem) {
-          scope.results = resultAndProblem[0].results;
-          scope.problem = resultAndProblem[1];
+          if (scope.model.modelType.type === 'node-split') {
+            return;
+          }
 
           if (scope.problem.treatments && scope.problem.treatments.length > 0) {
             scope.selectedBaseline = scope.problem.treatments[0];
