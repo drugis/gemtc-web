@@ -80,13 +80,7 @@
 
 <relative-effect-plots  model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></relative-effect-plots>
 <pairwise-forest-plots  model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></pairwise-forest-plots>
-
-<div class="row" ng-if="result.results && model.modelType.type === 'node-split'">
-  <div class="columns large-12 small-8">
-    <p><strong>Density plot </strong><data-inline-help help-key="density-plot"></data-inline-help></p>
-    <data-paged-png-plot file-name="'densityPlot'" pages="result.results.nodeSplitDensityPlot"></data-paged-png-plot>
-  </div>
-</div>
+<node-split-density-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></node-split-density-plots>
 
 <div ng-if="result.results && model.modelType.type !== 'node-split'">
   <div class="row" style="padding-top: 1rem;" >
