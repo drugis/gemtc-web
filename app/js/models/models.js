@@ -32,5 +32,6 @@ define(function (require) {
     .directive('heterogeneityPrior', require('models/heterogeneityPrior/heterogeneityPriorDirective'))
     .directive('relativeEffectPlots', require('models/result/relativeEffectPlotsDirective'))
     .directive('pairwiseForestPlots', require('models/result/pairwiseForestPlotsDirective'))
+    .directive('nodeSplitDensityPlots', require('models/result/nodeSplitDensityPlotsDirective'))
     ;
 });

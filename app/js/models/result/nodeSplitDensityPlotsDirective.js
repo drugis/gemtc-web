@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
   var dependencies = ['gemtcRootPath', '$q'];
-  var pairwiseForestPlotsDirective = function(gemtcRootPath, $q) {
+  var nodeSplitDensityPlotsDirective = function(gemtcRootPath, $q) {
     return {
       scope: {
         modelPromise: '=',
@@ -9,7 +9,7 @@ define([], function() {
         problemPromise: '='
       },
       restrict: 'E',
-      templateUrl: gemtcRootPath + 'js/models/result/pairwiseForestPlots.html',
+      templateUrl: gemtcRootPath + 'js/models/result/nodeSplitDensityPlots.html',
       link: function(scope) {
 
         $q.all([scope.modelPromise, scope.resultsPromise, scope.problemPromise])
@@ -22,5 +22,5 @@ define([], function() {
       }
     };
   };
-  return dependencies.concat(pairwiseForestPlotsDirective);
+  return dependencies.concat(nodeSplitDensityPlotsDirective);
 });

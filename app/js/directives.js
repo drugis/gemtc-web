@@ -14,5 +14,6 @@ define(function(require) {
     .directive('graphModal', require('gemtc-web/util/graphModalDirective/graphModalDirective'))
     .directive('relativeEffectPlots', require('gemtc-web/models/result/relativeEffectPlotsDirective'))
     .directive('pairwiseForestPlots', require('gemtc-web/models/result/pairwiseForestPlotsDirective'))
+    .directive('nodeSplitDensityPlots', require('gemtc-web/models/result/nodeSplitDensityPlotsDirective'))
   ;
 });
