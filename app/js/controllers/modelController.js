@@ -19,7 +19,6 @@ define(['lodash'], function(_) {
       percentage: 0
     };
     $scope.model = ModelResource.get($stateParams);
-    $scope.modelPr
     $scope.$parent.model = $scope.model;
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.selectedBaseline = undefined;
@@ -53,7 +52,7 @@ define(['lodash'], function(_) {
     }
 
     function getTaskUpdatesUri(info) {
-      return info.uri.replace(/^https/, "wss") + '/updates'; // FIXME: less hacky please
+      return info.uri.replace(/^https/, 'wss') + '/updates'; // FIXME: less hacky please
     }
 
     function nameRankProbabilities(rankProbabilities, treatments) {
@@ -152,7 +151,8 @@ define(['lodash'], function(_) {
           });
           $scope.covariateQuantiles = MetaRegressionService.getCovariateSummaries($scope.result.results, $scope.problem);
         }
-        $scope.model = ModelResource.get($stateParams); // refresh so that model.taskId is set
+        $scope.model = ModelResource.get($stateParams); // refresh so that model.taskUrl is set
+        return result;
       });
     }
 
