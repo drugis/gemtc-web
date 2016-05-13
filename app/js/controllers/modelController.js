@@ -42,7 +42,7 @@ define(['lodash'], function(_) {
           });
         },
         function(update) {
-          if (update && update.eventType == "progress" && update.eventData && $.isNumeric(update.eventData.progress)) {
+          if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData.progress)) {
             $scope.progress.percentage = update.eventData.progress;
           }
         });

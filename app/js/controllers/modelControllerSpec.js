@@ -16,7 +16,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       mockModel,
       problemDeferred,
       mockProblem,
-      mockPataviTaskId,
+      mockPataviTaskId = {
+        uri: 'https://something/1'
+      },
       pataviResult,
       pataviResultDeferred,
       pataviService,
@@ -81,8 +83,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       problemResource.get.and.returnValue(mockProblem);
       pataviTaskIdResource = jasmine.createSpyObj('PataviTaskIdResource', ['get']);
       pataviTaskIdResource.get.and.returnValue(pataviTaskIdResult);
-      pataviService = jasmine.createSpyObj('PataviService', ['run']);
-      pataviService.run.and.returnValue(pataviResult);
+      pataviService = jasmine.createSpyObj('PataviService', ['listen']);
+      pataviService.listen.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
       devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildAbsoluteTable', 'buildRelativeTable']);
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['buildDiagnosticMap', 'compareDiagnostics']);
@@ -143,8 +145,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
           scope.$apply();
         });
 
-        it('should call the patavi service', function() {
-          expect(pataviService.run).toHaveBeenCalled();
+        it('should listen to the patavi service', function() {
+          expect(pataviService.listen).toHaveBeenCalled();
         });
 
         describe('when the patavi results are ready', function() {
