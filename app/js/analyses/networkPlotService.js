@@ -19,7 +19,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       return (y - 1) / (y + 1);
     }
 
-    function drawNetwork(network, width) {
+    function drawNetwork(network, element, width) {
       var n = network.interventions.length;
       var angle = 2.0 * Math.PI / n;
       var originX = width / 2;
@@ -28,9 +28,10 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       var radius = originY - margin / 2;
       var circleMaxSize = 30;
       var circleMinSize = 5;
-      d3.select('#network-graph').selectAll('g').remove();
-      d3.select('#network-graph').selectAll('line').remove();
-      var svg = d3.select('#network-graph').select('svg')
+      var node = d3.select($(element).get(0));
+      node.selectAll('g').remove();
+      node.selectAll('line').remove();
+      var svg = node.select('svg')
         .attr('width', width)
         .attr('height', width);
 

@@ -1,5 +1,5 @@
-var
-  modelRepository = require('./modelRepository');
+'use strict';
+var modelRepository = require('./modelRepository');
 
 module.exports = {
   update: update

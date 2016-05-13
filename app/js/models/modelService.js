@@ -130,6 +130,18 @@ define(['angular', 'lodash'], function(angular, _) {
       }
     }
 
+    function findCentering(resultsWithLevels) {
+      return _.find(resultsWithLevels, function(resultWithLevel) {
+        return resultWithLevel.level === 'centering';
+      });
+    }
+
+    function filterCentering(resultsWithLevels) {
+      return _.filter(resultsWithLevels, function(resultWithLevel) {
+        return resultWithLevel.level !== 'centering';
+      });
+    }
+
     return {
       findPrimaryModel: findPrimaryModel,
       cleanModel: cleanModel,
@@ -137,7 +149,9 @@ define(['angular', 'lodash'], function(angular, _) {
       isVariableBinary: isVariableBinary,
       getBinaryCovariateNames: getBinaryCovariateNames,
       isProblemWithCovariates: isProblemWithCovariates,
-      getCovariateBounds: getCovariateBounds
+      getCovariateBounds: getCovariateBounds,
+      findCentering: findCentering,
+      filterCentering: filterCentering
     };
   };
 
