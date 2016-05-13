@@ -12,5 +12,9 @@ define(function(require) {
     .directive('nodesplitForestPlot',require('gemtc-web/models/nodesplitForestPlot/nodesplitForestPlotDirective'))
     .directive('heterogeneityPrior', require('gemtc-web/models/heterogeneityPrior/heterogeneityPriorDirective'))
     .directive('graphModal', require('gemtc-web/util/graphModalDirective/graphModalDirective'))
+    .directive('relativeEffectPlots', require('gemtc-web/models/result/relativeEffectPlotsDirective'))
+    .directive('pairwiseForestPlots', require('gemtc-web/models/result/pairwiseForestPlotsDirective'))
+    .directive('nodeSplitDensityPlots', require('gemtc-web/models/result/nodeSplitDensityPlotsDirective'))
+    .directive('metaRegressionCovPlots', require('gemtc-web/models/result/metaRegressionCovPlotsDirective'))
   ;
 });

@@ -7,14 +7,7 @@
   </div>
 </div>
 
-<div class="row" ng-show="result.results && model.modelType.type === 'regression'" >
-  <div class="columns large-4 end">
-    <select
-      ng-options="covariateEffectPlot as covariateEffectPlot.treatmentName for covariateEffectPlot in covariateEffectPlots"
-      ng-model="covariateEffectPlot"></select>
-    <img ng-src="{{covariateEffectPlot.plot}}" export file-name="'covariate-effect-plot'">
-  </div>
-</div>
+<meta-regression-cov-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></meta-regression-cov-plots>
 
 <div class="row" ng-show="result.results && model.modelType.type === 'regression'" >
   <div class="columns large-4 end">

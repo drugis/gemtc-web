@@ -1,0 +1,10 @@
+<div class="row" ng-if="results && model.modelType.type === 'pairwise'">
+  <div class="columns">
+    <div class="row">
+      <div class="columns large-12 small-8">
+        <p><strong>Study effect forest plot </strong><data-inline-help help-key="forest-plot"></data-inline-help></p>
+        <data-paged-svg-plot file-name="'forestPlot'" pages="results.studyForestPlot"></data-paged-svg-plot>
+      </div>
+    </div>
+  </div>
+</div>
