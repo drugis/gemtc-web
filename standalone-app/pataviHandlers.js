@@ -1,10 +1,10 @@
+'use strict';
 var logger = require('./logger'),
   async = require('async'),
   modelRepository = require('./modelRepository'),
-  pataviTaskRepository = require('./pataviTaskRepository'),
   pataviHandlerService = require('./pataviHandlerService'),
   analysisRepository = require('./analysisRepository'),
-  status = require('http-status-codes')
+  httpStatus = require('http-status-codes')
 ;
 var modelCache;
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
 };
 
 
-function getPataviTask(request, response, next) {
+function getPataviTask(request, response) {
   var modelId = request.params.modelId;
   var analysisId = request.params.analysisId;
 
@@ -45,10 +45,10 @@ function getPataviTask(request, response, next) {
         });
       }
     ],
-    function(error, callback) {
+    function(error) {
       if (error && error !== 'stop') {
         logger.error(error);
-        response.sendStatus(status.INTERNAL_SERVER_ERROR);
+        response.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
         response.end();
       }
     });

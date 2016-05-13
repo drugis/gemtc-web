@@ -1,12 +1,12 @@
+'use strict';
 var logger = require('./logger');
-var dbUtil = require('./dbUtil');
-var db = require('./db')(dbUtil.pataviDBUrl);
 
 var _ = require('lodash');
 var fs = require('fs');
 var https = require('https');
 var async = require('async');
 var urlModule = require('url');
+var httpStatus = require('http-status-codes');
 
 module.exports = {
   getResult: getResult,
@@ -46,7 +46,7 @@ function getResult(taskId, callback) {
     if (err) {
       return callback(err);
     }
-    if (result.status != "done") {
+    if (result.status !== "done") {
       return callback({
         description: "no result found"
       });
@@ -62,12 +62,16 @@ function getResult(taskId, callback) {
 
 function getPataviTasksStatus(taskIds, callback) {
   logger.debug('pataviTaskRepository.getPataviTasksStatus');
+
   function getTaskStatus(taskId, callback) {
     getJson(taskId, function(err, result) {
       if (err) {
         return callback(err);
       }
-      callback(null, { id: taskId, hasResult: (result.status == "done") });
+      callback(null, {
+        id: taskId,
+        hasResult: (result.status === "done")
+      });
     });
   }
   async.map(taskIds, getTaskStatus, function(err, results) {
@@ -88,7 +92,7 @@ function createPataviTask(problem, callback) {
     }
   };
   var postReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
-    if (res.statusCode == 201 && res.headers.location) {
+    if (res.statusCode === httpStatus.CREATED && res.headers.location) {
       callback(null, res.headers.location);
     } else {
       callback('Error queueing task: server returned code ' + res.statusCode);
@@ -102,7 +106,7 @@ function deleteTask(id, callback) {
   var reqOptions = urlModule.parse(id);
   reqOptions.method = 'DELETE';
   var deleteReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
-    if (res.statusCode == 200) {
+    if (res.statusCode === httpStatus.OK) {
       callback(null);
     } else {
       callback('Error deleting task: server returned code ' + res.statusCode);
