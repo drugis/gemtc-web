@@ -11,7 +11,7 @@ module.exports = {
   get: getModel,
   update: update,
   findByAnalysis: findByAnalysis,
-  setTaskId: setTaskId
+  setTaskUrl: setTaskUrl
 };
 
 function mapModelRow(modelRow) {
@@ -20,7 +20,7 @@ function mapModelRow(modelRow) {
     title: modelRow.title,
     linearModel: modelRow.linearmodel,
     analysisId: modelRow.analysisid,
-    taskId: modelRow.taskid,
+    taskUrl: modelRow.taskurl,
     modelType: modelRow.modeltype,
     burnInIterations: modelRow.burn_in_iterations,
     inferenceIterations: modelRow.inference_iterations,
@@ -42,7 +42,7 @@ function mapModelRow(modelRow) {
 function findByAnalysis(analysisId, callback) {
   logger.debug('modelRepository.findByAnalysis, where analysisId = ' + analysisId);
   db.query(
-    ' SELECT id, taskId, ' + columnString +
+    ' SELECT id, taskUrl, ' + columnString +
     ' FROM model WHERE analysisId=$1', [analysisId],
     function(error, result) {
       if (error) {
@@ -86,7 +86,7 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
 
 function getModel(modelId, callback) {
   db.query(
-    ' SELECT id, taskId, ' + columnString +
+    ' SELECT id, taskUrl, ' + columnString +
     ' FROM model WHERE id=$1', [modelId],
     function(error, result) {
       if (error) {
@@ -99,8 +99,8 @@ function getModel(modelId, callback) {
     });
 }
 
-function setTaskId(modelId, taskId, callback) {
-  db.query('UPDATE model SET taskId=$2 WHERE id = $1', [modelId, taskId], function(error) {
+function setTaskUrl(modelId, taskUrl, callback) {
+  db.query('UPDATE model SET taskUrl=$2 WHERE id = $1', [modelId, taskUrl], function(error) {
     if (error) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);
@@ -111,7 +111,7 @@ function setTaskId(modelId, taskId, callback) {
 }
 
 function update(newModel, callback) {
-  db.query('UPDATE model SET burn_in_iterations=$2, inference_iterations=$3, thinning_factor=$4, taskid=NULL where id = $1', [
+  db.query('UPDATE model SET burn_in_iterations=$2, inference_iterations=$3, thinning_factor=$4, taskUrl=NULL where id = $1', [
     newModel.id,
     newModel.burnInIterations,
     newModel.inferenceIterations,

@@ -42,7 +42,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
             }
           }
         },
-        taskId: 101
+        taskUrl: 101
       }, {
         id: 4,
         likelihood: 'binom',
@@ -221,7 +221,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
       it('should find the matching network model', function() {
         expect(scope.networkModel).toBe(modelsMock[3]);
       });
-      it('should retrieve results for models with a taskId', function() {
+      it('should retrieve results for models with a taskUrl', function() {
         expect(modelResourceMock.getResult).toHaveBeenCalledWith({
           modelId: modelsMock[2].id,
           analysisId: stateParamsMock.analysisId

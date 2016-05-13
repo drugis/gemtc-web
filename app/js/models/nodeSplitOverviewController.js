@@ -30,7 +30,7 @@ define(['angular', 'lodash'], function(angular, _) {
       }
 
       if ($scope.networkModel) {
-        if ($scope.networkModel.taskId) {
+        if ($scope.networkModel.taskUrl) {
           findModelResult($scope.networkModel.id).then(function(result) {
             if (result) {
               $scope.networkModel.result = result;
@@ -54,7 +54,7 @@ define(['angular', 'lodash'], function(angular, _) {
           row.modelTitle = model.title;
           row.modelId = model.id;
           row.hasModel = true;
-          if (model.taskId) {
+          if (model.taskUrl) {
             findModelResult(model.id).then(function(result) {
               if (result) {
                 row.result = result;
