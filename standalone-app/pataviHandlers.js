@@ -23,9 +23,9 @@ function getPataviTask(request, response) {
       },
       function(model, callback) {
         modelCache = model;
-        if (model.taskId) {
+        if (model.taskUrl) {
           response.json({
-            uri: model.taskId
+            uri: model.taskUrl
           });
           callback('stop');
         } else {
@@ -37,7 +37,7 @@ function getPataviTask(request, response) {
       },
       function(createdId, callback) {
         createdIdCache = createdId;
-        modelRepository.setTaskId(modelCache.id, createdId, callback);
+        modelRepository.setTaskUrl(modelCache.id, createdId, callback);
       },
       function() {
         response.json({

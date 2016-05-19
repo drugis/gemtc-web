@@ -31,7 +31,7 @@ describe('the patavi task repository', function() {
       done();
     };
     sinon.stub(dbStub, 'query').onCall(0).yields(null, resultFromQuery);
-    pataviTaskRepository.getResult(123, callback);
+    pataviTaskRepository.getResult('123', callback);
   });
 
   it('should get the result when none are precent', function(done) {
@@ -45,6 +45,6 @@ describe('the patavi task repository', function() {
       done();
     };
     sinon.stub(dbStub, 'query').onCall(0).yields(null, resultFromQuery);
-    pataviTaskRepository.getResult(123, callback);
+    pataviTaskRepository.getResult('123', callback);
   });
 });

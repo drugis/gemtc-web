@@ -1,7 +1,7 @@
+'use strict';
 var assert = require('assert'),
   proxyquire = require('proxyquire'),
-  should = require('should'),
-  status = require('http-status-codes'),
+  httpStatus = require('http-status-codes'),
   sinon = require('sinon'),
   session = require('express-session'),
   request = require('superagent'),
@@ -48,8 +48,8 @@ describe('modelRouter', function() {
   });
 
   describe('request to /', function() {
-    var taskId = 101;
-    var taskId2 = 102;
+    var taskUrl = 101;
+    var taskUrl2 = 102;
     beforeEach(function() {
 
       var models = [{
@@ -58,18 +58,18 @@ describe('modelRouter', function() {
       }, {
         id: 2,
         title: 'model2',
-        taskId: taskId
+        taskUrl: taskUrl
       }, {
         id: 3,
         title: 'model3',
-        taskId: taskId2
+        taskUrl: taskUrl2
       }];
 
       var pataviTasks = [{
-        id: taskId,
+        id: taskUrl,
         hasresult: true
       }, {
-        id: taskId2,
+        id: taskUrl2,
         hasresult: false
       }];
 
@@ -86,18 +86,18 @@ describe('modelRouter', function() {
       var expectedResult = [{
         id: 2,
         title: 'model2',
-        taskId: taskId,
+        taskUrl: taskUrl,
         hasResult: true
       }, {
         id: 3,
         title: 'model3',
-        taskId: taskId2,
+        taskUrl: taskUrl2,
         hasResult: false
       }];
 
       request('GET', BASE_PATH + '1/models/')
         .end(function(err, res) {
-          res.should.have.property('status', status.OK);
+          res.should.have.property('status', httpStatus.OK);
           assert.deepEqual(expectedResult[0], res.body[0]);
           done();
         });
@@ -123,7 +123,7 @@ describe('modelRouter', function() {
         .send(newModel)
         .end(function(err, res) {
           assert(err);
-          res.should.have.property('status', status.FORBIDDEN);
+          res.should.have.property('status', httpStatus.FORBIDDEN);
           done();
         });
     });
@@ -143,7 +143,7 @@ describe('modelRouter', function() {
       modelRepository.create.restore();
     });
 
-    it('should create the model and have status status.CREATED', function(done) {
+    it('should create the model and have status CREATED', function(done) {
       var newModel = {};
       var expectedBody = {
         id: createdId
@@ -153,8 +153,8 @@ describe('modelRouter', function() {
         .send(newModel)
         .end(function(err, res) {
           assert(!err);
-          res.should.have.property('status', status.CREATED);
-          assert.equal('/analyses/1/models/' + createdId, res.headers['location'])
+          res.should.have.property('status', httpStatus.CREATED);
+          assert.equal('/analyses/1/models/' + createdId, res.headers.location);
           assert.deepEqual(expectedBody, res.body);
           done();
         });
@@ -175,7 +175,7 @@ describe('modelRouter', function() {
         .get(BASE_PATH + '1/models/' + model.id)
         .end(function(err, res) {
           assert(!err);
-          res.should.have.property('status', status.OK);
+          res.should.have.property('status', httpStatus.OK);
           assert.deepEqual(model, res.body);
           done();
         });
@@ -184,7 +184,7 @@ describe('modelRouter', function() {
   describe('GET request to /:modelID/result', function() {
     var model = {
       id: 2,
-      taskId: 3
+      taskUrl: 3
     };
     var result = {
       results: 'something'
@@ -202,13 +202,13 @@ describe('modelRouter', function() {
         .get(BASE_PATH + '1/models/' + model.id + '/result')
         .end(function(err, res) {
           assert(!err);
-          res.should.have.property('status', status.OK);
+          res.should.have.property('status', httpStatus.OK);
           assert.deepEqual(result, res.body);
           done();
         });
     });
   });
-  describe('GET request to /:modelID/result for model with no taskId', function() {
+  describe('GET request to /:modelID/result for model with no taskUrl', function() {
     var model = {
       id: 2
     };
@@ -223,7 +223,7 @@ describe('modelRouter', function() {
         .get(BASE_PATH + '1/models/' + model.id + '/result')
         .end(function(err, res) {
           assert(err);
-          res.should.have.property('status', status.NOT_FOUND);
+          res.should.have.property('status', httpStatus.NOT_FOUND);
           done();
         });
     });
@@ -245,7 +245,7 @@ describe('modelRouter', function() {
         .send(newModel)
         .end(function(err, res) {
           assert(err);
-          res.should.have.property('status', status.FORBIDDEN);
+          res.should.have.property('status', httpStatus.FORBIDDEN);
           done();
         });
     });
@@ -278,9 +278,9 @@ describe('modelRouter', function() {
         .post(BASE_PATH + '1/models/2')
         .send(runLengths)
         .end(function(err, res) {
-          console.log(JSON.stringify(err))
+          console.error(JSON.stringify(err));
           assert(!err);
-          res.should.have.property('status', status.OK);
+          res.should.have.property('status', httpStatus.OK);
           done();
         });
     });
@@ -310,7 +310,7 @@ describe('modelRouter', function() {
         .send(runLengths)
         .end(function(err, res) {
           assert(err);
-          res.should.have.property('status', status.NOT_FOUND);
+          res.should.have.property('status', httpStatus.NOT_FOUND);
           done();
         });
     });
@@ -347,7 +347,7 @@ describe('modelRouter', function() {
         .send(runLengths)
         .end(function(err, res) {
           assert(err);
-          res.should.have.property('status', status.INTERNAL_SERVER_ERROR);
+          res.should.have.property('status', httpStatus.INTERNAL_SERVER_ERROR);
           done();
         });
     });
