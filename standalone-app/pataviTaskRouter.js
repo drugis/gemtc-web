@@ -1,5 +1,6 @@
-var express = require('express');
-var pataviHandlers = require('./pataviHandlers')
+'use strict';
+var express = require('express'),
+  pataviHandlers = require('./pataviHandlers');
 
 module.exports = express.Router({
   mergeParams: true
