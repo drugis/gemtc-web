@@ -85,8 +85,9 @@ function getResult(request, response, next) {
           statusCode: httpStatus.NOT_FOUND,
           message: 'attempt to get results of model with no task'
         });
+      } else {
+        callback();
       }
-      callback();
     },
     function(callback) {
       pataviTaskRepository.getResult(modelCache.taskUrl, callback);
@@ -164,9 +165,9 @@ function checkCoordinates(analysisId, model, callback) {
 function extendRunLength(request, response, next) {
   logger.debug('extend model runlength.');
   logger.debug('analysisId ' + request.params.analysisId);
-  var analysisId = request.params.analysisId;
-  var modelId = request.params.modelId;
-  var userId = request.session.userId;
+  var analysisId = Number.parseInt(request.params.analysisId);
+  var modelId = Number.parseInt(request.params.modelId);
+  var userId = Number.parseInt(request.session.userId);
 
   var modelCache;
   var newModel = request.body;
