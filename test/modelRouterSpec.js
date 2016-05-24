@@ -67,10 +67,10 @@ describe('modelRouter', function() {
 
       var pataviTasks = [{
         id: taskUrl,
-        hasresult: true
+        hasResult: true
       }, {
         id: taskUrl2,
-        hasresult: false
+        hasResult: false
       }];
 
       sinon.stub(modelRepository, 'findByAnalysis').onCall(0).yields(null, models);
