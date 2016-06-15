@@ -1,6 +1,7 @@
+'use strict';
 var logger = require('./logger'),
   express = require('express'),
-  status = require('http-status-codes'),
+  httpStatus = require('http-status-codes'),
   _ = require('lodash'),
   async = require('async'),
   analysisRepository = require('./analysisRepository'),
@@ -23,7 +24,7 @@ function decorateWithHasResults(modelsResult, pataviResult) {
   var pataviTasks = _.keyBy(pataviResult, 'id');
   return _.map(modelsResult, function(model) {
     return _.extend(model, {
-      hasResult: pataviTasks[model.taskId].hasResult
+      hasResult: pataviTasks[model.taskUrl].hasResult
     });
   });
 }
@@ -37,26 +38,26 @@ function find(request, response, next) {
   modelRepository.findByAnalysis(analysisId, function(error, modelsResult) {
     if (error) {
       next({
-        statusCode: 500,
+        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
         message: error
       });
     } else {
       var modelsWithTasks = _.filter(modelsResult, function(model) {
-        return model.taskId !== null && model.taskId !== undefined;
+        return model.taskUrl !== null && model.taskUrl !== undefined;
       });
       var modelsWithoutTasks = _.filter(modelsResult, function(model) {
-        return model.taskId === null || model.taskId === undefined;
+        return model.taskUrl === null || model.taskUrl === undefined;
       });
       if (modelsWithTasks.length) {
-        var taskIds = _.map(modelsWithTasks, 'taskId');
-        pataviTaskRepository.getPataviTasksStatus(taskIds, function(error, pataviResult) {
+        var taskUrls = _.map(modelsWithTasks, 'taskUrl');
+        pataviTaskRepository.getPataviTasksStatus(taskUrls, function(error, pataviResult) {
           if (error) {
             next({
-              statusCode: 500,
+              statusCode: httpStatus.INTERNAL_SERVER_ERROR,
               message: error
             });
           } else {
-            decoratedResult = decorateWithHasResults(modelsWithTasks, pataviResult);
+            var decoratedResult = decorateWithHasResults(modelsWithTasks, pataviResult);
             response.json(decoratedResult.concat(modelsWithoutTasks));
           }
         });
@@ -70,7 +71,6 @@ function find(request, response, next) {
 function getResult(request, response, next) {
   logger.debug('modelRouter.getResult');
   logger.debug('request.params.analysisId' + request.params.analysisId);
-  var analysisId = request.params.analysisId;
   var modelId = request.params.modelId;
   var modelCache;
 
@@ -80,24 +80,25 @@ function getResult(request, response, next) {
     },
     function(model, callback) {
       modelCache = model;
-      if (model.taskId === null || model.taskId === undefined) {
+      if (model.taskUrl === null || model.taskUrl === undefined) {
         callback({
-          statusCode: 404,
+          statusCode: httpStatus.NOT_FOUND,
           message: 'attempt to get results of model with no task'
         });
+      } else {
+        callback();
       }
-      callback();
     },
     function(callback) {
-      pataviTaskRepository.getResult(modelCache.taskId, callback);
+      pataviTaskRepository.getResult(modelCache.taskUrl, callback);
     },
-    function(pataviResult, callback) {
-      response.status(status.OK);
+    function(pataviResult) {
+      response.status(httpStatus.OK);
       response.json(pataviResult);
     }
-  ], function(error, result) {
+  ], function(error) {
     if (error) {
-      response.status(404).send({
+      response.status(httpStatus.NOT_FOUND).send({
         error: 'no result found for model with id ' + modelId
       });
     } else {
@@ -111,7 +112,6 @@ function createModel(request, response, next) {
   logger.debug('request.params.analysisId' + request.params.analysisId);
   var analysisId = request.params.analysisId;
   var userId = request.session.userId;
-  var modelCache;
 
   async.waterfall([
     function(callback) {
@@ -123,10 +123,10 @@ function createModel(request, response, next) {
     function(callback) {
       modelRepository.create(userId, analysisId, request.body, callback);
     },
-    function(createdId, callback) {
+    function(createdId) {
       response
         .location('/analyses/' + analysisId + '/models/' + createdId)
-        .status(status.CREATED)
+        .status(httpStatus.CREATED)
         .json({
           id: createdId
         });
@@ -140,9 +140,9 @@ function createModel(request, response, next) {
 
 function checkOwnership(owner, userId, callback) {
   logger.debug('check owner with ownerId = ' + owner + ' and userId = ' + userId);
-  if (owner != userId) {
+  if (owner !== userId) {
     callback({
-      statusCode: 403,
+      statusCode: httpStatus.FORBIDDEN,
       message: 'attempt to modify model in not-owned analysis'
     });
   } else {
@@ -152,9 +152,9 @@ function checkOwnership(owner, userId, callback) {
 
 function checkCoordinates(analysisId, model, callback) {
   logger.debug('check analysisId = ' + analysisId + ' and model.analysisId = ' + model.analysisId);
-  if (analysisId != model.analysisId) {
+  if (analysisId !== model.analysisId) {
     callback({
-      statusCode: 404,
+      statusCode: httpStatus.NOT_FOUND,
       message: 'analysis/model combination not found'
     });
   } else {
@@ -165,9 +165,9 @@ function checkCoordinates(analysisId, model, callback) {
 function extendRunLength(request, response, next) {
   logger.debug('extend model runlength.');
   logger.debug('analysisId ' + request.params.analysisId);
-  var analysisId = request.params.analysisId;
-  var modelId = request.params.modelId;
-  var userId = request.session.userId;
+  var analysisId = Number.parseInt(request.params.analysisId);
+  var modelId = Number.parseInt(request.params.modelId);
+  var userId = Number.parseInt(request.session.userId);
 
   var modelCache;
   var newModel = request.body;
@@ -190,10 +190,10 @@ function extendRunLength(request, response, next) {
       modelService.update(modelCache, newModel, callback);
     },
     function(callback) {
-      pataviTaskRepository.deleteTask(modelCache.taskId, callback);
+      pataviTaskRepository.deleteTask(modelCache.taskUrl, callback);
     },
-    function(callback) {
-      response.sendStatus(status.OK);
+    function() {
+      response.sendStatus(httpStatus.OK);
     }
   ], next);
 }
@@ -203,7 +203,7 @@ function getModel(request, response, next) {
   modelRepository.get(modelId, function(error, result) {
     if (error) {
       next({
-        statusCode: 404,
+        statusCode: httpStatus.NOT_FOUND,
         message: error
       });
     } else {
