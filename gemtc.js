@@ -1,3 +1,4 @@
+'use strict';
 var express = require('express'),
   session = require('express-session'),
   bodyparser = require('body-parser'),

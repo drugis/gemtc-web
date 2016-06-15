@@ -1,12 +1,11 @@
 'use strict';
-var logger = require('./logger');
-
-var _ = require('lodash');
-var fs = require('fs');
-var https = require('https');
-var async = require('async');
-var urlModule = require('url');
-var httpStatus = require('http-status-codes');
+var logger = require('./logger'),
+  _ = require('lodash'),
+  fs = require('fs'),
+  https = require('https'),
+  async = require('async'),
+  urlModule = require('url'),
+  httpStatus = require('http-status-codes');
 
 module.exports = {
   getResult: getResult,
@@ -40,15 +39,16 @@ function getJson(url, callback) {
   });
 }
 
-function getResult(taskId, callback) {
+function getResult(taskUrl, callback) {
   logger.debug('pataviTaskRepository.getResult');
-  getJson(taskId, function(err, result) {
+  getJson(taskUrl, function(err, result) {
+    console.log('first get');
     if (err) {
       return callback(err);
     }
-    if (result.status !== "done") {
+    if (result.status !== 'done') {
       return callback({
-        description: "no result found"
+        description: 'no result found'
       });
     }
     getJson(result._links.results.href, function(err, result) {
@@ -60,21 +60,22 @@ function getResult(taskId, callback) {
   });
 }
 
-function getPataviTasksStatus(taskIds, callback) {
+function getPataviTasksStatus(taskUrls, callback) {
   logger.debug('pataviTaskRepository.getPataviTasksStatus');
 
-  function getTaskStatus(taskId, callback) {
-    getJson(taskId, function(err, result) {
+  function getTaskStatus(taskUrl, callback) {
+    console.log('getting ' + taskUrl);
+    getJson(taskUrl, function(err, result) {
       if (err) {
         return callback(err);
       }
       callback(null, {
-        id: taskId,
-        hasResult: (result.status === "done")
+        id: taskUrl,
+        hasResult: (result.status === 'done')
       });
     });
   }
-  async.map(taskIds, getTaskStatus, function(err, results) {
+  async.map(taskUrls, getTaskStatus, function(err, results) {
     if (err) {
       return callback(err);
     }

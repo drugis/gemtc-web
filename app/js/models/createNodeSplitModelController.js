@@ -7,7 +7,7 @@ define(['angular', 'lodash'], function(angular, _) {
     modelCopy.title = 'Nodesplit model (' + comparison.label + ')';
     delete modelCopy.id;
     delete modelCopy.result;
-    delete modelCopy.taskId;
+    delete modelCopy.taskUrl;
     delete modelCopy.analysisId;
 
     $scope.model = modelCopy;
