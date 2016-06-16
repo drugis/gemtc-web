@@ -11,8 +11,8 @@ var logger = require('./logger'),
   pataviTaskRepository = require('./pataviTaskRepository');
 
 module.exports = express.Router({
-    mergeParams: true
-  })
+  mergeParams: true
+})
   .get('/', find)
   .post('/', createModel)
   .get('/:modelId', getModel)
@@ -21,7 +21,10 @@ module.exports = express.Router({
   .use('/:modelId/task', pataviTaskRouter);
 
 function decorateWithHasResults(modelsResult, pataviResult) {
-  var pataviTasks = _.keyBy(pataviResult, 'id');
+  var pataviTasks = _.reduce(pataviResult, function(accum, result) {
+    accum[result.id] = result;
+    return accum;
+  }, {});
   return _.map(modelsResult, function(model) {
     return _.extend(model, {
       hasResult: pataviTasks[model.taskUrl].hasResult
@@ -31,11 +34,10 @@ function decorateWithHasResults(modelsResult, pataviResult) {
 
 function find(request, response, next) {
   logger.debug('modelRouter.find');
-  logger.debug('request.params.analysisId' + request.params.analysisId);
 
   var analysisId = request.params.analysisId;
-
   modelRepository.findByAnalysis(analysisId, function(error, modelsResult) {
+
     if (error) {
       next({
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
@@ -75,6 +77,7 @@ function getResult(request, response, next) {
   var modelCache;
 
   async.waterfall([
+
     function(callback) {
       modelRepository.get(modelId, callback);
     },
@@ -114,6 +117,7 @@ function createModel(request, response, next) {
   var userId = request.session.userId;
 
   async.waterfall([
+
     function(callback) {
       analysisRepository.get(analysisId, callback);
     },
@@ -173,6 +177,7 @@ function extendRunLength(request, response, next) {
   var newModel = request.body;
 
   async.waterfall([
+
     function(callback) {
       analysisRepository.get(analysisId, callback);
     },

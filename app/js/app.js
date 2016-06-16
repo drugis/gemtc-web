@@ -17,7 +17,8 @@ define(
     'util/util',
     'patavi/patavi',
     'angular-patavi-client',
-    'help-popup'
+    'help-popup',
+    'error-reporting'
   ],
   function(angular, require, $, _) {
 
@@ -34,7 +35,8 @@ define(
       'gemtc.util',
       'gemtc.patavi',
       'patavi',
-      'help-directive'
+      'help-directive',
+      'errorReporting'
     ];
 
     var app = angular.module('gemtc', dependencies);
@@ -55,14 +57,6 @@ define(
           }
         };
 
-        $rootScope.$on('error', function(e, error) {
-          $rootScope.error = _.extend(error, {
-            close: function() {
-              delete $rootScope.error;
-            }
-          });
-        });
-
         $rootScope.$on("$stateChangeSuccess",
           function(event, toState) {
             $rootScope.currentStateName = toState.name;
@@ -77,7 +71,6 @@ define(
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
       function($stateProvider, $urlRouterProvider, $httpProvider) {
 
-        $httpProvider.interceptors.push('errorInterceptor');
         $httpProvider.interceptors.push('sessionExpiredInterceptor');
 
         $stateProvider
@@ -165,7 +158,7 @@ define(
               ' </div> ' +
               ' </section> ' +
 
-              ' <section class="content"> ' +
+            ' <section class="content"> ' +
               ' <div class="row"> ' +
               '  <div class="columns large-offset-2 large-8 medium-12"> ' +
               '     Sorry! An unknown error has occurred. Please sign in again. ' +

@@ -45,6 +45,7 @@
     "requirejs": "~2.1.10",
     "requirejs-domready": "~2.0.1",
     "help-popup": "https://github.com/connorstroomberg/help-popup.git",
+    "error-reporting": "https://github.com/connorstroomberg/error-reporting.git#develop",
     "KaTeX": "katex#~0.5.1",
     "scrollup": "~2.4.1",
     "angular-patavi-client": "https://github.com/gertvv/angular-patavi-client.git#1.0.0"
