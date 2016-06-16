@@ -37,7 +37,7 @@ define(['lodash'], function(_) {
         function(pataviError) {
           console.error('an error has occurred, error: ' + JSON.stringify(pataviError));
           $scope.$emit('error', {
-            type: 'patavi',
+            type: 'PATAVI',
             message: pataviError.desc
           });
         },

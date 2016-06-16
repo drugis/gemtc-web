@@ -57,13 +57,6 @@ define(
           }
         };
 
-        $rootScope.$on("$stateChangeSuccess",
-          function(event, toState) {
-            $rootScope.currentStateName = toState.name;
-            delete $rootScope.error;
-          }
-        );
-
         HelpPopupService.loadLexicon($http.get('lexicon.json'));
       }
     ]);
