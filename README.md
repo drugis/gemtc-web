@@ -50,11 +50,13 @@ Setup environment variables
     export GEMTC_DB=gemtc
     export GEMTC_DB_USERNAME=gemtc
     export GEMTC_DB_PASSWORD=develop
-    export PATAVI_TASK_DB=patavitask
-    export PATAVI_TASK_DB_USERNAME=patavitask
-    export PATAVI_TASK_DB_PASSWORD=develop
     export GEMTC_HOST=http://localhost:3001
-    export PATAVI_URI=ws://localhost:3000/ws/staged/
+    export PATAVI_HOST=localhost 
+    export PATAVI_PORT=3000
+    export PATAVI_CLIENT_KEY=path-to/app-env-key.pem
+    export PATAVI_CLIENT_CRT=path-to/app-env-crt.pem
+    export PATAVI_CA=path-to/provider-name.crt
+
 
 Running the patavi worker
 -------------------------

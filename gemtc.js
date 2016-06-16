@@ -69,8 +69,8 @@ module.exports = app
   .use(session(sessionOpts))
 
 .use(csrf({
-    value: loginUtils.csrfValue
-  }))
+  value: loginUtils.csrfValue
+}))
   .use(bodyparser.json())
   .use(loginUtils.setXSRFTokenMiddleware)
   .all('*', loginUtils.securityMiddleware)
