@@ -48,7 +48,7 @@
     "error-reporting": "https://github.com/connorstroomberg/error-reporting.git#develop",
     "KaTeX": "katex#~0.5.1",
     "scrollup": "~2.4.1",
-    "angular-patavi-client": "https://github.com/gertvv/angular-patavi-client.git#1.0.0"
+    "angular-patavi-client": "git@github.com:ConnorStroomberg/angular-patavi-client.git#issue/chrome-wss-bug"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"
