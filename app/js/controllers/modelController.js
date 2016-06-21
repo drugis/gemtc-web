@@ -31,7 +31,7 @@ define(['lodash'], function(_) {
     $scope.resultsPromise = $scope.model
       .$promise
       .then(getTaskInfo)
-      .then(getTaskUpdatesUri)
+      .then(getTaskUrl)
       .then(PataviService.listen)
       .then(pataviRunSuccessCallback,
         function(pataviError) {
@@ -51,8 +51,8 @@ define(['lodash'], function(_) {
       return PataviTaskIdResource.get($stateParams).$promise;
     }
 
-    function getTaskUpdatesUri(info) {
-      return info.uri.replace(/^https/, 'wss') + '/updates'; // FIXME: less hacky please
+    function getTaskUrl(taskInfo) {
+      return taskInfo.uri;
     }
 
     function nameRankProbabilities(rankProbabilities, treatments) {
