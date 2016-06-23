@@ -32,7 +32,9 @@ pwforest <- function(result, t1, t2, ...) {
   data <- network$data.ab
   columns <- ll.call("required.columns.ab", model)
   study.effect <- lapply(studies, function(study) {
-    est <- ll.call('mtc.rel.mle', model, as.matrix(data[data$study == study & (data$treatment == t1 | data$treatment == t2), columns]), correction.force=FALSE, correction.type="reciprocal", correction.magnitude=0.1)
+    t1.data <- data[data$study == study & data$treatment == t1, columns]
+    t2.data <- data[data$study == study & data$treatment == t2, columns]
+    est <- ll.call('mtc.rel.mle', model, as.matrix(rbind(t1.data, t2.data)), correction.force=FALSE, correction.type="reciprocal", correction.magnitude=0.1)
     if (is.null(alpha)) {
       est
     } else {
