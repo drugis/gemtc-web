@@ -1,6 +1,6 @@
 # Dockerfile for the GeMTC Patavi worker
 # You need the patavi/worker-aqmp base image
-FROM patavi/worker-aqmp
+FROM patavi/worker-amqp
 
 USER root
 
