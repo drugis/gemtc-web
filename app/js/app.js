@@ -41,8 +41,8 @@ define(
 
     var app = angular.module('gemtc', dependencies);
 
-    app.run(['$rootScope', '$window', '$http', 'HelpPopupService',
-      function($rootScope, $window, $http, HelpPopupService) {
+    app.run(['$rootScope', '$window', '$http', '$location', '$anchorScroll', 'HelpPopupService',
+      function($rootScope, $window, $http, $location, $anchorScroll, HelpPopupService) {
 
         $rootScope.$on('$viewContentLoaded', function() {
           $(document).foundation();
@@ -61,8 +61,14 @@ define(
       }
     ]);
 
-    app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
-      function($stateProvider, $urlRouterProvider, $httpProvider) {
+    app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide',
+      function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
+
+        $provide.decorator('$uiViewScroll', function($delegate) {
+          return function(uiViewElement) {
+            window.scrollTo(0, (uiViewElement[0].getBoundingClientRect().top - 200));
+          };
+        });
 
         $httpProvider.interceptors.push('sessionExpiredInterceptor');
 
