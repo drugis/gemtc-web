@@ -498,7 +498,16 @@ times$summary <- system.time({
 })
 report('summary', 1.0)
     summary[['script-version']] <- 0.3
-    summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
+    statistics <- summary[['summaries']][['statistics']]
+    if(is.vector(statistics)) { # in case of pairwise there's no effect matrix
+      treatmentIds <- as.character(network[['treatments']][['id']])
+      matrixStatistics <-  matrix(statistics, ncols=4)
+      colnames(matrixStatistics) <- names(statistics)
+      rownames(matrixStatistics) <- paste('d.', treatmentIds[1], ".", treatmentIds[2], sep="")
+    } else {
+      matrixStatistics <- statistics
+    }
+    summary[['summaries']][['statistics']] <- wrap.matrix(matrixStatistics)  
     summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
     summary[['logScale']] <- ll.call('scale.log', model)
     summary[['link']] <- model[['link']]
