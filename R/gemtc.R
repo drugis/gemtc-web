@@ -501,7 +501,7 @@ report('summary', 1.0)
     statistics <- summary[['summaries']][['statistics']]
     if(is.vector(statistics)) { # in case of pairwise there's no effect matrix
       treatmentIds <- as.character(network[['treatments']][['id']])
-      matrixStatistics <-  matrix(statistics, ncols=4)
+      matrixStatistics <-  matrix(statistics, ncol=4)
       colnames(matrixStatistics) <- names(statistics)
       rownames(matrixStatistics) <- paste('d.', treatmentIds[1], ".", treatmentIds[2], sep="")
     } else {
