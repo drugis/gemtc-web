@@ -4,12 +4,21 @@
     <label>Number of burn-in iterations <inline-help help-key="burn-in-iterations"></inline-help>
       <input type="number" min="1" step="1" ng-model="burnInIterations" ng-model-options='{ debounce: 200 }' id="nr-burn-in-input">
     </label>
+    <div class="alert" ng-show='burnInIterations && burnInIterations < 1000'>
+      The number of burn-in iterations must be at meast 1000
+    </div>
     <label>Number of inference iterations<inline-help help-key="inference-iterations"></inline-help>
       <input type="number" min="1" step="1" ng-model="inferenceIterations" ng-model-options='{ debounce: 200 }' id="nr-inference-input">
     </label>
+    <div class="alert" ng-show='inferenceIterations && inferenceIterations < 1000'>
+      The number of inference iterations must be at meast 1000
+    </div>
     <label>Thinning factor<inline-help help-key="thinning-factor"></inline-help>
       <input type="number" min="1" step="1" ng-model="thinningFactor" pattern="\d*" ng-model-options='{ debounce: 200 }' id="nr-thinning-factor-input">
     </label>
+    <div class="alert" ng-show='thinningFactor && inferenceIterations && inferenceIterations >= 1000 && (inferenceIterations/thinningFactor) < 1000'>
+      The number of inference iterations devided by the thinning factor must be at meast 1000
+    </div>
   </div>
 </div>
 <!-- end run-length parameters section -->

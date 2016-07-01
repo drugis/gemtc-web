@@ -25,10 +25,10 @@ define(['moment', 'lodash'], function(moment, _) {
         /*
          * createModel supplies a frontEndModel that needs to be cleaned,
          * the results controller supplies a cleaned model
-        */
+         */
         function cleanModelIfNeeded(model) {
-          if($scope.model.modelType.mainType){
-            return  ModelService.cleanModel($scope.model);
+          if ($scope.model.modelType.mainType) {
+            return ModelService.cleanModel($scope.model);
           }
           return model;
         }
@@ -66,7 +66,10 @@ define(['moment', 'lodash'], function(moment, _) {
           $scope.isValidRunLength = $scope.burnInIterations &&
             $scope.inferenceIterations &&
             isRunlengthDivisibleByThinningFactor() &&
-            $scope.estimatedRunLength <= 300;
+            $scope.estimatedRunLength <= 300 &&
+            $scope.burnInIterations >= 1000 &&
+            $scope.inferenceIterations >= 1000 &&
+            ($scope.inferenceIterations / $scope.thinningFactor) >= 1000;
         }
       }
     };
