@@ -8,7 +8,7 @@
     "Joël Kuiper",
     "Daan Reid"
   ],
-  "description": "User interface for network meta-analysis based on the gemtc R package and Patavi",
+  "description": "User interface for evidence synthesis based on the gemtc R package and Patavi",
   "main": "/app/js/main.js",
   "moduleType": [
     "amd"
