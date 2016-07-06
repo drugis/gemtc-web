@@ -82,7 +82,7 @@ define(
             abstract: true,
             templateUrl: '/js/analyses/abstract-analysis.html',
           })
-          .state('networkMetaAnalysis', {
+          .state('evidenceSynthesis', {
             parent: 'analysis-container',
             url: '/analyses/:analysisId',
             views: {

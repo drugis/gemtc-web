@@ -40,7 +40,10 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.isNumber = isNumber;
     $scope.problem = ProblemResource.get($stateParams);
     $scope.selectedCovariateValueHasNullValues = false;
-    $scope.covariateBounds = {min: undefined, max: undefined};
+    $scope.covariateBounds = {
+      min: undefined,
+      max: undefined
+    };
 
     $scope.problem.$promise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
@@ -201,7 +204,7 @@ define(['angular', 'lodash'], function(angular, _) {
         model.likelihoodLink.compatibility === 'incompatible' ||
         model.outcomeScale.value <= 0 ||
         (model.outcomeScale.type === 'fixed' &&
-          !angular.isNumber(model.outcomeScale.value)) ||
+        !angular.isNumber(model.outcomeScale.value)) ||
         $scope.selectedCovariateValueHasNullValues ||
         !!($scope.isWeighted && model.sensitivity.weightingFactor === undefined);
     }
@@ -219,7 +222,7 @@ define(['angular', 'lodash'], function(angular, _) {
         });
         $q.all(creationPromises).then(function() {
           $scope.isAddingModel = false;
-          $state.go('networkMetaAnalysis', $stateParams);
+          $state.go('evidenceSynthesis', $stateParams);
         });
       } else {
         createAndPostModel(model, function(result) {
