@@ -1,3 +1,4 @@
+'use strict';
 var proxyquire = require('proxyquire');
 var chai = require('chai'),
   spies = require('chai-spies'),
@@ -16,8 +17,7 @@ describe('the patavi handler service', function() {
       pataviHandlerService = proxyquire('../standalone-app/pataviHandlerService', {
         './pataviTaskRepository': pataviTaskRepositoryStub
       });
-
-    })
+    });
     it('for network models should simply create the task', function() {
       var analysisMock = {
         problem: {
@@ -34,6 +34,67 @@ describe('the patavi handler service', function() {
       var callback = function() {};
       var expected = _.extend(analysisMock.problem, _.pick(modelMock, ['linearModel', 'modelType']));
 
+      pataviHandlerService.createPataviTask(analysisMock, modelMock, callback);
+
+      expect(pataviTaskRepositoryStub.create).to.have.been.called.with(expected, callback);
+    });
+    it('for leave one out models should omit the omitted study', function() {
+      var analysisMock = {
+        problem: {
+          entries: [{
+            treatment: 1,
+            study: 'study 1'
+          }, {
+            treatment: 2,
+            study: 'study 2'
+          }, {
+            treatment: 3,
+            study: 'study 3'
+          }],
+          treatments: [{
+            id: 1,
+            name: 'treatment1'
+          }, {
+            id: 2,
+            name: 'treatment2'
+          }]
+        }
+      };
+      var modelMock = {
+        linearModel: 'random',
+        modelType: {
+          type: 'network'
+        },
+        sensitivity: {
+          omittedStudy: 'study 2'
+        }
+      };
+
+      var expected = {
+        entries: [{
+          treatment: 1,
+          study: 'study 1'
+        }, {
+          treatment: 3,
+          study: 'study 3'
+        }],
+        treatments: [{
+          id: 1,
+          name: 'treatment1'
+        }, {
+          id: 2,
+          name: 'treatment2'
+        }],
+        linearModel: 'random',
+        modelType: {
+          type: 'network'
+        },
+        sensitivity: {
+          omittedStudy: 'study 2'
+        }
+      };
+
+      var callback = function() {};
       pataviHandlerService.createPataviTask(analysisMock, modelMock, callback);
 
       expect(pataviTaskRepositoryStub.create).to.have.been.called.with(expected, callback);
@@ -101,7 +162,7 @@ describe('the patavi handler service', function() {
         }
       };
 
-      callback = function() {};
+      var callback = function() {};
       pataviHandlerService.createPataviTask(analysisMock, modelMock, callback);
 
       expect(pataviTaskRepositoryStub.create).to.have.been.called.with(expected, callback);

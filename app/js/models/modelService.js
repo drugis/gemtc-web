@@ -54,7 +54,14 @@ define(['angular', 'lodash'], function(angular, _) {
       if (model.heterogeneityPrior && model.heterogeneityPrior.type === 'automatic') {
         delete model.heterogeneityPrior;
       }
-      model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink');
+
+      if(model.leaveOneOut.isSelected) {
+        if(!model.sensitivity){
+          model.sensitivity = {};
+        }
+        model.sensitivity.omittedStudy = model.leaveOneOut.omittedStudy;
+      }
+      model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink', 'leaveOneOut');
       return model;
     }
 
@@ -74,6 +81,15 @@ define(['angular', 'lodash'], function(angular, _) {
           return newModel;
         });
       }
+    }
+
+    function createLeaveOneOutBatch(modelBase, leaveOneOutOptions) {
+      return _.map(leaveOneOutOptions, function(leaveOneOutOption) {
+        var newModel = _.cloneDeep(modelBase);
+        newModel.title = modelBase.title + ' (without ' + leaveOneOutOption + ')';
+        newModel.leaveOneOut.omittedStudy = leaveOneOutOption;
+        return newModel;
+      });
     }
 
     function isVariableBinary(covariateName, problem) {
@@ -151,7 +167,8 @@ define(['angular', 'lodash'], function(angular, _) {
       isProblemWithCovariates: isProblemWithCovariates,
       getCovariateBounds: getCovariateBounds,
       findCentering: findCentering,
-      filterCentering: filterCentering
+      filterCentering: filterCentering,
+      createLeaveOneOutBatch: createLeaveOneOutBatch
     };
   };
 

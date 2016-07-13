@@ -32,6 +32,10 @@ define(['angular', 'angular-mocks', 'services'], function() {
           },
           heterogeneityPrior: {
             type: 'automatic'
+          },
+          leaveOneOut: {
+            isSelected: true,
+            omittedStudy: 'study1'
           }
         };
         cleanedModel = {
@@ -44,7 +48,10 @@ define(['angular', 'angular-mocks', 'services'], function() {
           inferenceIterations: 20000,
           thinningFactor: 10,
           likelihood: 'likelihood',
-          link: 'link'
+          link: 'link',
+          sensitivity: {
+            omittedStudy: 'study1'
+          }
         };
       });
 
@@ -289,7 +296,8 @@ define(['angular', 'angular-mocks', 'services'], function() {
           studyLevelCovariates: {
             'Alves et al, 1999': {
               'LENGTH_OF_FOLLOW_UP': 30.0
-            }, 'Boyer et al, 1998': {
+            },
+            'Boyer et al, 1998': {
               'LENGTH_OF_FOLLOW_UP': null
             }
           }
@@ -315,6 +323,30 @@ define(['angular', 'angular-mocks', 'services'], function() {
         });
       });
 
+    });
+
+    describe('createLeaveOneOutBatch', function() {
+      it('should create list of models for each leaveOneOutOption', function() {
+        var model = {
+          title: 'copyMe',
+          leaveOneOut: {}
+        };
+        var leaveOneOutOptions = ['study1', 'study2'];
+        var expectedResult = [{
+          title: 'copyMe (without study1)',
+          leaveOneOut: {
+            omittedStudy: 'study1'
+          }
+        }, {
+          title: 'copyMe (without study2)',
+          leaveOneOut: {
+            omittedStudy: 'study2'
+          }
+        }];
+        var result = modelService.createLeaveOneOutBatch(model, leaveOneOutOptions);
+        expect(result.size).toEqual(result.size);
+        expect(result).toEqual(expectedResult);
+      });
     });
   });
 });

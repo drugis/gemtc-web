@@ -161,6 +161,61 @@ define(['angular', 'lodash'], function(angular, _) {
       return addComparisonLabels(edgesWithMoreThanOneStudy);
     }
 
+
+    function isNetworkDisconnected(network) {
+      var toVisit = [network.interventions[0]];
+      var visited = [];
+
+      function findEdgesConnectedToNode(node) {
+        return _.filter(network.edges, function(edge) {
+          return edge.studies.length && edge.from.name === node.name || edge.to.name === node.name;
+        });
+      }
+
+      function addUnvisitedNodesToToVisitList(edge) {
+        if (!_.find(visited, ['name', edge.to.name])) {
+          toVisit.push(edge.to);
+        } else if (!_.find(visited, ['name', edge.from.name])) {
+          toVisit.push(edge.from);
+        }
+      }
+
+      function areNodeSetsEqual(setA, setB) {
+        var namesA = _.map(setA, 'name');
+        var namesB = _.map(setB, 'name');
+        return !_.difference(namesA, namesB).length;
+      }
+
+      if (!network.interventions.length) {
+        return true;
+      }
+
+      while (toVisit.length) {
+        var node = toVisit.pop();
+        visited.push(node);
+        var connectedEdges = findEdgesConnectedToNode(node);
+        _.each(connectedEdges, addUnvisitedNodesToToVisitList);
+      }
+      return !areNodeSetsEqual(network.interventions, visited);
+    }
+
+    function createLeaveOneOutOptions(problem) {
+      var studyTitles = _.map(_.uniqBy(problem.entries, 'study'), 'study');
+
+      return _.filter(studyTitles, function(studyTitle) {
+        var entriesWithoutStudy = _.filter(problem.entries, function(entry) {
+          return entry.study !== studyTitle;
+        });
+        var problemWithoutStudy = {
+          entries: entriesWithoutStudy,
+          treatments: problem.treatments
+        };
+        var network = transformProblemToNetwork(problemWithoutStudy);
+
+        return !isNetworkDisconnected(network);
+      });
+    }
+
     function countRandomEffects(entries) {
       // sum of number of arms minus number of studies
       var studies = _.uniqBy(entries, 'study');
@@ -324,11 +379,12 @@ define(['angular', 'lodash'], function(angular, _) {
           setting.link === model.link;
       }).scale;
     }
-
     return {
+      isNetworkDisconnected: isNetworkDisconnected,
       transformProblemToNetwork: transformProblemToNetwork,
       problemToStudyMap: problemToStudyMap,
       createPairwiseOptions: createPairwiseOptions,
+      createLeaveOneOutOptions: createLeaveOneOutOptions,
       generateEdges: generateEdges,
       estimateRunLength: estimateRunLength,
       createNodeSplitOptions: createNodeSplitOptions,

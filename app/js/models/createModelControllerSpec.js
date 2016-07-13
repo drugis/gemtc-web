@@ -5,16 +5,19 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       stateParamsMock, stateMock,
       problemDefer,
       pairwiseOptionsMock = ['pairwise 1'],
+      leaveOneOutOptionsMock = [],
       nodeSplitOptionsMock = ['nodesplit 1'],
       likelihoodLinkOptionsMock = [],
       modelSaveDefer,
       problemMock,
       modelSaveResultMock,
       modelServiceMock = jasmine.createSpyObj('ModelService', ['cleanModel',
-       'createModelBatch', 'isVariableBinary', 'getBinaryCovariateNames', 'isProblemWithCovariates', 'getCovariateBounds']),
+        'createModelBatch', 'isVariableBinary', 'getBinaryCovariateNames', 'isProblemWithCovariates', 'getCovariateBounds'
+      ]),
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', [
         'createPairwiseOptions',
+        'createLeaveOneOutOptions',
         'createNodeSplitOptions',
         'createLikelihoodLinkOptions',
         'estimateRunLength'
@@ -50,6 +53,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       };
 
       problemResourceMock.get.and.returnValue(problemMock);
+      analysisServiceMock.createLeaveOneOutOptions.and.returnValue(leaveOneOutOptionsMock);
       analysisServiceMock.createPairwiseOptions.and.returnValue(pairwiseOptionsMock);
       analysisServiceMock.createNodeSplitOptions.and.returnValue(nodeSplitOptionsMock);
 
@@ -139,7 +143,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           },
           outcomeScale: {
             type: 'heuristically'
-          }
+          },
+          leaveOneOut: {}
         };
 
         var cleanedModel = {};
@@ -184,7 +189,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           },
           outcomeScale: {
             type: 'heuristically'
-          }
+          },
+          leaveOneOut: {}
         };
 
         var cleanedModel = {};
@@ -221,7 +227,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           outcomeScale: {
             type: 'fixed',
             value: 123456
-          }
+          },
+          leaveOneOut: {}
         };
 
         var cleanedModel = {};
@@ -267,7 +274,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           inferenceIterations: 100,
           thinningFactor: 10,
           modelType: {
-            mainType : 'consistency'
+            mainType: 'consistency'
           }
         };
 
@@ -283,7 +290,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           inferenceIterations: 100,
           thinningFactor: 10,
           modelType: {
-            mainType : 'consistency'
+            mainType: 'consistency'
           }
         };
 
@@ -309,7 +316,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           inferenceIterations: 100,
           thinningFactor: 10,
           modelType: {
-            mainType : 'regression'
+            mainType: 'regression'
           },
           covariateOption: 'my cov'
         };
@@ -354,7 +361,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
           inferenceIterations: 100,
           thinningFactor: 10,
           modelType: {
-            mainType : 'consistency'
+            mainType: 'consistency'
           },
           sensitivity: {
             weightingFactor: undefined
