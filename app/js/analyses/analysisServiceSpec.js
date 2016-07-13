@@ -476,9 +476,133 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         options = analysisService.createPairwiseOptions(mockProblem);
       });
 
-      it('should create the options for pairwise comparisons from the analysis promise', function() {
+      it('should create the options for pairwise comparisons from the problem', function() {
         expect(options.length).toBe(1);
         expect(options[0].label).toEqual('Treatment1 - Treatment2');
+      });
+    });
+
+    describe('isNetworkDisconnected', function() {
+
+      it('should return true if the network is connected', function() {
+        var network = {
+          interventions: [{
+            name: 'A'
+          }, {
+            name: 'B'
+          }, {
+            name: 'C'
+          }],
+          edges: [{
+            from: {
+              name: 'A'
+            },
+            studies: [1],
+            to: {
+              name: 'B'
+            }
+          }, {
+            from: {
+              name: 'B'
+            },
+            studies: [1],
+            to: {
+              name: 'C'
+            }
+          }]
+        };
+
+        expect(analysisService.isNetworkDisconnected(network)).toBeFalsy();
+
+        network.edges[1].studies = [];
+
+        expect(analysisService.isNetworkDisconnected(network)).toBeTruthy();
+      });
+
+      it('should return false for a network that has two connected subnetworks', function() {
+        var network = {
+          interventions: [{
+            name: 'A'
+          }, {
+            name: 'B'
+          }, {
+            name: 'C'
+          }, {
+            name: 'D'
+          }],
+          edges: [{
+            from: {
+              name: 'A'
+            },
+            studies: [1],
+            to: {
+              name: 'B'
+            }
+          }, {
+            from: {
+              name: 'C'
+            },
+            studies: [1],
+            to: {
+              name: 'D'
+            }
+          }]
+        };
+        expect(analysisService.isNetworkDisconnected(network)).toBeTruthy();
+      });
+    });
+
+    describe('createLeaveOneOutOptions', function() {
+      var options;
+      var mockProblem = {
+        'entries': [{
+          'study': 'Study1',
+          'treatment': 1,
+          'responders': 58,
+          'sampleSize': 100
+        }, {
+          'study': 'Study1',
+          'treatment': 2,
+          'responders': 53,
+          'sampleSize': 103
+        }, {
+          'study': 'Study2',
+          'treatment': 1,
+          'responders': 54,
+          'sampleSize': 99
+        }, {
+          'study': 'Study2',
+          'treatment': 2,
+          'responders': 90,
+          'sampleSize': 109
+        }, {
+          'study': 'Study3',
+          'treatment': 2,
+          'responders': 54,
+          'sampleSize': 99
+        }, {
+          'study': 'Study3',
+          'treatment': 3,
+          'responders': 90,
+          'sampleSize': 109
+        }],
+        'treatments': [{
+          'id': 1,
+          'name': 'Treatment1'
+        }, {
+          'id': 2,
+          'name': 'Treatment2'
+        }, {
+          'id': 3,
+          'name': 'Treatment3'
+        }]
+      };
+      beforeEach(function() {
+        options = analysisService.createLeaveOneOutOptions(mockProblem);
+      });
+
+      it('should create the options for leave one out sensitivity analysis from the problem', function() {
+        expect(options.length).toBe(2);
       });
     });
 

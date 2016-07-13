@@ -20,8 +20,10 @@ define(['angular', 'lodash'], function(angular, _) {
       heterogeneityPrior: {
         type: 'automatic'
       },
-      treatmentInteraction: 'shared'
+      treatmentInteraction: 'shared',
+      leaveOneOut: {}
     };
+
     $scope.isTaskTooLong = false;
     $scope.isValidHeterogeneityPrior = true;
     $scope.createModel = createModel;
@@ -33,13 +35,17 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.heterogeneityParamsChange = heterogeneityParamsChange;
     $scope.covariateChange = covariateChange;
     $scope.changeIsWeighted = changeIsWeighted;
+    $scope.changeIsLeaveOneOut = changeIsLeaveOneOut;
     $scope.addLevel = addLevel;
     $scope.addLevelOnEnter = addLevelOnEnter;
     $scope.levelAlreadyPresent = levelAlreadyPresent;
     $scope.isCovariateLevelOutOfBounds = isCovariateLevelOutOfBounds;
+    $scope.isAllowedLeaveOneOut = isAllowedLeaveOneOut;
     $scope.isNumber = isNumber;
     $scope.problem = ProblemResource.get($stateParams);
     $scope.selectedCovariateValueHasNullValues = false;
+    $scope.pairwiseSubTypeChange = pairwiseSubTypeChange;
+    $scope.resetLeaveOneOut = resetLeaveOneOut;
     $scope.covariateBounds = {
       min: undefined,
       max: undefined
@@ -71,6 +77,9 @@ define(['angular', 'lodash'], function(angular, _) {
         $scope.model.metaRegressionControl = problem.treatments[0];
         covariateChange();
       }
+
+      $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem, $scope.model.modelType.mainType);
+
       return problem;
     });
 
@@ -110,6 +119,8 @@ define(['angular', 'lodash'], function(angular, _) {
 
       if (mainType === 'network') {
         $scope.model.modelType.subType = '';
+        $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem);
+        $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
       }
       if (mainType === 'pairwise') {
         $scope.model.modelType.subType = 'all-pairwise';
@@ -118,8 +129,35 @@ define(['angular', 'lodash'], function(angular, _) {
         $scope.model.modelType.subType = 'all-node-split';
       }
       if (mainType === 'regression') {
+        $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem);
+        $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
         $scope.model.modelType.subType = '';
         covariateChange();
+      }
+
+      resetLeaveOneOut();
+    }
+
+    function pairwiseSubTypeChange() {
+      resetLeaveOneOut();
+    }
+
+    function resetLeaveOneOut() {
+      $scope.model.leaveOneOut = {};
+
+      if (isValidModelTypeForLeaveOneOut()) {
+        $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem);
+
+        if ($scope.model.modelType.mainType === 'pairwise' && $scope.model.modelType.subType === 'specific-pairwise') {
+          $scope.leaveOneOutOptions = _.filter($scope.leaveOneOutOptions, function(option) {
+            return _.find($scope.model.pairwiseComparison.studies, function(study) {
+              return study.title === option;
+            });
+          });
+        }
+        if ($scope.leaveOneOutOptions.length > 0) {
+          $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
+        }
       }
     }
 
@@ -160,6 +198,28 @@ define(['angular', 'lodash'], function(angular, _) {
           weightingFactor: 0.5,
           adjustmentFactor: $scope.binaryCovariateNames[0]
         };
+      }
+    }
+
+    function isValidModelTypeForLeaveOneOut() {
+      var mainType = $scope.model.modelType.mainType;
+      return mainType === 'network' ||
+        (mainType === 'pairwise' && $scope.model.modelType.subType === 'specific-pairwise') ||
+        mainType === 'regression';
+    }
+
+    function isAllowedLeaveOneOut() {
+      return isValidModelTypeForLeaveOneOut() && $scope.leaveOneOutOptions && $scope.leaveOneOutOptions.length > 0;
+    }
+
+    function changeIsLeaveOneOut(newValue) {
+      if (!newValue) {
+        resetLeaveOneOut();
+      } else {
+        $scope.model.leaveOneOut.subType = 'all-leave-one-out';
+        if ($scope.leaveOneOutOptions.length > 0) {
+          $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
+        }
       }
     }
 
@@ -204,7 +264,7 @@ define(['angular', 'lodash'], function(angular, _) {
         model.likelihoodLink.compatibility === 'incompatible' ||
         model.outcomeScale.value <= 0 ||
         (model.outcomeScale.type === 'fixed' &&
-        !angular.isNumber(model.outcomeScale.value)) ||
+          !angular.isNumber(model.outcomeScale.value)) ||
         $scope.selectedCovariateValueHasNullValues ||
         !!($scope.isWeighted && model.sensitivity.weightingFactor === undefined);
     }
@@ -221,12 +281,18 @@ define(['angular', 'lodash'], function(angular, _) {
           return createAndPostModel(modelToCreate, function() {});
         });
         $q.all(creationPromises).then(function() {
-          $scope.isAddingModel = false;
+          $state.go('evidenceSynthesis', $stateParams);
+        });
+      } else if (model.leaveOneOut.subType === 'all-leave-one-out') {
+        var leaveOneOutModels = ModelService.createLeaveOneOutBatch(model, $scope.leaveOneOutOptions);
+        var leaveOneOutPromises = _.map(leaveOneOutModels, function(modelToCreate) {
+          return createAndPostModel(modelToCreate, function() {});
+        });
+        $q.all(leaveOneOutPromises).then(function() {
           $state.go('evidenceSynthesis', $stateParams);
         });
       } else {
         createAndPostModel(model, function(result) {
-          $scope.isAddingModel = false;
           $state.go('model', _.extend($stateParams, {
             modelId: result.id
           }));
