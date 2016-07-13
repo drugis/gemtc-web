@@ -14,7 +14,7 @@ define(['angular', 'lodash'], function(angular, _) {
         ["mean", "std.err"],
         ["mean", "std.dev", "sampleSize"]
       ],
-      missingColumnsLabel: "'mean' and 'std.err' or 'mean', 'std.err', and 'sampleSize'"
+      missingColumnsLabel: "'mean' and 'std.err' or 'mean', 'std.dev', and 'sampleSize'"
     }, {
       likelihood: "binom",
       link: "logit",
