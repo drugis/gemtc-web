@@ -264,7 +264,7 @@ define(['angular', 'lodash'], function(angular, _) {
         model.likelihoodLink.compatibility === 'incompatible' ||
         model.outcomeScale.value <= 0 ||
         (model.outcomeScale.type === 'fixed' &&
-          !angular.isNumber(model.outcomeScale.value)) ||
+        !angular.isNumber(model.outcomeScale.value)) ||
         $scope.selectedCovariateValueHasNullValues ||
         !!($scope.isWeighted && model.sensitivity.weightingFactor === undefined);
     }
@@ -281,7 +281,7 @@ define(['angular', 'lodash'], function(angular, _) {
           return createAndPostModel(modelToCreate, function() {});
         });
         $q.all(creationPromises).then(function() {
-          $state.go('evidenceSynthesis', $stateParams);
+          $state.go('networkMetaAnalysis', $stateParams);
         });
       } else if (model.leaveOneOut.subType === 'all-leave-one-out') {
         var leaveOneOutModels = ModelService.createLeaveOneOutBatch(model, $scope.leaveOneOutOptions);
@@ -289,7 +289,7 @@ define(['angular', 'lodash'], function(angular, _) {
           return createAndPostModel(modelToCreate, function() {});
         });
         $q.all(leaveOneOutPromises).then(function() {
-          $state.go('evidenceSynthesis', $stateParams);
+          $state.go('networkMetaAnalysis', $stateParams);
         });
       } else {
         createAndPostModel(model, function(result) {
