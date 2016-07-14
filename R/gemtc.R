@@ -291,17 +291,15 @@ gemtc <- function(params) {
         do.call(data.frame, c(values, list(stringsAsFactors=FALSE)))
       }
     ))
-    # if(!is.null(params[['sensitivity']])) {
-    #   if(!is.null(params[['sensitivity']][['adjustmentFactor']])) {
-    #     adjustmentFactor <- make.names(params[['sensitivity']][['adjustmentFactor']])
-    #     inflationValue <- params[['sensitivity']][['inflationValue']]
-    #     weightingFactor <- params[['sensitivity']][['weightingFactor']]
-    #     weightingVector <- unlist(lapply(studies[[adjustmentFactor]], function(x) {
-    #       if (x == inflationValue) weightingFactor else 1
-    #     }))
-    #     studies[['powerAdjust']] <- weightingVector
-    #   }
-    # }
+    if(!is.null(params[['sensitivity']]) && 'adjustmentVector' %in% names(params[['sensitivity']])) {
+      adjustmentFactor <- make.names(params[['sensitivity']][['adjustmentFactor']])
+      inflationValue <- params[['sensitivity']][['inflationValue']]
+      weightingFactor <- params[['sensitivity']][['weightingFactor']]
+      weightingVector <- unlist(lapply(studies[[adjustmentFactor]], function(x) {
+        if (x == inflationValue) weightingFactor else 1
+      }))
+      studies[['powerAdjust']] <- weightingVector
+    }
 
     # create network
     network <- mtc.network(data.ab=data.ab, data.re=data.re, treatments=treatments, studies=studies)
@@ -317,7 +315,7 @@ gemtc <- function(params) {
     if (!is.null(params[['outcomeScale']])) {
       mtc.model.params <- c(mtc.model.params, list('om.scale' = params[['outcomeScale']]))
     }
-    if(!is.null(params[['sensitivity']])) {
+    if(!is.null(params[['sensitivity']]) && 'adjustmentVector' %in% names(params[['sensitivity']])) {
       mtc.model.params <- c(mtc.model.params, list(powerAdjust="powerAdjust"))
     }
     if(modelType == 'node-split') {
