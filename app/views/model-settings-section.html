@@ -18,7 +18,7 @@
               <data-inline-help help-key="model-type"></data-inline-help>
             </td>
           </tr>
-          <tr ng-if="model.sensitivity.ommitedStudy">
+          <tr ng-if="model.sensitivity.omittedStudy">
             <td class="large-6 text-right">
               <strong>sub type</strong>
             </td>
@@ -26,12 +26,12 @@
               leave one out
             </td>
           </tr>
-          <tr ng-if="model.sensitivity.ommitedStudy">
+          <tr ng-if="model.sensitivity.omittedStudy">
             <td class="large-6 text-right">
-              <strong>ommited study</strong>
+              <strong>omittedStudy study</strong>
             </td>
             <td>
-              {{::model.sensitivity.ommitedStudy}}
+              {{::model.sensitivity.omittedStudy}}
             </td>
           </tr>
           <tr ng-if="model.modelType.type === 'pairwise'">
