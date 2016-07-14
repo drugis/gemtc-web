@@ -34,7 +34,7 @@
             <a ng-click="gotoModel(model)">{{model.title}} </a>
             <span ng-show="hasPimaryLabel(model)"> (primary model)</span>
           </td>
-          <td class="text-center">{{model.modelType.type}} <span ng-if="model.sensitivity.omittedStudy">leave one out</span></td>
+          <td class="text-center">{{model.modelType.type}} <span ng-if="model.sensitivity.omittedStudy">(leave one out)</span></td>
           <td class="text-center"><i class="fa fa-check" style="color:green;" ng-if="model.hasResult"></td>
         </tr>
       </tbody>
