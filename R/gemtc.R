@@ -291,7 +291,7 @@ gemtc <- function(params) {
         do.call(data.frame, c(values, list(stringsAsFactors=FALSE)))
       }
     ))
-    if(!is.null(params[['sensitivity']]) && 'adjustmentVector' %in% names(params[['sensitivity']])) {
+    if(!is.null(params[['sensitivity']]) && 'adjustmentFactor' %in% names(params[['sensitivity']])) {
       adjustmentFactor <- make.names(params[['sensitivity']][['adjustmentFactor']])
       inflationValue <- params[['sensitivity']][['inflationValue']]
       weightingFactor <- params[['sensitivity']][['weightingFactor']]
