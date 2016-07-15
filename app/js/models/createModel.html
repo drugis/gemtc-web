@@ -265,7 +265,7 @@
               <input type="radio" value="specific-leave-one-out" ng-model="model.leaveOneOut.subType"
                 id="leave-one-out-specific-type-radio">
               <label for="leave-one-out-specific-type-radio">Specific study</label>
-              <select class="large-6" ng-options="study for study in leaveOneOutOptions" ng-model="model.leaveOneOut.omittedStudy"
+              <select class="large-6" ng-options="study for study in leaveOneOutOptions | orderBy:'toString()'" ng-model="model.leaveOneOut.omittedStudy"
                 id="leave-one-out-select" ng-disabled="model.leaveOneOut.subType !== 'specific-leave-one-out'"></select>
             </span>
           </div>

@@ -186,6 +186,32 @@ define(['angular', 'angular-mocks', 'services'], function() {
       });
     });
 
+    describe('toFrontEnd', function() {
+      it('should change the backend model to frontend structure', function() {
+
+      });
+      it('should roundtrip', function() {
+        var backendModel = {
+          'id': 211,
+          'title': 'test',
+          'linearModel': 'random',
+          'analysisId': 109,
+          'taskUrl': null,
+          'modelType': {
+            'type': 'network'
+          },
+          'burnInIterations': 5000,
+          'inferenceIterations': 20000,
+          'thinningFactor': 10,
+          'likelihood': 'binom',
+          'link': 'logit',
+          'regressor': null,
+          'sensitivity': null
+        };
+        expect(modelService.cleanModel(modelService.toFrontEnd(backendModel))).toEqual(backendModel);
+      });
+    });
+
     describe('getBinaryCovariateNames', function() {
       var problem = {
         'studyLevelCovariates': {
