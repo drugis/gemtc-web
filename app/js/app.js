@@ -20,7 +20,7 @@ define(
     'help-popup',
     'error-reporting'
   ],
-  function(angular, require, $, _) {
+  function(angular, require, $) {
 
     var dependencies = [
       'ui.router',
@@ -111,7 +111,40 @@ define(
           .state('createModel', {
             url: '/analyses/:analysisId/models/createModel',
             templateUrl: 'js/models/createModel.html',
-            controller: 'CreateModelController'
+            controller: 'CreateModelController',
+            resolve: {
+              model: function() {
+                return {
+                  linearModel: 'random',
+                  modelType: {
+                    mainType: 'network'
+                  },
+                  outcomeScale: {
+                    type: 'heuristically'
+                  },
+                  burnInIterations: 5000,
+                  inferenceIterations: 20000,
+                  thinningFactor: 10,
+                  heterogeneityPrior: {
+                    type: 'automatic'
+                  },
+                  treatmentInteraction: 'shared',
+                  leaveOneOut: {}
+                };
+              }
+            }
+          })
+          .state('refineModel', {
+            url: '/analyses/:analysisId/models/:modelId/refineModel',
+            templateUrl: 'js/models/createModel.html',
+            controller: 'CreateModelController',
+            resolve: {
+              model: ['$stateParams', 'RefineModelService',
+                function($stateParams, RefineModelService) {
+                  return RefineModelService.getRefinedModel($stateParams.analysisId, $stateParams.modelId);
+                }
+              ]
+            }
           })
           .state('standalone-model-container', {
             templateUrl: 'js/models/standalone-model-container.html'
@@ -157,7 +190,7 @@ define(
               ' </div> ' +
               ' </section> ' +
 
-            ' <section class="content"> ' +
+              ' <section class="content"> ' +
               ' <div class="row"> ' +
               '  <div class="columns large-offset-2 large-8 medium-12"> ' +
               '     Sorry! An unknown error has occurred. Please sign in again. ' +
