@@ -12,11 +12,7 @@ if (!exists("gelman.diag.fix", mode="function")) {
   assignInNamespace("gelman.diag", gelman.diag.fix, "coda")
 }
 
-# Not ready for inclusion in R package:
-#  - only works for arm-based data
-#  - computes continuity corrections even if not necessary
-#  - t1 and t2 must be in alphabetical order
-pwforest <- function(result, t1, t2, ...) {
+pweffects <- function(result, t1, t2) {
   model <- result$model
   network <- model$network
 
@@ -42,12 +38,31 @@ pwforest <- function(result, t1, t2, ...) {
     }
   })
 
+  data.frame(
+    study=studies,
+    t1=t1,
+    t2=t2,
+    mean=sapply(study.effect, function(x) { x['mean'] }),
+    std.err=sapply(study.effect, function(x) { x['sd'] }))
+}
+
+# Not ready for inclusion in R package:
+#  - only works for arm-based data
+#  - computes continuity corrections even if not necessary
+#  - t1 and t2 must be in alphabetical order
+pwforest <- function(result, t1, t2, ...) {
+  model <- result$model
+  network <- model$network
+
+  study.effect <- pweffects(result, t1, t2)
+
   pooled.effect <- as.matrix(as.mcmc.list(relative.effect(result, t1=t1, t2=t2, preserve.extra=FALSE)))
 
   pooledMean <- apply(pooled.effect, 2, mean)
   pooledSD <- apply(pooled.effect, 2, sd)
-  m <- c(sapply(study.effect, function(x) { x['mean'] }), pooledMean)
-  e <- c(sapply(study.effect, function(x) { x['sd'] }), pooledSD)
+  studies <- study.effect[['study']]
+  m <- c(study.effect[['mean']], pooledMean)
+  e <- c(study.effect[['std.err']], pooledSD)
 
   fdata <- data.frame(
     id=c(studies, "Pooled"),
