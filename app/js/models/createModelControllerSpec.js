@@ -59,6 +59,24 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
 
       modelResourceMock.save.and.returnValue(modelSaveResultMock);
 
+      var model = {
+        linearModel: 'random',
+        modelType: {
+          mainType: 'network'
+        },
+        outcomeScale: {
+          type: 'heuristically'
+        },
+        burnInIterations: 5000,
+        inferenceIterations: 20000,
+        thinningFactor: 10,
+        heterogeneityPrior: {
+          type: 'automatic'
+        },
+        treatmentInteraction: 'shared',
+        leaveOneOut: {}
+      };
+
       $controller('CreateModelController', {
         $scope: scope,
         $q: q,
@@ -67,7 +85,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         ModelService: modelServiceMock,
         ModelResource: modelResourceMock,
         AnalysisService: analysisServiceMock,
-        ProblemResource: problemResourceMock
+        ProblemResource: problemResourceMock,
+        model: model
       });
     }));
 

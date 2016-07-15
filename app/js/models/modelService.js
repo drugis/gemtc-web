@@ -55,14 +55,81 @@ define(['angular', 'lodash'], function(angular, _) {
         delete model.heterogeneityPrior;
       }
 
-      if(model.leaveOneOut.isSelected) {
-        if(!model.sensitivity){
+      if (model.leaveOneOut.isSelected) {
+        if (!model.sensitivity) {
           model.sensitivity = {};
         }
         model.sensitivity.omittedStudy = model.leaveOneOut.omittedStudy;
       }
       model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink', 'leaveOneOut');
       return model;
+    }
+
+    function toFrontEnd(model) {
+      var frontEndModel = _.cloneDeep(model);
+
+      frontEndModel.modelType = {
+        mainType: model.modelType.type
+      }
+
+      if (model.modelType.type === 'node-split') {
+        frontEndModel.nodeSplitComparison = {
+          from: model.modelType.details.from,
+          to: model.modelType.details.to
+        };
+        frontEndModel.modelType.subType = 'specific-node-split';
+      }
+
+      if (model.modelType.type === 'pairwise') {
+        frontEndModel.pairwiseComparison = {
+          from: model.modelType.details.from,
+          to: model.modelType.details.to
+        };
+        frontEndModel.modelType.subType = 'specific-pairwise';
+      }
+
+      if (model.modelType.type === 'regression') {
+        frontEndModel.comparisonOption = model.regressor.variable;
+        frontEndModel.treatmentInteraction = model.regressor.coefficient;
+        frontEndModel.metaRegressionControl = {
+          id: parseInt(model.regressor.control)
+        };
+        frontEndModel.levels = model.regressor.levels;
+        delete frontEndModel.regressor;
+      }
+
+      frontEndModel.likelihoodLink = {
+        likelihood: model.likelihood,
+        link: model.link
+      };
+      delete frontEndModel.likelihood;
+      delete frontEndModel.link;
+
+      if (model.outcomeScale) {
+        frontEndModel.outcomeScale = {
+          type: 'fixed',
+          value: model.outcomeScale
+        };
+      } else {
+        frontEndModel.outcomeScale = {
+          type: 'heuristically'
+        };
+      }
+
+      if (!model.heterogeneityPrior) {
+        frontEndModel.heterogeneityPrior = {
+          type: 'automatic'
+        };
+      }
+
+      frontEndModel.leaveOneOut = {};
+      if (model.sensitivity && model.sensitivity.omittedStudy) {
+        frontEndModel.leaveOneOut.isSelected = true;
+        frontEndModel.leaveOneOut.omittedStudy = model.sensitivity.omittedStudy;
+        frontEndModel.leaveOneOut.subType = 'specific-leave-one-out';
+      }
+
+      return frontEndModel;
     }
 
     function createModelBatch(modelBase, comparisonOptions, nodeSplitOptions) {
@@ -168,7 +235,8 @@ define(['angular', 'lodash'], function(angular, _) {
       getCovariateBounds: getCovariateBounds,
       findCentering: findCentering,
       filterCentering: filterCentering,
-      createLeaveOneOutBatch: createLeaveOneOutBatch
+      createLeaveOneOutBatch: createLeaveOneOutBatch,
+      toFrontEnd: toFrontEnd
     };
   };
 
