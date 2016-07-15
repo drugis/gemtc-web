@@ -18,6 +18,22 @@
               <data-inline-help help-key="model-type"></data-inline-help>
             </td>
           </tr>
+          <tr ng-if="model.sensitivity.omittedStudy">
+            <td class="large-6 text-right">
+              <strong>sub type</strong>
+            </td>
+            <td>
+              leave one out
+            </td>
+          </tr>
+          <tr ng-if="model.sensitivity.omittedStudy">
+            <td class="large-6 text-right">
+              <strong>omitted study</strong>
+            </td>
+            <td>
+              {{::model.sensitivity.omittedStudy}}
+            </td>
+          </tr>
           <tr ng-if="model.modelType.type === 'pairwise'">
             <td class="large-6 text-right">
               <strong>pairwise comparison</strong>
@@ -102,7 +118,7 @@
               <data-inline-help help-key="heterogeneity-prior-distribution"></data-inline-help>
             </td>
           </tr>
-          <tr ng-if="model.sensitivity">
+          <tr ng-if="model.sensitivity.adjustmentFactor">
             <td class="large-6 text-right" style="vertical-align:top;">
               <strong>design adjustment</strong>
             </td>
@@ -136,6 +152,7 @@
             </td>
           </tr>
         </table>
+        <button ng-click="goToRefineModel()">Refine model</button>
       </div>
       <!-- end callout panel -->
     </div>

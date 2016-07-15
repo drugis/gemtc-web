@@ -19,11 +19,13 @@
       <label class="form-item-header">Fixed/random effect(s)
         <inline-help help-key="effects-type"></inline-help>
         <div class="stacked-radio">
-          <input type="radio" value="random" ng-model="model.linearModel" ng-change="effectsTypeChange()" id="random-effect-radio">
+          <input type="radio" value="random" ng-model="model.linearModel" ng-change="effectsTypeChange()"
+            id="random-effect-radio">
           <label for="random-effect-radio">Random effects</label>
         </div>
         <div class="stacked-radio">
-          <input type="radio" value="fixed" ng-model="model.linearModel" ng-change="effectsTypeChange()" id="fixed-effect-radio">
+          <input type="radio" value="fixed" ng-model="model.linearModel" ng-change="effectsTypeChange()"
+            id="fixed-effect-radio">
           <label for="fixed-effect-radio">Fixed effect</label>
         </div>
       </label>
@@ -36,11 +38,14 @@
         <inline-help help-key="model-type"></inline-help>
       </label>
       <div class="stacked-radio">
-        <input type="radio" value="network" ng-model="model.modelType.mainType" id="network-model-type-radio" ng-change="modelTypeChange()">
+        <input type="radio" value="network" ng-model="model.modelType.mainType" id="network-model-type-radio"
+          ng-change="modelTypeChange()">
         <label for="network-model-type-radio">Consistency model</label>
       </div>
+
       <div class="stacked-radio">
-        <input type="radio" value="pairwise" ng-model="model.modelType.mainType" id="pairwise-model-main-type-radio" ng-change="modelTypeChange()" ng-disabled="comparisonOptions.length === 0">
+        <input type="radio" value="pairwise" ng-model="model.modelType.mainType" id="pairwise-model-main-type-radio"
+          ng-change="modelTypeChange()" ng-disabled="comparisonOptions.length === 0">
         <label for="pairwise-model-main-type-radio">Pair-wise model
           <em ng-show="comparisonOptions.length === 0"> (Not possible for this analysis)</em>
         </label>
@@ -48,19 +53,34 @@
       <div class="indent-one" ng-show="model.modelType.mainType == 'pairwise'">
         <label for="comparison-select">Select comparison for which to perform pair-wise model</label>
         <div class="stacked-radio">
-          <input type="radio" value="all-pairwise" ng-model="model.modelType.subType" id="all-pairwise-model-type-radio">
+          <input
+          id="all-pairwise-model-type-radio"
+          type="radio"
+          value="all-pairwise"
+          ng-model="model.modelType.subType"
+          ng-change="pairwiseSubTypeChange()"
+         >
           <label for="all-pairwise-model-type-radio">All pairwise models (batch)</label>
         </div>
         <div class="stacked-radio">
           <span>
-            <input type="radio" value="specific-pairwise" ng-model="model.modelType.subType" id="pairwise-specific-type-radio">
+            <input
+            id="pairwise-specific-type-radio"
+            type="radio"
+            value="specific-pairwise"
+            ng-model="model.modelType.subType"
+          ng-change="pairwiseSubTypeChange()"
+            >
             <label for="pairwise-specific-type-radio">Specific pair</label>
-            <select class="large-6" ng-options="comparison.label for comparison in comparisonOptions" ng-model="model.pairwiseComparison" id="comparison-select" ng-disabled="model.modelType.subType !== 'specific-pairwise'"></select>
+            <select class="large-6" ng-options="comparison.label for comparison in comparisonOptions"
+              ng-model="model.pairwiseComparison" ng-change="resetLeaveOneOut()" id="comparison-select" ng-disabled="model.modelType.subType !== 'specific-pairwise'"></select>
           </span>
         </div>
       </div>
+
       <div class="stacked-radio">
-        <input type="radio" value="node-split" ng-model="model.modelType.mainType" id="node-split-model-main-type-radio" ng-change="modelTypeChange()" ng-disabled="nodeSplitOptions.length === 0">
+        <input type="radio" value="node-split" ng-model="model.modelType.mainType" id="node-split-model-main-type-radio"
+          ng-change="modelTypeChange()" ng-disabled="nodeSplitOptions.length === 0">
         <label for="node-split-model-main-type-radio">Node-splitting model
           <inline-help help-key="node-splitting-model"></inline-help>
           <em ng-show="nodeSplitOptions.length === 0"> (Not possible for this model)</em>
@@ -74,14 +94,17 @@
         </div>
         <div class="stacked-radio">
           <span>
-            <input type="radio" value="specific-node-split" ng-model="model.modelType.subType" id="node-split-specific-type-radio">
+            <input type="radio" value="specific-node-split" ng-model="model.modelType.subType"
+              id="node-split-specific-type-radio">
             <label for="node-split-specific-type-radio">Specific model</label>
-            <select class="large-6" ng-options="nodeSplitOption.label for nodeSplitOption in nodeSplitOptions" ng-model="model.nodeSplitComparison" id="node-split-select" ng-disabled="model.modelType.subType !== 'specific-node-split'"></select>
+            <select class="large-6" ng-options="nodeSplitOption.label for nodeSplitOption in nodeSplitOptions"
+              ng-model="model.nodeSplitComparison" id="node-split-select" ng-disabled="model.modelType.subType !== 'specific-node-split'"></select>
           </span>
         </div>
       </div>
       <div class="stacked-radio">
-        <input type="radio" value="regression" ng-model="model.modelType.mainType" id="meta-regression-model-type-radio" ng-change="modelTypeChange()" ng-disabled="!isProblemWithCovariates">
+        <input type="radio" value="regression" ng-model="model.modelType.mainType" id="meta-regression-model-type-radio"
+          ng-change="modelTypeChange()" ng-disabled="!isProblemWithCovariates">
         <label for="meta-regression-model-type-radio">Meta-regression
           <em ng-if="!isProblemWithCovariates"> (Data does not contain covariates)</em>
         </label>
@@ -89,18 +112,20 @@
       <div class="indent-one" ng-show="model.modelType.mainType == 'regression'">
         <label for="covariate-select">Select covariate
           <inline-help help-key="covariate"></inline-help>
-          <select id="covariate-select" ng-options="covariate for covariate in covariateOptions" ng-model="model.covariateOption" ng-change="covariateChange()"></select>
+          <select id="covariate-select" ng-options="covariate for covariate in covariateOptions"
+            ng-model="model.covariateOption" ng-change="covariateChange()"></select>
         </label>
         <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">This covariate has missing values.</div>
         <div ng-show="variableIsBinary && model.modelType.mainType === 'regression'" style="margin-bottom: 2rem;">Variable is binary (i.e. levels are 0 and 1).
-          <inline-help help-key="levels"></inline-help></div>
+          <inline-help help-key="levels"></inline-help>
+        </div>
 
         <div ng-hide="selectedCovariateValueHasNullValues || (variableIsBinary && model.modelType.mainType === 'regression')">
           <label>
             Levels
             <span ng-show="!selectedCovariateValueHasNullValues && !variableIsBinary && model.modelType.mainType === 'regression'">
               (observed range: {{covariateBounds.min}} to {{covariateBounds.max}})
-                      </span>
+            </span>
             <inline-help help-key="levels"></inline-help>
             <ul ng-show="model.levels.length" class="no-bullet">
               <li ng-repeat="level in model.levels">
@@ -113,21 +138,18 @@
             <div class="row collapse">
               <div class="small-9 columns">
                 <label for="covariate-level">
-                  <input id="covariate-level"
-                  type="number"
-                  ng-model="newLevel"
-                  ng-keypress="addLevelOnEnter($event, newLevel)"
-                  ng-model-options="{ debounce: 300 }"
-                  ng-change="checkCovariateBounds(newLevel)"
-                  ng-disabled="selectedCovariateValueHasNullValues || model.modelType.mainType !== 'regression'"
-                  >
+                  <input id="covariate-level" type="number" ng-model="newLevel" ng-keypress="addLevelOnEnter($event, newLevel)"
+                    ng-model-options="{ debounce: 300 }" ng-change="checkCovariateBounds(newLevel)"
+                    ng-disabled="selectedCovariateValueHasNullValues || model.modelType.mainType !== 'regression'">
                 </label>
               </div>
               <div class="small-3 columns">
-                <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel) || isCovariateLevelOutOfBounds(newLevel)" type="button" ng-click="addLevel(newLevel)" class="postfix">Add level</button>
+                <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel) || isCovariateLevelOutOfBounds(newLevel)"
+                  type="button" ng-click="addLevel(newLevel)" class="postfix">Add level</button>
               </div>
               <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">Level already present.</div>
-              <div ng-show="newLevel !== unedefined && isCovariateLevelOutOfBounds(newLevel)" class="alert" style="margin-bottom: 2rem;">Level is outside the observed range.</div>
+              <div ng-show="newLevel !== unedefined && isCovariateLevelOutOfBounds(newLevel)" class="alert"
+                style="margin-bottom: 2rem;">Level is outside the observed range.</div>
             </div>
           </label>
         </div>
@@ -144,7 +166,8 @@
         </div>
         <label for="meta-regression-control-select">Select control treatment
           <inline-help help-key="regression-control"></inline-help>
-          <select id="meta-regression-control-select" ng-options="treatment.name for treatment in problem.treatments" ng-model="model.metaRegressionControl"></select>
+          <select id="meta-regression-control-select" ng-options="treatment.name for treatment in problem.treatments"
+            ng-model="model.metaRegressionControl"></select>
         </label>
       </div>
     </div>
@@ -154,26 +177,32 @@
   <div class="row section">
     <div class="columns large-12 medium-12 small-12">
       <label class="form-item-header">Sensitivity analysis</label>
-      <input id="adjustment-checkbox" type="checkbox" ng-model="isWeighted" ng-change="changeIsWeighted()" ng-disabled="binaryCovariateNames.length === 0">
-      <label for="adjustment-checkbox">Design adjusted model (variance inflation) <em ng-show="binaryCovariateNames.length === 0">(Not possible: no binary covariates)</em>
-          <inline-help help-key="design-adjustment"></inline-help>
-</label>
+      <input id="adjustment-checkbox" type="checkbox" ng-model="isWeighted" ng-change="changeIsWeighted()"
+        ng-disabled="binaryCovariateNames.length === 0">
+      <label for="adjustment-checkbox">Design adjusted model (variance inflation)
+        <em ng-show="binaryCovariateNames.length === 0">(Not possible: no binary covariates)</em>
+        <inline-help help-key="design-adjustment"></inline-help>
+      </label>
       <div class="row" ng-show="isWeighted">
         <div class="columns large-5 medium-5 small-12 large-offset-1 medium-offset-1">
           <label>Ajustment factor
-            <select ng-options="option for option in binaryCovariateNames" ng-model="model.sensitivity.adjustmentFactor" id="adjustment-factor-select"></select>
+            <select ng-options="option for option in binaryCovariateNames" ng-model="model.sensitivity.adjustmentFactor"
+              id="adjustment-factor-select"></select>
           </label>
           <label>Value to inflate variance for</label>
-          <input id="inflation-value-radio-0" type="radio" ng-model="model.sensitivity.inflationValue" ng-checked="true" value="0">
+          <input id="inflation-value-radio-0" type="radio" ng-model="model.sensitivity.inflationValue"
+            ng-checked="true" value="0">
           <label for="inflation-value-radio-0">0</label>
-          <input id="inflation-value-radio-1" type="radio" ng-model="model.sensitivity.inflationValue" value="1">
+          <input id="inflation-value-radio-1" type="radio" ng-model="model.sensitivity.inflationValue"
+            value="1">
           <label for="inflation-value-radio-1">1</label>
           <label for="weighting-factor-input">Weighting factor
-            <input type="number" min="0" max="1" step="0.0000001" ng-model="model.sensitivity.weightingFactor" id="weighting-factor-input">
+            <input type="number" min="0" max="1" step="0.0000001" ng-model="model.sensitivity.weightingFactor"
+              id="weighting-factor-input">
           </label>
           <div>
             <label ng-hide="model.sensitivity.weightingFactor !== undefined" class="alert">Must be number between zero and one
-              </label>
+            </label>
           </div>
         </div>
       </div>
@@ -182,47 +211,66 @@
           <table width="100%">
             <thead>
               <tr>
-                 <th>{{model.sensitivity.adjustmentFactor}}</th>
-                 <th>Weight</th>
-                 <th>Inflation factor</th>
+                <th>{{model.sensitivity.adjustmentFactor}}</th>
+                <th>Weight</th>
+                <th>Inflation factor</th>
               </tr>
-             </thead>
-             <tbody>
-               <tr>
-                 <td>
-                   0
-                 </td>
-                 <td>
-                   {{model.sensitivity.inflationValue == 0 ? model.sensitivity.weightingFactor : 1}}
-                 </td>
-                 <td>
-                   {{model.sensitivity.inflationValue == 0 ? 1 / model.sensitivity.weightingFactor : 1}}
-                 </td>
-               </tr>
-               <tr>
-                 <td>
-                   1
-                 </td>
-                 <td>
-                   {{model.sensitivity.inflationValue == 1 ? model.sensitivity.weightingFactor : 1}}
-                 </td>
-                 <td>
-                    {{model.sensitivity.inflationValue == 1 ? 1 / model.sensitivity.weightingFactor : 1}}
-                 </td>
-               </tr>
-             </tbody>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  0
+                </td>
+                <td>
+                  {{model.sensitivity.inflationValue == 0 ? model.sensitivity.weightingFactor : 1}}
+                </td>
+                <td>
+                  {{model.sensitivity.inflationValue == 0 ? 1 / model.sensitivity.weightingFactor :
+                  1}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  1
+                </td>
+                <td>
+                  {{model.sensitivity.inflationValue == 1 ? model.sensitivity.weightingFactor : 1}}
+                </td>
+                <td>
+                  {{model.sensitivity.inflationValue == 1 ? 1 / model.sensitivity.weightingFactor :
+                  1}}
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
-    </div>
-
-  </div>
-
-  <div class="row ">
-    <div class="columns large-8 medium-10 small-12">
-      <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel }}.</label>
-      <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'" style="margin-bottom:2.25rem"> </label>
-      <!-- spacer -->
+      <div class="row">
+        <div class="columns large-12 medium-5 small-12">
+          <input id="leave-one-out-checkbox" type="checkbox" ng-model="model.leaveOneOut.isSelected" ng-change="changeIsLeaveOneOut(model.leaveOneOut.isSelected)" ng-disabled="!isAllowedLeaveOneOut()">
+          <label for="leave-one-out-checkbox">Leave one out (omit single study)<em ng-show="!isAllowedLeaveOneOut()">(Not possible: wrong model type, or network disconnected if any study left out)</em>
+          </label>
+        </div>
+      </div>
+      <div class="row" ng-show="model.leaveOneOut.isSelected">
+        <div class="columns large-5 medium-5 small-12 large-offset-1 medium-offset-1">
+          <label for="leave-one-out-select">Select study to leave out</label>
+          <div class="stacked-radio">
+            <input type="radio" value="all-leave-one-out" ng-model="model.leaveOneOut.subType"
+              id="all-leave-one-out-model-type-radio">
+            <label for="all-leave-one-out-model-type-radio">All leave one out models ({{leaveOneOutOptions.length}} will be created)</label>
+          </div>
+          <div class="stacked-radio">
+            <span>
+              <input type="radio" value="specific-leave-one-out" ng-model="model.leaveOneOut.subType"
+                id="leave-one-out-specific-type-radio">
+              <label for="leave-one-out-specific-type-radio">Specific study</label>
+              <select class="large-6" ng-options="study for study in leaveOneOutOptions | orderBy:'toString()'" ng-model="model.leaveOneOut.omittedStudy"
+                id="leave-one-out-select" ng-disabled="model.leaveOneOut.subType !== 'specific-leave-one-out'"></select>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <!-- end sensitivity analysis section -->
@@ -233,15 +281,18 @@
         <inline-help help-key="likelihood-link"></inline-help>
       </label>
       <label>Select a likelihood/link type
-        <select ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions" ng-model="model.likelihoodLink" id="likelihood-link-select"></select>
+        <select ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions"
+          ng-model="model.likelihoodLink" id="likelihood-link-select"></select>
       </label>
     </div>
   </div>
 
   <div class="row ">
     <div class="columns large-8 medium-10 small-12">
-      <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel }}.</label>
-      <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'" style="margin-bottom:2.25rem"> </label>
+      <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel
+        }}.</label>
+      <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'" style="margin-bottom:2.25rem">
+      </label>
       <!-- spacer -->
     </div>
   </div>
@@ -253,13 +304,17 @@
         <inline-help help-key="outcome-scale"></inline-help>
       </label>
       <div class="stacked-radio">
-        <input type="radio" value="heuristically" ng-model="model.outcomeScale.type" id="heuristically-model-outcom-scale-type-radio" ng-change="outcomeScaleTypeChange()">
+        <input type="radio" value="heuristically" ng-model="model.outcomeScale.type" id="heuristically-model-outcom-scale-type-radio"
+          ng-change="outcomeScaleTypeChange()">
         <label for="heuristically-model-outcom-scale-type-radio">Determine heuristically</label>
       </div>
       <div class="stacked-radio">
-        <input type="radio" value="fixed" ng-model="model.outcomeScale.type" id="fixed-model-outcom-scale-type-radio" ng-change="outcomeScaleTypeChange()">
+        <input type="radio" value="fixed" ng-model="model.outcomeScale.type" id="fixed-model-outcom-scale-type-radio"
+          ng-change="outcomeScaleTypeChange()">
         <label for="fixed-model-outcom-scale-type-radio">Fixed value</label>
-        <input type="number" ng-model="model.outcomeScale.value" id="fixed-outcome-scale-input" ng-disabled="model.outcomeScale.type !== 'fixed'" ng-change="fixedOutcomeScaleValueChage()" style="display: inline; width:18%;">
+        <input type="number" ng-model="model.outcomeScale.value" id="fixed-outcome-scale-input"
+          ng-disabled="model.outcomeScale.type !== 'fixed'" ng-change="fixedOutcomeScaleValueChage()"
+          style="display: inline; width:18%;">
       </div>
     </div>
   </div>
@@ -294,7 +349,8 @@
 
     <div class="row">
       <div class="columns large-6 stacked-radio">
-        <input type="radio" value="automatic" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-automatic-radio" ng-change="heterogeneityPriorTypechange()">
+        <input type="radio" value="automatic" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-automatic-radio"
+          ng-change="heterogeneityPriorTypechange()">
         <label for="heterogeneity-prior-automatic-radio">Automatic (heuristic uniform) ~ U(0,
           <span ng-show="model.outcomeScale.type !== 'fixed'">S</span>
           <span ng-show="model.outcomeScale.type === 'fixed'">{{model.outcomeScale.value}}</span>)</label>
@@ -303,18 +359,21 @@
 
     <div class="row">
       <div class="columns large-6 stacked-radio">
-        <input type="radio" value="standard-deviation" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-standard-deviation-radio" ng-change="heterogeneityPriorTypechange()">
+        <input type="radio" value="standard-deviation" ng-model="model.heterogeneityPrior.type"
+          id="heterogeneity-prior-standard-deviation-radio" ng-change="heterogeneityPriorTypechange()">
         <label for="heterogeneity-prior-standard-deviation-radio">Uniform for standard deviation</label>
         <div ng-show="model.heterogeneityPrior.type === 'standard-deviation'">
           <div class="row">
             <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
               <label>lower
-                <input type="number" ng-model="model.heterogeneityPrior.values.lower" id="heterogeneity-uniform-parameter1-input" ng-change="heterogeneityParamsChange()">
+                <input type="number" ng-model="model.heterogeneityPrior.values.lower" id="heterogeneity-uniform-parameter1-input"
+                  ng-change="heterogeneityParamsChange()">
               </label>
             </div>
             <div class="columns large-2 medium-3 small-6 end">
               <label>upper
-                <input type="number" ng-model="model.heterogeneityPrior.values.upper" id="heterogeneity-uniform-parameter2-input" ng-change="heterogeneityParamsChange()">
+                <input type="number" ng-model="model.heterogeneityPrior.values.upper" id="heterogeneity-uniform-parameter2-input"
+                  ng-change="heterogeneityParamsChange()">
               </label>
             </div>
           </div>
@@ -329,17 +388,20 @@
 
     <div class="row">
       <div class="columns large-6 stacked-radio">
-        <input type="radio" value="variance" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-variance-radio" ng-change="heterogeneityPriorTypechange()">
+        <input type="radio" value="variance" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-variance-radio"
+          ng-change="heterogeneityPriorTypechange()">
         <label for="heterogeneity-prior-variance-radio">Log-N for variance</label>
         <div class="row" ng-show="model.heterogeneityPrior.type === 'variance'">
           <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
             <label>mean
-              <input type="number" ng-model="model.heterogeneityPrior.values.mean" id="heterogeneity-log-n-parameter1-input" ng-change="heterogeneityParamsChange()">
+              <input type="number" ng-model="model.heterogeneityPrior.values.mean" id="heterogeneity-log-n-parameter1-input"
+                ng-change="heterogeneityParamsChange()">
             </label>
           </div>
           <div class="columns large-2 medium-3 small-6 end">
             <label>std.dev
-              <input type="number" ng-model="model.heterogeneityPrior.values.stdDev" id="heterogeneity-log-n-parameter2-input" ng-change="heterogeneityParamsChange()">
+              <input type="number" ng-model="model.heterogeneityPrior.values.stdDev" id="heterogeneity-log-n-parameter2-input"
+                ng-change="heterogeneityParamsChange()">
             </label>
           </div>
         </div>
@@ -353,18 +415,21 @@
 
     <div class="row">
       <div class="columns large-6 stacked-radio">
-        <input type="radio" value="precision" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-precision-radio" ng-change="heterogeneityPriorTypechange()">
+        <input type="radio" value="precision" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-precision-radio"
+          ng-change="heterogeneityPriorTypechange()">
         <label for="heterogeneity-prior-precision-radio">Gamma for precision</label>
 
         <div class="row" ng-show="model.heterogeneityPrior.type === 'precision'">
           <div class="columns large-2 medium-3 small-6 large-offset-1 medium-offset-1">
             <label>rate
-              <input type="number" ng-model="model.heterogeneityPrior.values.rate" id="heterogeneity-gamma-parameter1-input" ng-change="heterogeneityParamsChange()">
+              <input type="number" ng-model="model.heterogeneityPrior.values.rate" id="heterogeneity-gamma-parameter1-input"
+                ng-change="heterogeneityParamsChange()">
             </label>
           </div>
           <div class="columns large-2 medium-3 small-6 end">
             <label>shape
-              <input type="number" ng-model="model.heterogeneityPrior.values.shape" id="heterogeneity-gamma-parameter2-input" ng-change="heterogeneityParamsChange()">
+              <input type="number" ng-model="model.heterogeneityPrior.values.shape" id="heterogeneity-gamma-parameter2-input"
+                ng-change="heterogeneityParamsChange()">
             </label>
           </div>
         </div>
@@ -382,7 +447,9 @@
   </div>
   <!-- end heterogeneity prior section -->
 
-  <data-run-length problem="problem" model="model" burn-in-iterations="model.burnInIterations" inference-iterations="model.inferenceIterations" thinning-factor="model.thinningFactor" is-valid-run-length="isValidRunLength"></data-run-length>
+  <data-run-length problem="problem" model="model" burn-in-iterations="model.burnInIterations"
+    inference-iterations="model.inferenceIterations" thinning-factor="model.thinningFactor"
+    is-valid-run-length="isValidRunLength"></data-run-length>
 
   <div class="row bottom-button-bar">
     <div class="large-9 columns">

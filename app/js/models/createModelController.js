@@ -1,27 +1,13 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state',
-    'ModelResource', 'ModelService', 'AnalysisService', 'ProblemResource'
+    'ModelResource', 'ModelService', 'AnalysisService', 'ProblemResource', 'model'
   ];
   var CreateModelController = function($scope, $q, $stateParams, $state,
-    ModelResource, ModelService, AnalysisService, ProblemResource) {
+    ModelResource, ModelService, AnalysisService, ProblemResource, model) {
 
-    $scope.model = {
-      linearModel: 'random',
-      modelType: {
-        mainType: 'network'
-      },
-      outcomeScale: {
-        type: 'heuristically'
-      },
-      burnInIterations: 5000,
-      inferenceIterations: 20000,
-      thinningFactor: 10,
-      heterogeneityPrior: {
-        type: 'automatic'
-      },
-      treatmentInteraction: 'shared'
-    };
+    $scope.model = model;
+
     $scope.isTaskTooLong = false;
     $scope.isValidHeterogeneityPrior = true;
     $scope.createModel = createModel;
@@ -33,23 +19,41 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.heterogeneityParamsChange = heterogeneityParamsChange;
     $scope.covariateChange = covariateChange;
     $scope.changeIsWeighted = changeIsWeighted;
+    $scope.changeIsLeaveOneOut = changeIsLeaveOneOut;
     $scope.addLevel = addLevel;
     $scope.addLevelOnEnter = addLevelOnEnter;
     $scope.levelAlreadyPresent = levelAlreadyPresent;
     $scope.isCovariateLevelOutOfBounds = isCovariateLevelOutOfBounds;
+    $scope.isAllowedLeaveOneOut = isAllowedLeaveOneOut;
     $scope.isNumber = isNumber;
     $scope.problem = ProblemResource.get($stateParams);
     $scope.selectedCovariateValueHasNullValues = false;
-    $scope.covariateBounds = {min: undefined, max: undefined};
+    $scope.pairwiseSubTypeChange = pairwiseSubTypeChange;
+    $scope.resetLeaveOneOut = resetLeaveOneOut;
+    $scope.covariateBounds = {
+      min: undefined,
+      max: undefined
+    };
 
     $scope.problem.$promise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
-      if ($scope.comparisonOptions.length > 0) {
+      if (!$scope.model.pairwiseComparison && $scope.comparisonOptions.length > 0) {
         $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
+      } else {
+        $scope.model.pairwiseComparison = _.find($scope.comparisonOptions, function(option) {
+          return option.from.id === $scope.model.pairwiseComparison.from.id &&
+            option.to.id === $scope.model.pairwiseComparison.to.id;
+        });
       }
+
       $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
-      if ($scope.nodeSplitOptions.length > 0) {
+      if (!$scope.model.nodeSplitComparison && $scope.nodeSplitOptions.length > 0) {
         $scope.model.nodeSplitComparison = $scope.nodeSplitOptions[0];
+      } else {
+        $scope.model.nodeSplitComparison = _.find($scope.nodeSplitOptions, function(option) {
+          return option.from.id === $scope.model.nodeSplitComparison.from.id &&
+            option.to.id === $scope.model.nodeSplitComparison.to.id;
+        });
       }
       $scope.binaryCovariateNames = ModelService.getBinaryCovariateNames(problem);
       $scope.isProblemWithCovariates = ModelService.isProblemWithCovariates(problem);
@@ -61,13 +65,32 @@ define(['angular', 'lodash'], function(angular, _) {
         return option.compatibility === "incompatible";
       });
       $scope.likelihoodLinkOptions = compatible.concat(incompatible);
-      $scope.model.likelihoodLink = compatible[0];
+
+      if (!$scope.model.likelihoodLink) {
+        $scope.model.likelihoodLink = compatible[0];
+      } else {
+        $scope.model.likelihoodLink = _.find($scope.likelihoodLinkOptions, function(option) {
+          return option.link === model.likelihoodLink.link &&
+            option.likelihood === model.likelihoodLink.likelihood;
+        });
+      }
+
       if (problem.studyLevelCovariates) {
         $scope.covariateOptions = buildCovariateOptions(problem);
-        $scope.model.covariateOption = $scope.covariateOptions[0];
-        $scope.model.metaRegressionControl = problem.treatments[0];
-        covariateChange();
+        if (!$scope.model.covariateOption) {
+          $scope.model.covariateOption = $scope.covariateOptions[0];
+        }
+        if (!$scope.model.metaRegressionControl) {
+          $scope.model.metaRegressionControl = problem.treatments[0];
+        } else {
+          $scope.model.metaRegressionControl = _.find(problem.treatments, function(treatment) {
+            return treatment.id === $scope.model.metaRegressionControl.id;
+          });
+        }
       }
+
+      $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem, $scope.model.modelType.mainType);
+
       return problem;
     });
 
@@ -107,6 +130,8 @@ define(['angular', 'lodash'], function(angular, _) {
 
       if (mainType === 'network') {
         $scope.model.modelType.subType = '';
+        $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem);
+        $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
       }
       if (mainType === 'pairwise') {
         $scope.model.modelType.subType = 'all-pairwise';
@@ -115,8 +140,35 @@ define(['angular', 'lodash'], function(angular, _) {
         $scope.model.modelType.subType = 'all-node-split';
       }
       if (mainType === 'regression') {
+        $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem);
+        $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
         $scope.model.modelType.subType = '';
         covariateChange();
+      }
+
+      resetLeaveOneOut();
+    }
+
+    function pairwiseSubTypeChange() {
+      resetLeaveOneOut();
+    }
+
+    function resetLeaveOneOut() {
+      $scope.model.leaveOneOut = {};
+
+      if (isValidModelTypeForLeaveOneOut()) {
+        $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem);
+
+        if ($scope.model.modelType.mainType === 'pairwise' && $scope.model.modelType.subType === 'specific-pairwise') {
+          $scope.leaveOneOutOptions = _.filter($scope.leaveOneOutOptions, function(option) {
+            return _.find($scope.model.pairwiseComparison.studies, function(study) {
+              return study.title === option;
+            });
+          });
+        }
+        if ($scope.leaveOneOutOptions.length > 0) {
+          $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
+        }
       }
     }
 
@@ -157,6 +209,28 @@ define(['angular', 'lodash'], function(angular, _) {
           weightingFactor: 0.5,
           adjustmentFactor: $scope.binaryCovariateNames[0]
         };
+      }
+    }
+
+    function isValidModelTypeForLeaveOneOut() {
+      var mainType = $scope.model.modelType.mainType;
+      return mainType === 'network' ||
+        (mainType === 'pairwise' && $scope.model.modelType.subType === 'specific-pairwise') ||
+        mainType === 'regression';
+    }
+
+    function isAllowedLeaveOneOut() {
+      return isValidModelTypeForLeaveOneOut() && $scope.leaveOneOutOptions && $scope.leaveOneOutOptions.length > 0;
+    }
+
+    function changeIsLeaveOneOut(newValue) {
+      if (!newValue) {
+        resetLeaveOneOut();
+      } else {
+        $scope.model.leaveOneOut.subType = 'all-leave-one-out';
+        if ($scope.leaveOneOutOptions.length > 0) {
+          $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
+        }
       }
     }
 
@@ -218,12 +292,18 @@ define(['angular', 'lodash'], function(angular, _) {
           return createAndPostModel(modelToCreate, function() {});
         });
         $q.all(creationPromises).then(function() {
-          $scope.isAddingModel = false;
+          $state.go('networkMetaAnalysis', $stateParams);
+        });
+      } else if (model.leaveOneOut.subType === 'all-leave-one-out') {
+        var leaveOneOutModels = ModelService.createLeaveOneOutBatch(model, $scope.leaveOneOutOptions);
+        var leaveOneOutPromises = _.map(leaveOneOutModels, function(modelToCreate) {
+          return createAndPostModel(modelToCreate, function() {});
+        });
+        $q.all(leaveOneOutPromises).then(function() {
           $state.go('networkMetaAnalysis', $stateParams);
         });
       } else {
         createAndPostModel(model, function(result) {
-          $scope.isAddingModel = false;
           $state.go('model', _.extend($stateParams, {
             modelId: result.id
           }));
@@ -233,7 +313,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function createAndPostModel(frontEndModel, successFunction) {
       var model = ModelService.cleanModel(frontEndModel);
-      return ModelResource.save($stateParams, model, successFunction).$promise;
+      return ModelResource.save(_.omit($stateParams, 'modelId'), model, successFunction).$promise;
     }
   };
 

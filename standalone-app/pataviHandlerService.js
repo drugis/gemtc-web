@@ -25,6 +25,9 @@ function createPataviTask(analysis, model, callback) {
   if (problemPlusModelSettings.modelType.type === 'pairwise') {
     problemPlusModelSettings = reduceToPairwiseProblem(problemPlusModelSettings);
   }
+  if(problemPlusModelSettings.sensitivity && problemPlusModelSettings.sensitivity.omittedStudy) {
+    problemPlusModelSettings = leaveStudyOut(problemPlusModelSettings);
+  }
   pataviTaskRepository.create(problemPlusModelSettings, callback);
 }
 
@@ -47,4 +50,11 @@ function reduceToPairwiseProblem(problem) {
     problem.modelType.details.to.name);
   problem.entries = filterPairwiseEntries(problem.entries, problem.treatments);
   return problem;
+}
+
+function leaveStudyOut(problemPlusSettings) {
+  problemPlusSettings.entries = _.filter(problemPlusSettings.entries, function(entry) {
+    return entry.study !== problemPlusSettings.sensitivity.omittedStudy;
+  });
+  return problemPlusSettings;
 }

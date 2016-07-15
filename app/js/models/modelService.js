@@ -54,8 +54,82 @@ define(['angular', 'lodash'], function(angular, _) {
       if (model.heterogeneityPrior && model.heterogeneityPrior.type === 'automatic') {
         delete model.heterogeneityPrior;
       }
-      model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink');
+
+      if (model.leaveOneOut.isSelected) {
+        if (!model.sensitivity) {
+          model.sensitivity = {};
+        }
+        model.sensitivity.omittedStudy = model.leaveOneOut.omittedStudy;
+      }
+      model = _.omit(model, 'pairwiseComparison', 'nodeSplitComparison', 'likelihoodLink', 'leaveOneOut');
       return model;
+    }
+
+    function toFrontEnd(model) {
+      var frontEndModel = _.cloneDeep(model);
+
+      frontEndModel.modelType = {
+        mainType: model.modelType.type
+      }
+
+      if (model.modelType.type === 'node-split') {
+        frontEndModel.nodeSplitComparison = {
+          from: model.modelType.details.from,
+          to: model.modelType.details.to
+        };
+        frontEndModel.modelType.subType = 'specific-node-split';
+      }
+
+      if (model.modelType.type === 'pairwise') {
+        frontEndModel.pairwiseComparison = {
+          from: model.modelType.details.from,
+          to: model.modelType.details.to
+        };
+        frontEndModel.modelType.subType = 'specific-pairwise';
+      }
+
+      if (model.modelType.type === 'regression') {
+        frontEndModel.comparisonOption = model.regressor.variable;
+        frontEndModel.treatmentInteraction = model.regressor.coefficient;
+        frontEndModel.metaRegressionControl = {
+          id: parseInt(model.regressor.control)
+        };
+        frontEndModel.levels = model.regressor.levels;
+        delete frontEndModel.regressor;
+      }
+
+      frontEndModel.likelihoodLink = {
+        likelihood: model.likelihood,
+        link: model.link
+      };
+      delete frontEndModel.likelihood;
+      delete frontEndModel.link;
+
+      if (model.outcomeScale) {
+        frontEndModel.outcomeScale = {
+          type: 'fixed',
+          value: model.outcomeScale
+        };
+      } else {
+        frontEndModel.outcomeScale = {
+          type: 'heuristically'
+        };
+      }
+
+      if (!model.heterogeneityPrior) {
+        frontEndModel.heterogeneityPrior = {
+          type: 'automatic'
+        };
+      }
+
+      frontEndModel.leaveOneOut = {};
+      if (model.sensitivity && model.sensitivity.omittedStudy) {
+        frontEndModel.leaveOneOut.isSelected = true;
+        frontEndModel.leaveOneOut.omittedStudy = model.sensitivity.omittedStudy;
+        frontEndModel.leaveOneOut.subType = 'specific-leave-one-out';
+      }
+
+      return frontEndModel;
     }
 
     function createModelBatch(modelBase, comparisonOptions, nodeSplitOptions) {
@@ -74,6 +148,15 @@ define(['angular', 'lodash'], function(angular, _) {
           return newModel;
         });
       }
+    }
+
+    function createLeaveOneOutBatch(modelBase, leaveOneOutOptions) {
+      return _.map(leaveOneOutOptions, function(leaveOneOutOption) {
+        var newModel = _.cloneDeep(modelBase);
+        newModel.title = modelBase.title + ' (without ' + leaveOneOutOption + ')';
+        newModel.leaveOneOut.omittedStudy = leaveOneOutOption;
+        return newModel;
+      });
     }
 
     function isVariableBinary(covariateName, problem) {
@@ -151,7 +234,9 @@ define(['angular', 'lodash'], function(angular, _) {
       isProblemWithCovariates: isProblemWithCovariates,
       getCovariateBounds: getCovariateBounds,
       findCentering: findCentering,
-      filterCentering: filterCentering
+      filterCentering: filterCentering,
+      createLeaveOneOutBatch: createLeaveOneOutBatch,
+      toFrontEnd: toFrontEnd
     };
   };
 
