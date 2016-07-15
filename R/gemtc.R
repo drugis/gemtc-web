@@ -306,7 +306,7 @@ gemtc <- function(params) {
         do.call(data.frame, c(values, list(stringsAsFactors=FALSE)))
       }
     ))
-    if(!is.null(params[['sensitivity']])) {
+    if(!is.null(params[['sensitivity']]) && 'adjustmentFactor' %in% names(params[['sensitivity']])) {
       adjustmentFactor <- make.names(params[['sensitivity']][['adjustmentFactor']])
       inflationValue <- params[['sensitivity']][['inflationValue']]
       weightingFactor <- params[['sensitivity']][['weightingFactor']]
@@ -330,7 +330,7 @@ gemtc <- function(params) {
     if (!is.null(params[['outcomeScale']])) {
       mtc.model.params <- c(mtc.model.params, list('om.scale' = params[['outcomeScale']]))
     }
-    if(!is.null(params[['sensitivity']])) {
+    if(!is.null(params[['sensitivity']]) && 'adjustmentVector' %in% names(params[['sensitivity']])) {
       mtc.model.params <- c(mtc.model.params, list(powerAdjust="powerAdjust"))
     }
     if(modelType == 'node-split') {
@@ -513,7 +513,16 @@ times$summary <- system.time({
 })
 report('summary', 1.0)
     summary[['script-version']] <- 0.3
-    summary[['summaries']][['statistics']] <- wrap.matrix(summary[['summaries']][['statistics']])
+    statistics <- summary[['summaries']][['statistics']]
+    if(is.vector(statistics)) { # in case of pairwise there's no effect matrix
+      treatmentIds <- as.character(network[['treatments']][['id']])
+      matrixStatistics <-  matrix(statistics, ncol=4)
+      colnames(matrixStatistics) <- names(statistics)
+      rownames(matrixStatistics) <- paste('d.', treatmentIds[1], ".", treatmentIds[2], sep="")
+    } else {
+      matrixStatistics <- statistics
+    }
+    summary[['summaries']][['statistics']] <- wrap.matrix(matrixStatistics)
     summary[['summaries']][['quantiles']] <- wrap.matrix(summary[['summaries']][['quantiles']])
     summary[['logScale']] <- ll.call('scale.log', model)
     summary[['link']] <- model[['link']]

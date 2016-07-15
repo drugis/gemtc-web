@@ -1,7 +1,7 @@
 gemtc-web
 =========
 
-User interface for network meta-analysis based on the gemtc R package and Patavi
+User interface for evidence synthesis based on the gemtc R package and Patavi
 
 Setup for the stand-alone version
 ---------------------------------

@@ -8,7 +8,7 @@
     "Joël Kuiper",
     "Daan Reid"
   ],
-  "description": "User interface for network meta-analysis based on the gemtc R package and Patavi",
+  "description": "User interface for evidence synthesis based on the gemtc R package and Patavi",
   "main": "/app/js/main.js",
   "moduleType": [
     "amd"
@@ -48,7 +48,7 @@
     "error-reporting": "https://github.com/connorstroomberg/error-reporting.git#1.1",
     "KaTeX": "katex#~0.5.1",
     "scrollup": "~2.4.1",
-    "angular-patavi-client": "https://github.com/gertvv/angular-patavi-client.git#2.0.0"
+    "angular-patavi-client": "https://github.com/drugis/angular-patavi-client.git#master"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"

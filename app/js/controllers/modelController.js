@@ -21,6 +21,7 @@ define(['lodash'], function(_) {
     $scope.model = ModelResource.get($stateParams);
     $scope.$parent.model = $scope.model;
     $scope.openRunLengthDialog = openRunLengthDialog;
+    $scope.goToRefineModel = goToRefineModel;
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
 
@@ -46,6 +47,10 @@ define(['lodash'], function(_) {
             $scope.progress.percentage = update.eventData.progress;
           }
         });
+
+    function goToRefineModel(){
+      $state.go('refineModel', $stateParams);
+    }
 
     function getTaskInfo() {
       return PataviTaskIdResource.get($stateParams).$promise;

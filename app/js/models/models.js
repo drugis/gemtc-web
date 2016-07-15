@@ -20,6 +20,7 @@ define(function (require) {
 
     //services
     .factory('ModelService', require('models/modelService'))
+    .factory('RefineModelService', require('models/refineModelService'))
     .factory('AnalysisService', require('analyses/analysisService'))
     .factory('DevianceStatisticsService', require('models/devianceStatisticsService'))
     .factory('NodeSplitOverviewService', require('models/nodeSplitOverviewService'))
