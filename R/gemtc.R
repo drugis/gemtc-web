@@ -551,7 +551,9 @@ report('summary', 1.0)
       # meanEffect <- summary$summaries$quantiles[['50%']]
       # print(c(treatment1, treatment2))
       pairwiseEffects <- pweffects(result, t1, t2)
-      summary[['pairwiseEffects']] <- pairwiseEffects
+      if(dim(results$pairwiseEffects)[1] > 3) { # no funnel plot if <= 3 studies
+        summary[['pairwiseEffects']] <- pairwiseEffects
+      }
     }
     if(modelType == 'node-split') {
       summary[['nodeSplitDensityPlot']] <- nodeSplitDensityPlot
