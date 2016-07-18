@@ -544,6 +544,14 @@ report('summary', 1.0)
     }
     if(modelType == "pairwise") {
       summary[['studyForestPlot']] <- forestPlot
+      t1 <- as.character(params[['modelType']][['details']][['from']][['id']])
+      t2 <- as.character(params[['modelType']][['details']][['to']][['id']])
+      # treatment1 <- treatments$description[treatments$id == t1]
+      # treatment2 <- treatments$description[treatments$id == t2]
+      # meanEffect <- summary$summaries$quantiles[['50%']]
+      # print(c(treatment1, treatment2))
+      pairwiseEffects <- pweffects(result, t1, t2)
+      summary[['pairwiseEffects']] <- pairwiseEffects
     }
     if(modelType == 'node-split') {
       summary[['nodeSplitDensityPlot']] <- nodeSplitDensityPlot
