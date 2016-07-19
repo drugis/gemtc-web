@@ -7,22 +7,23 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
       scope: {
         resultsPromise: '='
       },
+      templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
       link: function(scope, element) {
 
         var root = d3.select(element[0])
-              .append('svg');
+          .find('.funnel-plot')
+          .append('svg');
 
         scope.resultsPromise.then(render);
 
-        function render(resultss) {
+        function render(resultsHolder) {
 
-          var
-            results = resultss.results,
-            midPoint = results.relativeEffects.centering[0].quantiles['50%'],
-            minY = 0,
-            maxY = Math.max(2, _.max(results.studyRelativeEffects['std.err'])),
-            minX = (-1.96  + midPoint) * maxY,
-            maxX = (1.96  + midPoint) * maxY;
+          var results = resultsHolder.results;
+          var midPoint = results.relativeEffects.centering[0].quantiles['50%'];
+          var minY = 0;
+          var maxY = Math.max(2, _.max(results.studyRelativeEffects['std.err']));
+          var minX = (-1.96 + midPoint) * maxY;
+          var maxX = (1.96 + midPoint) * maxY;
 
           nvd3.addGraph(function() {
             root.append("rect")
@@ -35,12 +36,14 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               .color(d3.scale.category10().range())
               .xDomain([minX, maxX])
               .yDomain([maxY, minY]);
-              chart.yAxis.axisLabel('Standard error');
-              chart.xAxis.axisLabel('Median study effect');
+            chart.yAxis.axisLabel('Standard error');
+            chart.xAxis.axisLabel('Median study effect');
 
             //Axis settings
             chart.xAxis.tickFormat(d3.format('.02f'));
-            chart.yAxis.tickFormat(function(d){ return Math.abs(d);});
+            chart.yAxis.tickFormat(function(d) {
+              return Math.abs(d);
+            });
 
             var myData = [{
               values: results.studyRelativeEffects.mean.map(function(meanVal, idx) {
@@ -55,35 +58,34 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               .style('width', '500')
               .style('height', '500')
               .datum(myData)
-              .call(chart)
+              .call(chart);
 
-              ;
             chart.dispatch.on('renderEnd', function() {
               var graph = d3.select(element[0].querySelector('g'));
 
               graph.append('line')
-              .style('stroke', 'black')
-              .style('stroke-dasharray', '5,10,5')
-              .attr('x1', chart.xScale()(minX))
-              .attr('y1', chart.yScale()(maxY))
-              .attr('x2', chart.xScale()(midPoint))
-              .attr('y2', chart.yScale()(0));
+                .style('stroke', 'black')
+                .style('stroke-dasharray', '5,10,5')
+                .attr('x1', chart.xScale()(minX))
+                .attr('y1', chart.yScale()(maxY))
+                .attr('x2', chart.xScale()(midPoint))
+                .attr('y2', chart.yScale()(0));
 
               graph.append('line')
-              .style('stroke', 'black')
-              .style('stroke-dasharray', '5,10,5')
-              .attr('x1', chart.xScale()(midPoint))
-              .attr('y1', chart.yScale()(0))
-              .attr('x2', chart.xScale()(maxX))
-              .attr('y2', chart.yScale()(maxY));
+                .style('stroke', 'black')
+                .style('stroke-dasharray', '5,10,5')
+                .attr('x1', chart.xScale()(midPoint))
+                .attr('y1', chart.yScale()(0))
+                .attr('x2', chart.xScale()(maxX))
+                .attr('y2', chart.yScale()(maxY));
 
               graph.append('line')
-              .style('stroke', 'black')
-              .style('stroke-dasharray', '5,10,5')
-              .attr('x1', chart.xScale()(midPoint))
-              .attr('y1', chart.yScale()(0))
-              .attr('x2', chart.xScale()(midPoint))
-              .attr('y2', chart.yScale()(maxY));
+                .style('stroke', 'black')
+                .style('stroke-dasharray', '5,10,5')
+                .attr('x1', chart.xScale()(midPoint))
+                .attr('y1', chart.yScale()(0))
+                .attr('x2', chart.xScale()(midPoint))
+                .attr('y2', chart.yScale()(maxY));
             });
             nvd3.utils.windowResize(chart.update);
 
