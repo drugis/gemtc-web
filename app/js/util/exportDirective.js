@@ -50,7 +50,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
           a.download = scope.fileName + ".png";
           a.href = $canvasElement[0].toDataURL("image/png");
 
-          // work around firefox security feature that stop triggering click event from script
+          // work around firefox security feature that stops triggering click event from script
           var clickEvent = new MouseEvent("click", {
             "view": window,
             "bubbles": true,
@@ -60,6 +60,10 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
         }
 
         function exportSvg($svgElement) {
+          // remove interactable elements from nvd3 scatter graph
+          $svgElement.find('.nv-point-paths').remove();
+          $svgElement.find('.nv-point-clips').remove();
+
           //can't set svg instructions as image src directly
           var $image = createImage($svgElement);
           $image.load(_.partial(exportImage, $image[0]));

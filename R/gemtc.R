@@ -546,13 +546,9 @@ report('summary', 1.0)
       summary[['studyForestPlot']] <- forestPlot
       t1 <- as.character(params[['modelType']][['details']][['from']][['id']])
       t2 <- as.character(params[['modelType']][['details']][['to']][['id']])
-      # treatment1 <- treatments$description[treatments$id == t1]
-      # treatment2 <- treatments$description[treatments$id == t2]
-      # meanEffect <- summary$summaries$quantiles[['50%']]
-      # print(c(treatment1, treatment2))
-      pairwiseEffects <- pweffects(result, t1, t2)
-      if(dim(results$pairwiseEffects)[1] > 3) { # no funnel plot if <= 3 studies
-        summary[['pairwiseEffects']] <- pairwiseEffects
+      studyRelativeEffects <- pweffects(result, t1, t2)
+      if(dim(studyRelativeEffects)[1] > 3) { # no funnel plot if <= 3 studies
+        summary[['studyRelativeEffects']] <- studyRelativeEffects
       }
     }
     if(modelType == 'node-split') {
