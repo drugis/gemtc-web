@@ -19,7 +19,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
           var results = resultsHolder.results;
           scope.results = results;
 
-          if (!results.relativeEffects) {
+          if (!results.studyRelativeEffects) {
             return; // do not render if data is missing
           }
 
