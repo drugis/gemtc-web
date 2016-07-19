@@ -1,7 +1,7 @@
 'use strict';
 define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
-  var dependencies = [];
-  var FunnelPlot = function() {
+  var dependencies = ['gemtcRootPath'];
+  var FunnelPlot = function(gemtcRootPath) {
     return {
       restrict: 'E',
       scope: {
