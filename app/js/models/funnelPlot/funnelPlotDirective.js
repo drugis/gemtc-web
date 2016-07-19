@@ -10,7 +10,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
       templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
       link: function(scope, element) {
 
-        var root = d3.select('.funnel-plot', element[0]).append('svg');
+        var root = d3.select('svg', element[0]);
 
         scope.resultsPromise.then(render);
 
