@@ -69,6 +69,11 @@
     "text": "A plot showing the treatment effect for each study.",
     "link": "/manual.html#pairwise-meta-analysis-results"
   },
+  "funnel-plot": {
+    "title": "Funnel",
+    "text": "A plot showing to what extent the effects of studies lie within the expected interval",
+    "link": "/manual.html#pairwise-meta-analysis-results"
+  },
   "hazard-ratio": {
     "title": "Hazard ratio",
     "text": "The ratio of the hazard rates of an event in two groups being compared. If the hazard rate is h1 in the base group and h2 in the other group, the hazard ratio is h2/h1. The hazard rate is the limit of the number of events per unit time per person at risk, as the time interval approaches zero.",
