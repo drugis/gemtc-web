@@ -4,11 +4,8 @@ define([], function() {
 
   var RefineModelService = function(ModelResource, ModelService) {
 
-    function getRefinedModel(analysisId, modelId) {
-      return ModelResource.get({
-        analysisId: analysisId,
-        modelId: modelId
-      }).$promise.then(function(model) {
+    function getRefinedModel($stateParams) {
+      return ModelResource.get($stateParams).$promise.then(function(model) {
         delete model.title;
         delete model.id;
         delete model.taskUrl;
@@ -18,7 +15,7 @@ define([], function() {
     }
 
     return {
-      getRefinedModel : getRefinedModel
+      getRefinedModel: getRefinedModel
     };
   };
 
