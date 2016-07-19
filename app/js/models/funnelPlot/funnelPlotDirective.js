@@ -17,6 +17,11 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
         function render(resultsHolder) {
 
           var results = resultsHolder.results;
+
+          if (!results.relativeEffects) {
+            return; // do not render if data is missing
+          }
+
           var midPoint = results.relativeEffects.centering[0].quantiles['50%'];
           var minY = 0;
           var maxY = Math.max(2, _.max(results.studyRelativeEffects['std.err']));
