@@ -25,8 +25,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
           var midPoint = results.relativeEffects.centering[0].quantiles['50%'];
           var minY = 0;
           var maxY = Math.max(2, _.max(results.studyRelativeEffects['std.err']));
-          var minX = (-1.96 + midPoint) * maxY;
-          var maxX = (1.96 + midPoint) * maxY;
+          var minX = midPoint - 1.96 * maxY;
+          var maxX = midPoint + 1.96 * maxY;
 
           nvd3.addGraph(function() {
             function drawInterval() {
