@@ -93,8 +93,9 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
             chart.dispatch.on('renderEnd', drawInterval);
             nvd3.utils.windowResize(function() {
-              drawInterval();
+              root.selectAll('*').remove();
               chart.update();
+              drawInterval();
             });
 
             return chart;
