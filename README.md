@@ -28,19 +28,14 @@ Use psql to create the db to store data
     CREATE USER gemtc WITH PASSWORD 'develop';
     CREATE DATABASE gemtc ENCODING 'utf-8' OWNER gemtc;
 
-    CREATE USER patavitask WITH PASSWORD 'develop';
-    CREATE DATABASE patavitask ENCODING 'utf-8' OWNER patavitask;
-
 Create a .pgpass in the user home to store the database password
 the file should contain a line with the following format hostname:port:database:username:password
 
     localhost:5432:gemtc:gemtc:develop
-    localhost:5432:patavitask:patavitask:develop
 
 Create the schema
 
     for i in create-database-changeset-*.sql; do psql -h localhost -U gemtc -d gemtc -f $i; done
-    for i in create-database-patavitaks-changeset-*.sql; do psql -h localhost -U patavitask -d patavitask -f $i; done
 
 Setup environment variables
 
@@ -116,19 +111,3 @@ To run nightwatch integration tests:
     wget http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar
     node gemtc &
     nightwatch --config nightwatch-local.json
-
-
-Release log
-===========
-
-2015-11-27 (0.2.7)
-------------------
-- Added inline help, and an user's guide.
-- Added breadcrumbs
-- Redesigned convergence diagnostics plots
-- Added nodesplitting summary screen
-- Added residual deviance statistics
-- Allow specification of heterogeneity prior
-- Allow extension of model runs that have not converged
-- Allow limited exporting of tables and figures
-- Many small UI/terminology improvements
