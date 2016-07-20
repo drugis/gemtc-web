@@ -9,7 +9,6 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
       },
       templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
       link: function(scope, element) {
-
         var root = d3.select('svg', element[0]);
 
         scope.resultsPromise.then(render);
@@ -19,17 +18,45 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
           var results = resultsHolder.results;
           scope.results = results;
 
-          if (!results.relativeEffects) {
+          if (!results.studyRelativeEffects) {
             return; // do not render if data is missing
           }
 
           var midPoint = results.relativeEffects.centering[0].quantiles['50%'];
           var minY = 0;
           var maxY = Math.max(2, _.max(results.studyRelativeEffects['std.err']));
-          var minX = (-1.96 + midPoint) * maxY;
-          var maxX = (1.96 + midPoint) * maxY;
+          var minX = midPoint - 1.96 * maxY;
+          var maxX = midPoint + 1.96 * maxY;
 
           nvd3.addGraph(function() {
+            function drawInterval() {
+              var graph = d3.select(element[0].querySelector('g'));
+
+              graph.append('line')
+                .style('stroke', 'black')
+                .style('stroke-dasharray', '5,10,5')
+                .attr('x1', chart.xScale()(minX))
+                .attr('y1', chart.yScale()(maxY))
+                .attr('x2', chart.xScale()(midPoint))
+                .attr('y2', chart.yScale()(0));
+
+              graph.append('line')
+                .style('stroke', 'black')
+                .style('stroke-dasharray', '5,10,5')
+                .attr('x1', chart.xScale()(midPoint))
+                .attr('y1', chart.yScale()(0))
+                .attr('x2', chart.xScale()(maxX))
+                .attr('y2', chart.yScale()(maxY));
+
+              graph.append('line')
+                .style('stroke', 'black')
+                .style('stroke-dasharray', '5,10,5')
+                .attr('x1', chart.xScale()(midPoint))
+                .attr('y1', chart.yScale()(0))
+                .attr('x2', chart.xScale()(midPoint))
+                .attr('y2', chart.yScale()(maxY));
+            }
+
             root.append("rect")
               .attr("width", "100%")
               .attr("height", "100%")
@@ -59,40 +86,17 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             }];
 
             root
-              .style('width', '500')
-              .style('height', '500')
+              .style('width', '500px')
+              .style('height', '500px')
               .datum(myData)
               .call(chart);
 
-            chart.dispatch.on('renderEnd', function() {
-              var graph = d3.select(element[0].querySelector('g'));
-
-              graph.append('line')
-                .style('stroke', 'black')
-                .style('stroke-dasharray', '5,10,5')
-                .attr('x1', chart.xScale()(minX))
-                .attr('y1', chart.yScale()(maxY))
-                .attr('x2', chart.xScale()(midPoint))
-                .attr('y2', chart.yScale()(0));
-
-              graph.append('line')
-                .style('stroke', 'black')
-                .style('stroke-dasharray', '5,10,5')
-                .attr('x1', chart.xScale()(midPoint))
-                .attr('y1', chart.yScale()(0))
-                .attr('x2', chart.xScale()(maxX))
-                .attr('y2', chart.yScale()(maxY));
-
-              graph.append('line')
-                .style('stroke', 'black')
-                .style('stroke-dasharray', '5,10,5')
-                .attr('x1', chart.xScale()(midPoint))
-                .attr('y1', chart.yScale()(0))
-                .attr('x2', chart.xScale()(midPoint))
-                .attr('y2', chart.yScale()(maxY));
+            chart.dispatch.on('renderEnd', drawInterval);
+            nvd3.utils.windowResize(function() {
+              root.selectAll('*').remove();
+              chart.update();
+              drawInterval();
             });
-            nvd3.utils.windowResize(chart.update);
-
 
             return chart;
           });
