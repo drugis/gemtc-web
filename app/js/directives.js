@@ -9,12 +9,12 @@ define(function(require) {
     .directive('pagedPngPlot', require('gemtc-web/util/pagedPngPlotDirective'))
     .directive('appAlert', require('gemtc-web/util/appAlertDirective'))
     .directive('runLength', require('gemtc-web/models/runLength/runLengthDirective'))
-    .directive('nodesplitForestPlot',require('gemtc-web/models/nodesplitForestPlot/nodesplitForestPlotDirective'))
+    .directive('nodesplitForestPlot', require('gemtc-web/models/nodesplitForestPlot/nodesplitForestPlotDirective'))
     .directive('heterogeneityPrior', require('gemtc-web/models/heterogeneityPrior/heterogeneityPriorDirective'))
+    .directive('funnelPLot', require('gemtc-web/models/funnelPlot/funnelPlotDirective'))
     .directive('graphModal', require('gemtc-web/util/graphModalDirective/graphModalDirective'))
     .directive('relativeEffectPlots', require('gemtc-web/models/result/relativeEffectPlotsDirective'))
     .directive('pairwiseForestPlots', require('gemtc-web/models/result/pairwiseForestPlotsDirective'))
     .directive('nodeSplitDensityPlots', require('gemtc-web/models/result/nodeSplitDensityPlotsDirective'))
-    .directive('metaRegressionCovPlots', require('gemtc-web/models/result/metaRegressionCovPlotsDirective'))
-  ;
+    .directive('metaRegressionCovPlots', require('gemtc-web/models/result/metaRegressionCovPlotsDirective'));
 });
