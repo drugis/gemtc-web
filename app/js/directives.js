@@ -11,7 +11,7 @@ define(function(require) {
     .directive('runLength', require('gemtc-web/models/runLength/runLengthDirective'))
     .directive('nodesplitForestPlot', require('gemtc-web/models/nodesplitForestPlot/nodesplitForestPlotDirective'))
     .directive('heterogeneityPrior', require('gemtc-web/models/heterogeneityPrior/heterogeneityPriorDirective'))
-    .directive('funnelPLot', require('gemtc-web/models/funnelPlot/funnelPlotDirective'))
+    .directive('funnelPlot', require('gemtc-web/models/funnelPlot/funnelPlotDirective'))
     .directive('graphModal', require('gemtc-web/util/graphModalDirective/graphModalDirective'))
     .directive('relativeEffectPlots', require('gemtc-web/models/result/relativeEffectPlotsDirective'))
     .directive('pairwiseForestPlots', require('gemtc-web/models/result/pairwiseForestPlotsDirective'))
