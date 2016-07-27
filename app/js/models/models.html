@@ -1,43 +1,45 @@
   <div class="row">
   <div class="columns large-12">
-    <h3>Models</h3>
-    <div ng-show="!modelsLoaded" class="row">
-      <div class="columns center large-12">
+    <h3 class="left">Models</h3>
+    <div ng-show="!modelsLoaded">
         <i class="fa fa-spinner fa-spin fa-3x"></i>
         <p>Loading models...</p>
-      </div>
     </div>
-  </div>
-</div>
-<div class="row" ng-show="modelsLoaded">
-  <div class="columns large-8">
+    <div class="clearfix" ng-show="modelsLoaded">
     <!-- NB ng-hide code only for ADDIS purposes (can't see others' models in gemtc standalone)-->
-    <button id="add-model-btn" ng-hide="loginUserId !== userId" tabindex="0" class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add new model</button>
-</div>
-</div>
-<div class="row" ng-show="modelsLoaded">
-  <div class="columns large-12">
-    <h5>Other models</h5>
-    <em ng-show="models.length === 0">No other models have been created</em>
-    <table ng-show="models.length > 0">
-      <thead>
-        <tr>
-          <td class="large-3 text-center">Title</td>
-          <td class="large-1 text-center">Type</td>
-          <td class="large-1 text-center">Model computed <inline-help help-key="model-computed"></inline-help></td>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- class="on-hover clickable"  -->
-        <tr ng-repeat="model in models | orderBy:'title'">
-          <td>
-            <a ng-click="gotoModel(model)">{{model.title}} </a>
-            <span ng-show="hasPimaryLabel(model)"> (primary model)</span>
-          </td>
-          <td class="text-center">{{model.modelType.type}} <span ng-if="model.sensitivity.omittedStudy">(leave one out)</span></td>
-          <td class="text-center"><i class="fa fa-check" style="color:green;" ng-if="model.hasResult"></td>
-        </tr>
-      </tbody>
+    
+     <button id="add-model-btn" ng-hide="loginUserId !== userId" tabindex="0" class="button small right" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add model
+    </button>
+    <button tabindex="1" ng-disabled="numberOfModelsArchived === 0" ng-hide="showArchived" class="button secondary small right" ng-click="showArchived = !showArchived"><i class="fa fa-eye"></i> Show archived ({{numberOfModelsArchived}})
+    </button>
+    <button tabindex="1" ng-show="showArchived" class="button secondary small right" ng-click="showArchived = !showArchived"><i class="fa fa-eye-slash"></i> Hide archived
+    </button>
+    <div class="row">
+      <div class="columns large-12">
+        <em ng-show="models.length === 0">No models have been created</em>
+        <em ng-show="models.length > 0 && !showArchived && models.length === numberOfModelsArchived">All models have been archived</em>
+        <table ng-show="models.length > 0 && (showArchived || models.length !== numberOfModelsArchived)" style="width:100%;">
+            <thead>
+              <tr>
+                <td class="text-center large-6 medium-6">Title</td>
+                <td class="text-center large-2 medium-2">Type</td>
+                <td class="text-center large-2 medium-2">Model computed <inline-help help-key="model-computed"></inline-help></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="model in models | orderBy:title |filter:archivedFilter">
+                <td>
+                  <a ng-click="gotoModel(model)">{{model.title}} <span ng-show=model.archived>(archvived)</span></a>
+                  <span ng-show="hasPimaryLabel(model)"> (primary model)</span>
+                  <span><button ng-if="!model.archived &&  !hasPimaryLabel(model)" ng-click="archiveModel(model)" type="button" class="tiny right info radius" style="margin-bottom:0;">archive</button></span>
+                  <span><button ng-if="model.archived" ng-click="unArchiveModel(model)" type="button" class="tiny right alert radius" style="margin-bottom:0;">unarchive</button></span>
+                </td>
+                <td class="text-center">{{model.modelType.type}} <span ng-if="model.sensitivity.omittedStudy">(leave one out)</span></td>
+                <td class="text-center"><i class="fa fa-check" style="color:green;" ng-if="model.hasResult"></i></td>
+              </tr>
+            </tbody>
     </table>
+    </div>
+    </div>
   </div>
 </div>
