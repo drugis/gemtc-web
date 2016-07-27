@@ -1,15 +1,20 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$state', '$stateParams', 'AnalysisResource', 'ModelResource'];
-  var ModelsController = function($scope, $state, $stateParams, AnalysisResource, ModelResource) {
+  var dependencies = ['$scope', '$state', '$stateParams', 'AnalysisResource', 'ModelResource', 'ModelAttributeResource'];
+  var ModelsController = function($scope, $state, $stateParams, AnalysisResource, ModelResource, ModelAttributeResource) {
     $scope.modelsLoaded = false;
+    $scope.archivedFilter = archivedFilter;
     $scope.analysisId = $stateParams.analysisId;
     $scope.setAsPrimary = setAsPrimary;
     $scope.modelParams = modelParams;
     $scope.loadModels = loadModels;
+    $scope.archiveModel = archiveModel;
+    $scope.unArchiveModel = unArchiveModel;
     $scope.gotoCreateModel = gotoCreateModel;
     $scope.gotoModel = gotoModel;
     $scope.hasPimaryLabel = hasPimaryLabel;
+    $scope.showArchived = false;
+    $scope.numberOfModelsArchived = 0;
     $scope.loadModels();
 
     function modelParams(model) {
@@ -28,13 +33,41 @@ define(['lodash'], function(_) {
         $scope.$parent.primaryModel = result.find(function(model) {
           return model.id === $scope.analysis.primaryModel;
         });
-        $scope.$watch('$parent.primaryModel', function(newValue, oldValue){
-          if(oldValue !== newValue) {
-              setAsPrimary(newValue);
+        $scope.$watch('$parent.primaryModel', function(newValue, oldValue) {
+          if (oldValue !== newValue) {
+            setAsPrimary(newValue);
           }
         });
-        $scope.$parent.models =  result.sort(byName);
+        $scope.numberOfModelsArchived = result.reduce(function(accum, model) {
+          return model.archived ? ++accum : accum;
+        }, 0);
+        $scope.$parent.models = result.sort(byName);
       });
+    }
+
+    function archivedFilter(model) {
+      if ($scope.showArchived) {
+        return true;
+      }
+      return !model.archived;
+    }
+
+    function archiveModel(model) {
+      ModelAttributeResource.save({
+        analysisId: $scope.analysisId,
+        modelId: model.id
+      }, {
+        archived: true
+      }).$promise.then(loadModels);
+    }
+
+    function unArchiveModel(model) {
+      ModelAttributeResource.save({
+        analysisId: $scope.analysisId,
+        modelId: model.id
+      }, {
+        archived: false
+      }).$promise.then(loadModels);
     }
 
     function gotoCreateModel() {
@@ -51,7 +84,10 @@ define(['lodash'], function(_) {
 
     function setAsPrimary(primaryModel) {
       var modelId = primaryModel ? primaryModel.id : null;
-      return AnalysisResource.setPrimaryModel(_.extend($scope.analysis, {modelId: modelId, analysisId: $scope.analysis.id}));
+      return AnalysisResource.setPrimaryModel(_.extend($scope.analysis, {
+        modelId: modelId,
+        analysisId: $scope.analysis.id
+      }));
     }
 
   };

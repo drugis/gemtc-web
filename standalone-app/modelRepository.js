@@ -4,14 +4,15 @@ var logger = require('./logger'),
   _ = require('lodash'),
   db = require('./db')(dbUtil.gemtcDBUrl),
   columnString = 'title, analysisId, linearModel, burn_in_iterations, inference_iterations, ' +
-  ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior, regressor, sensitivity';
+  ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior, regressor, sensitivity, archived';
 
 module.exports = {
   create: createModel,
   get: getModel,
   update: update,
   findByAnalysis: findByAnalysis,
-  setTaskUrl: setTaskUrl
+  setTaskUrl: setTaskUrl,
+  setArchive: setArchive
 };
 
 function mapModelRow(modelRow) {
@@ -29,7 +30,8 @@ function mapModelRow(modelRow) {
     link: modelRow.link,
     heterogeneityPrior: modelRow.heterogeneity_prior,
     regressor: modelRow.regressor,
-    sensitivity: modelRow.sensitivity
+    sensitivity: modelRow.sensitivity,
+    archived: modelRow.archived
   };
 
   if (modelRow.outcome_scale) {
@@ -109,6 +111,18 @@ function setTaskUrl(modelId, taskUrl, callback) {
     }
   });
 }
+
+function setArchive(modelId, isArchived, callback) {
+  db.query('UPDATE model SET archived=$2 WHERE id = $1', [modelId, isArchived], function(error) {
+    if (error) {
+      logger.error('error setting model.archived, error: ' + error);
+      callback(error);
+    } else {
+      callback();
+    }
+  });
+}
+
 
 function update(newModel, callback) {
   db.query('UPDATE model SET burn_in_iterations=$2, inference_iterations=$3, thinning_factor=$4, taskUrl=NULL where id = $1', [
