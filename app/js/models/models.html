@@ -27,7 +27,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="model in models | orderBy:title |filter:archivedFilter">
+              <tr ng-repeat="model in models | orderBy:title | filter:archivedFilter">
                 <td>
                   <a ng-click="gotoModel(model)">{{model.title}} <span ng-show=model.archived>(archived {{model.archivedOn | date}})</span></a>
                   <span ng-show="hasPimaryLabel(model)"> (primary model)</span>
