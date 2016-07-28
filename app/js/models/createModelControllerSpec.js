@@ -2,7 +2,8 @@
 define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
   describe('the create model controller', function() {
     var scope, q,
-      stateParamsMock, stateMock,
+      stateParamsMock = {},
+      stateMock,
       problemDefer,
       pairwiseOptionsMock = ['pairwise 1'],
       leaveOneOutOptionsMock = [],
