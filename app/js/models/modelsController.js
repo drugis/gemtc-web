@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = ['$scope', '$state', '$stateParams', 'AnalysisResource', 'ModelResource', 'ModelAttributeResource'];
   var ModelsController = function($scope, $state, $stateParams, AnalysisResource, ModelResource, ModelAttributeResource) {
     $scope.modelsLoaded = false;
@@ -53,19 +53,17 @@ define(['lodash'], function(_) {
     }
 
     function archiveModel(model) {
-      ModelAttributeResource.save({
-        analysisId: $scope.analysisId,
-        modelId: model.id
-      }, {
+      var params = angular.clone($stateParams);
+      params.modelId = model.id;
+      ModelAttributeResource.save(params, {
         archived: true
       }).$promise.then(loadModels);
     }
 
     function unArchiveModel(model) {
-      ModelAttributeResource.save({
-        analysisId: $scope.analysisId,
-        modelId: model.id
-      }, {
+      var params = angular.clone($stateParams);
+      params.modelId = model.id;
+      ModelAttributeResource.save(params, {
         archived: false
       }).$promise.then(loadModels);
     }
