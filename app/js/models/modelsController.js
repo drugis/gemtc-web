@@ -53,7 +53,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function archiveModel(model) {
-      var params = angular.clone($stateParams);
+      var params = angular.copy($stateParams);
       params.modelId = model.id;
       ModelAttributeResource.save(params, {
         archived: true
@@ -61,7 +61,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function unArchiveModel(model) {
-      var params = angular.clone($stateParams);
+      var params = angular.copy($stateParams);
       params.modelId = model.id;
       ModelAttributeResource.save(params, {
         archived: false
