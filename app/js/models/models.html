@@ -29,7 +29,7 @@
             <tbody>
               <tr ng-repeat="model in models | orderBy:title |filter:archivedFilter">
                 <td>
-                  <a ng-click="gotoModel(model)">{{model.title}} <span ng-show=model.archived>(archvived)</span></a>
+                  <a ng-click="gotoModel(model)">{{model.title}} <span ng-show=model.archived>(archived {{model.archivedOn | date}})</span></a>
                   <span ng-show="hasPimaryLabel(model)"> (primary model)</span>
                   <span><button ng-if="!model.archived &&  !hasPimaryLabel(model)" ng-click="archiveModel(model)" type="button" class="tiny right info radius" style="margin-bottom:0;">archive</button></span>
                   <span><button ng-if="model.archived" ng-click="unArchiveModel(model)" type="button" class="tiny right alert radius" style="margin-bottom:0;">unarchive</button></span>

@@ -6,6 +6,7 @@ var assert = require('assert'),
   session = require('express-session'),
   request = require('superagent'),
   express = require('express'),
+  bodyParser = require('body-parser'),
   errorHandler = require('../standalone-app/errorHandler');
 
 var app = express();
@@ -34,6 +35,7 @@ describe('modelRouter', function() {
 
   before(function() {
     server = app
+      .use(bodyParser.json())
       .use(session(sessionOpts))
       .use(function(req, res, next) {
         req.session.userId = userId;
@@ -348,6 +350,45 @@ describe('modelRouter', function() {
         .end(function(err, res) {
           assert(err);
           res.should.have.property('status', httpStatus.INTERNAL_SERVER_ERROR);
+          done();
+        });
+    });
+  });
+
+  describe('setAttributes', function() {
+    var model = {
+      analysisId: 1,
+      id: 2
+    };
+    var analysis = {
+      id: 1,
+      owner: userId,
+    };
+
+    var setArchiveStub;
+
+    beforeEach(function() {
+      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
+      sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
+      setArchiveStub = sinon.stub(modelRepository, 'setArchive');
+      setArchiveStub.onCall(0).yields(null);
+    });
+
+    afterEach(function() {
+      analysisRepository.get.restore();
+      modelRepository.get.restore();
+      modelRepository.setArchive.restore();
+    });
+
+    it('should call setArchived with the isArchived from the body', function(done) {
+      request
+        .post(BASE_PATH + '1/models/2/attributes')
+        .send({
+          archived: true
+        })
+        .end(function(err, res) {
+          res.should.have.property('status', httpStatus.OK);
+          assert(setArchiveStub.callCount === 1);
           done();
         });
     });

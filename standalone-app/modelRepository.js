@@ -3,8 +3,11 @@ var logger = require('./logger'),
   dbUtil = require('./dbUtil'),
   _ = require('lodash'),
   db = require('./db')(dbUtil.gemtcDBUrl),
-  columnString = 'title, analysisId, linearModel, burn_in_iterations, inference_iterations, ' +
-  ' thinning_factor, modelType, likelihood, link, outcome_scale, heterogeneity_prior, regressor, sensitivity, archived';
+  columnString = 'title, analysisId, linearModel,' +
+  ' burn_in_iterations, inference_iterations, ' +
+  ' thinning_factor, modelType, likelihood, link,' +
+  ' outcome_scale, heterogeneity_prior, regressor,' +
+  ' sensitivity, archived, archived_on';
 
 module.exports = {
   create: createModel,
@@ -31,7 +34,8 @@ function mapModelRow(modelRow) {
     heterogeneityPrior: modelRow.heterogeneity_prior,
     regressor: modelRow.regressor,
     sensitivity: modelRow.sensitivity,
-    archived: modelRow.archived
+    archived: modelRow.archived,
+    archivedOn: modelRow.archived_on
   };
 
   if (modelRow.outcome_scale) {
@@ -113,7 +117,8 @@ function setTaskUrl(modelId, taskUrl, callback) {
 }
 
 function setArchive(modelId, isArchived, callback) {
-  db.query('UPDATE model SET archived=$2 WHERE id = $1', [modelId, isArchived], function(error) {
+  var archivedOn = isArchived ? new Date() : null;
+  db.query('UPDATE model SET archived=$2, archived_on=$3  WHERE id = $1', [modelId, isArchived, archivedOn], function(error) {
     if (error) {
       logger.error('error setting model.archived, error: ' + error);
       callback(error);
