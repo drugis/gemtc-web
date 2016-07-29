@@ -15,12 +15,30 @@ module.exports = {
 };
 
 var httpsOptions = {
-  hostname: process.env.PATAVI_HOST,
-  port: process.env.PATAVI_PORT,
-  key: fs.readFileSync(process.env.PATAVI_CLIENT_KEY),
-  cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT),
-  ca: fs.readFileSync(process.env.PATAVI_CA)
+  hostname: process.env.PATAVI_HOST || 'localhost',
+  port: process.env.PATAVI_PORT || 3000
 };
+
+try{
+  httpsOptions.key = fs.readFileSync(process.env.PATAVI_CLIENT_KEY);
+}catch(e) {
+  logger.warn('could not read patavi client key at: ' + process.env.PATAVI_CLIENT_KEY);
+  httpsOptions.key = 'empy-key';
+}
+
+try{
+  httpsOptions.cert = fs.readFileSync(process.env.PATAVI_CLIENT_CRT);
+}catch(e) {
+  logger.warn('could not read patavi client certivicate key at: ' + process.env.PATAVI_CLIENT_CRT);
+  httpsOptions.cert = 'empy-client-crt';
+}
+
+try{
+  httpsOptions.ca = fs.readFileSync(process.env.PATAVI_CA);
+}catch(e) {
+  logger.warn('could not read patavi certivicate authority at: ' + process.env.PATAVI_CA);
+  httpsOptions.ca = 'empy-ca';
+}
 
 function getJson(url, callback) {
   var opts = urlModule.parse(url);
