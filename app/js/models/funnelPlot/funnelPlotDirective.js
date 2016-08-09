@@ -57,6 +57,14 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
                 .attr('y2', chart.yScale()(maxY));
             }
 
+            // ensure that the comparison direction is the same for pooled relative effects
+            // and study-specific ones.
+            function consistentDirection(meanVal, valT1, valT2) {
+              return valT1 === results.relativeEffects.centering[0].t1 && valT1 === results.relativeEffects.centering[0].t1 ?
+                  meanVal :
+                - meanVal;
+            }
+
             root.append("rect")
               .attr("width", "100%")
               .attr("height", "100%")
@@ -79,8 +87,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             var myData = [{
               values: results.studyRelativeEffects.mean.map(function(meanVal, idx) {
                 return {
-                  x: meanVal,
-                  y: results.studyRelativeEffects['std.err'][idx] // '-' : hack to invert y axis
+                  x: consistentDirection(meanVal, results.studyRelativeEffects.t1[idx], results.studyRelativeEffects.t1[idx]),
+                  y: results.studyRelativeEffects['std.err'][idx]
                 };
               })
             }];
