@@ -25,6 +25,10 @@ pweffects <- function(result, t1, t2) {
     (is.null(alpha) || alpha[study] > 0)
   })]
 
+  if(length(studies) == 0) {
+    return (data.frame())
+  }
+
   data <- network$data.ab
   columns <- ll.call("required.columns.ab", model)
   study.effect <- lapply(studies, function(study) {
@@ -541,6 +545,13 @@ report('summary', 1.0)
     summary[['alternatives']] <- names(summary[['rankProbabilities']])
     if(modelType == "network" || modelType == "regression") {
       summary[['relativeEffectPlots']] <- forestPlots
+    }
+    if(modelType == "network") {
+      comps <- combn(treatmentIds, 2)
+      studyRelativeEffects <- apply(comps, 2, function(treatmentPair) {
+        pweffects(result, treatmentPair[1], treatmentPair[2])
+      })
+      summary[['studyRelativeEffects']] <- studyRelativeEffects
     }
     if(modelType == "pairwise") {
       summary[['studyForestPlot']] <- forestPlot
