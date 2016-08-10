@@ -1,0 +1,24 @@
+<form id="add-comparison-funnel-plot-form" novalidate ng-submit="addFunnelPlot(settings)">
+  <div class="row">
+    <div class="large-9 columns">
+      <h3>Add a comparison-adjusted funnel plot</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-9 columns">
+      <h4>Select comparisons</h4>
+      <label for="comparison-checkbox-{{$index}}" ng-repeat="for comparison in comparisons">
+        {{comparison.name}}
+        <input type="checkbox" id="comparison-checkbox-{{$index}}" ng-model="comparison.isIncluded" >
+      </label>
+    </div>
+  </div>
+  <div class="row modal-bottom-button-bar">
+    <div class="large-9 columns">
+      <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(model)">
+        Add
+      </button>
+    </div>
+  </div>
+  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+</form>
