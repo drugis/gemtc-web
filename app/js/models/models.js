@@ -12,12 +12,14 @@ define(function(require) {
     .controller('NodeSplitOverviewController', require('models/nodeSplitOverviewController'))
     .controller('CreateNodeSplitModelController', require('models/createNodeSplitModelController'))
     .controller('CreateNetworkModelController', require('models/createNetworkModelController'))
+    .controller('AddComparisonFunnelPlotController', require('models/addComparisonFunnelPlotController'))
 
   // resources
   .factory('ModelResource', require('models/standaloneModelResource'))
     .factory('ModelAttributeResource', require('models/standaloneModelAttributeResource'))
     .factory('ProblemResource', require('models/standaloneProblemResource'))
     .factory('AnalysisResource', require('analyses/analysisResource'))
+    .factory('FunnelPlotResource', require('models/funnelPlotResource'))
 
   //services
   .factory('ModelService', require('models/modelService'))

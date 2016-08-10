@@ -95,6 +95,28 @@ define(['lodash'], function(_) {
       });
     }
 
+    function openRunLengthDialog() {
+      $modal.open({
+        windowClass: 'small',
+        templateUrl: gemtcRootPath + 'js/models/addComparisonFunnelPlot.html',
+        scope: $scope,
+        controller: 'AddComparisonFunnelPlotController',
+        resolve: {
+          problem: function() {
+            return $scope.problem;
+          },
+          model: function() {
+            return $scope.model;
+          },
+          successCallback: function() {
+            return function() {
+              $scope.comparisonAdjustedFunnelPlots = FunnelPlotResource.query($stateParams);
+            };
+          }
+        }
+      });
+    }  
+
     $scope.problemPromise = ProblemResource.get({
       analysisId: $stateParams.analysisId,
       projectId: $stateParams.projectId

@@ -19,6 +19,7 @@ module.exports = express.Router({
   .post('/:modelId', extendRunLength)
   .get('/:modelId/result', getResult)
   .post('/:modelId/attributes', setAttributes)
+  .post('/:modelId/funnelPlots', addFunnelPlot)
   .use('/:modelId/task', pataviTaskRouter);
 
 function decorateWithHasResults(modelsResult, pataviResult) {
@@ -204,6 +205,33 @@ function extendRunLength(request, response, next) {
   ], next);
 }
 
+function addFunnelPlot(request, response, next) {
+  logger.debug('add funnel plot');
+  var analysisId = Number.parseInt(request.params.analysisId);
+  var modelId = Number.parseInt(request.params.modelId);
+  var userId = Number.parseInt(request.session.userId);
+  async.waterfall([
+    function(callback) {
+      analysisRepository.get(analysisId, callback);
+    },
+    function(analysis, callback) {
+      checkOwnership(analysis.owner, userId, callback);
+    },
+    function(callback) {
+      modelRepository.get(modelId, callback);
+    },
+    function(model, callback) {
+      checkCoordinates(analysisId, model, callback);
+    },
+    function(callback) {
+      funnelPlotRepository.create(userId, analysisId, modelId, request.body, callback);
+    },
+    function() {
+      response.sendStatus(httpStatus.CREATED);
+    }
+  ], next);
+}
+
 function setAttributes(request, response, next) {
   logger.debug('set model attributes');
   var analysisId = Number.parseInt(request.params.analysisId);
@@ -212,7 +240,6 @@ function setAttributes(request, response, next) {
   var isArchived = request.body.archived;
   var modelToSet;
   async.waterfall([
-
     function(callback) {
       analysisRepository.get(analysisId, callback);
     },

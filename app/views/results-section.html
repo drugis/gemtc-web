@@ -80,7 +80,15 @@
 
 <relative-effect-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></relative-effect-plots>
 <pairwise-forest-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></pairwise-forest-plots>
-<funnel-plot results-promise="resultsPromise"></funnel-plot>
+<funnel-plot ng-if="model.modelType.type === 'pairwise'" results-promise="resultsPromise"></funnel-plot>
+
+<div ng-if="result.results && modelType.type === 'network'">
+  <div class="row">
+    <div class="columns large-12">
+      <button ng-click="openComparisonAdjustedModal()">Add comparison-adjusted funnel plot</button>
+    </div>
+  </div>
+</div>
 
 <node-split-density-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></node-split-density-plots>
 
