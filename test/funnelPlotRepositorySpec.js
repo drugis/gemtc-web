@@ -29,14 +29,28 @@ describe('the funnelplot repository', function() {
     });
 
     it('should call db with the values to create', function(done) {
-      var newFunnelPlot = {
-        includedComparisons: [{
+      var includedComparisons = [{
           t1: 3,
           t2: 4
-        }]
-      }
-      funnelPlotRepository.create(1, newFunnelPlot, function() {
-        sinon.assert.calledWith(query, 1);
+        }, {
+          t1: 5,
+          t2: 7
+        }],
+        newFunnelPlot = {
+          includedComparisons: includedComparisons
+        },
+        modelId = 1;
+      
+      var expectedQuery = "INSERT INTO funnelplot (modelId, t1, t2) VALUES " +
+        "($1, $2, $3),($4, $5, $6)";
+      var expectedValues = [
+        modelId, includedComparisons[0].t1, includedComparisons[0].t2,
+        modelId, includedComparisons[1].t1, includedComparisons[1].t2
+      ];
+
+      funnelPlotRepository.create(modelId, newFunnelPlot, function() {
+        sinon.assert.calledWith(query, expectedQuery, expectedValues);
+        done();
       });
     });
   });
