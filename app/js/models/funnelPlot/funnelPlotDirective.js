@@ -24,7 +24,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
           var midPoint = results.relativeEffects.centering[0].quantiles['50%'];
           var minY = 0;
-          var maxY = Math.max(2, _.max(results.studyRelativeEffects['std.err']));
+          var maxY = 1.2 * _.max(results.studyRelativeEffects['std.err']);
           var minX = midPoint - 1.96 * maxY;
           var maxX = midPoint + 1.96 * maxY;
 

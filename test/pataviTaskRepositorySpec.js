@@ -1,6 +1,6 @@
 'use strict';
-var proxyquire = require('proxyquire');
-var chai = require('chai'),
+var proxyquire = require('proxyquire'),
+  chai = require('chai'),
   spies = require('chai-spies'),
   sinon = require('sinon'),
   chaiExpect = chai.expect;

@@ -21,13 +21,15 @@ var userId = 1;
 var modelRepository = {},
   modelService = {},
   pataviTaskRepository = {},
-  analysisRepository = {};
+  analysisRepository = {},
+  funnelPlotRepository = {};
 
 var modelRouter = proxyquire('../standalone-app/modelRouter', {
   './modelRepository': modelRepository,
   './modelService': modelService,
   './pataviTaskRepository': pataviTaskRepository,
-  './analysisRepository': analysisRepository
+  './analysisRepository': analysisRepository,
+  './funnelPlotRepository': funnelPlotRepository
 });
 
 describe('modelRouter', function() {
@@ -52,8 +54,8 @@ describe('modelRouter', function() {
   describe('request to /', function() {
     var taskUrl = 101;
     var taskUrl2 = 102;
-    beforeEach(function() {
 
+    beforeEach(function() {
       var models = [{
         id: 1,
         title: 'model1'
@@ -389,6 +391,38 @@ describe('modelRouter', function() {
         .end(function(err, res) {
           res.should.have.property('status', httpStatus.OK);
           assert(setArchiveStub.callCount === 1);
+          done();
+        });
+    });
+  });
+
+  describe('POST request to /:modelId/funnelPlots with owner that is the logged in user', function() {
+    beforeEach(function() {
+      var analysis = {
+        owner: userId,
+      };
+      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
+      sinon.stub(funnelPlotRepository, 'create').onCall(0).yields(null);
+    });
+    afterEach(function() {
+      analysisRepository.get.restore();
+      funnelPlotRepository.create.restore();
+    });
+
+    it('should create the model and have status CREATED', function(done) {
+      var funnelPlots = {
+        includedComparisons: [{
+          t1: 1,
+          t2: 3
+        }]
+      };
+      request
+        .post(BASE_PATH + '1/models/2/funnelPlots')
+        .send(funnelPlots)
+        .end(function(err, res) {
+          assert(!err);
+          res.should.have.property('status', httpStatus.CREATED);
+          assert.equal('/analyses/1/models/' + createdId, res.headers.location);
           done();
         });
     });
