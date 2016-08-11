@@ -1,30 +1,41 @@
 'use strict';
-var proxyquire = require('proxyquire');
-var chai = require('chai'),
-  spies = require('chai-spies'),
-  sinon = require('sinon'),
-  chaiExpect = chai.expect;
+var proxyquire = require('proxyquire'),
+  sinon = require('sinon');
 
-chai.use(spies);
+var queryStub = {
+    query: function() {
+      console.log('query being called');
+    }
+  },
+  dbStub = function() {
+    return queryStub;
+  };
 
-var httpsStub = {};
-
-var modelRepository;
+var modelRepository = proxyquire('../standalone-app/modelRepository', {
+  './db': dbStub
+});
 
 describe('the model repository', function() {
-  beforeEach(function() {
-    modelRepository = proxyquire('../standalone-app/modelRepository', {
-      'https': httpsStub
-    });
-  });
-
-
   describe('setArchive', function() {
+    var query;
+    beforeEach(function() {
+      query = sinon.stub(queryStub, 'query');
+      query.onCall(0).yields(null);
+    });
+
+    afterEach(function() {
+      query.restore();
+    });
+
     it('should setArchive', function(done) {
       var modelId = 1234;
       var isArchived = true;
 
+      var expectedQuery = 'UPDATE model SET archived=$2, archived_on=$3  WHERE id = $1',
+        expectedValues = [modelId, isArchived, new Date()];
+
       modelRepository.setArchive(modelId, isArchived, function() {
+        sinon.assert.calledWith(query, expectedQuery, expectedValues);
         done();
       });
     });

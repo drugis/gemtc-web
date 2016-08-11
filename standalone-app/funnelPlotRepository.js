@@ -11,7 +11,7 @@ function createFunnelPlot(modelId, newFunnelPlot, callback) {
   var variableIndex = 1;
   var queryValues = newFunnelPlot.includedComparisons.reduce(function(accum, comparison) {
     return { // modelId             treatment 1             treatment 2
-      strings: accum.strings.concat('(' + variableIndex++ + ',' + variableIndex++ + ',' + variableIndex++ + ')'),
+      strings: accum.strings.concat('($' + variableIndex++ + ', $' + variableIndex++ + ', $' + variableIndex++ + ')'),
       rows: accum.rows.concat([modelId, comparison.t1, comparison.t2])
     };
   }, {
@@ -20,7 +20,7 @@ function createFunnelPlot(modelId, newFunnelPlot, callback) {
   });
 
   db.query(
-    'INSERT INTO funnelplot (modelId, t1, t2) VALUES' + queryValues.strings.join(','),
+    'INSERT INTO funnelplot (modelId, t1, t2) VALUES ' + queryValues.strings.join(','),
     queryValues.rows,
     function(error) {
       if (error) {

@@ -8,7 +8,8 @@ var logger = require('./logger'),
   modelRepository = require('./modelRepository'),
   modelService = require('./modelService'),
   pataviTaskRouter = require('./pataviTaskRouter'),
-  pataviTaskRepository = require('./pataviTaskRepository');
+  pataviTaskRepository = require('./pataviTaskRepository'),
+  funnelPlotRepository = require('./funnelPlotRepository');
 
 module.exports = express.Router({
   mergeParams: true
@@ -224,7 +225,7 @@ function addFunnelPlot(request, response, next) {
       checkCoordinates(analysisId, model, callback);
     },
     function(callback) {
-      funnelPlotRepository.create(userId, analysisId, modelId, request.body, callback);
+      funnelPlotRepository.create(modelId, request.body, callback);
     },
     function() {
       response.sendStatus(httpStatus.CREATED);

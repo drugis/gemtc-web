@@ -397,12 +397,20 @@ describe('modelRouter', function() {
   });
 
   describe('POST request to /:modelId/funnelPlots with owner that is the logged in user', function() {
+    var funnelCreate;
+    var model = {
+      analysisId: 1,
+      id: 2
+    };
     beforeEach(function() {
       var analysis = {
         owner: userId,
       };
+
       sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
-      sinon.stub(funnelPlotRepository, 'create').onCall(0).yields(null);
+      sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
+      funnelCreate = sinon.stub(funnelPlotRepository, 'create');
+      funnelCreate.onCall(0).yields(null);
     });
     afterEach(function() {
       analysisRepository.get.restore();
@@ -421,8 +429,8 @@ describe('modelRouter', function() {
         .send(funnelPlots)
         .end(function(err, res) {
           assert(!err);
+          sinon.assert.calledWith(funnelCreate, model.id, funnelPlots);
           res.should.have.property('status', httpStatus.CREATED);
-          assert.equal('/analyses/1/models/' + createdId, res.headers.location);
           done();
         });
     });
