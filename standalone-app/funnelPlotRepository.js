@@ -4,8 +4,17 @@ var logger = require('./logger'),
   db = require('./db')(dbUtil.gemtcDBUrl);
 
 module.exports = {
-  create: createFunnelPlot
+  create: createFunnelPlot,
+  findByModelId: findByModelId
 };
+
+function mapRow(row) {
+  return {
+    modelId: row.modelid,
+    t1: row.t1,
+    t2: row.t2
+  };
+}
 
 function createFunnelPlot(modelId, newFunnelPlot, callback) {
   var variableIndex = 1;
@@ -32,4 +41,18 @@ function createFunnelPlot(modelId, newFunnelPlot, callback) {
       }
     }
   );
+}
+
+function findByModelId(modelId, callback) {
+  logger.debug('finding funnel plots for model ' + modelId);
+  db.query(
+    'SELECT modelId, t1, t2 FROM funnel_plot WHERE modelId = $1', [modelId],
+    function(error, result){
+      if(error) {
+        logger.error('error finding funnelplots by model id, error: ' + error);
+        callback(error);
+      } else {
+        callback(null, result.map(mapRow));
+      }
+    });
 }

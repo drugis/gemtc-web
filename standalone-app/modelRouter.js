@@ -12,8 +12,8 @@ var logger = require('./logger'),
   funnelPlotRepository = require('./funnelPlotRepository');
 
 module.exports = express.Router({
-  mergeParams: true
-})
+    mergeParams: true
+  })
   .get('/', find)
   .post('/', createModel)
   .get('/:modelId', getModel)
@@ -21,6 +21,7 @@ module.exports = express.Router({
   .get('/:modelId/result', getResult)
   .post('/:modelId/attributes', setAttributes)
   .post('/:modelId/funnelPlots', addFunnelPlot)
+  .get('/:modelId/funnelPlots', queryFunnnelPlots)
   .use('/:modelId/task', pataviTaskRouter);
 
 function decorateWithHasResults(modelsResult, pataviResult) {
@@ -231,6 +232,20 @@ function addFunnelPlot(request, response, next) {
       response.sendStatus(httpStatus.CREATED);
     }
   ], next);
+}
+
+function queryFunnnelPlots(request, response, next) {
+  var modelId = request.params.modelId;
+  funnelPlotRepository.findByModelId(modelId, function(error, result) {
+    if (error) {
+      next({
+        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+        message: error
+      });
+    } else {
+      response.json(result);
+    }
+  });
 }
 
 function setAttributes(request, response, next) {

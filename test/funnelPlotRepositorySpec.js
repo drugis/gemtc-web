@@ -1,5 +1,6 @@
 'use strict';
 var proxyquire = require('proxyquire'),
+  assert = require('assert'),
   sinon = require('sinon');
 
 var queryStub = {
@@ -40,7 +41,7 @@ describe('the funnelplot repository', function() {
           includedComparisons: includedComparisons
         },
         modelId = 1;
-      
+
       var expectedQuery = "INSERT INTO funnelplot (modelId, t1, t2) VALUES " +
         "($1, $2, $3),($4, $5, $6)";
       var expectedValues = [
@@ -50,6 +51,38 @@ describe('the funnelplot repository', function() {
 
       funnelPlotRepository.create(modelId, newFunnelPlot, function() {
         sinon.assert.calledWith(query, expectedQuery, expectedValues);
+        done();
+      });
+    });
+  });
+
+  describe('findByModelId', function() {
+    var
+      result = [{
+        modelid: 1,
+        t1: 1,
+        t2: 3
+      }],
+      query;
+    beforeEach(function() {
+      query = sinon.stub(queryStub, 'query');
+      query.onCall(0).yields(null, result);
+    });
+
+    afterEach(function() {
+      queryStub.query.restore();
+    });
+    it('should query the funnelplots for the modelId', function(done) {
+      var modelId = 1;
+      var expectedResult = [{
+        modelId: 1,
+        t1: 1,
+        t2: 3
+      }];
+      funnelPlotRepository.findByModelId(modelId, function(error, result) {
+        assert(!error);
+        sinon.assert.calledWith(query, 'SELECT modelId, t1, t2 FROM funnel_plot WHERE modelId = $1', [modelId]);
+        assert.deepEqual(expectedResult, result);
         done();
       });
     });
