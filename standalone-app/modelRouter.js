@@ -22,6 +22,7 @@ module.exports = express.Router({
   .post('/:modelId/attributes', setAttributes)
   .post('/:modelId/funnelPlots', addFunnelPlot)
   .get('/:modelId/funnelPlots', queryFunnnelPlots)
+  .get('/:modelId/funnelPlots/:plotId', getFunnelPlot)
   .use('/:modelId/task', pataviTaskRouter);
 
 function decorateWithHasResults(modelsResult, pataviResult) {
@@ -237,6 +238,20 @@ function addFunnelPlot(request, response, next) {
 function queryFunnnelPlots(request, response, next) {
   var modelId = request.params.modelId;
   funnelPlotRepository.findByModelId(modelId, function(error, result) {
+    if (error) {
+      next({
+        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+        message: error
+      });
+    } else {
+      response.json(result);
+    }
+  });
+}
+
+function getFunnelPlot(request, response, next) {
+  var plotId = request.params.plotId;
+  funnelPlotRepository.findByPlotId(plotId, function(error, result) {
     if (error) {
       next({
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
