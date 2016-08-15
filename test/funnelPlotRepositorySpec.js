@@ -59,6 +59,7 @@ describe('the funnelplot repository', function() {
   describe('findByModelId', function() {
     var
       result = [{
+        id: 2,
         modelid: 1,
         t1: 1,
         t2: 3
@@ -75,13 +76,48 @@ describe('the funnelplot repository', function() {
     it('should query the funnelplots for the modelId', function(done) {
       var modelId = 1;
       var expectedResult = [{
+        id: 2,
         modelId: 1,
         t1: 1,
         t2: 3
       }];
       funnelPlotRepository.findByModelId(modelId, function(error, result) {
         assert(!error);
-        sinon.assert.calledWith(query, 'SELECT modelId, t1, t2 FROM funnel_plot WHERE modelId = $1', [modelId]);
+        sinon.assert.calledWith(query, 'SELECT id, modelId, t1, t2 FROM funnel_plot WHERE modelId = $1', [modelId]);
+        assert.deepEqual(expectedResult, result);
+        done();
+      });
+    });
+  });
+
+  describe('get', function() {
+    var
+      modelId = 1,
+      result = [{
+        id: 2,
+        modelid: modelId,
+        t1: 1,
+        t2: 3
+      }],
+      query;
+    beforeEach(function() {
+      query = sinon.stub(queryStub, 'query');
+      query.onCall(0).yields(null, result);
+    });
+
+    afterEach(function() {
+      queryStub.query.restore();
+    });
+    it('should get the funnelplots with the plot id', function(done) {
+      var expectedResult = [{
+        id: 2,
+        modelId: modelId,
+        t1: 1,
+        t2: 3
+      }];
+      funnelPlotRepository.findByPlotId(modelId, function(error, result) {
+        assert(!error);
+        sinon.assert.calledWith(query, 'SELECT id, modelId, t1, t2 FROM funnel_plot WHERE id = $1', [modelId]);
         assert.deepEqual(expectedResult, result);
         done();
       });

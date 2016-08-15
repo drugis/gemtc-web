@@ -444,24 +444,52 @@ describe('modelRouter', function() {
 
   describe('GET request to /:modelId/funnelPlots', function() {
     var modelId = 1;
+    var funnelPlots = [{
+      id:1,
+      modelId: modelId,
+      t1: 1,
+      t2: 3
+    }];
     beforeEach(function() {
-      var funnelPlots = [{
-        modelId: modelId,
-        t1: 1,
-        t2: 3
-      }];
       sinon.stub(funnelPlotRepository, 'findByModelId').onCall(0).yields(null, funnelPlots);
     });
     afterEach(function() {
-      modelRepository.findByModelId.restore();
+      funnelPlotRepository.findByModelId.restore();
     });
-    it('should return the funnel plots for that model', function() {
+    it('should return the funnel plots for that model', function(done) {
       request
         .get(BASE_PATH + '1/models/' + modelId + '/funnelPlots')
         .end(function(err, res) {
           assert(!err);
           res.should.have.property('status', httpStatus.OK);
-          assert.deepEqual(model, res.body);
+          assert.deepEqual(funnelPlots, res.body);
+          done();
+        });
+    });
+  });
+
+  describe('GET request to /:modelId/funnelPlots/:plotId', function() {
+    var modelId = 1;
+    var plotId = 2;
+    var funnelPlots = [{
+      id: plotId,
+      modelId: modelId,
+      t1: 1,
+      t2: 3
+    }];
+    beforeEach(function() {
+      sinon.stub(funnelPlotRepository, 'findByPlotId').onCall(0).yields(null, funnelPlots);
+    });
+    afterEach(function() {
+      funnelPlotRepository.findByPlotId.restore();
+    });
+    it('should return the funnel plots for that plot', function(done) {
+      request
+        .get(BASE_PATH + '1/models/' + modelId + '/funnelPlots/' + plotId)
+        .end(function(err, res) {
+          assert(!err);
+          res.should.have.property('status', httpStatus.OK);
+          assert.deepEqual(funnelPlots, res.body);
           done();
         });
     });
