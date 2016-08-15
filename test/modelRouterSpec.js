@@ -185,6 +185,7 @@ describe('modelRouter', function() {
         });
     });
   });
+
   describe('GET request to /:modelID/result', function() {
     var model = {
       id: 2,
@@ -212,6 +213,7 @@ describe('modelRouter', function() {
         });
     });
   });
+
   describe('GET request to /:modelID/result for model with no taskUrl', function() {
     var model = {
       id: 2
@@ -232,6 +234,7 @@ describe('modelRouter', function() {
         });
     });
   });
+
   describe('POST request to /:modelId where the user is not the analysis owner', function() {
     beforeEach(function() {
       var analysis = {
@@ -254,6 +257,7 @@ describe('modelRouter', function() {
         });
     });
   });
+
   describe('POST request to /:modelId with owner that is the logged in user', function() {
     var model = {
       analysisId: 1,
@@ -289,6 +293,7 @@ describe('modelRouter', function() {
         });
     });
   });
+
   describe('POST request to /:modelId with inconsistent model.analysisID and analysisID', function() {
     var model = {
       analysisId: 2,
@@ -319,6 +324,7 @@ describe('modelRouter', function() {
         });
     });
   });
+
   describe('POST request to /:modelId where the modelservice returns an error', function() {
     var model = {
       analysisId: 1,
@@ -357,7 +363,7 @@ describe('modelRouter', function() {
     });
   });
 
-  describe('setAttributes', function() {
+  describe('POST request to /:modelId/attributes with owner that is the logged in user', function() {
     var model = {
       analysisId: 1,
       id: 2
@@ -417,7 +423,7 @@ describe('modelRouter', function() {
       funnelPlotRepository.create.restore();
     });
 
-    it('should create the model and have status CREATED', function(done) {
+    it('should create the funnel plot and have status CREATED', function(done) {
       var funnelPlots = {
         includedComparisons: [{
           t1: 1,
@@ -431,6 +437,31 @@ describe('modelRouter', function() {
           assert(!err);
           sinon.assert.calledWith(funnelCreate, model.id, funnelPlots);
           res.should.have.property('status', httpStatus.CREATED);
+          done();
+        });
+    });
+  });
+
+  describe('GET request to /:modelId/funnelPlots', function() {
+    var modelId = 1;
+    beforeEach(function() {
+      var funnelPlots = [{
+        modelId: modelId,
+        t1: 1,
+        t2: 3
+      }];
+      sinon.stub(funnelPlotRepository, 'findByModelId').onCall(0).yields(null, funnelPlots);
+    });
+    afterEach(function() {
+      modelRepository.findByModelId.restore();
+    });
+    it('should return the funnel plots for that model', function() {
+      request
+        .get(BASE_PATH + '1/models/' + modelId + '/funnelPlots')
+        .end(function(err, res) {
+          assert(!err);
+          res.should.have.property('status', httpStatus.OK);
+          assert.deepEqual(model, res.body);
           done();
         });
     });
