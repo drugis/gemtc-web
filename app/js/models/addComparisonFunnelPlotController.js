@@ -30,7 +30,8 @@ define(['lodash'], function(_) {
         includedComparisons: includedComparisons.map(function(comparison) {
           return {
             t1: comparison.t1.id,
-            t2: comparison.t2.id
+            t2: comparison.t2.id,
+            biasDirection: comparison.biasDirection.id === comparison.t1.id ? 1 : 2
           };
         })
       };

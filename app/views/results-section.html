@@ -82,7 +82,7 @@
 <pairwise-forest-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></pairwise-forest-plots>
 <funnel-plot ng-if="model.modelType.type === 'pairwise'" results-promise="resultsPromise"></funnel-plot>
 
-<div ng-if="result.results && modelType.type === 'network'">
+<div ng-if="result.results && model.modelType.type === 'network'">
   <div class="row">
     <div class="columns large-12">
       <button ng-click="openComparisonAdjustedModal()">Add comparison-adjusted funnel plot</button>

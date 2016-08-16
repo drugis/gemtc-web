@@ -65,7 +65,7 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
 
   db.query(
     ' INSERT INTO model (' + columnString + ') ' +
-    ' VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id', [
+    ' VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id', [
       newModel.title,
       analysisId,
       newModel.linearModel,
@@ -78,7 +78,9 @@ function createModel(ownerAccountId, analysisId, newModel, callback) {
       newModel.outcomeScale,
       newModel.heterogeneityPrior,
       newModel.regressor,
-      newModel.sensitivity
+      newModel.sensitivity,
+      false, // is archived
+      null // archived on
     ],
     function(error, result) {
       if (error) {

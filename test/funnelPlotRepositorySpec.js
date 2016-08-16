@@ -87,7 +87,7 @@ describe('the funnelplot repository', function() {
       }];
       funnelPlotRepository.findByModelId(modelId, function(error, result) {
         assert(!error);
-        sinon.assert.calledWith(query, 'SELECT id, modelId, t1, t2, biasDirection FROM funnel_plot WHERE modelId = $1', [modelId]);
+        sinon.assert.calledWith(query, 'SELECT id, modelId, t1, t2, biasDirection FROM funnelplot WHERE modelId = $1', [modelId]);
         assert.deepEqual(expectedResult, result);
         done();
       });
@@ -123,7 +123,7 @@ describe('the funnelplot repository', function() {
       }];
       funnelPlotRepository.findByPlotId(modelId, function(error, result) {
         assert(!error);
-        sinon.assert.calledWith(query, 'SELECT id, modelId, t1, t2, biasDirection FROM funnel_plot WHERE id = $1', [modelId]);
+        sinon.assert.calledWith(query, 'SELECT id, modelId, t1, t2, biasDirection FROM funnelplot WHERE id = $1', [modelId]);
         assert.deepEqual(expectedResult, result);
         done();
       });

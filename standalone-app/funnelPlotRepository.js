@@ -1,7 +1,8 @@
 'use strict';
 var logger = require('./logger'),
   dbUtil = require('./dbUtil'),
-  db = require('./db')(dbUtil.gemtcDBUrl);
+  db = require('./db')(dbUtil.gemtcDBUrl),
+  _ = require('lodash');
 
 module.exports = {
   create: createFunnelPlot,
@@ -50,13 +51,13 @@ function createFunnelPlot(modelId, newFunnelPlot, callback) {
 function findByModelId(modelId, callback) {
   logger.debug('finding funnel plots for model ' + modelId);
   db.query(
-    'SELECT id, modelId, t1, t2, biasDirection FROM funnel_plot WHERE modelId = $1', [modelId],
+    'SELECT id, modelId, t1, t2, biasDirection FROM funnelplot WHERE modelId = $1', [modelId],
     function(error, result){
       if(error) {
         logger.error('error finding funnelplots by model id, error: ' + error);
         callback(error);
       } else {
-        callback(null, result.map(mapRow));
+        callback(null, _.map(result, mapRow));
       }
     });
 }
@@ -64,13 +65,13 @@ function findByModelId(modelId, callback) {
 function findByPlotId(plotId, callback) {
   logger.debug('retrieving funnel plot ' + plotId);
   db.query(
-    'SELECT id, modelId, t1, t2, biasDirection FROM funnel_plot WHERE id = $1', [plotId],
+    'SELECT id, modelId, t1, t2, biasDirection FROM funnelplot WHERE id = $1', [plotId],
     function(error, result){
       if(error) {
         logger.error('error finding retrieving funnel plot, error: ' + error);
         callback(error);
       } else {
-        callback(null, result.map(mapRow));
+        callback(null, _.map(result, mapRow));
       }
     });
 }
