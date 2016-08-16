@@ -551,6 +551,7 @@ report('summary', 1.0)
       studyRelativeEffects <- apply(comps, 2, function(treatmentPair) {
         pweffects(result, treatmentPair[1], treatmentPair[2])
       })
+      studyRelativeEffects <- studyRelativeEffects[lapply(studyRelativeEffects, nrow) > 0] # filter out comps without effects
       summary[['studyRelativeEffects']] <- studyRelativeEffects
     }
     if(modelType == "pairwise") {
