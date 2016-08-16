@@ -1,10 +1,10 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'PataviService',
+  var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'FunnelPlotResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService'
   ];
-  var ModelController = function($scope, $modal, $state, $stateParams, gemtcRootPath, ModelResource, PataviService,
+  var ModelController = function($scope, $modal, $state, $stateParams, gemtcRootPath, ModelResource, FunnelPlotResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, ModelService,
     DiagnosticsService, AnalysisService, DevianceStatisticsService, MetaRegressionService) {
 
@@ -19,8 +19,10 @@ define(['lodash'], function(_) {
       percentage: 0
     };
     $scope.model = ModelResource.get($stateParams);
+    $scope.funnelplots = FunnelPlotResource.query($stateParams);
     $scope.$parent.model = $scope.model;
     $scope.openRunLengthDialog = openRunLengthDialog;
+    $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;
     $scope.goToRefineModel = goToRefineModel;
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
@@ -95,7 +97,7 @@ define(['lodash'], function(_) {
       });
     }
 
-    function openRunLengthDialog() {
+    function openComparisonAdjustedModal() {
       $modal.open({
         windowClass: 'small',
         templateUrl: gemtcRootPath + 'js/models/addComparisonFunnelPlot.html',
@@ -115,7 +117,7 @@ define(['lodash'], function(_) {
           }
         }
       });
-    }  
+    }
 
     $scope.problemPromise = ProblemResource.get({
       analysisId: $stateParams.analysisId,
