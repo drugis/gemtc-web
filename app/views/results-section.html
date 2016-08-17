@@ -83,6 +83,14 @@
 <funnel-plot ng-if="model.modelType.type === 'pairwise'" results-promise="resultsPromise"></funnel-plot>
 
 <div ng-if="result.results && model.modelType.type === 'network'">
+  <div class="row" ng-repeat="funnelPlot in funnelPlots">
+    <div class="columns large-12">
+      <comparison-adjusted-funnel-plot plot-data="funnelPlot" results-promise="resultsPromise"></comparison-adjusted-funnel-plot>
+    </div>
+  </div>
+</div>
+
+<div ng-if="result.results && model.modelType.type === 'network'">
   <div class="row">
     <div class="columns large-12">
       <button ng-click="openComparisonAdjustedModal()">Add comparison-adjusted funnel plot</button>

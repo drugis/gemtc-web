@@ -5,6 +5,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
     return {
       restrict: 'E',
       scope: {
+        plotData: '=',
         resultsPromise: '='
       },
       templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
@@ -22,9 +23,18 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             return; // do not render if data is missing
           }
 
+          var includedRelativeEffects = _.filter(results.studyRelativeEffects, function(comparisonEffects) {
+            return _.find(scope.plotData.includedComparisons, function(comparison) {
+              return (comparison.t1.toString() === comparisonEffects.t1[0] && comparison.t2.toString() === comparisonEffects.t2[0]) ||
+                (comparison.t1.toString() === comparisonEffects.t2[0] && comparison.t2.toString() === comparisonEffects.t1[0]);
+            });
+          });
+
           var midPoint = results.relativeEffects.centering[0].quantiles['50%'];
           var minY = 0;
-          var maxY = 1.2 * _.max(results.studyRelativeEffects['std.err']);
+          var maxY = 1.2 * _.max(_.map(includedRelativeEffects, function(relativeEffects) {
+            return _.max(relativeEffects['std.err']);
+          }));
           var minX = midPoint - 1.96 * maxY;
           var maxX = midPoint + 1.96 * maxY;
 
@@ -61,8 +71,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             // and study-specific ones.
             function consistentDirection(meanVal, valT1, valT2) {
               return valT1 === results.relativeEffects.centering[0].t1 && valT2 === results.relativeEffects.centering[0].t2 ?
-                  meanVal :
-                - meanVal;
+                meanVal :
+                -meanVal;
             }
 
             root.append("rect")
@@ -71,7 +81,6 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               .attr("fill", "white");
 
             var chart = nvd3.models.scatterChart()
-              .showLegend(false)
               .color(d3.scale.category10().range())
               .xDomain([minX, maxX])
               .yDomain([maxY, minY]);
@@ -84,14 +93,17 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               return Math.abs(d);
             });
 
-            var myData = [{
-              values: results.studyRelativeEffects.mean.map(function(meanVal, idx) {
-                return {
-                  x: consistentDirection(meanVal, results.studyRelativeEffects.t1[idx], results.studyRelativeEffects.t1[idx]),
-                  y: results.studyRelativeEffects['std.err'][idx]
-                };
-              })
-            }];
+            var myData = _.map(includedRelativeEffects, function(comparisonRelativeEffects) {
+              return {
+                key: comparisonRelativeEffects.t1[0] + ' &mdash; ' + comparisonRelativeEffects.t2[0],
+                values: comparisonRelativeEffects.mean.map(function(meanVal, idx) {
+                  return {
+                    x: consistentDirection(meanVal, comparisonRelativeEffects.t1[idx], comparisonRelativeEffects.t1[idx]),
+                    y: comparisonRelativeEffects['std.err'][idx]
+                  };
+                })
+              };
+            });
 
             root
               .style('width', '500px')

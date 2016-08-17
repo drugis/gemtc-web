@@ -60,7 +60,6 @@ function getJson(url, callback) {
 function getResult(taskUrl, callback) {
   logger.debug('pataviTaskRepository.getResult');
   getJson(taskUrl, function(err, result) {
-    console.log('first get');
     if (err) {
       return callback(err);
     }
@@ -82,7 +81,7 @@ function getPataviTasksStatus(taskUrls, callback) {
   logger.debug('pataviTaskRepository.getPataviTasksStatus');
 
   function getTaskStatus(taskUrl, callback) {
-    console.log('getting ' + taskUrl);
+    logger.debug('getting ' + taskUrl);
     getJson(taskUrl, function(err, result) {
       if (err) {
         return callback(err);

@@ -11,6 +11,7 @@ define(['lodash'], function(_) {
       problem.treatments.forEach(function(treatment, idx) {
         var restOfTreatments = problem.treatments.slice(idx + 1);
         restOfTreatments.forEach(function(otherTreatment) {
+          // TODO: omit comparisons without results
           comparisons.push({
             t1: treatment,
             t2: otherTreatment

@@ -44,8 +44,9 @@ describe('the funnelplot repository', function() {
         },
         modelId = 1;
 
-      var expectedQuery = "INSERT INTO funnelplot (modelId, t1, t2, biasDirection) VALUES " +
-        "($1, $2, $3, $4),($5, $6, $7, $8)";
+      var expectedQuery = 'WITH newplotid as (select nextval("funnelplot_plotid_seq")) INSERT INTO funnelplot (plotid, modelId, t1, t2, biasDirection) ' +
+        'VALUES ((select * from newplotid),  $1, $2, $3, $4),' +
+        '((select * from newplotid),  $5, $6, $7, $8)';
       var expectedValues = [
         modelId, includedComparisons[0].t1, includedComparisons[0].t2, includedComparisons[0].biasDirection,
         modelId, includedComparisons[1].t1, includedComparisons[1].t2, includedComparisons[1].biasDirection,
@@ -61,7 +62,7 @@ describe('the funnelplot repository', function() {
   describe('findByModelId', function() {
     var
       result = [{
-        id: 2,
+        plotid: 2,
         modelid: 1,
         t1: 1,
         t2: 3,
@@ -76,18 +77,22 @@ describe('the funnelplot repository', function() {
     afterEach(function() {
       queryStub.query.restore();
     });
-    it('should query the funnelplots for the modelId', function(done) {
+    it('should query the funnelplot for the modelId', function(done) {
       var modelId = 1;
       var expectedResult = [{
         id: 2,
         modelId: 1,
-        t1: 1,
-        t2: 3,
-        biasDirection: 1
+        includedComparisons: [{
+          t1: 1,
+          t2: 3,
+          biasDirection: 1
+        }]
       }];
       funnelPlotRepository.findByModelId(modelId, function(error, result) {
         assert(!error);
-        sinon.assert.calledWith(query, 'SELECT id, modelId, t1, t2, biasDirection FROM funnelplot WHERE modelId = $1', [modelId]);
+        sinon.assert.calledWith(query, 'SELECT plotId, modelId, t1, t2, biasDirection FROM funnelplot WHERE modelId = $1 ORDER BY plotId', [modelId]);
+        console.log( '~~~~' + JSON.stringify(result));
+        console.log( '++++' + JSON.stringify(expectedResult));
         assert.deepEqual(expectedResult, result);
         done();
       });
@@ -98,7 +103,7 @@ describe('the funnelplot repository', function() {
     var
       modelId = 1,
       result = [{
-        id: 2,
+        plotid: 2,
         modelid: modelId,
         t1: 1,
         t2: 3,
@@ -113,17 +118,21 @@ describe('the funnelplot repository', function() {
     afterEach(function() {
       queryStub.query.restore();
     });
-    it('should get the funnelplots with the plot id', function(done) {
-      var expectedResult = [{
+    it('should get the funnelplot with the plot id', function(done) {
+      var expectedResult = {
         id: 2,
         modelId: modelId,
-        t1: 1,
-        t2: 3,
-        biasDirection: 2
-      }];
+        includedComparisons: [{
+          t1: 1,
+          t2: 3,
+          biasDirection: 2
+        }]
+      };
       funnelPlotRepository.findByPlotId(modelId, function(error, result) {
         assert(!error);
-        sinon.assert.calledWith(query, 'SELECT id, modelId, t1, t2, biasDirection FROM funnelplot WHERE id = $1', [modelId]);
+        sinon.assert.calledWith(query, 'SELECT plotId, modelId, t1, t2, biasDirection FROM funnelplot WHERE plotId = $1', [modelId]);
+        console.log( '~~~~' + JSON.stringify(result));
+        console.log( '++++' + JSON.stringify(expectedResult));
         assert.deepEqual(expectedResult, result);
         done();
       });
