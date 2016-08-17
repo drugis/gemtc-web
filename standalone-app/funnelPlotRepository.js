@@ -10,21 +10,34 @@ module.exports = {
   findByPlotId: findByPlotId
 };
 
-function mapRow(row) {
-  return {
-    id: row.id,
-    modelId: row.modelid,
-    t1: row.t1,
-    t2: row.t2,
-    biasDirection: row.biasdirection
-  };
+
+function aggregateRows(result) {
+  logger.debug('aggregating ' + JSON.stringify(result));
+  var plots = _.reduce(result, function(accum, row) {
+    if(!accum[row.plotid]) {
+      accum[row.plotid] = {
+        id: row.plotid,
+        modelId: row.modelid,
+        includedComparisons: []
+      };
+    }
+    accum[row.plotid].includedComparisons.push({
+      t1: row.t1,
+      t2: row.t2,
+      biasDirection: row.biasdirection
+    });
+    return accum;
+  }, {});
+  return _.map(plots, _.identity); // from map to array
 }
 
 function createFunnelPlot(modelId, newFunnelPlot, callback) {
   var variableIndex = 1;
   var queryValues = newFunnelPlot.includedComparisons.reduce(function(accum, comparison) {
-    return {                                    // modelId             treatment 1             treatment 2                bias direction
-      strings: accum.strings.concat('($' + variableIndex++ + ', $' + variableIndex++ + ', $' + variableIndex++ + ', $' + variableIndex++ + ')'),
+                      //     new plot id                     modelId               treatment 1               treatment 2               bias direction
+    var valueString = '((select * from newplotid),  $' + variableIndex++ + ', $' + variableIndex++ + ', $' + variableIndex++ + ', $' + variableIndex++ + ')';
+    return {
+      strings: accum.strings.concat(valueString),
       rows: accum.rows.concat([modelId, comparison.t1, comparison.t2, comparison.biasDirection])
     };
   }, {
@@ -33,7 +46,8 @@ function createFunnelPlot(modelId, newFunnelPlot, callback) {
   });
 
   db.query(
-    'INSERT INTO funnelplot (modelId, t1, t2, biasDirection) VALUES ' +
+    'WITH newplotid as (select nextval(\'funnelplot_plotid_seq\')) ' +
+    'INSERT INTO funnelplot (plotid, modelId, t1, t2, biasDirection) VALUES ' +
     queryValues.strings.join(','),
     queryValues.rows,
     function(error) {
@@ -51,13 +65,13 @@ function createFunnelPlot(modelId, newFunnelPlot, callback) {
 function findByModelId(modelId, callback) {
   logger.debug('finding funnel plots for model ' + modelId);
   db.query(
-    'SELECT id, modelId, t1, t2, biasDirection FROM funnelplot WHERE modelId = $1', [modelId],
-    function(error, result){
-      if(error) {
+    'SELECT plotId, modelId, t1, t2, biasDirection FROM funnelplot WHERE modelId = $1 ORDER BY plotId', [modelId],
+    function(error, result) {
+      if (error) {
         logger.error('error finding funnelplots by model id, error: ' + error);
         callback(error);
       } else {
-        callback(null, _.map(result, mapRow));
+        callback(null, aggregateRows(result.rows));
       }
     });
 }
@@ -65,13 +79,13 @@ function findByModelId(modelId, callback) {
 function findByPlotId(plotId, callback) {
   logger.debug('retrieving funnel plot ' + plotId);
   db.query(
-    'SELECT id, modelId, t1, t2, biasDirection FROM funnelplot WHERE id = $1', [plotId],
-    function(error, result){
-      if(error) {
+    'SELECT plotId, modelId, t1, t2, biasDirection FROM funnelplot WHERE plotId = $1', [plotId],
+    function(error, result) {
+      if (error) {
         logger.error('error finding retrieving funnel plot, error: ' + error);
         callback(error);
       } else {
-        callback(null, _.map(result, mapRow));
+        callback(null, aggregateRows(result.rows)[0]);
       }
     });
 }
