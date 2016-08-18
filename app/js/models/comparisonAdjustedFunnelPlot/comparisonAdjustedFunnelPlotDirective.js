@@ -113,7 +113,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
             var myData = _.map(includedRelativeEffects, function(studyEffectsForComparison) {
               var pooledRelativeEffect = _.find(results.relativeEffects.centering, function(relativeEffect) {
-                return measuringSameComparison(studyEffectsForComparison, relativeEffect);
+                return measuringSameComparison(relativeEffect, studyEffectsForComparison);
               });
               var comparison = findComparisonForRelativeEffect(pooledRelativeEffect);
               return {
