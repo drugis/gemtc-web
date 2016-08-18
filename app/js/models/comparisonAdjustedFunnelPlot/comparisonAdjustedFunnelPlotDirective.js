@@ -30,7 +30,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             });
           });
 
-          var midPoint = results.relativeEffects.centering[0].quantiles['50%'];
+          var pooledEffect = results.relativeEffects.centering[0].quantiles['50%'];
+          var midPoint = 0;
           var minY = 0;
           var maxY = 1.2 * _.max(_.map(includedRelativeEffects, function(relativeEffects) {
             return _.max(relativeEffects['std.err']);
@@ -68,11 +69,12 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             }
 
             // ensure that the comparison direction is the same for pooled relative effects
-            // and study-specific ones.
-            function consistentDirection(meanVal, valT1, valT2) {
-              return valT1 === results.relativeEffects.centering[0].t1 && valT2 === results.relativeEffects.centering[0].t2 ?
-                meanVal :
-                -meanVal;
+            // and study-specific ones. Then adjust so the difference from pooled effect is shown.
+            function normaliseDifference(meanVal, valT1, valT2) {
+              return valT1 === results.relativeEffects.centering[0].t1 && 
+                     valT2 === results.relativeEffects.centering[0].t2 ?
+                 pooledEffect - meanVal :
+                 pooledEffect + meanVal;
             }
 
             root.append("rect")
@@ -98,7 +100,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
                 key: comparisonRelativeEffects.t1[0] + ' &mdash; ' + comparisonRelativeEffects.t2[0],
                 values: comparisonRelativeEffects.mean.map(function(meanVal, idx) {
                   return {
-                    x: consistentDirection(meanVal, comparisonRelativeEffects.t1[idx], comparisonRelativeEffects.t1[idx]),
+                    x: normaliseDifference(meanVal, comparisonRelativeEffects.t1[idx], comparisonRelativeEffects.t1[idx]),
                     y: comparisonRelativeEffects['std.err'][idx]
                   };
                 })
