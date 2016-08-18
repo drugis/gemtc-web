@@ -107,8 +107,8 @@ define(['lodash'], function(_) {
           problem: function() {
             return $scope.problem;
           },
-          model: function() {
-            return $scope.model;
+          studyRelativeEffects: function() {
+            return $scope.result.results.studyRelativeEffects;
           },
           successCallback: function() {
             return function() {
