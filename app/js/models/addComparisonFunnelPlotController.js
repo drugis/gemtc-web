@@ -1,7 +1,10 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'FunnelPlotResource', 'problem', 'successCallback'];
-  var AddComparisonFunnelPlotController = function($scope, $modalInstance, $stateParams, FunnelPlotResource, problem, successCallback) {
+  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'FunnelPlotResource',
+    'studyRelativeEffects', 'problem', 'successCallback'
+  ];
+  var AddComparisonFunnelPlotController = function($scope, $modalInstance, $stateParams, FunnelPlotResource,
+    studyRelativeEffects, problem, successCallback) {
     $scope.comparisons = buildComparisons();
     $scope.savePlot = savePlot;
     $scope.cancel = cancel;
@@ -11,11 +14,18 @@ define(['lodash'], function(_) {
       problem.treatments.forEach(function(treatment, idx) {
         var restOfTreatments = problem.treatments.slice(idx + 1);
         restOfTreatments.forEach(function(otherTreatment) {
-          // TODO: omit comparisons without results
-          comparisons.push({
-            t1: treatment,
-            t2: otherTreatment
+          var comparisonResults = _.find(studyRelativeEffects, function(comparisonEffects) {
+            return (comparisonEffects.t1[0] === treatment.id.toString() &&
+                comparisonEffects.t2[0] === otherTreatment.id.toString()) ||
+              (comparisonEffects.t2[0] === treatment.id.toString() &&
+                comparisonEffects.t1[0] === otherTreatment.id.toString());
           });
+          if (comparisonResults) {
+            comparisons.push({
+              t1: treatment,
+              t2: otherTreatment
+            });
+          }
         });
       });
       return comparisons;
