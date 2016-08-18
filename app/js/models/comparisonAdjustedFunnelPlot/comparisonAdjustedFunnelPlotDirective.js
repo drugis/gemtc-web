@@ -1,6 +1,14 @@
 'use strict';
 define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
   var dependencies = ['gemtcRootPath'];
+
+  function measuringSameComparison(comparison, comparisonEffects) {
+    return (
+      (comparison.t1.toString() === comparisonEffects.t1[0] && comparison.t2.toString() === comparisonEffects.t2[0]) ||
+      (comparison.t1.toString() === comparisonEffects.t2[0] && comparison.t2.toString() === comparisonEffects.t1[0])
+    );
+  }
+
   var FunnelPlot = function(gemtcRootPath) {
     return {
       restrict: 'E',
@@ -14,6 +22,12 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
         scope.resultsPromise.then(render);
 
+        function findComparisonForRelativeEffect(relativeEffect) {
+          return _.find(scope.plotData.includedComparisons, function(comparison) {
+            return measuringSameComparison(comparison, relativeEffect);
+          });
+        }
+
         function render(resultsHolder) {
 
           var results = resultsHolder.results;
@@ -23,14 +37,10 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             return; // do not render if data is missing
           }
 
-          var includedRelativeEffects = _.filter(results.studyRelativeEffects, function(comparisonEffects) {
-            return _.find(scope.plotData.includedComparisons, function(comparison) {
-              return (comparison.t1.toString() === comparisonEffects.t1[0] && comparison.t2.toString() === comparisonEffects.t2[0]) ||
-                (comparison.t1.toString() === comparisonEffects.t2[0] && comparison.t2.toString() === comparisonEffects.t1[0]);
-            });
+          var includedRelativeEffects = _.filter(results.studyRelativeEffects, function(relativeEffect) {
+            return findComparisonForRelativeEffect(relativeEffect);
           });
 
-          var pooledEffect = results.relativeEffects.centering[0].quantiles['50%'];
           var midPoint = 0;
           var minY = 0;
           var maxY = 1.2 * _.max(_.map(includedRelativeEffects, function(relativeEffects) {
@@ -70,11 +80,17 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
             // ensure that the comparison direction is the same for pooled relative effects
             // and study-specific ones. Then adjust so the difference from pooled effect is shown.
-            function normaliseDifference(meanVal, valT1, valT2) {
-              return valT1 === results.relativeEffects.centering[0].t1 && 
-                     valT2 === results.relativeEffects.centering[0].t2 ?
-                 pooledEffect - meanVal :
-                 pooledEffect + meanVal;
+            function normalisedStudyDifference(comparison, pooledRelativeEffect, studyEffects, idx) {
+              var pooledEffectSize = pooledRelativeEffect.quantiles['50%'];
+              // Adjust the data for the funnel plot so that the non-biased result is 
+              // subtracted from the biased result
+              var studyEffect = comparison.biasDirection === 1 ?
+                studyEffects.t1[idx] - studyEffects.t2[idx] :
+                studyEffects.t2[idx] - studyEffects.t1[idx];
+              return studyEffects.t1 === pooledRelativeEffect.t1 &&
+                studyEffects.t1 === pooledRelativeEffect.t2 ?
+                pooledEffectSize - studyEffect :
+                pooledEffectSize + studyEffect;
             }
 
             root.append("rect")
@@ -95,13 +111,17 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               return Math.abs(d);
             });
 
-            var myData = _.map(includedRelativeEffects, function(comparisonRelativeEffects) {
+            var myData = _.map(includedRelativeEffects, function(studyEffectsForComparison) {
+              var pooledRelativeEffect = _.find(results.relativeEffects.centering, function(relativeEffect) {
+                return measuringSameComparison(studyEffectsForComparison, relativeEffect);
+              });
+              var comparison = findComparisonForRelativeEffect(pooledRelativeEffect);
               return {
-                key: comparisonRelativeEffects.t1[0] + ' &mdash; ' + comparisonRelativeEffects.t2[0],
-                values: comparisonRelativeEffects.mean.map(function(meanVal, idx) {
+                key: studyEffectsForComparison.t1[0] + ' &mdash; ' + studyEffectsForComparison.t2[0],
+                values: studyEffectsForComparison.mean.map(function(meanVal, idx) {
                   return {
-                    x: normaliseDifference(meanVal, comparisonRelativeEffects.t1[idx], comparisonRelativeEffects.t1[idx]),
-                    y: comparisonRelativeEffects['std.err'][idx]
+                    x: normalisedStudyDifference(comparison, pooledRelativeEffect, studyEffectsForComparison, idx),
+                    y: studyEffectsForComparison['std.err'][idx]
                   };
                 })
               };
