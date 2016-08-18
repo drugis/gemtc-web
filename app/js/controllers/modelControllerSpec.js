@@ -6,6 +6,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       modelResource,
       problemResource,
       pataviTaskIdResource,
+      funnelPlotResourceMock,
       mockStateParams = {
         analysisId: 1,
         projectId: 11
@@ -83,6 +84,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       problemResource.get.and.returnValue(mockProblem);
       pataviTaskIdResource = jasmine.createSpyObj('PataviTaskIdResource', ['get']);
       pataviTaskIdResource.get.and.returnValue(pataviTaskIdResult);
+      funnelPlotResourceMock = jasmine.createSpyObj('FunnelPlotResource', ['query']);
       pataviService = jasmine.createSpyObj('PataviService', ['listen']);
       pataviService.listen.and.returnValue(pataviResult);
       relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
@@ -105,6 +107,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         $modal: modalMock,
         $state: stateMock,
         ModelResource: modelResource,
+        FunnelPlotResource: funnelPlotResourceMock,
         ProblemResource: problemResource,
         PataviService: pataviService,
         PataviTaskIdResource: pataviTaskIdResource,
