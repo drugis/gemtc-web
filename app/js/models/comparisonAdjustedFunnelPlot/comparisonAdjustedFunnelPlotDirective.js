@@ -86,8 +86,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               var pooledEffectSize = pooledRelativeEffect.quantiles['50%'];
               var difference = studyEffects.t1 === pooledRelativeEffect.t1 &&
                 studyEffects.t1 === pooledRelativeEffect.t2 ?
-                studyEffects.mean[idx] - pooledEffectSize :
-                - studyEffects.mean[idx] - pooledEffectSize ;
+                  studyEffects.mean[idx] - pooledEffectSize :
+                  studyEffects.mean[idx] + pooledEffectSize ;
               return comparison.biasDirection === 1? difference : -1 * difference;
             }
 
