@@ -78,19 +78,17 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
                 .attr('y2', chart.yScale()(maxY));
             }
 
+
+            // (delta(i, t1, t2) - d(t1, t2)) * dir
             // ensure that the comparison direction is the same for pooled relative effects
             // and study-specific ones. Then adjust so the difference from pooled effect is shown.
             function normalisedStudyDifference(comparison, pooledRelativeEffect, studyEffects, idx) {
               var pooledEffectSize = pooledRelativeEffect.quantiles['50%'];
-              // Adjust the data for the funnel plot so that the non-biased result is 
-              // subtracted from the biased result
-              var studyEffect = comparison.biasDirection === 1 ?
-                studyEffects.t1[idx] - studyEffects.t2[idx] :
-                studyEffects.t2[idx] - studyEffects.t1[idx];
-              return studyEffects.t1 === pooledRelativeEffect.t1 &&
+              var difference = studyEffects.t1 === pooledRelativeEffect.t1 &&
                 studyEffects.t1 === pooledRelativeEffect.t2 ?
-                pooledEffectSize - studyEffect :
-                pooledEffectSize + studyEffect;
+                studyEffects.mean[idx] - pooledEffectSize :
+                - studyEffects.mean[idx] - pooledEffectSize ;
+              return comparison.biasDirection === 1? difference : -1 * difference;
             }
 
             root.append("rect")
