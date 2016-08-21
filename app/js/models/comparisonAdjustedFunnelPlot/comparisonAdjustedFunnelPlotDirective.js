@@ -84,8 +84,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             // and study-specific ones. Then adjust so the difference from pooled effect is shown.
             function normalisedStudyDifference(comparison, pooledRelativeEffect, studyEffects, idx) {
               var pooledEffectSize = pooledRelativeEffect.quantiles['50%'];
-              var difference = studyEffects.t1 === pooledRelativeEffect.t1 &&
-                studyEffects.t2 === pooledRelativeEffect.t2 ?
+              var difference = studyEffects.t1[idx] === pooledRelativeEffect.t1 &&
+                studyEffects.t2[idx] === pooledRelativeEffect.t2 ?
                   studyEffects.mean[idx] - pooledEffectSize :
                   studyEffects.mean[idx] + pooledEffectSize ;
               return comparison.biasDirection === 1? difference : -1 * difference;
