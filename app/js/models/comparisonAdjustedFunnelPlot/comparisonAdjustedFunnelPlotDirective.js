@@ -117,7 +117,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               });
               var comparison = findComparisonForRelativeEffect(pooledRelativeEffect);
               return {
-                key: treatmentsById[pooledRelativeEffect.t1] + ' - ' + treatmentsById[pooledRelativeEffect.t2],
+                key: treatmentsById[pooledRelativeEffect.t1].name + ' - ' + treatmentsById[pooledRelativeEffect.t2].name,
                 values: studyEffectsForComparison.mean.map(function(meanVal, idx) {
                   return {
                     x: normalisedStudyDifference(comparison, pooledRelativeEffect, studyEffectsForComparison, idx),
