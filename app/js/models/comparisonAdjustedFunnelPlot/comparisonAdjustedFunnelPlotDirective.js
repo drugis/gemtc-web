@@ -1,6 +1,5 @@
 'use strict';
 define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
-  var dependencies = ['gemtcRootPath'];
 
   function measuringSameComparison(comparison, comparisonEffects) {
     return (
@@ -9,18 +8,20 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
     );
   }
 
-  var FunnelPlot = function(gemtcRootPath) {
+  var dependencies = ['$q', 'gemtcRootPath'];
+  var FunnelPlot = function($q, gemtcRootPath) {
     return {
       restrict: 'E',
       scope: {
         plotData: '=',
+        problemPromise: '=',
         resultsPromise: '='
       },
       templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
       link: function(scope, element) {
         var root = d3.select('svg', element[0]);
 
-        scope.resultsPromise.then(render);
+        $q.all(scope.resultsPromise, scope.problemPromise).then(render);
 
         function findComparisonForRelativeEffect(relativeEffect) {
           return _.find(scope.plotData.includedComparisons, function(comparison) {
@@ -28,8 +29,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
           });
         }
 
-        function render(resultsHolder) {
-
+        function render(resultsHolder, problem) {
+          var treatmentsById = _.keyBy(problem.treatments, 'id')
           var results = resultsHolder.results;
           scope.results = results;
 
@@ -115,7 +116,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               });
               var comparison = findComparisonForRelativeEffect(pooledRelativeEffect);
               return {
-                key: studyEffectsForComparison.t1[0] + ' &mdash; ' + studyEffectsForComparison.t2[0],
+                key: treatmentsById[pooledRelativeEffect.t1] + ' - ' + treatmentsById[pooledRelativeEffect.t2],
                 values: studyEffectsForComparison.mean.map(function(meanVal, idx) {
                   return {
                     x: normalisedStudyDifference(comparison, pooledRelativeEffect, studyEffectsForComparison, idx),
