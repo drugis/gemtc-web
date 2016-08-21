@@ -21,7 +21,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
       link: function(scope, element) {
         var root = d3.select('svg', element[0]);
 
-        $q.all(scope.resultsPromise, scope.problemPromise).then(render);
+        $q.all([scope.resultsPromise, scope.problemPromise]).then(render);
 
         function findComparisonForRelativeEffect(relativeEffect) {
           return _.find(scope.plotData.includedComparisons, function(comparison) {
@@ -30,7 +30,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
         }
 
         function render(resultsHolder, problem) {
-          var treatmentsById = _.keyBy(problem.treatments, 'id')
+          var treatmentsById = _.keyBy(problem.treatments, 'id');
           var results = resultsHolder.results;
           scope.results = results;
 
