@@ -29,9 +29,10 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
           });
         }
 
-        function render(resultsHolder, problem) {
+        function render(promiseResults) {
+          var results = promiseResults[0].results;
+          var problem = promiseResults[1];
           var treatmentsById = _.keyBy(problem.treatments, 'id');
-          var results = resultsHolder.results;
           scope.results = results;
 
           if (!results.studyRelativeEffects) {
