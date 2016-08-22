@@ -19,7 +19,7 @@ define(['lodash'], function(_) {
       percentage: 0
     };
     $scope.model = ModelResource.get($stateParams);
-    $scope.funnelPlots = FunnelPlotResource.query($stateParams);
+    $scope.comparisonAdjustedFunnelPlots = FunnelPlotResource.query($stateParams);
     $scope.$parent.model = $scope.model;
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;

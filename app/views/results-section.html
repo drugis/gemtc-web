@@ -83,7 +83,7 @@
 <funnel-plot ng-if="model.modelType.type === 'pairwise'" results-promise="resultsPromise"></funnel-plot>
 
 <div ng-if="result.results && model.modelType.type === 'network'">
-  <div class="row" ng-repeat="funnelPlot in funnelPlots">
+  <div class="row" ng-repeat="funnelPlot in comparisonAdjustedFunnelPlots">
     <div class="columns large-12">
       <comparison-adjusted-funnel-plot plot-data="funnelPlot" problem-promise="problemPromise" results-promise="resultsPromise"></comparison-adjusted-funnel-plot>
     </div>
