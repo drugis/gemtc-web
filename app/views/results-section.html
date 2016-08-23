@@ -90,7 +90,7 @@
   </div>
 </div>
 
-<div ng-if="result.results && model.modelType.type === 'network'">
+<div ng-if="result.results && model.modelType.type === 'network' && !editMode.disableEditing">
   <div class="row">
     <div class="columns large-12">
       <button ng-click="openComparisonAdjustedModal()">Add comparison-adjusted funnel plot</button>
