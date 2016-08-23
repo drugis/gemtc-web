@@ -80,9 +80,22 @@
 
 <relative-effect-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></relative-effect-plots>
 <pairwise-forest-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></pairwise-forest-plots>
-<funnel-plot ng-if="model.modelType.type === 'pairwise'" results-promise="resultsPromise"></funnel-plot>
+
+<div ng-if="model.modelType.type === 'pairwise'">
+  <div class="row">
+    <div class="columns large-12">
+  <p><strong>Study effect funnel plot </strong><data-inline-help help-key="funnel-plot"></data-inline-help></p>
+    </div>
+  </div>
+  <funnel-plot results-promise="resultsPromise"></funnel-plot>
+</div>
 
 <div ng-if="result.results && model.modelType.type === 'network'">
+  <div class="row">
+    <div class="columns large-12">
+  <p><strong>Study effect funnel plot </strong><data-inline-help help-key="funnel-plot"></data-inline-help></p>
+    </div>
+  </div>
   <div class="row" ng-repeat="funnelPlot in comparisonAdjustedFunnelPlots">
     <div class="columns large-12">
       <comparison-adjusted-funnel-plot plot-data="funnelPlot" problem-promise="problemPromise" results-promise="resultsPromise"></comparison-adjusted-funnel-plot>
