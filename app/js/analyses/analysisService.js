@@ -350,7 +350,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function isSettingIncompatible(setting, problem) {
-      return problem.entries.find(function(entry) {
+      return _.find(problem.entries, function(entry) {
         return _.every(setting.columns, function(columnNames) {
           return _.intersection(_.keys(entry), columnNames).length !== columnNames.length;
         });
