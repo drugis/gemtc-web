@@ -6,7 +6,11 @@ define(['lodash'], function(_) {
   var AddAnalysisController = function($http, $scope, $location, AnalysisResource, ModelResource,
     $modalInstance, FileUploadService, ProblemValidityService, AnalysisService) {
 
-    $scope.analysis = {};
+    $scope.analysis = {
+      outcome: {
+        direction: 1
+      }
+    };
     $scope.problemFile = {};
     $scope.isAddButtonDisabled = isAddButtonDisabled;
     $scope.addAnalysis = addAnalysis;

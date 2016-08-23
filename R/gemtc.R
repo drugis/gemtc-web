@@ -537,9 +537,11 @@ report('summary', 1.0)
     summary[['inferenceIterations']] <- params[['inferenceIterations']]
     summary[['thinningFactor']] <- params[['thinningFactor']]
     summary[['outcomeScale']] <- model[['om.scale']]
+    preferredDirection <- nullCheckWithDefault(params[['preferredDirection']], 1)  # 1 (higher is beter) as default
+    summary[['preferredDirection']] <- preferredDirection
     if(modelType != 'node-split') {
       summary[['relativeEffects']] <- releffect
-      summary[['rankProbabilities']] <- list(centering=wrap.matrix(rank.probability(result)))
+      summary[['rankProbabilities']] <- list(centering=wrap.matrix(rank.probability(result,  preferredDirection=preferredDirection)))
       summary[['multivariateSummary']] <- multivariateSummary
     }
     summary[['alternatives']] <- names(summary[['rankProbabilities']])
