@@ -15,13 +15,13 @@
     <script src="js/bower_components/jquery/jquery.min.js"></script>
     <script src="js/bower_components/scrollup/dist/jquery.scrollUp.min.js"></script>
     <style type="text/css">
-			#scrollUp {
-			    bottom: 20px;
-			    right: 20px;
-			    padding: 10px 20px;
-			    background-color: #555;
-			    color: #fff;
-			}
+      #scrollUp {
+          bottom: 20px;
+          right: 20px;
+          padding: 10px 20px;
+          background-color: #555;
+          color: #fff;
+      }
     </style>
   </head>
   <body>
@@ -65,35 +65,35 @@
 
     <section class="content">
 
-    	<div class="row">
-            <div class="columns large-3">
-                    <ul class="side-nav">
+      <div class="row">
+        <div class="columns large-3">
+          <ul class="side-nav">
+            <li class="heading"><a href="#introduction" style="padding-left : 0;">Introduction</a></li>
+            <li><a href="#gemtc-preparing-dataset">Preparing your dataset</a></li>
 
-										  <li class="heading"><a href="#bayesian-meta-analysis" style="padding-left : 0;">Bayesian meta-analysis</a></li>
-										  <li><a href="#model-structure">Model structure</a></li>
-										  <li><a href="#heterogeneity">Heterogeneity and inconsistency</a></li>
-										  <li><a href="#likelihood-link">Likelihood / link</a></li>
-										  <li><a href="#prior-distributions">Prior distributions</a></li>
-										  <li><a href="#model-fit">Model fit</a></li>
-										  <li><a href="#run-length-convergence">Run length and convergence</a></li>
-
-
-										  <li class="heading"><a href="#advanced-models" style="padding-left : 0;">Advanced models</a></li>
-										  <li><a href="#node-splitting-analysis">Node-splitting analysis of inconsistency</a></li>
-										  <li><a href="#network-meta-regression">Network meta-regression</a></li>
-										  <li><a href="#design-adjustment">Design adjustment</a></li>
+            <li class="heading"><a href="#bayesian-meta-analysis" style="padding-left : 0;">Bayesian meta-analysis</a></li>
+            <li><a href="#model-structure">Model structure</a></li>
+            <li><a href="#heterogeneity">Heterogeneity and inconsistency</a></li>
+            <li><a href="#likelihood-link">Likelihood / link</a></li>
+            <li><a href="#prior-distributions">Prior distributions</a></li>
+            <li><a href="#model-fit">Model fit</a></li>
+            <li><a href="#run-length-convergence">Run length and convergence</a></li>
 
 
-											<li class="heading"><a href="#gemtc-network-meta-analysis" style="padding-left : 0;">Network meta-analysis in GeMTC</a></li>
-											<li><a href="#gemtc-preparing-dataset">Preparing your dataset</a></li>
-											<li><a href="#analyses-and-models">Analyses and models</a></li>
-											<li><a href="#model creation">Creating a new model</a></li>
-											<li><a href="#model-results">Interpreting model results</a></li>
+            <li class="heading"><a href="#advanced-models" style="padding-left : 0;">Advanced models</a></li>
+            <li><a href="#node-splitting-analysis">Node-splitting analysis of inconsistency</a></li>
+            <li><a href="#network-meta-regression">Network meta-regression</a></li>
+            <li><a href="#design-adjustment">Design adjustment</a></li>
 
 
-									</ul>
-										</div>
-				<div class="columns large-8 medium-12 end">
+            <li class="heading"><a href="#gemtc-user-interface" style="padding-left : 0;">Evidence synthesis user interface</a></li>
+            <li><a href="#analyses-and-models">Analyses and models</a></li>
+            <li><a href="#model creation">Creating a new model</a></li>
+            <li><a href="#model-results">Interpreting model results</a></li>
+
+          </ul>
+        </div>
+        <div class="columns large-8 medium-12 end">
 
         <h2>Introduction</h2>
 
@@ -132,6 +132,75 @@
         The functionality in the GeMTC user interface is supported by the <a href="http://drugis.org/software/r-packages/gemtc">GeMTC R package</a>.
         All <a href="https://drugis.org">drugis.org</a> software is open source, and source code is available on <a href="https://github.com/drugis/">github.com/drugis</a>.
         </p>
+
+        <h3 id="gemtc-preparing-dataset">Preparing your dataset</h3>
+        <p>This section only applies to the stand-alone version of GeMTC, hosted on <a href="https://gemtc.drugis.org">https://gemtc.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
+        <p>After signing in to GeMTC, you will be redirected to your personal home page. It contains a list of your previously created analyses (which will be empty until you create one), and a button to create a new analysis. Clicking this button will open the “New analysis” dialog, where you choose a title for your analysis and outcome, and upload a dataset file:</p>
+
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/gemtc_add_analysis.png" alt="add analysis screen shot" style=" padding: 5px; border: 1px solid gray;">
+        </div>
+
+        <p>Datasets can be uploaded in CSV format. The CSV file should contain one row per arm, and needs to contain “study” and “treatment” columns, which can contain names or identifiers for the study and treatment. The data columns may be one of:</p>
+        <ul>
+          <li>Continuous data: “mean” and “std.err”</li>
+          <li>Continuous data: “mean”, “std.dev”, and “sampleSize”</li>
+          <li>Dichotomous data: “responders” and “sampleSize”</li>
+          <li>Survival data: “responders” and “exposure” (exposure in person-time)</li>
+        </ul>
+
+        <p>The following is an example CSV file for a Parkinson’s disease dataset:</p>
+
+        <pre>
+          "study","treatment","mean","std.dev","sampleSize"
+          "1","A",-1.22,3.7,54
+          "1","C",-1.53,4.28,95
+          "2","A",-0.7,3.7,172
+          "2","B",-2.4,3.4,173
+          "3","A",-0.3,4.4,76
+          "3","B",-2.6,4.3,71
+          "3","D",-1.2,4.3,81
+          "4","C",-0.24,3,128
+          "4","D",-0.59,3,72
+          "5","C",-0.73,3,80
+          "5","D",-0.18,3,46
+          "6","D",-2.2,2.31,137
+          "6","E",-2.5,2.18,131
+          "7","D",-1.8,2.48,154
+          "7","E",-2.1,2.99,143
+        </pre>
+
+        <h4 id="gemtc-data-covariates">Including covariates in the dataset</h4>
+
+        <p>To include covariates in a dataset, simply add additional columns to the CSV file, but do not to use any of the column names already recognized by GeMTC (study, treatment, mean, etc.).
+        Covariates are currently only considered at the study level.
+        Therefore, you can include these data in one of two different ways:</p>
+        <ul>
+          <li>Specify the covariate value for only one of the study arms, and leave it as missing or "NA" for the others.</li>
+          <li>Specify the covariate value for all arms of the study, making sure that each arm within a study has the same value as the other arms.</li>
+        </ul>
+
+        <h4 id="gemtc-data-contrast-based">Including contrast-based data</h4>
+
+        <p>Contrast based data (e.g. log odds ratios) can also be analyzed in GeMTC.
+        Datasets can contain both contrast-based and arm-based data, but any single study must be either completely contrast-based or completely arm-based.
+        Contrast based data are effect estimates and their standard errors on a specific scale (e.g. mean difference or log-odds ratio); that scale must be specified when uploading contrast-based data.</p>
+
+        <p>Contrast-based data are also specified using the one arm per row format.
+        For every arm except the base arm, specify the effect estimate and its standard error in the columns "re.diff" and "re.diff.se".
+        For the base arm, these columns must be left as missing or "NA".</p>
+
+        <p>In multi-arm (that is, more than 2 arms) trials, the treatment contrasts are correlated.
+        This must be accounted for in the likelihood.
+        To do this, the standard error of the (absolute) effect in the base arm must be specified in the column "re.base.se".
+        For example, if the outcome scale is the log-odds ratio, this is the standard error of the absolute log-odds in the base arm.
+        By a convenient statistical coincidence, the standard error of the base arm squared is equal to the covariance between the treatment contrasts.
+        Thus, if the covariance is known, set "re.base.se" to the square root of the covariance.</p>
+
+        <p>There are a number of caveats when using contrast-based data.
+        First, as the number of participants is not known for this data, the size of nodes in the evidence graph does not reflect the number of participants.
+        Second, the scale at which the relative effects were computed will restrict the available likelihoods.
+        Third, model fit statistics for contrast-based data are not computed at the arm level, but at the study level.</p>
 
         <h2 id="bayesian-meta-analysis">Bayesian meta-analysis</h2>
 
@@ -450,15 +519,6 @@
           <li>Unrelated coefficients: each non-control treatment has an independent coefficient \(\beta_{ck}\).</li>
         </ul>
         <p>For continuous covariates, the user can additionally input covariate levels of interest. Summary statistics (treatment effects, rank probabilities) will be generated at these levels of interest, as well as at the mean of the observed values.</p>
-        <p>
-        <p>To create a meta-regression model, the dataset must contain one or more covariates. Meta-regression can then be chosen as the Model type, and the meta-regression settings are specified as follows:</p>
-        <div style="text-align: center; margin-bottom: 1em;">
-          <img src="img/regression-settings.png" style=" padding: 5px; border: 1px solid gray;">
-        </div>
-        <p>The normal network meta-analysis outputs (the league table, relative effects plots, and rank probabilities) can be viewed at any of the specified covariate levels of interest.
-        In addition, the meta-regression section will display plots of fitted treatment effects versus the covariate level, with credible intervals, for each treatment.
-        A table summarizes the estimates of the regression coefficients.
-        Covariate values are automatically centered and standardized, as displayed in the model settings panel at the top of the results page.</p>
 
         <h3 id="design-adjustment">Design adjustment</h3>
 
@@ -477,84 +537,9 @@
         To do this, we set \(\alpha_i = 0.5\) for those studies.
         A similar adjustment can be applied to data with other likelihoods (e.g. Binomial), where the log-likelihood is multiplied by the adjustment factor \(\alpha_i\).</p>
 
-        <p>To create a design-adjusted analysis, you need a dataset with a binary covariate, and must select "Design adjusted model (variance inflation)" under the "Sensitivity analysis" section of the model creation screen:</p>
-        <div style="text-align: center; margin-bottom: 1em;">
-          <img src="img/design-adjust-settings.png" style=" padding: 5px; border: 1px solid gray;">
-        </div>
-        <p>Design adjustment can be applied to any of the model types, and the set-up using a binary covariate allows you to easily try different levels of down-weighting.</p>
+        <h2 id="gemtc-user-interface">Evidence synthesis user interface</h2>
 
-        <h2 id="gemtc-network-meta-analysis">Network meta-analysis in GeMTC</h2>
-
-        <p>The following sections give an overview of the GeMTC user interface.<p>
-
-        <h3 id="gemtc-preparing-dataset">Preparing your dataset</h3>
-        <p>This section only applies to the stand-alone version of GeMTC, hosted on <a href="https://gemtc.drugis.org">https://gemtc.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
-        <p>After signing in to GeMTC, you will be redirected to your personal home page. It contains a list of your previously created analyses (which will be empty until you create one), and a button to create a new analysis. Clicking this button will open the “New analysis” dialog, where you choose a title for your analysis and outcome, and upload a dataset file:</p>
-
-        <div style="text-align: center; margin-bottom: 1em;">
-          <img src="img/gemtc_add_analysis.png" alt="add analysis screen shot" style=" padding: 5px; border: 1px solid gray;">
-        </div>
-
-        <p>Datasets can be uploaded in CSV format. The CSV file should contain one row per arm, and needs to contain “study” and “treatment” columns, which can contain names or identifiers for the study and treatment. The data columns may be one of:</p>
-        <ul>
-          <li>Continuous data: “mean” and “std.err”</li>
-          <li>Continuous data: “mean”, “std.dev”, and “sampleSize”</li>
-          <li>Dichotomous data: “responders” and “sampleSize”</li>
-          <li>Survival data: “responders” and “exposure” (exposure in person-time)</li>
-        </ul>
-
-        <p>The following is an example CSV file for a Parkinson’s disease dataset:</p>
-
-        <pre>
-          "study","treatment","mean","std.dev","sampleSize"
-          "1","A",-1.22,3.7,54
-          "1","C",-1.53,4.28,95
-          "2","A",-0.7,3.7,172
-          "2","B",-2.4,3.4,173
-          "3","A",-0.3,4.4,76
-          "3","B",-2.6,4.3,71
-          "3","D",-1.2,4.3,81
-          "4","C",-0.24,3,128
-          "4","D",-0.59,3,72
-          "5","C",-0.73,3,80
-          "5","D",-0.18,3,46
-          "6","D",-2.2,2.31,137
-          "6","E",-2.5,2.18,131
-          "7","D",-1.8,2.48,154
-          "7","E",-2.1,2.99,143
-        </pre>
-
-        <h4 id="gemtc-data-covariates">Including covariates in the dataset</h4>
-
-        <p>To include covariates in a dataset, simply add additional columns to the CSV file, but do not to use any of the column names already recognized by GeMTC (study, treatment, mean, etc.).
-        Covariates are currently only considered at the study level.
-        Therefore, you can include these data in one of two different ways:</p>
-        <ul>
-          <li>Specify the covariate value for only one of the study arms, and leave it as missing or "NA" for the others.</li>
-          <li>Specify the covariate value for all arms of the study, making sure that each arm within a study has the same value as the other arms.</li>
-        </ul>
-
-        <h4 id="gemtc-data-contrast-based">Including contrast-based data</h4>
-
-        <p>Contrast based data (e.g. log odds ratios) can also be analyzed in GeMTC.
-        Datasets can contain both contrast-based and arm-based data, but any single study must be either completely contrast-based or completely arm-based.
-        Contrast based data are effect estimates and their standard errors on a specific scale (e.g. mean difference or log-odds ratio); that scale must be specified when uploading contrast-based data.</p>
-
-        <p>Contrast-based data are also specified using the one arm per row format.
-        For every arm except the base arm, specify the effect estimate and its standard error in the columns "re.diff" and "re.diff.se".
-        For the base arm, these columns must be left as missing or "NA".</p>
-        
-        <p>In multi-arm (that is, more than 2 arms) trials, the treatment contrasts are correlated.
-        This must be accounted for in the likelihood.
-        To do this, the standard error of the (absolute) effect in the base arm must be specified in the column "re.base.se".
-        For example, if the outcome scale is the log-odds ratio, this is the standard error of the absolute log-odds in the base arm.
-        By a convenient statistical coincidence, the standard error of the base arm squared is equal to the covariance between the treatment contrasts.
-        Thus, if the covariance is known, set "re.base.se" to the square root of the covariance.</p>
-
-        <p>There are a number of caveats when using contrast-based data.
-        First, as the number of participants is not known for this data, the size of nodes in the evidence graph does not reflect the number of participants.
-        Second, the scale at which the relative effects were computed will restrict the available likelihoods.
-        Third, model fit statistics for contrast-based data are not computed at the arm level, but at the study level.</p>
+        <p>The following sections give an overview of the evidence synthesis user interface.<p>
 
         <h3 id="analyses-and-models">Analyses and models</h3>
         <p>An analysis consists of a set of data together with all the models that have been run on these data. After creating an analysis, the analysis screen shows the evidence network, the models, the evidence table, and a button to create more models:</p>
@@ -573,6 +558,17 @@
         </div>
 
         <p>On the model creation screen you can select the model type (currently supported types are <a href="#network-meta-analysis-normally-distributed">network meta-analysis</a>, <a href="#pairwise-analysis-normally-distributed">pair-wise meta-analysis</a>, and <a href="#node-splitting-analysis">node-splitting</a>), tweak the model settings to your satisfaction before creating and running it. Once the run is complete, the <a href="#model-results">model results</a> should be shown.</p>
+
+        <p>To create a meta-regression model, the dataset must contain one or more covariates. Meta-regression can then be chosen as the Model type, and the meta-regression settings are specified as follows:</p>
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/regression-settings.png" style=" padding: 5px; border: 1px solid gray;">
+        </div>
+
+        <p>To create a design-adjusted analysis, you need a dataset with a binary covariate, and must select "Design adjusted model (variance inflation)" under the "Sensitivity analysis" section of the model creation screen:</p>
+        <div style="text-align: center; margin-bottom: 1em;">
+          <img src="img/design-adjust-settings.png" style=" padding: 5px; border: 1px solid gray;">
+        </div>
+        <p>Design adjustment can be applied to any of the model types, and the set-up using a binary covariate allows you to easily try different levels of down-weighting.</p>
 
         <h4 id="gemtc-network-meta-analysis-implementation">Implementation of network meta-analysis in GeMTC</h4>
 
@@ -669,6 +665,13 @@
         Please keep in mind that you should still assess the convergence and run-length of each model separately.
         </p>
 
+        <h4 id="meta-regression-results">Results: meta-regression</h4>
+
+        <p>For a meta-regression analysis, the standard network meta-analysis outputs (the league table, relative effects plots, and rank probabilities) can be viewed at any of the specified covariate levels of interest.
+        In addition, the meta-regression section will display plots of fitted treatment effects versus the covariate level, with credible intervals, for each treatment.
+        A table summarizes the estimates of the regression coefficients.
+        Covariate values are automatically centered and standardized, as displayed in the model settings panel at the top of the results page.</p>
+
       </div>
     </div>
    </div>
@@ -676,8 +679,8 @@
    <script>
     renderMathInElement(document.body);
     $(function () {
-    	$.scrollUp();
-		});
+      $.scrollUp();
+    });
    </script>
   </body>
 </html>
