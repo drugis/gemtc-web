@@ -19,8 +19,6 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
       },
       templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
       link: function(scope, element) {
-        var root = d3.select('svg', element[0]);
-
         $q.all([scope.resultsPromise, scope.problemPromise]).then(render);
 
         function findComparisonForRelativeEffect(relativeEffect) {
@@ -30,6 +28,9 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
         }
 
         function render(promiseResults) {
+          var root = d3.select($(element).get(0));
+          root = root.select('svg');
+
           var results = promiseResults[0].results;
           var problem = promiseResults[1];
           var treatmentsById = _.keyBy(problem.treatments, 'id');
@@ -53,7 +54,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
           nvd3.addGraph(function() {
             function drawInterval() {
-              var graph = d3.select(element[0].querySelector('g'));
+              var graph = root.select('g');
 
               graph.append('line')
                 .style('stroke', 'black')
@@ -103,13 +104,11 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               .xDomain([minX, maxX])
               .yDomain([maxY, minY]);
             chart.yAxis.axisLabel('Standard error');
-            chart.xAxis.axisLabel('Median study effect');
+            chart.xAxis.axisLabel('Effect centered at comparison-specific pooled effect');
 
             //Axis settings
             chart.xAxis.tickFormat(d3.format('.02f'));
-            chart.yAxis.tickFormat(function(d) {
-              return Math.abs(d);
-            });
+            chart.yAxis.tickFormat(d3.format('.02f'));
 
             var myData = _.map(includedRelativeEffects, function(studyEffectsForComparison) {
               var pooledRelativeEffect = _.find(results.relativeEffects.centering, function(relativeEffect) {
