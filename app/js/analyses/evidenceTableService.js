@@ -36,7 +36,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function isAbsoluteEffectStudy(study) {
-      return !!study.arms.find(function(arm) {
+      return !!_.find(study.arms, function(arm) {
         return arm.data.hasOwnProperty('sampleSize') ||
           arm.data.hasOwnProperty('responders') ||
           arm.data.hasOwnProperty('mean') ||

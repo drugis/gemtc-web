@@ -21,7 +21,7 @@ define(['lodash'], function(_) {
           $scope.analysis.problem = $scope.uploadResult.problem;
           if ($scope.problemFile.extension === 'csv') {
             $scope.scaleOptions = _.uniqBy(AnalysisService.createLikelihoodLinkOptions($scope.analysis.problem), 'analysisScale');
-            $scope.selectedScale = $scope.scaleOptions.find(function(option) {
+            $scope.selectedScale = _.find($scope.scaleOptions, function(option) {
               return option.compatibility === 'compatible';
             });
           }
