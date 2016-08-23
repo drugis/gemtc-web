@@ -5,7 +5,10 @@
         <h5 class="subheader">Outcome
           <inline-help help-key="outcome"></inline-help>
         </h5>
-        <h5 id="analysisOutcome" class="inline">{{::analysis.outcome.name}}
+        <h5 id="analysisOutcome" class="inline">
+          {{::analysis.outcome.name}}
+          <span ng-if="analysis.outcome.direction != -1"> (higher is better)</span> 
+          <span ng-if="analysis.outcome.direction == -1"> (lower is better)</span> 
         </h5>
   </div>
   <div class="columns large-4 medium-8 end">
