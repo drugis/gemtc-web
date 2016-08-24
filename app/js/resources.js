@@ -4,6 +4,7 @@ define(function(require) {
   return angular.module('gemtc.resources', ['ngResource'])
     .factory('ModelAttributeResource', require('gemtc-web/resources/modelAttributeResource'))
     .factory('ModelResource', require('gemtc-web/resources/modelResource'))
+    .factory('FunnelPlotResource', require('gemtc-web/resources/funnelPlotResource'))
     .factory('ProblemResource', require('gemtc-web/resources/problemResource'))
     .factory('PataviTaskIdResource', require('gemtc-web/resources/pataviTaskIdResource'));
 });

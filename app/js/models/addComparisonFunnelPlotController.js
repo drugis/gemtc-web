@@ -38,6 +38,7 @@ define(['lodash'], function(_) {
     function buildPlotObject(comparisons) {
       var includedComparisons = _.filter(comparisons, 'isIncluded');
       return {
+        modelId: $stateParams.modelId,
         includedComparisons: includedComparisons.map(function(comparison) {
           return {
             t1: comparison.t1.id,
