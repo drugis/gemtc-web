@@ -1,10 +1,10 @@
 'use strict';
 define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
-  function measuringSameComparison(comparison, comparisonEffects) {
+  function isComparisonForTreatments(comparison, t1, t2) {
     return (
-      (comparison.t1.toString() === comparisonEffects.t1[0] && comparison.t2.toString() === comparisonEffects.t2[0]) ||
-      (comparison.t1.toString() === comparisonEffects.t2[0] && comparison.t2.toString() === comparisonEffects.t1[0])
+      (comparison.t1.toString() === t1 && comparison.t2.toString() === t2) ||
+      (comparison.t1.toString() === t2 && comparison.t2.toString() === t1)
     );
   }
 
@@ -21,9 +21,9 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
       link: function(scope, element) {
         $q.all([scope.resultsPromise, scope.problemPromise]).then(render);
 
-        function findComparisonForRelativeEffect(relativeEffect) {
+        function findComparisonForTreatments(t1, t2) {
           return _.find(scope.plotData.includedComparisons, function(comparison) {
-            return measuringSameComparison(comparison, relativeEffect);
+            return isComparisonForTreatments(comparison, t1, t2);
           });
         }
 
@@ -41,7 +41,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
           }
 
           var includedRelativeEffects = _.filter(results.studyRelativeEffects, function(relativeEffect) {
-            return findComparisonForRelativeEffect(relativeEffect);
+            return findComparisonForTreatments(relativeEffect.t1[0], relativeEffect.t2[0]);
           });
 
           var midPoint = 0;
@@ -112,9 +112,9 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
             var myData = _.map(includedRelativeEffects, function(studyEffectsForComparison) {
               var pooledRelativeEffect = _.find(results.relativeEffects.centering, function(relativeEffect) {
-                return measuringSameComparison(relativeEffect, studyEffectsForComparison);
+                return isComparisonForTreatments(relativeEffect, studyEffectsForComparison.t1[0], studyEffectsForComparison.t2[0]);
               });
-              var comparison = findComparisonForRelativeEffect(pooledRelativeEffect);
+              var comparison = findComparisonForTreatments(pooledRelativeEffect.t1, pooledRelativeEffect.t2);
               return {
                 key: treatmentsById[pooledRelativeEffect.t1].name + ' - ' + treatmentsById[pooledRelativeEffect.t2].name,
                 values: studyEffectsForComparison.mean.map(function(meanVal, idx) {
