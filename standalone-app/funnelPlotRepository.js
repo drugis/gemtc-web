@@ -14,7 +14,7 @@ module.exports = {
 function aggregateRows(result) {
   logger.debug('aggregating ' + JSON.stringify(result));
   var plots = _.reduce(result, function(accum, row) {
-    if(!accum[row.plotid]) {
+    if (!accum[row.plotid]) {
       accum[row.plotid] = {
         id: row.plotid,
         modelId: row.modelid,
@@ -34,8 +34,8 @@ function aggregateRows(result) {
 function createFunnelPlot(modelId, newFunnelPlot, callback) {
   var variableIndex = 1;
   var queryValues = newFunnelPlot.includedComparisons.reduce(function(accum, comparison) {
-                      //     new plot id                     modelId               treatment 1               treatment 2               bias direction
-    var valueString = '((select * from newplotid),  $' + variableIndex++ + ', $' + variableIndex++ + ', $' + variableIndex++ + ', $' + variableIndex++ + ')';
+    //     new plot id                     modelId               treatment 1               treatment 2               bias direction
+    var valueString = '((select * from newplotid),  $' + variableIndex+++', $' + variableIndex+++', $' + variableIndex+++', $' + variableIndex+++')';
     return {
       strings: accum.strings.concat(valueString),
       rows: accum.rows.concat([modelId, comparison.t1, comparison.t2, comparison.biasDirection])
