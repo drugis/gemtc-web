@@ -20,6 +20,18 @@
     </div>
   </div>
   <div class="row">
+    <div class="large-9 columns">
+      <label>Outcome direction</label>
+          <input type="radio" id="higher-is-better-radio" ng-value="1" ng-model="analysis.outcome.direction">
+          <label for="higher-is-better-radio">Higher is better</label>
+          <input type="radio" id="lower-is-better-radio" ng-value="-1" ng-model="analysis.outcome.direction">
+          <label for="lower-is-better-radio">Lower is better</label>
+    </div>
+  </div>
+      </label>
+    </div>
+  </div>
+  <div class="row">
     <div class="large-9 columns" ng-model="showInfo">
       <span style="line-height: 2.5em">
                 <label style="display: inline;">Dataset file<inline-help help-key="dataset-file"></inline-help></label>

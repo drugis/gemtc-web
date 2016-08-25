@@ -23,6 +23,9 @@ describe('the patavi handler service', function() {
         problem: {
           entries: [],
           treatments: []
+        },
+        outcome: {
+
         }
       };
       var modelMock = {
@@ -58,6 +61,9 @@ describe('the patavi handler service', function() {
             id: 2,
             name: 'treatment2'
           }]
+        },
+        outcome: {
+          direction: -1
         }
       };
       var modelMock = {
@@ -91,7 +97,8 @@ describe('the patavi handler service', function() {
         },
         sensitivity: {
           omittedStudy: 'study 2'
-        }
+        },
+        preferredDirection: -1
       };
 
       var callback = function() {};
@@ -119,6 +126,9 @@ describe('the patavi handler service', function() {
             id: 3,
             name: 'treatment3'
           }]
+        },
+        outcome: {
+
         }
       };
       var modelMock = {
@@ -159,7 +169,8 @@ describe('the patavi handler service', function() {
               name: 'treatment2'
             }
           }
-        }
+        },
+        preferredDirection: 1
       };
 
       var callback = function() {};
