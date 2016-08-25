@@ -35,7 +35,7 @@ function createFunnelPlot(modelId, newFunnelPlot, callback) {
   var variableIndex = 1;
   var queryValues = newFunnelPlot.includedComparisons.reduce(function(accum, comparison) {
     //     new plot id                     modelId               treatment 1               treatment 2               bias direction
-    var valueString = '((select * from newplotid),  $' + variableIndex+++', $' + variableIndex+++', $' + variableIndex+++', $' + variableIndex+++')';
+    var valueString = '((select * from newplotid),  $' + variableIndex++ + ', $' + variableIndex++ + ', $' + variableIndex++ + ', $' + variableIndex++ + ')';
     return {
       strings: accum.strings.concat(valueString),
       rows: accum.rows.concat([modelId, comparison.t1, comparison.t2, comparison.biasDirection])
