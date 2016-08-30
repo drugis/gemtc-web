@@ -33,11 +33,11 @@ describe('the funnelplot repository', function() {
       var includedComparisons = [{
           t1: 3,
           t2: 4,
-          biasDirection: 1
+          biasDirection: 't1'
         }, {
           t1: 5,
           t2: 7,
-          biasDirection: 2
+          biasDirection: 't2'
         }],
         newFunnelPlot = {
           includedComparisons: includedComparisons
@@ -67,7 +67,7 @@ describe('the funnelplot repository', function() {
           modelid: 1,
           t1: 1,
           t2: 3,
-          biasdirection: 1
+          biasdirection: 't1'
         }]
       },
       query;
@@ -87,7 +87,7 @@ describe('the funnelplot repository', function() {
         includedComparisons: [{
           t1: 1,
           t2: 3,
-          biasDirection: 1
+          biasDirection: 't1'
         }]
       }];
       funnelPlotRepository.findByModelId(modelId, function(error, result) {
@@ -108,7 +108,7 @@ describe('the funnelplot repository', function() {
           modelid: modelId,
           t1: 1,
           t2: 3,
-          biasdirection: 2
+          biasdirection: 't2'
         }]
       },
       query;
@@ -127,7 +127,7 @@ describe('the funnelplot repository', function() {
         includedComparisons: [{
           t1: 1,
           t2: 3,
-          biasDirection: 2
+          biasDirection: 't2'
         }]
       };
       funnelPlotRepository.findByPlotId(modelId, function(error, result) {

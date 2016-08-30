@@ -86,12 +86,14 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             // ensure that the comparison direction is the same for pooled relative effects
             // and study-specific ones. Then adjust so the difference from pooled effect is shown.
             function normalisedStudyDifference(comparison, pooledRelativeEffect, studyEffects, idx) {
+              if(comparison.t1.toString() !== studyEffects.t1[idx]) {
+                throw new Error('comparison and study effect direction must be the same');
+              }
               var pooledEffectSize = pooledRelativeEffect.quantiles['50%'];
-              var difference = studyEffects.t1[idx] === pooledRelativeEffect.t1 &&
-                studyEffects.t2[idx] === pooledRelativeEffect.t2 ?
+              var difference = studyEffects.t1[idx] === pooledRelativeEffect.t1 ?
                   studyEffects.mean[idx] - pooledEffectSize :
                   studyEffects.mean[idx] + pooledEffectSize ;
-              return comparison.biasDirection === 1? difference : -1 * difference;
+              return comparison.biasDirection === "t1" ? difference : -1 * difference;
             }
 
             root.append("rect")
