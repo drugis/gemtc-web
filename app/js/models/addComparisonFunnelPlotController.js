@@ -16,9 +16,7 @@ define(['lodash'], function(_) {
         restOfTreatments.forEach(function(otherTreatment) {
           var comparisonResults = _.find(studyRelativeEffects, function(comparisonEffects) {
             return (comparisonEffects.t1[0] === treatment.id.toString() &&
-                comparisonEffects.t2[0] === otherTreatment.id.toString()) ||
-              (comparisonEffects.t2[0] === treatment.id.toString() &&
-                comparisonEffects.t1[0] === otherTreatment.id.toString());
+                comparisonEffects.t2[0] === otherTreatment.id.toString());
           });
           if (comparisonResults) {
             comparisons.push({
