@@ -66,12 +66,12 @@
   },
   "forest-plot": {
     "title": "Forest plot",
-    "text": "A plot showing the treatment effect for each study.",
+    "text": "A plot showing the treatment effect in each study as well as the pooled treatment effect.",
     "link": "/manual.html#pairwise-meta-analysis-results"
   },
   "funnel-plot": {
-    "title": "Funnel",
-    "text": "A plot showing to what extent the effects of studies lie within the expected interval",
+    "title": "Funnel plot",
+    "text": "A graph to aid in the detection of bias. It plots deviations from the pooled effect against standard error of the study, which should follow a symmetric funnel-like shape in the absence of bias.",
     "link": "/manual.html#pairwise-meta-analysis-results"
   },
   "hazard-ratio": {
