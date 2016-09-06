@@ -3,6 +3,8 @@ library(gemtc)
 library(base64enc)
 library(coda)
 
+files <- NULL
+
 # Workaround for CODA bug
 if (!exists("gelman.diag.fix", mode="function")) {
   gelman.diag.old <- coda::gelman.diag
@@ -147,21 +149,26 @@ plotToFile <- function(plotFunction, dataType, extension, imageCreationFunction)
   plotFunction()
   dev.off()
 
-  # read & delete plot files
+  # stage plot files for Patavi
   filenames <- grep(paste0("^", prefix), dir(tempdir(), full.names=TRUE), value=TRUE)
+  newFiles <- lapply(filenames, function(filename) {
+    list(name=basename(filename), # FIXME?
+         file=filename, # FIXME?
+         mime=dataType)
+  })
+  assign("files", c(files, newFiles), envir=parent.env(environment()))
+
   lapply(filenames, function(filename) {
-    contents <- paste0("data:image/", dataType, ";base64,", base64encode(filename))
-    file.remove(filename)
-    contents
+    list('href'=basename(filename), 'content-type'=dataType)
   })
 }
 
 plotToSvg <- function(plotFunction) {
-  plotToFile(plotFunction, 'svg+xml', '.svg', svg)
+  plotToFile(plotFunction, 'image/svg+xml', '.svg', svg)
 }
 
 plotToPng <- function(plotFunction) {
-  plotToFile(plotFunction, 'png', '.png', png)
+  plotToFile(plotFunction, 'image/png', '.png', png)
 }
 
 predict.t <- function(network, n.adapt, n.iter, thin) {
