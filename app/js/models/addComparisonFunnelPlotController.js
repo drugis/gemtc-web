@@ -10,23 +10,21 @@ define(['lodash'], function(_) {
     $scope.cancel = cancel;
 
     function buildComparisons() {
-      var comparisons = [];
-      problem.treatments.forEach(function(treatment, idx) {
-        var restOfTreatments = problem.treatments.slice(idx + 1);
-        restOfTreatments.forEach(function(otherTreatment) {
+      return problem.treatments.reduce(function(accum, treatment) {
+        problem.treatments.forEach(function(otherTreatment) {
           var comparisonResults = _.find(studyRelativeEffects, function(comparisonEffects) {
             return (comparisonEffects.t1[0] === treatment.id.toString() &&
-                comparisonEffects.t2[0] === otherTreatment.id.toString());
+              comparisonEffects.t2[0] === otherTreatment.id.toString());
           });
           if (comparisonResults) {
-            comparisons.push({
+            accum.push({
               t1: treatment,
               t2: otherTreatment
             });
           }
         });
-      });
-      return comparisons;
+        return accum;
+      }, []);
     }
 
     function cancel() {
