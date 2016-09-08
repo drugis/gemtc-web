@@ -515,7 +515,7 @@ report('covariateEffectPlot', 1.0)
 times$summary <- system.time({
   summary <- summary(result)
 })
-report('summary', 1.0)
+    report('summary', 1.0)
     summary[['script-version']] <- 0.3
     statistics <- summary[['summaries']][['statistics']]
     if(is.vector(statistics)) { # in case of pairwise there's no effect matrix
@@ -591,14 +591,16 @@ report('summary', 1.0)
     summary[['gelmanDiagnostics']] <- wrap.matrix(gelman.diag(result, multivariate=FALSE)[['psrf']])
     deviance <- result[['deviance']]
     summary[['devianceStatistics']][['perArmDeviance']] <- wrap.arms(deviance[['dev.ab']], model[['network']])
-    print(model[['network']][['data.re']][['study']])
-    relEffectStudyNames <- rle(as.character(model[['network']][['data.re']][['study']]))[['values']]
-    names(deviance[['dev.re']]) <- relEffectStudyNames
-    summary[['devianceStatistics']][['relativeDeviance']] <- if(length(deviance[['dev.re']]) > 0)  deviance[['dev.re']] else NULL
     summary[['devianceStatistics']][['perArmLeverage']] <- wrap.arms(deviance[['dev.ab']] - deviance[['fit.ab']], model[['network']])
-    relativeLeverage <- deviance[['dev.re']] - deviance[['fit.re']]
-    names(relativeLeverage) <- relEffectStudyNames
-    summary[['devianceStatistics']][['relativeLeverage']] <- if(length(relativeLeverage) > 0) relativeLeverage else NULL
+    if(!is.null(deviance[['dev.re']])) {
+      relEffectStudyNames <- rle(as.character(model[['network']][['data.re']][['study']]))[['values']]
+      names(deviance[['dev.re']]) <- relEffectStudyNames
+      summary[['devianceStatistics']][['relativeDeviance']] <- deviance[['dev.re']]
+      relativeLeverage <- deviance[['dev.re']] - deviance[['fit.re']]
+      names(relativeLeverage) <- relEffectStudyNames
+      summary[['devianceStatistics']][['relativeLeverage']] <- relativeLeverage
+    }
+    summary[['devianceStatistics']][['nDataPoints']] <- deviance[['data points']]
     summary[['residualDeviance']] <- deviance[['Dbar']]
     summary[['leverage']] <- deviance[['pD']]
     summary[['DIC']] <- deviance[['DIC']]
