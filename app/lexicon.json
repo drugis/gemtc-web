@@ -154,6 +154,11 @@
     "text": " model where direct and indirect evidence are estimated separately for a specific treatment comparison (the node “being split”). These estimates can be compared to each other and to the estimate obtained from a consistency model to judge the agreement between direct and indirect evidence. This is a method for assessing consistency.",
     "link": "/manual.html#node-splitting-analysis"
   },
+  "number-of-data-points" : {
+    "title": "Number of data points",
+    "text": "The number of data points on which the fit is based.",
+    "link": "/manual.html#model-fit"
+  },
   "odds-ratio": {
     "title": "Odds ratio",
     "text": "The ratio of the odds of an event in two groups being compared. If p is a probability, the odds are p/(1-p). If the odds are o1 in the base group and o2 in the other group, the odds ratio is o2/o1",
