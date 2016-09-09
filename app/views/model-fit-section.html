@@ -31,7 +31,10 @@
             <td>{{result.results.residualDeviance | number : 1}}</td>
           </tr>
           <tr>
-            <td>Leverage (p<sub>D</sub>)</td>
+            <td>
+              Leverage (p<sub>D</sub>)
+              <data-inline-help help-key="leverage"></data-inline-help>
+            </td>
             <td>{{result.results.leverage | number : 1}}</td>
           </tr>
           <tr>
@@ -39,6 +42,12 @@
               <data-inline-help help-key="deviance-information-criterion"></data-inline-help>
             </td>
             <td>{{result.results.DIC | number : 1}}</td>
+          </tr>
+          <tr>
+            <td>Number of data points
+              <data-inline-help help-key="number-of-data-points"></data-inline-help>
+            </td>
+            <td>{{result.results.devianceStatistics.nDataPoints}}</td>
           </tr>
         </tbody>
       </table>
