@@ -9,7 +9,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
       },
       templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
       link: function(scope, element) {
-        var root = d3.select('svg', element[0]);
+        var root = d3.select($(element).get(0));
+        root = root.select('svg');
 
         scope.resultsPromise.then(render);
 
@@ -87,7 +88,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             var myData = [{
               values: results.studyRelativeEffects.mean.map(function(meanVal, idx) {
                 return {
-                  x: consistentDirection(meanVal, results.studyRelativeEffects.t1[idx], results.studyRelativeEffects.t1[idx]),
+                  x: consistentDirection(meanVal, results.studyRelativeEffects.t1[idx], results.studyRelativeEffects.t2[idx]),
                   y: results.studyRelativeEffects['std.err'][idx]
                 };
               })
