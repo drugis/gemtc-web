@@ -52,11 +52,11 @@ define(['lodash'], function(_) {
     }
 
     function buildDiagnosticMap(model, problem, result) {
-      var labelledDiagnostics = labelDiagnostics(model.modelType.type, result.results.gelmanDiagnostics, problem.treatments);
+      var labelledDiagnostics = labelDiagnostics(model.modelType.type, result.gelmanDiagnostics, problem.treatments);
       var diagnosticMap = labelledDiagnostics.reduce(function(accum, diagnostic) {
-        diagnostic.tracePlot = result.results.convergencePlots.trace[diagnostic.key];
-        diagnostic.densityPlot = result.results.convergencePlots.density[diagnostic.key];
-        diagnostic.psrfPlot = result.results.convergencePlots.psrf[diagnostic.key];
+        diagnostic.tracePlot = result.convergencePlots.trace[diagnostic.key];
+        diagnostic.densityPlot = result.convergencePlots.density[diagnostic.key];
+        diagnostic.psrfPlot = result.convergencePlots.psrf[diagnostic.key];
         accum[diagnostic.label] = diagnostic;
         return accum;
       }, {});

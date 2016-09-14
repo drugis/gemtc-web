@@ -6,6 +6,7 @@ define(function(require) {
     .factory('DevianceStatisticsService', require('gemtc-web/models/devianceStatisticsService'))
     .factory('ModelService', require('gemtc-web/models/modelService'))
     .factory('RefineModelService', require('gemtc-web/models/refineModelService'))
+    .factory('ResultsPlotService', require('gemtc-web/models/result/resultsPlotService'))
 
   .factory('NetworkPlotService', require('gemtc-web/analyses/networkPlotService'))
     .factory('AnalysisService', require('gemtc-web/analyses/analysisService'))

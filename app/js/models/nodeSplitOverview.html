@@ -9,7 +9,7 @@
       <h5><strong>Analysis</strong></h5>
       <h5><a ui-sref="networkMetaAnalysis(stateParams)">{{analysis.title}}</a></h5>
       <h5><strong>Outcome</strong><inline-help help-key="outcome"></inline-help></h5>
-      <h5>{{analysis.outcome.name}}<span ng-show="result.results.logScale"> (log scale)</span></h5>
+      <h5>{{analysis.outcome.name}}<span ng-show="result.logScale"> (log scale)</span></h5>
       <h5 ng-if="model !== networkModel"><strong>Base Model</strong></h5>
       <h5 ng-if="model !== networkModel"><a ui-sref="model(stateParams)">{{model.title}}</a></h5>
       <div class="alert" ng-if="baseModelNotShown">The base model is not included in the comparison because another model with identical settings was selected instead. Please archive that model if you wish to use the base model for comparison.</div>
@@ -23,16 +23,16 @@
         <table class="layout-table">
           <tr>
             <td class="large-6 text-right"><strong>effects type</strong></td>
-            <td>{{::result.results.linearModel}}</td>
+            <td>{{::result.linearModel}}</td>
           </tr>
           <tr>
             <td class="large-6 text-right"><strong>outcome scale</strong></td>
             <td ng-if="model.outcomeScale">{{::model.outcomeScale}}</td>
-            <td ng-if="!model.outcomeScale">{{::result.results.outcomeScale}} (imputed)</td>
+            <td ng-if="!model.outcomeScale">{{::result.outcomeScale}} (imputed)</td>
           </tr>
           <tr>
             <td class="large-6 text-right"><strong>likelihood / link</strong></td>
-            <td>{{::result.results.likelihood}} / {{::result.results.link}}</td>
+            <td>{{::result.likelihood}} / {{::result.link}}</td>
           </tr>
         </table>
       </div>

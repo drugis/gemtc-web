@@ -28,6 +28,7 @@ define(function(require) {
     .factory('DevianceStatisticsService', require('models/devianceStatisticsService'))
     .factory('NodeSplitOverviewService', require('models/nodeSplitOverviewService'))
     .factory('MetaRegressionService', require('gemtc-web/models/metaRegressionService'))
+    .factory('ResultsPlotService', require('gemtc-web/models/result/resultsPlotService'))
 
   //directives
   .directive('gemtcRankPlot', require('models/rankPlotDirective'))
