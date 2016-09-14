@@ -1,4 +1,4 @@
-<div class="row" ng-if="result.results && model.modelType.type === 'regression'" style="padding-top: 1rem;">
+<div class="row" ng-if="result && model.modelType.type === 'regression'" style="padding-top: 1rem;">
   <div class="columns large-2 medium-4">
     <h3 id="model-results-meta-regression-header" class="main-category-header">Meta regression</h3>
   </div>
@@ -7,9 +7,9 @@
   </div>
 </div>
 
-<meta-regression-cov-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></meta-regression-cov-plots>
+<meta-regression-cov-plots model-promise="modelPromise" results-promise="resultsPromise" problem-promise="problemPromise"></meta-regression-cov-plots>
 
-<div class="row" ng-show="result.results && model.modelType.type === 'regression'" >
+<div class="row" ng-show="result && model.modelType.type === 'regression'" >
   <div class="columns large-4 end">
     <table>
       <thead>

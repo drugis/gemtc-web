@@ -1,4 +1,4 @@
-<div class="row" ng-if="result.results"  style="padding-top: 1rem;">
+<div class="row" ng-if="result"  style="padding-top: 1rem;">
     <div class="columns large-3">
       <h3 class="main-category-header">Convergence diagnostics</h3>
     </div>
@@ -7,7 +7,7 @@
     </div>
   </div> <!-- end Convergence diagnostics header -->
 
-  <div class="row" ng-if="result.results" >
+  <div class="row" ng-if="result" >
     <div class="columns large-12 medium-6 small-12">
         <table export>
           <caption>Per-parameter convergence diagnostics</caption>
@@ -29,8 +29,8 @@
           <tbody>
             <tr ng-repeat="diagnostic in diagnostics">
               <td>{{diagnostic.label}}</td>
-              <td>{{result.results.summaries.statistics[diagnostic.key].SD}}</td>
-              <td>{{result.results.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
+              <td>{{result.summaries.statistics[diagnostic.key].SD}}</td>
+              <td>{{result.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
               <td>{{diagnostic['Point est.']}}</td>
               <td>{{diagnostic['Upper C.I.']}}</td>
               <td class="button-cell"><graph-modal diagnostics-map="diagnosticMap" selected-comparison="diagnostic" />
@@ -40,7 +40,7 @@
       </div>
     </div> <!-- end Convergence diagnostics content -->
 
-    <div class="row" ng-if="result.results" >
+    <div class="row" ng-if="result" >
       <div class="columns large-8 medium-6 small-12">
         <!-- gemtc stand-alone does not set editMode-->
         <button id="open-run-length-dialog-btn" ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()" class="small">Extend run-length</button>

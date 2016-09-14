@@ -72,7 +72,7 @@ function getResult(taskUrl, callback) {
       if (err) {
         return callback(err);
       }
-      callback(null, result.results);
+      callback(null, result);
     });
   });
 }

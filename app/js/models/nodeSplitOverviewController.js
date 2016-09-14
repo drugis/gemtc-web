@@ -98,14 +98,19 @@ define(['angular', 'lodash'], function(angular, _) {
       var getParams = angular.copy($stateParams);
       getParams.modelId = modelId;
       return ModelResource
-        .getResult(getParams)
-        .$promise.then(
+        .getResult(getParams,
           function(result) {
-            return result;
+            if (!result.$promise) {
+              return result;
+            } else {
+              result.$promise.then(function(resultValue) {
+                return resultValue;
+              });
+            }
           },
           function() {
             return $q.resolve(undefined);
-          });
+          }).$promise;
     }
 
     function findModelForComparison(comparison, models) {

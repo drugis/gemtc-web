@@ -52,7 +52,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         }];
 
 
-        var covariatePlotOptions = metaRegressionService.buildCovariatePlotOptions(result.results, problem);
+        var covariatePlotOptions = metaRegressionService.buildCovariatePlotOptions(result, problem);
         expect(covariatePlotOptions).toEqual(expected);
 
       });
@@ -101,7 +101,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
           }
         }];
 
-        var covariateSummaries = metaRegressionService.getCovariateSummaries(result.results, problem);
+        var covariateSummaries = metaRegressionService.getCovariateSummaries(result, problem);
         expect(covariateSummaries).toEqual(expected);
       });
     });

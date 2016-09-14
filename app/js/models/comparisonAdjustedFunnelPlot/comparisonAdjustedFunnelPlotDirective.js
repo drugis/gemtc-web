@@ -31,7 +31,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
           var root = d3.select($(element).get(0));
           root = root.select('svg');
 
-          var results = promiseResults[0].results;
+          var results = promiseResults[0];
           var problem = promiseResults[1];
           var treatmentsById = _.keyBy(problem.treatments, 'id');
           scope.results = results;

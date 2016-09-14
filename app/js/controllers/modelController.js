@@ -1,12 +1,16 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'FunnelPlotResource', 'PataviService',
+  var dependencies = ['$scope', '$q', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'FunnelPlotResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
-    'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService'
+    'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService',
+    'ResultsPlotService'
   ];
-  var ModelController = function($scope, $modal, $state, $stateParams, gemtcRootPath, ModelResource, FunnelPlotResource, PataviService,
+  var ModelController = function($scope, $q, $modal, $state, $stateParams, gemtcRootPath, ModelResource, FunnelPlotResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, ModelService,
-    DiagnosticsService, AnalysisService, DevianceStatisticsService, MetaRegressionService) {
+    DiagnosticsService, AnalysisService, DevianceStatisticsService, MetaRegressionService,
+    ResultsPlotService) {
+
+    var modelDefer = $q.defer();
 
     $scope.resultsViewTemplate = gemtcRootPath + 'views/results-section.html';
     $scope.modelSettingsViewTemplate = gemtcRootPath + 'views/model-settings-section.html';
@@ -19,6 +23,7 @@ define(['lodash'], function(_) {
       percentage: 0
     };
     $scope.model = ModelResource.get($stateParams);
+    $scope.modelPromise = modelDefer.promise;
     $scope.comparisonAdjustedFunnelPlots = FunnelPlotResource.query($stateParams);
     $scope.$parent.model = $scope.model;
     $scope.openRunLengthDialog = openRunLengthDialog;
@@ -27,7 +32,7 @@ define(['lodash'], function(_) {
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
 
-    // pass information to parent for use in beardcrumbs
+    // pass information to parent for use in breadcrumbs
     $scope.$parent.model = $scope.model;
     $scope.$parent.analysis = $scope.analysis;
 
@@ -59,6 +64,7 @@ define(['lodash'], function(_) {
     }
 
     function getTaskUrl(taskInfo) {
+      $scope.taskUri = taskInfo.uri;
       return taskInfo.uri;
     }
 
@@ -108,7 +114,7 @@ define(['lodash'], function(_) {
             return $scope.problem;
           },
           studyRelativeEffects: function() {
-            return $scope.result.results.studyRelativeEffects;
+            return $scope.result.studyRelativeEffects;
           },
           successCallback: function() {
             return function() {
@@ -124,15 +130,25 @@ define(['lodash'], function(_) {
       projectId: $stateParams.projectId
     }).$promise;
 
+    function prefixPlots(result, taskUri) {
+      var resultPlotPrefix = taskUri +  '/results/';
+      result.convergencePlots.trace = ResultsPlotService.prefixImageUris(result.convergencePlots.trace, resultPlotPrefix);
+      result.convergencePlots.density = ResultsPlotService.prefixImageUris(result.convergencePlots.density, resultPlotPrefix);
+      result.convergencePlots.psrf = ResultsPlotService.prefixImageUris(result.convergencePlots.psrf, resultPlotPrefix);
+      result.deviancePlot = ResultsPlotService.prefixImageUris(result.deviancePlot, resultPlotPrefix);
+      return result;
+    }
+
     function pataviRunSuccessCallback(result) {
       return $scope.problemPromise.then(function(problem) {
         $scope.problem = problem;
         $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
-        $scope.result = result;
+
+        $scope.result = prefixPlots(result, $scope.taskUri);
         if (problem.treatments && problem.treatments.length > 0) {
           $scope.selectedBaseline = problem.treatments[0];
         }
-        var isLogScale = result.results.logScale;
+        var isLogScale = result.logScale;
         $scope.scaleName = AnalysisService.getScaleName($scope.model);
         $scope.diagnosticMap = DiagnosticsService.buildDiagnosticMap(
           $scope.model,
@@ -144,13 +160,13 @@ define(['lodash'], function(_) {
         $scope.diagnostics = unsorted.sort(DiagnosticsService.compareDiagnostics);
 
         if ($scope.model.modelType.type !== 'node-split') {
-          $scope.rankProbabilitiesByLevel = _.map(result.results.rankProbabilities, function(rankProbability, key) {
+          $scope.rankProbabilitiesByLevel = _.map(result.rankProbabilities, function(rankProbability, key) {
             return {
               level: key,
               data: nameRankProbabilities(rankProbability, problem.treatments)
             };
           });
-          $scope.relativeEffectsTables = _.map(result.results.relativeEffects, function(relativeEffect, key) {
+          $scope.relativeEffectsTables = _.map(result.relativeEffects, function(relativeEffect, key) {
             return {
               level: key,
               table: RelativeEffectsTableService.buildTable(relativeEffect, isLogScale, problem.treatments)
@@ -166,21 +182,24 @@ define(['lodash'], function(_) {
             $scope.relativeEffectsTable = ModelService.findCentering($scope.relativeEffectsTables);
             $scope.rankProbabilities = ModelService.findCentering($scope.rankProbabilitiesByLevel);
             if ($scope.model.regressor) {
-              $scope.relativeEffectsTable.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
-              $scope.rankProbabilities.level = 'centering (' + $scope.result.results.regressor.modelRegressor.mu + ')';
+              $scope.relativeEffectsTable.level = 'centering (' + $scope.result.regressor.modelRegressor.mu + ')';
+              $scope.rankProbabilities.level = 'centering (' + $scope.result.regressor.modelRegressor.mu + ')';
             }
           }
         } // end not nodesplit
 
-        $scope.absoluteDevianceStatisticsTable = DevianceStatisticsService.buildAbsoluteTable(result.results.devianceStatistics, problem);
-        $scope.relativeDevianceStatisticsTable = DevianceStatisticsService.buildRelativeTable(result.results.devianceStatistics);
+        $scope.absoluteDevianceStatisticsTable = DevianceStatisticsService.buildAbsoluteTable(result.devianceStatistics, problem);
+        $scope.relativeDevianceStatisticsTable = DevianceStatisticsService.buildRelativeTable(result.devianceStatistics);
         if ($scope.model.regressor) {
           $scope.controlTreatment = _.find($scope.problem.treatments, function(treatment) {
             return treatment.id === Number($scope.model.regressor.control);
           });
-          $scope.covariateQuantiles = MetaRegressionService.getCovariateSummaries($scope.result.results, $scope.problem);
+          $scope.covariateQuantiles = MetaRegressionService.getCovariateSummaries($scope.result, $scope.problem);
         }
         $scope.model = ModelResource.get($stateParams); // refresh so that model.taskUrl is set
+        $scope.model.$promise.then(function(model) {
+          modelDefer.resolve(model);
+        });
         return result;
       });
     }

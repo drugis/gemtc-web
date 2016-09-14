@@ -14,9 +14,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
         scope.resultsPromise.then(render);
 
-        function render(resultsHolder) {
-
-          var results = resultsHolder.results;
+        function render(results) {
           scope.results = results;
 
           if (!results.studyRelativeEffects) {

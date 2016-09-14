@@ -1,5 +1,5 @@
 <!-- -start results section -->
-<div class="row" ng-if="result.results" style="padding-top: 1rem;">
+<div class="row" ng-if="result" style="padding-top: 1rem;">
   <div class="columns large-1">
     <h3 id="model-results-results-header" class="main-category-header">Results</h3>
   </div>
@@ -8,13 +8,13 @@
   </div>
 </div>
 
-<div class="row" ng-show="result.results && model.linearModel === 'random'" style="padding-top: 1rem;">
+<div class="row" ng-show="result && model.linearModel === 'random'" style="padding-top: 1rem;">
   <div class="columns large-12">
-    <p><strong>Random effects standard deviation </strong> {{result.results.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.results.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.results.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</p>
+    <p><strong>Random effects standard deviation </strong> {{result.summaries.quantiles["sd.d"]["50%"] | number: 3}} ({{result.summaries.quantiles["sd.d"]["2.5%"] | number: 3}}, {{result.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</p>
   </div>
 </div>
 
-<div class="row" ng-if="result.results && model.modelType.type === 'node-split'">
+<div class="row" ng-if="result && model.modelType.type === 'node-split'">
   <div class="column large-12">
     <table>
       <caption>Node splitting results</caption>
@@ -26,25 +26,25 @@
       </thead>
       <tr>
         <td><strong>Direct estimate </strong><data-inline-help help-key="direct-estimate"></data-inline-help></td>
-        <td>{{::result.results.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.direct']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
+        <td>{{::result.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.summaries.quantiles['d.direct']['2.5%'] | number: 3}}, {{::result.summaries.quantiles['d.direct']['97.5%'] | number: 3}})</td>
       </tr>
       <tr>
         <td><strong>Indirect estimate </strong><data-inline-help help-key="indirect-estimate"></data-inline-help></td>
-        <td>{{::result.results.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.results.summaries.quantiles['d.indirect']['2.5%'] | number: 3}}, {{::result.results.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
+        <td>{{::result.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.summaries.quantiles['d.indirect']['2.5%'] | number: 3}}, {{::result.summaries.quantiles['d.indirect']['97.5%'] | number: 3}})</td>
       </tr>
       <tr>
         <td><strong>Inconsistency factor</strong></td>
-        <td>{{::result.results.nodeSplit.diff.quantiles['50%'] | number: 3}} ({{::result.results.nodeSplit.diff.quantiles['2.5%'] | number: 3}}, {{::result.results.nodeSplit.diff.quantiles['97.5%'] | number: 3}})</td>
+        <td>{{::result.nodeSplit.diff.quantiles['50%'] | number: 3}} ({{::result.nodeSplit.diff.quantiles['2.5%'] | number: 3}}, {{::result.nodeSplit.diff.quantiles['97.5%'] | number: 3}})</td>
       </tr>
       <tr>
         <td><strong>Inconsistency P-value</strong></td>
-        <td>{{::result.results.nodeSplit['incons.p'] | number: 3}}</td>
+        <td>{{::result.nodeSplit['incons.p'] | number: 3}}</td>
       </tr>
     </table>
   </div>
 </div>
 
-<div ng-if="result.results && model.modelType.type !== 'node-split'">
+<div ng-if="result && model.modelType.type !== 'node-split'">
   <div class="row" style="padding-top: 1rem;">
     <div class="columns large-4">
       <p><strong>Relative effects table <data-inline-help help-key="relative-effects"></data-inline-help></strong></p>
@@ -78,10 +78,10 @@
   </div>
 </div>
 
-<relative-effect-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></relative-effect-plots>
-<pairwise-forest-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></pairwise-forest-plots>
+<relative-effect-plots model-promise="modelPromise" results-promise="resultsPromise" problem-promise="problemPromise"></relative-effect-plots>
+<pairwise-forest-plots model-promise="modelPromise" results-promise="resultsPromise" problem-promise="problemPromise"></pairwise-forest-plots>
 
-<div ng-if="result.results && model.modelType.type === 'pairwise'">
+<div ng-if="result && model.modelType.type === 'pairwise'">
   <div class="row">
     <div class="columns large-12">
   <p><strong>Study effect funnel plot </strong><data-inline-help help-key="funnel-plot"></data-inline-help></p>
@@ -90,7 +90,7 @@
   <funnel-plot results-promise="resultsPromise"></funnel-plot>
 </div>
 
-<div ng-if="result.results && model.modelType.type === 'network'">
+<div ng-if="result && model.modelType.type === 'network'">
   <div class="row">
     <div class="columns large-12">
   <p><strong>Study effect funnel plot </strong><data-inline-help help-key="funnel-plot"></data-inline-help></p>
@@ -108,7 +108,7 @@
   </div>
 </div>
 
-<div ng-if="result.results && model.modelType.type === 'network' && !editMode.disableEditing">
+<div ng-if="result && model.modelType.type === 'network' && !editMode.disableEditing">
   <div class="row">
     <div class="columns large-12">
       <button ng-click="openComparisonAdjustedModal()">Add comparison-adjusted funnel plot</button>
@@ -116,9 +116,9 @@
   </div>
 </div>
 
-<node-split-density-plots model-promise="model.$promise" results-promise="resultsPromise" problem-promise="problemPromise"></node-split-density-plots>
+<node-split-density-plots model-promise="modelPromise" results-promise="resultsPromise" problem-promise="problemPromise"></node-split-density-plots>
 
-<div ng-if="result.results && model.modelType.type !== 'node-split'">
+<div ng-if="result && model.modelType.type !== 'node-split'">
   <div class="row" style="padding-top: 1rem;" >
     <div class="columns large-12">
       <div>

@@ -1,4 +1,4 @@
-<div class="row" ng-if="result.results" style="padding-top: 2rem;">
+<div class="row" ng-if="result" style="padding-top: 2rem;">
   <div class="columns large-2">
     <h3 class="main-category-header">Model fit</h3>
   </div>
@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<div class="row" ng-if="result.results && model.sensitivity">
+<div class="row" ng-if="result && model.sensitivity">
   <div class="columns large-6 medium-8 small-12">
     <div class="panel callout">
       The variance inflation model adjusts the variance of observations, which amounts
@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<div class="row" ng-if="result.results">
+<div class="row" ng-if="result">
   <div class="columns large-8 medium-6 small-12">
     <div>
       <table export>
@@ -28,26 +28,26 @@
               <span style="text-decoration: overline;">D</span><sub>res</sub>)
               <data-inline-help help-key="residual-deviance"></data-inline-help>
             </td>
-            <td>{{result.results.residualDeviance | number : 1}}</td>
+            <td>{{result.residualDeviance | number : 1}}</td>
           </tr>
           <tr>
             <td>
               Leverage (p<sub>D</sub>)
               <data-inline-help help-key="leverage"></data-inline-help>
             </td>
-            <td>{{result.results.leverage | number : 1}}</td>
+            <td>{{result.leverage | number : 1}}</td>
           </tr>
           <tr>
             <td>DIC
               <data-inline-help help-key="deviance-information-criterion"></data-inline-help>
             </td>
-            <td>{{result.results.DIC | number : 1}}</td>
+            <td>{{result.DIC | number : 1}}</td>
           </tr>
           <tr>
             <td>Number of data points
               <data-inline-help help-key="number-of-data-points"></data-inline-help>
             </td>
-            <td>{{result.results.devianceStatistics.nDataPoints}}</td>
+            <td>{{result.devianceStatistics.nDataPoints}}</td>
           </tr>
         </tbody>
       </table>
@@ -55,14 +55,14 @@
   </div>
 </div>
 
-<div class="row" ng-if="result.results">
+<div class="row" ng-if="result">
   <div class="columns large-12 medium-12 small-12">
-    <img export file-name="'residualDeviancePlot'" ng-src="{{result.results.deviancePlot[0]}}">
+    <img export file-name="'residualDeviancePlot'" ng-src="{{result.deviancePlot[0].href}}">
   </div>
 </div>
 
 
-<div class="row" ng-if="result.results && absoluteDevianceStatisticsTable.length > 0">
+<div class="row" ng-if="result && absoluteDevianceStatisticsTable.length > 0">
   <div class="columns large-12 medium-12 small-12">
     <table export>
       <thead>
@@ -87,7 +87,7 @@
     </table>
   </div>
 </div>
-<div class="row" ng-if="result.results && relativeDevianceStatisticsTable.length > 0">
+<div class="row" ng-if="result && relativeDevianceStatisticsTable.length > 0">
   <div class="columns large-12 medium-12 small-12">
     <table export>
       <thead>
