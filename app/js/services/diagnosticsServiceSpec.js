@@ -13,8 +13,6 @@ define(['angular', 'angular-mocks', 'services'], function() {
     }));
 
     describe('buildDiagnosticMap', function() {
-
-
       it('should correctly label the parameters', function() {
         var treatments = [{
           id: 2,
@@ -159,13 +157,11 @@ define(['angular', 'angular-mocks', 'services'], function() {
           'd.direct': 'f'
         };
         var result = {
-          results: {
-            gelmanDiagnostics: gelmanDiagnostics,
-            convergencePlots: {
-              trace: tracePlots,
-              density: densityPlots,
-              psrf: psrfPlots
-            }
+          gelmanDiagnostics: gelmanDiagnostics,
+          convergencePlots: {
+            trace: tracePlots,
+            density: densityPlots,
+            psrf: psrfPlots
           }
         };
 

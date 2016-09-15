@@ -202,6 +202,9 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
 
         scope.$apply();
       });
+      afterEach(function(){
+        modelResourceMock.getResult.calls.reset();
+      });
       it('should build a row per nodesplit comparison, matching the model where possible', function() {
         expect(analysisServiceMock.createNodeSplitOptions).toHaveBeenCalledWith(problemMock);
         expect(scope.comparisons.length).toBe(optionsMock.length);
@@ -225,7 +228,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         expect(modelResourceMock.getResult).toHaveBeenCalledWith({
           modelId: modelsMock[2].id,
           analysisId: stateParamsMock.analysisId
-        });
+        }, jasmine.any(Function), jasmine.any(Function));
       });
       it('should set baseModelNotShown to false', function() {
         expect(scope.baseModelNotShown).toBeFalsy();

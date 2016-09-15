@@ -29,12 +29,10 @@ define(['angular', 'angular-mocks', 'services'], function() {
           name: 'Sertraline'
         }];
         var result = {
-          results: {
-            covariateEffectPlot: {
-              3: '3',
-              2: '2',
-              5: '5',
-            }
+          covariateEffectPlot: {
+            3: '3',
+            2: '2',
+            5: '5',
           }
         };
         var problem = {
@@ -76,16 +74,14 @@ define(['angular', 'angular-mocks', 'services'], function() {
           name: 'Sertraline'
         }];
         var result = {
-          results: {
-            summaries: {
-              quantiles: {
-                'd.2.3': {},
-                'd.2.4': {},
-                'd.2.5': {},
-                'sd.d': {},
-                'B': {
-                  something: 'something'
-                }
+          summaries: {
+            quantiles: {
+              'd.2.3': {},
+              'd.2.4': {},
+              'd.2.5': {},
+              'sd.d': {},
+              'B': {
+                something: 'something'
               }
             }
           }
