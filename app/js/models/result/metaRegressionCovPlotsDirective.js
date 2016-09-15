@@ -20,7 +20,10 @@ define([], function() {
 
             if (scope.model.regressor) {
               scope.results.covariateEffectPlot = _.reduce(scope.results.covariateEffectPlot, function(accum, plot, key) {
-                accum[key] = ResultsPlotService.prefixImageUris(plot, scope.model.taskUrl + '/results/');
+                accum[key] = {
+                  'content-type': plot['content-type'],
+                  href: scope.model.taskUrl + '/results/' + plot.href
+                };
                 return accum;
               }, {});
               scope.covariateEffectPlots = MetaRegressionService.buildCovariatePlotOptions(scope.results, scope.problem);
