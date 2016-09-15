@@ -23,6 +23,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviResult,
       pataviResultDeferred,
       pataviService,
+      resultsPlotsServiceMock,
       relativeEffectsTableService,
       devianceStatisticsServiceMock,
       diagnosticsService,
@@ -63,15 +64,17 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviResultDeferred = $q.defer();
       pataviResult = {
         $promise: pataviResultDeferred.promise,
-        results: {
-          relativeEffects: [[]],
-          rankProbabilities: [],
-          tracePlot: [],
-          gelmanPlot: [],
-          regressor: {
-            modelRegressor: {
-              mu: 'mu'
-            }
+        relativeEffects: [
+          []
+        ],
+        convergencePlots: {},
+        deviancePlot: {},
+        rankProbabilities: [],
+        tracePlot: [],
+        gelmanPlot: [],
+        regressor: {
+          modelRegressor: {
+            mu: 'mu'
           }
         },
         logScale: true
@@ -84,6 +87,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       problemResource.get.and.returnValue(mockProblem);
       pataviTaskIdResource = jasmine.createSpyObj('PataviTaskIdResource', ['get']);
       pataviTaskIdResource.get.and.returnValue(pataviTaskIdResult);
+      resultsPlotsServiceMock = jasmine.createSpyObj('ResultsPlotService', ['prefixImageUris']);
       funnelPlotResourceMock = jasmine.createSpyObj('FunnelPlotResource', ['query']);
       pataviService = jasmine.createSpyObj('PataviService', ['listen']);
       pataviService.listen.and.returnValue(pataviResult);
@@ -95,7 +99,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       modalMock = jasmine.createSpyObj('$modal', ['open']);
       metaRegressionService = jasmine.createSpyObj('MetaRegressionService', ['buildCovariatePlotOptions', 'getCovariateSummaries']);
       metaRegressionService.buildCovariatePlotOptions.and.returnValue([]);
-      modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary','filterCentering','findCentering']);
+      modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary', 'filterCentering', 'findCentering']);
       modelserviceMock.isVariableBinary.and.returnValue(true);
       modelserviceMock.filterCentering.and.callFake(function(param) {
         return param;
@@ -111,6 +115,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         ProblemResource: problemResource,
         PataviService: pataviService,
         PataviTaskIdResource: pataviTaskIdResource,
+        ResultsPlotService: resultsPlotsServiceMock,
         RelativeEffectsTableService: relativeEffectsTableService,
         AnalysisResource: analysisResource,
         DiagnosticsService: diagnosticsService,
