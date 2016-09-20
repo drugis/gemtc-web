@@ -9,12 +9,12 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
       },
       templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
       link: function(scope, element) {
-        var root = d3.select($(element).get(0));
-        root = root.select('svg');
 
         scope.resultsPromise.then(render);
 
         function render(results) {
+          var root = d3.select($(element).get(0));
+          root = root.select('svg');
           scope.results = results;
 
           if (!results.studyRelativeEffects) {
@@ -60,8 +60,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             // and study-specific ones.
             function consistentDirection(meanVal, valT1, valT2) {
               return valT1 === results.relativeEffects.centering[0].t1 && valT2 === results.relativeEffects.centering[0].t2 ?
-                  meanVal :
-                - meanVal;
+                meanVal :
+                -meanVal;
             }
 
             root.append("rect")
