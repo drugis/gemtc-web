@@ -3,7 +3,7 @@
 require.config({
   paths: {
     'gemtc-web': '.',
-    'jQuery': 'bower_components/jquery/dist/jquery.min',
+    'jQuery': 'bower_components/jquery/dist/jquery',
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
