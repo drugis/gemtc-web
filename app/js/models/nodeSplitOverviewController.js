@@ -1,10 +1,10 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state', '$modal', 'gemtcRootPath',
-    'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService'
+    'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService', 'PataviService'
   ];
   var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, $modal, gemtcRootPath,
-    models, problem, AnalysisService, ModelResource, NodeSplitOverviewService) {
+    models, problem, AnalysisService, ModelResource, NodeSplitOverviewService, PataviService) {
 
     $scope.goToModel = goToModel;
     $scope.openCreateNodeSplitDialog = openCreateNodeSplitDialog;
@@ -12,13 +12,14 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.networkModelResultsDefer = $q.defer();
     $scope.baseModelNotShown = false;
 
-    $scope.model.$promise.then(function() {
+    $scope.modelPromise.then(function(model) {
+      $scope.model = model;
       var networkModel;
       $scope.analysis.$promise.then(buildComparisonRows).then(function() {
-        $scope.baseModelNotShown = $scope.model.modelType.type === 'node-split' && !_.some($scope.comparisons, ['modelId', $scope.model.id]);
+        $scope.baseModelNotShown = model.modelType.type === 'node-split' && !_.some($scope.comparisons, ['modelId', model.id]);
       });
-      if ($scope.model.modelType.type === 'node-split') {
-        networkModel = findNetworkModelForModel($scope.model, models);
+      if (model.modelType.type === 'node-split') {
+        networkModel = findNetworkModelForModel(model, models);
         if (networkModel) {
           $scope.networkStateParams = _.omit($stateParams, 'modelid');
           $scope.networkStateParams.modelId = networkModel.id;
@@ -31,7 +32,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
       if ($scope.networkModel) {
         if ($scope.networkModel.taskUrl) {
-          findModelResult($scope.networkModel.id).then(function(result) {
+          findModelResult($scope.networkModel.taskUrl).then(function(result) {
             if (result) {
               $scope.networkModel.result = result;
             }
@@ -55,7 +56,7 @@ define(['angular', 'lodash'], function(angular, _) {
           row.modelId = model.id;
           row.hasModel = true;
           if (model.taskUrl) {
-            findModelResult(model.id).then(function(result) {
+            findModelResult(model.taskUrl).then(function(result) {
               if (result) {
                 row.result = result;
                 row.directEffectEstimate = NodeSplitOverviewService.buildDirectEffectEstimates(result);
@@ -94,23 +95,8 @@ define(['angular', 'lodash'], function(angular, _) {
       );
     }
 
-    function findModelResult(modelId) {
-      var getParams = angular.copy($stateParams);
-      getParams.modelId = modelId;
-      return ModelResource
-        .getResult(getParams,
-          function(result) {
-            if (!result.$promise) {
-              return result;
-            } else {
-              result.$promise.then(function(resultValue) {
-                return resultValue;
-              });
-            }
-          },
-          function() {
-            return $q.resolve(undefined);
-          }).$promise;
+    function findModelResult(taskUrl) {
+      return PataviService.listen(taskUrl);
     }
 
     function findModelForComparison(comparison, models) {

@@ -5,8 +5,9 @@ define(['lodash'], function(_) {
 
     function prefixImageUris(plotObj, resultPlotPrefix) {
       return _.reduce(plotObj, function(accum, plot, key) {
-        plot.href = resultPlotPrefix + plot.href;
-        accum[key] = plot;
+        var newPlot = _.cloneDeep(plot);
+        newPlot.href = resultPlotPrefix + plot.href;
+        accum[key] = newPlot;
         return accum;
       }, {});
     }
