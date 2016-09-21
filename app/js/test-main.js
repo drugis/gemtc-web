@@ -13,7 +13,7 @@ for (var file in window.__karma__.files) {
 
 require.config({
   paths: {
-    'jQuery': 'bower_components/jquery/jquery.min',
+    'jQuery': 'bower_components/jquery/dist/jquery.min',
     'lodash': 'bower_components/lodash/dist/lodash.min',
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
