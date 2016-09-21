@@ -73,7 +73,8 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
       problemMock,
       stateMock = jasmine.createSpyObj('$state', ['go']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['createNodeSplitOptions']),
-      modelResourceMock = jasmine.createSpyObj('ModelResource', ['get', 'getResult']),
+      modelResourceMock = jasmine.createSpyObj('ModelResource', ['get']),
+      pataviServiceMock = jasmine.createSpyObj('PataviService', ['listen']),
       nodesplitOverviewServiceMock = jasmine.createSpyObj('NodesplitOverviewService', ['buildConsistencyEstimates', 'buildDirectEffectEstimates', 'buildIndirectEffectEstimates']);
 
     beforeEach(module('gemtc.models'));
@@ -84,6 +85,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
 
       modelDefer = q.defer();
       modelMock.$promise = modelDefer.promise;
+      scope.modelPromise = modelDefer.promise;
 
       analysisDefer = q.defer();
       analysisMock.$promise = analysisDefer.promise;
@@ -92,6 +94,8 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
       scope.analysis = analysisMock;
 
       modalMock.open.calls.reset();
+
+      pataviServiceMock.listen.and.returnValue({then:function(){}});
 
       $controller('NodeSplitOverviewController', {
         $scope: scope,
@@ -104,7 +108,8 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         problem: problemMock,
         AnalysisService: analysisServiceMock,
         ModelResource: modelResourceMock,
-        NodeSplitOverviewService: nodesplitOverviewServiceMock
+        NodeSplitOverviewService: nodesplitOverviewServiceMock,
+        PataviService: pataviServiceMock
       });
 
     }));
@@ -187,23 +192,21 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
           entries: []
         };
         var resultDefer = q.defer();
-        var resultMock = {
-          $promise: resultDefer.promise
-        };
 
         modelDefer.resolve(modelMock);
         analysisDefer.resolve(analysisMock);
-        resultDefer.resolve(resultMock);
+        resultDefer.resolve({});
 
         analysisServiceMock.createNodeSplitOptions.and.returnValue(optionsMock);
-        modelResourceMock.getResult.and.returnValue(resultMock);
         nodesplitOverviewServiceMock.buildDirectEffectEstimates.and.returnValue(directEffects);
         nodesplitOverviewServiceMock.buildIndirectEffectEstimates.and.returnValue(indirectEffects);
+        pataviServiceMock.listen.and.returnValue(resultDefer.promise);
 
         scope.$apply();
       });
       afterEach(function(){
-        modelResourceMock.getResult.calls.reset();
+        analysisServiceMock.createNodeSplitOptions.calls.reset();
+        pataviServiceMock.listen.calls.reset();
       });
       it('should build a row per nodesplit comparison, matching the model where possible', function() {
         expect(analysisServiceMock.createNodeSplitOptions).toHaveBeenCalledWith(problemMock);
@@ -225,10 +228,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         expect(scope.networkModel).toBe(modelsMock[3]);
       });
       it('should retrieve results for models with a taskUrl', function() {
-        expect(modelResourceMock.getResult).toHaveBeenCalledWith({
-          modelId: modelsMock[2].id,
-          analysisId: stateParamsMock.analysisId
-        }, jasmine.any(Function), jasmine.any(Function));
+        expect(pataviServiceMock.listen).toHaveBeenCalledWith(modelsMock[2].taskUrl);
       });
       it('should set baseModelNotShown to false', function() {
         expect(scope.baseModelNotShown).toBeFalsy();
