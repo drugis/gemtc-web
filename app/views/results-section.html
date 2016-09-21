@@ -90,7 +90,7 @@
   <funnel-plot results-promise="resultsPromise"></funnel-plot>
 </div>
 
-<div ng-if="result && model.modelType.type === 'network'">
+<div ng-if="result && model.modelType.type === 'network' && result.studyRelativeEffects">
   <div class="row">
     <div class="columns large-12">
   <p><strong>Study effect funnel plot </strong><data-inline-help help-key="funnel-plot"></data-inline-help></p>
