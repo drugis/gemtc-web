@@ -71,6 +71,34 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
+    /**
+     * It is an error if there is an arm with standard error lower than that of the base arm.
+     **/
+    function hasTooHighBaseArmStandardError(problem) {
+      return !!_.values(problem.relativeEffectData.data).find(function(study) {
+        if (study.baseArm && study.baseArm.baseArmStandardError) {
+          return _.find(study.otherArms, function(otherArm) {
+            return otherArm.standardError <= study.baseArm.baseArmStandardError;
+          });
+        }
+      });
+    }
+
+    /**
+     * It is an error if there is only one covariate level
+     **/
+
+    function hasOnlyOneCovariateLevel(problem) {
+      if (!problem.studyLevelCovariates) {
+        return false;
+      }
+      var studies = _.values(problem.studyLevelCovariates);
+      var covariates = _.keys(studies[0]);
+      return _.find(covariates, function(covariate) {
+        return _.uniq(_.map(studies, covariate)).length < 2;
+      });
+    }
+
     function isAllowedScale(scale) {
       return ['log odds ratio', 'log risk ratio', 'log hazard ratio', 'mean difference'].indexOf(scale) > -1;
     }
@@ -114,6 +142,13 @@ define(['angular', 'lodash'], function(angular, _) {
           result.message += ' The treatments field must contain a list of objects that all have name and id';
         }
 
+        if (problem.studyLevelCovariates) {
+          if (hasOnlyOneCovariateLevel(problem)) {
+            result.isValid = false;
+            result.message += ' Covariates must have more than one level';
+          }
+        }
+
         if (problem.relativeEffectData) {
           if (hasMalformedRelativeEntry(problem)) {
             result.isValid = false;
@@ -126,6 +161,10 @@ define(['angular', 'lodash'], function(angular, _) {
             if (hasMissingBaseArm(problem)) {
               result.isValid = false;
               result.message += ' Relative effects data must contain baseArmStandardError if the study contains more than 2 arms';
+            }
+            if (hasTooHighBaseArmStandardError(problem)) {
+              result.isValid = false;
+              result.message += ' Relative effects data may not contain a base arm with standard error higher than that of another arms';
             }
             if (!problem.relativeEffectData.scale || !isAllowedScale(problem.relativeEffectData.scale)) {
               result.isValid = false;

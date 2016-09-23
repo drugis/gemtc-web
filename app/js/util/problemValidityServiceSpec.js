@@ -147,6 +147,39 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(result.message).toContain(' Relative effects data must contain baseArmStandardError if the study contains more than 2 arms');
       });
 
+      it('should return false for a relative effect problem in which the base arm standardError is higher than one of the other arms standard error', function() {
+        var problem = {
+          entries: [],
+          relativeEffectData: {
+            scale: "mean difference",
+            data: {
+              2: {
+                baseArm: {
+                  treatment: 1,
+                  baseArmStandardError: 2
+                },
+                otherArms: [{
+                  treatment: 1,
+                  meanDifference: 2,
+                  standardError: 3
+                }, {
+                  treatment: 1,
+                  meanDifference: 2,
+                  standardError: 1
+                }]
+              }
+            }
+          },
+          treatments: [{
+            id: 1,
+            name: 'treatment 1'
+          }]
+        };
+        var result = problemValidityService.getValidity(problem);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain(' Relative effects data may not contain a base arm with standard error higher than that of another arms');
+      });
+
       it('should return false for malformed relativeEffectData', function() {
         var problem = {
           entries: [],
@@ -238,6 +271,33 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         expect(result.message).toContain('Each entry must have the same data columns');
       });
 
+      it('should return false when all the covariates have the same level', function() {
+        var problem = {
+          entries: [{
+            study: 1,
+            treatment: 1
+          }, {
+            study: 2,
+            treatment: 1
+          }],
+          treatments: [{
+            id: 1,
+            name: 'treatment 1'
+          }],
+          studyLevelCovariates: {
+            1: {
+              'BLINDING_AT_LEAST_DOUBLE_BLIND': 1.0
+            },
+            2: {
+              'BLINDING_AT_LEAST_DOUBLE_BLIND': 1.0
+            }
+          }
+        };
+        var result = problemValidityService.getValidity(problem);
+        expect(result.isValid).toBe(false);
+        expect(result.message).toContain('Covariates must have more than one level');
+      });
+
       describe('when an entry refers to an nonexistent treatment', function() {
         var problem;
         var result;
@@ -261,7 +321,6 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
         });
 
       });
-
     });
 
     describe('parse', function() {
