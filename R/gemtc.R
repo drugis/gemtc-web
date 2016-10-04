@@ -1,6 +1,5 @@
 library(RJSONIO)
 library(gemtc)
-library(base64enc)
 library(coda)
 
 files <- NULL
@@ -31,12 +30,16 @@ pweffects <- function(result, t1, t2) {
     return (data.frame())
   }
 
-  data <- network$data.ab
-  columns <- ll.call("required.columns.ab", model)
+  data.ab <- network[['data.ab']]
+  data.re <- network[['data.re']]
+  pairs <- data.frame(t1=t1, t2=t2, stringsAsFactors=FALSE)
   study.effect <- lapply(studies, function(study) {
-    t1.data <- data[data$study == study & data$treatment == t1, columns]
-    t2.data <- data[data$study == study & data$treatment == t2, columns]
-    est <- ll.call('mtc.rel.mle', model, as.matrix(rbind(t1.data, t2.data)), correction.force=FALSE, correction.type="reciprocal", correction.magnitude=0.1)
+    est <- if (!is.null(data.ab) && study %in% data.ab[['study']]) {
+      gemtc:::rel.mle.ab(data.ab[data.ab[['study']] == study, , drop=TRUE], model, pairs)[1,]
+    } else {
+      gemtc:::rel.mle.re(data.re[data.re[['study']] == study, , drop=TRUE], pairs)[1,]
+    }
+
     if (is.null(alpha)) {
       est
     } else {
@@ -622,5 +625,5 @@ times$summary <- system.time({
     print(times)
 
     update(list(progress=100))
-    summary
+    unclass(summary)
 }
