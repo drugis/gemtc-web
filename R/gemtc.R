@@ -26,10 +26,15 @@ pwFilter <- function(network, t1, t2) {
   # filter treatments
   treatments <- network[['treatments']]
   treatments <- treatments[treatments[['id']] %in% c(t1, t2),]
+  treatments[['id']] <- as.character(treatments[['id']])
 
   # filter arm-based data
   data.ab <- network[['data.ab']]
   data.ab <- data.ab[data.ab[['study']] %in% studies & data.ab[['treatment']] %in% c(t1, t2),]
+  if (!is.null(data.ab)) {
+    data.ab[['study']] <- as.character(data.ab[['study']])
+    data.ab[['treatment']] <- as.character(data.ab[['treatment']])
+  }
 
   # filter contrast-based data
   data.re <- network[['data.re']]
@@ -40,10 +45,17 @@ pwFilter <- function(network, t1, t2) {
     effect <- gemtc:::rel.mle.re(data.re[data.re[['study']] == study, , drop=FALSE], pairs)[1,]
     data.frame(study=study, treatment=c(t1,t2), diff=c(NA, effect['mean']), std.err=c(NA, effect['sd']), stringsAsFactors=FALSE)
   }))
+  if (!is.null(data.re)) {
+    data.re[['study']] <- as.character(data.re[['study']])
+    data.re[['treatment']] <- as.character(data.re[['treatment']])
+  }
 
   # filter studies
   studiesData <- network[['studies']]
-  studiesData <- studiesData[studiesData[['study']] %in% studies]
+  studiesData <- studiesData[studiesData[['study']] %in% studies,]
+  if (!is.null(studiesData)) {
+    studiesData[['study']] <- as.character(studiesData[['study']])
+  }
 
   if (is.null(data.ab) && is.null(data.re)) {
     stop(paste0("There are no studies that include both t1=", t1, " and t2=", t2))
