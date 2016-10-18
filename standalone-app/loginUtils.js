@@ -1,9 +1,10 @@
+'use strict';
 var crypto = require('crypto'),
   httpStatus = require('http-status-codes'),
   logger = require('./logger');
 
 // check if startsWith is not a language feature
-if (typeof String.prototype.startsWith != 'function') {
+if (typeof String.prototype.startsWith !== 'function') {
   String.prototype.startsWith = function(str) {
     return this.indexOf(str) === 0;
   };
@@ -54,8 +55,10 @@ module.exports = {
         request.url.startsWith('/js') ||
         request.url.startsWith('/views') ||
         request.url.startsWith('/img') ||
-        request.url == '/signin.html' ||
-        request.url == '/manual.html' ||
+        request.url === '/signin.html' ||
+        request.url === '/manual.html' ||
+        request.url === '/manual/shared-toc.html' ||
+        request.url === '/manual/shared.html' ||
         request.url.startsWith('/auth/google')
       )) {
       logger.debug('loginUtils.loginCheckMiddleware you request does not require login, request =  ' + request.url);

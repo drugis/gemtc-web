@@ -31,12 +31,12 @@ everyauth.google
   .appId(process.env.GEMTC_GOOGLE_KEY)
   .appSecret(process.env.GEMTC_GOOGLE_SECRET)
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
-  .handleAuthCallbackError(function(req, res) {
+  .handleAuthCallbackError(function() {
     logger.debug('gemtc.handleAuthCallbackError');
     //todo redirect to error page
   })
   .redirectPath('/')
-  .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata, data) {
+  .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata) {
 
     logger.debug("gemtc.findOrCreateUser");
     var promise = this.Promise();
@@ -78,6 +78,7 @@ module.exports = app
   .use('/analyses', analysisRouter)
   .use('/analyses/:analysisId/models', modelRouter)
   .use(express.static('app'))
+  .use(express.static('manual'))
   .use(everyauth.middleware())
   .use(errorHandler)
   .listen(3001);

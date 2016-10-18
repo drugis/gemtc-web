@@ -50,6 +50,7 @@
     "karma-phantomjs-launcher": "^0.2.0",
     "karma-requirejs": "^0.2.2",
     "phantomjs": "^1.9.17",
+    "phantomjs-polyfill-find": "ptim/phantomjs-polyfill-find",
     "proxyquire": "^1.5.0",
     "requirejs": "^2.1.18",
     "should": "^7.1.0",
