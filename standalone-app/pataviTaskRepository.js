@@ -88,7 +88,7 @@ function getPataviTasksStatus(taskUrls, callback) {
       }
       callback(null, {
         id: taskUrl,
-        hasResult: (result.status === 'done')
+        runStatus: result.status
       });
     });
   }
