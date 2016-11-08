@@ -33,9 +33,9 @@ the file should contain a line with the following format hostname:port:database:
 
     localhost:5432:gemtc:gemtc:develop
 
-Create the schema
+Create the schema (shell script)
 
-    for i in create-database-changeset-*.sql; do psql -h localhost -U gemtc -d gemtc -f $i; done
+    for i in changesets/create-database-changeset-*.sql; do psql -h localhost -U gemtc -d gemtc -f $i; done
 
 Setup environment variables
 
@@ -46,17 +46,21 @@ Setup environment variables
     export GEMTC_DB_USERNAME=gemtc
     export GEMTC_DB_PASSWORD=develop
     export GEMTC_HOST=http://localhost:3001
-    export PATAVI_HOST=localhost 
+    export PATAVI_HOST=localhost
     export PATAVI_PORT=3000
     export PATAVI_CLIENT_KEY=path-to/app-env-key.pem
     export PATAVI_CLIENT_CRT=path-to/app-env-crt.pem
     export PATAVI_CA=path-to/provider-name.crt
 
+(note: this google key/secret combination expects the server to run at localhost:3001)
+(note: replace the path with the location of your SSL client key and certificate)
 
 Running the patavi worker
 -------------------------
 
-First, build the R base dependencies for the gemtc worker, make sure patavi is installed:
+As a prerequisite, build the patavi worker images from the patavi repository.
+
+First, build the R base dependencies for the gemtc worker:
 
 in the `R/r-base` directory
 
