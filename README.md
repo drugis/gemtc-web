@@ -41,7 +41,7 @@ Setup environment variables
 
     export GEMTC_GOOGLE_KEY=100331616436-dgi00c0mjg8tbc06psuhluf9a2lo6c3i.apps.googleusercontent.com
     export GEMTC_GOOGLE_SECRET=9ROcvzLDuRbITbqj-m-W5C0I
-    export DB_HOST=localhost
+    export DB_HOST=<pc-name>.spice.drugis.org
     export GEMTC_DB=gemtc
     export GEMTC_DB_USERNAME=gemtc
     export GEMTC_DB_PASSWORD=develop
@@ -56,7 +56,7 @@ Setup environment variables
 Running the patavi worker
 -------------------------
 
-First, build the R base dependencies for the gemtc worker:
+First, build the R base dependencies for the gemtc worker, make sure patavi is installed:
 
 in the `R/r-base` directory
 
