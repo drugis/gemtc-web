@@ -52,7 +52,7 @@ pwFilter <- function(network, t1, t2) {
 
   # filter studies
   studiesData <- network[['studies']]
-  studiesData <- studiesData[studiesData[['study']] %in% studies,]
+  studiesData <- studiesData[studiesData[['study']] %in% studies,, drop=FALSE]
   if (!is.null(studiesData)) {
     studiesData[['study']] <- as.character(studiesData[['study']])
   }
