@@ -106,5 +106,77 @@ describe('the patavi handler service', function() {
 
       expect(pataviTaskRepositoryStub.create).to.have.been.called.with(expected, callback);
     });
+    it('for pairwise models should reduce the problem to those studies and treatments specified', function() {
+      var analysisMock = {
+        problem: {
+          entries: [{
+            treatment: 1
+          }, {
+            treatment: 2
+          }, {
+            treatment: 3
+          }],
+          treatments: [{
+            id: 1,
+            name: 'treatment1'
+          }, {
+            id: 2,
+            name: 'treatment2'
+          }, {
+            id: 3,
+            name: 'treatment3'
+          }]
+        },
+        outcome: {
+
+        }
+      };
+      var modelMock = {
+        linearModel: 'random',
+        modelType: {
+          type: 'pairwise',
+          details: {
+            from: {
+              name: 'treatment1'
+            },
+            to: {
+              name: 'treatment2'
+            }
+          }
+        }
+      };
+      var expected = {
+        entries: [{
+          treatment: 1
+        }, {
+          treatment: 2
+        }],
+        treatments: [{
+          id: 1,
+          name: 'treatment1'
+        }, {
+          id: 2,
+          name: 'treatment2'
+        }],
+        linearModel: 'random',
+        modelType: {
+          type: 'pairwise',
+          details: {
+            from: {
+              name: 'treatment1'
+            },
+            to: {
+              name: 'treatment2'
+            }
+          }
+        },
+        preferredDirection: 1
+      };
+
+      var callback = function() {};
+      pataviHandlerService.createPataviTask(analysisMock, modelMock, callback);
+
+      expect(pataviTaskRepositoryStub.create).to.have.been.called.with(expected, callback);
+    });
   });
 });
