@@ -24,6 +24,9 @@ var modelSettings = [
 function createPataviTask(analysis, model, callback) {
   var problemPlusModelSettings = _.extend(analysis.problem, _.pick(model, modelSettings));
   problemPlusModelSettings.preferredDirection = analysis.outcome.direction || 1; // 1 ( higher is better as default)
+  if (problemPlusModelSettings.modelType.type === 'pairwise') {
+    problemPlusModelSettings = reduceToPairwiseProblem(problemPlusModelSettings);
+  }
   if (problemPlusModelSettings.sensitivity && problemPlusModelSettings.sensitivity.omittedStudy) {
     problemPlusModelSettings = leaveStudyOut(problemPlusModelSettings);
   }

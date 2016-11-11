@@ -64,17 +64,19 @@ describe('the patavi task repository', function() {
       var urls = [url1, url2];
       var expectedResult = [{
         id: url1,
-        hasResult: true
+        runStatus: 'done'
       }, {
         id: url2,
-        hasResult: false
+        runStatus: undefined
       }];
-      var callback = function(err, result) {
+
+      var expectationsCallback = function(err, result) {
         chaiExpect(err).to.equal(null);
         chaiExpect(result).to.deep.equal(expectedResult);
         httpsStub.get.restore();
         done();
       }
+
       var doneTaskResponse = {
         status: 'done'
       };
@@ -82,7 +84,8 @@ describe('the patavi task repository', function() {
       var getStub = sinon.stub(httpsStub, 'get');
       stubHttpResponse(getStub, 0, doneTaskResponse);
       stubHttpResponse(getStub, 1, notDoneTaskResponse);
-      pataviTaskRepository.getPataviTasksStatus(urls, callback);
+
+      pataviTaskRepository.getPataviTasksStatus(urls, expectationsCallback);
     });
   });
   describe('create', function() {
