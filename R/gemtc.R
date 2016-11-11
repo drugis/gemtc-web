@@ -124,7 +124,7 @@ pwForest <- function(result, t1, t2, ...) {
   e <- c(study.effect[['std.err']], pooledSD)
 
   fdata <- data.frame(
-    id=c(studies, "Pooled"),
+    id=c(as.character(studies), "Pooled"),
     style=c(rep("normal", length(studies)), "pooled"),
     pe=m,
     ci.l=m - 1.96*e,
