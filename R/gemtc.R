@@ -13,7 +13,57 @@ if (!exists("gelman.diag.fix", mode="function")) {
   assignInNamespace("gelman.diag", gelman.diag.fix, "coda")
 }
 
-pweffects <- function(result, t1, t2) {
+# Given a network, filter it down to only include studies that have both t1 and
+# t2 arms, and to only include the t1 and t2 arms of those studies. For
+# contrast-based data, this may include a change of baseline for the study.
+pwFilter <- function(network, t1, t2) {
+  studies <- gemtc:::mtc.studies.list(network)$values
+  studies <- studies[sapply(studies, function(study) {
+    t1 %in% gemtc:::mtc.study.design(network, study) &&
+    t2 %in% gemtc:::mtc.study.design(network, study)
+  })]
+
+  # filter treatments
+  treatments <- network[['treatments']]
+  treatments <- treatments[treatments[['id']] %in% c(t1, t2),]
+  treatments[['id']] <- as.character(treatments[['id']])
+
+  # filter arm-based data
+  data.ab <- network[['data.ab']]
+  data.ab <- data.ab[data.ab[['study']] %in% studies & data.ab[['treatment']] %in% c(t1, t2),]
+  if (!is.null(data.ab)) {
+    data.ab[['study']] <- as.character(data.ab[['study']])
+    data.ab[['treatment']] <- as.character(data.ab[['treatment']])
+  }
+
+  # filter contrast-based data
+  data.re <- network[['data.re']]
+  studies.re <- unique(data.re[['study']])
+  studies.re <- studies.re[studies.re %in% studies]
+  pairs <- data.frame(t1=t1, t2=t2, stringsAsFactors=FALSE)
+  data.re <- do.call(rbind, lapply(studies.re, function(study) {
+    effect <- gemtc:::rel.mle.re(data.re[data.re[['study']] == study, , drop=FALSE], pairs)[1,]
+    data.frame(study=study, treatment=c(t1,t2), diff=c(NA, effect['mean']), std.err=c(NA, effect['sd']), stringsAsFactors=FALSE)
+  }))
+  if (!is.null(data.re)) {
+    data.re[['study']] <- as.character(data.re[['study']])
+    data.re[['treatment']] <- as.character(data.re[['treatment']])
+  }
+
+  # filter studies
+  studiesData <- network[['studies']]
+  studiesData <- studiesData[studiesData[['study']] %in% studies,, drop=FALSE]
+  if (!is.null(studiesData)) {
+    studiesData[['study']] <- as.character(studiesData[['study']])
+  }
+
+  if (is.null(data.ab) && is.null(data.re)) {
+    stop(paste0("There are no studies that include both t1=", t1, " and t2=", t2))
+  }
+  mtc.network(data.ab=data.ab, data.re=data.re, studies=studiesData, treatments=treatments)
+}
+
+pwEffects <- function(result, t1, t2) {
   model <- result$model
   network <- model$network
 
@@ -59,11 +109,11 @@ pweffects <- function(result, t1, t2) {
 #  - only works for arm-based data
 #  - computes continuity corrections even if not necessary
 #  - t1 and t2 must be in alphabetical order
-pwforest <- function(result, t1, t2, ...) {
+pwForest <- function(result, t1, t2, ...) {
   model <- result$model
   network <- model$network
 
-  study.effect <- pweffects(result, t1, t2)
+  study.effect <- pwEffects(result, t1, t2)
 
   pooled.effect <- as.matrix(as.mcmc.list(relative.effect(result, t1=t1, t2=t2, preserve.extra=FALSE)))
 
@@ -74,7 +124,7 @@ pwforest <- function(result, t1, t2, ...) {
   e <- c(study.effect[['std.err']], pooledSD)
 
   fdata <- data.frame(
-    id=c(studies, "Pooled"),
+    id=c(as.character(studies), "Pooled"),
     style=c(rep("normal", length(studies)), "pooled"),
     pe=m,
     ci.l=m - 1.96*e,
@@ -235,8 +285,7 @@ gemtc <- function(params) {
   }
 
   # changed from jags.object.R in rjags 3.13
-  update.jags <- function(object, n.iter = 1, by, ...)
-  {
+  update.jags <- function(object, n.iter = 1, by, ...) {
     if (!is.numeric(n.iter) || n.iter < 1) {
       stop("Invalid n.iter")
     }
@@ -306,7 +355,7 @@ gemtc <- function(params) {
       data.re <- NULL
     }
 
-    # linear model or fixed?
+    # linear model: random effects or fixed effect?
     linearModel <- nullCheckWithDefault(params[['linearModel']], 'random')
 
     treatments <- do.call(rbind, lapply(params[['treatments']], function(x) {
@@ -332,6 +381,13 @@ gemtc <- function(params) {
 
     # create network
     network <- mtc.network(data.ab=data.ab, data.re=data.re, treatments=treatments, studies=studies)
+
+    # pair-wise analysis: filter network
+    if(modelType == "pairwise") {
+      t1 <- as.character(params[['modelType']][['details']][['from']][['id']])
+      t2 <- as.character(params[['modelType']][['details']][['to']][['id']])
+      network <- pwFilter(network, t1=t1, t2=t2)
+    }
 
     #determine model parameters
     mtc.model.params <- list(network=network, linearModel=linearModel)
@@ -464,7 +520,7 @@ times$forest <- system.time({
       forestPlot <- plotToSvg(function() {
         t1 <- as.character(params[['modelType']][['details']][['from']][['id']])
         t2 <- as.character(params[['modelType']][['details']][['to']][['id']])
-        pwforest(result, t1, t2)
+        pwForest(result, t1, t2)
       })
     }
 })
@@ -561,7 +617,7 @@ times$summary <- system.time({
     if(modelType == "network") {
       comps <- combn(treatmentIds, 2)
       studyRelativeEffects <- apply(comps, 2, function(treatmentPair) {
-        pweffects(result, treatmentPair[1], treatmentPair[2])
+        pwEffects(result, treatmentPair[1], treatmentPair[2])
       })
       studyRelativeEffects <- studyRelativeEffects[lapply(studyRelativeEffects, nrow) > 0] # filter out comps without effects
       summary[['studyRelativeEffects']] <- studyRelativeEffects
@@ -570,7 +626,7 @@ times$summary <- system.time({
       summary[['studyForestPlot']] <- forestPlot
       t1 <- as.character(params[['modelType']][['details']][['from']][['id']])
       t2 <- as.character(params[['modelType']][['details']][['to']][['id']])
-      studyRelativeEffects <- pweffects(result, t1, t2)
+      studyRelativeEffects <- pwEffects(result, t1, t2)
       if(dim(studyRelativeEffects)[1] > 3) { # no funnel plot if <= 3 studies
         summary[['studyRelativeEffects']] <- studyRelativeEffects
       }
