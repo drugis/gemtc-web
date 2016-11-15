@@ -1,6 +1,6 @@
 {
   "name": "gemtc-web",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "gemtc",
   "main": "gemtc.js",
   "scripts": {
