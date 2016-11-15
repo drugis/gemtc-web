@@ -32,7 +32,7 @@ function decorateWithHasResults(modelsResult, pataviResult) {
   }, {});
   return _.map(modelsResult, function(model) {
     return _.extend(model, {
-      hasResult: pataviTasks[model.taskUrl].hasResult
+      runStatus: pataviTasks[model.taskUrl].runStatus
     });
   });
 }
