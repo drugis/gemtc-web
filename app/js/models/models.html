@@ -18,10 +18,16 @@
           <div ng-hide="!models.length" class="row collapse">
             <div class="small-9 columns">
               <select ng-hide="loginUserId !== userId" ng-model="$parent.primaryModel" ng-options="model.title for model in models | orderBy:title | filter:{archived: false}"></select>
+              <div ng-hide="loginUserId === userId" ng-if="$parent.primaryModel">
+                Primary model: {{$parent.primaryModel.title}}
+              </div>
+              <div ng-hide="loginUserId === userId" ng-if="!$parent.primaryModel">
+                No primary model selected
+              </div>
             </div>
             <div class="small-3 columns">
-              <button ng-hide="loginUserId !== userId" ng-disabled="!primaryModel" ng-click="$parent.primaryModel = null" class="alert postfix no-padding-left-right"
-                ng-show="!model.isPrimary">Unset</button>
+              <button ng-hide="loginUserId !== userId" ng-disabled="!primaryModel" ng-click="$parent.primaryModel = null"
+                class="alert postfix no-padding-left-right" ng-show="!model.isPrimary">Unset</button>
             </div>
           </div>
         </div>
