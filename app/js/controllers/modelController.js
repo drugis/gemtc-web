@@ -25,7 +25,6 @@ define(['lodash'], function(_) {
     $scope.model = ModelResource.get($stateParams);
     $scope.modelPromise = modelDefer.promise;
     $scope.comparisonAdjustedFunnelPlots = FunnelPlotResource.query($stateParams);
-    $scope.$parent.model = $scope.model;
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;
     $scope.goToRefineModel = goToRefineModel;
