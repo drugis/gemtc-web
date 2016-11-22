@@ -1,7 +1,7 @@
 <div class="row">
   <div class="columns columns large-9 medium-11 small-12">
     <h4 ng-if="!result" class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
-    <progressbar value="progress.percentage"></progressbar>
+    <progressbar ng-hide="result" value="progress.percentage"></progressbar>
     <div ng-if="result" style="padding-top: 1rem;">
       <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 "
       class="row">Go to node-split overview</a>
