@@ -33,7 +33,7 @@ test_that("pwFilter filters data.re", {
   network <- pwFilter(parkinson_shared, t1='D', t2='E')
   expect_equal(as.character(network$data.re$study), c("6", "6", "7", "7"))
   expect_equal(as.character(network$data.re$treatment), c("D", "E", "D", "E"))
-  expect_equal(network$data.re$diff, c(NA, -0.3, NA, -0.3))
+  expect_equal(network$data.re$diff, c(NA, -0.3, NA, -0.3), tolerance=1e-7)
   expect_equal(network$data.re$std.err, c(NA, 0.2742763, NA, 0.3200872), tolerance=1e-7)
 
   network <- pwFilter(parkinson_shared, t1='A', t2='B')
