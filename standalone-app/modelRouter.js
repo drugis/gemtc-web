@@ -25,7 +25,7 @@ module.exports = express.Router({
   .get('/:modelId/funnelPlots/:plotId', getFunnelPlot)
   .use('/:modelId/task', pataviTaskRouter);
 
-function decorateWithHasResults(modelsResult, pataviResult) {
+function decorateWithRunStatus(modelsResult, pataviResult) {
   var pataviTasks = _.reduce(pataviResult, function(accum, result) {
     accum[result.id] = result;
     return accum;
@@ -64,7 +64,7 @@ function find(request, response, next) {
               message: error
             });
           } else {
-            var decoratedResult = decorateWithHasResults(modelsWithTasks, pataviResult);
+            var decoratedResult = decorateWithRunStatus(modelsWithTasks, pataviResult);
             response.json(decoratedResult.concat(modelsWithoutTasks));
           }
         });

@@ -1,9 +1,13 @@
 'use strict';
 define(['angular'], function(angular) {
-  var dependencies = ['$window', 'NetworkPlotService'];
-  var NetworkPlotDirective = function($window, NetworkPlotService) {
+  var dependencies = ['$q', '$stateParams', '$window', 'NetworkPlotService', 'AnalysisResource', 'EvidenceTableResource',
+    'InterventionResource', 'NetworkMetaAnalysisService'
+  ];
+  var NetworkPlotDirective = function($q, $stateParams, $window, NetworkPlotService, AnalysisResource, EvidenceTableResource,
+    InterventionResource, NetworkMetaAnalysisService) {
     return {
       scope: {
+        analysisId: '=',
         network: '=',
         sizingElementId: '='
       },
@@ -25,6 +29,29 @@ define(['angular'], function(angular) {
         var width = sizingElement.width();
         var height = sizingElement.height();
 
+
+        if (scope.analysisId !== undefined) {
+          var analysis = AnalysisResource.get({
+            projectId: $stateParams.projectId,
+            analysisId: scope.analysisId
+          });
+          var interventions = InterventionResource.query($stateParams);
+          $q.all([analysis.$promise, interventions.$promise])
+            .then(function() {
+              EvidenceTableResource.query({
+                  projectId: $stateParams.projectId,
+                  analysisId: analysis.id
+                })
+                .$promise
+                .then(function(trialverseData) {
+                  interventions = NetworkMetaAnalysisService.addInclusionsToInterventions(interventions, analysis.interventionInclusions);
+                  var includedInterventions = NetworkMetaAnalysisService.getIncludedInterventions(interventions);
+                  var momentSelections = NetworkMetaAnalysisService.buildMomentSelections(trialverseData, analysis);
+                  var network = NetworkMetaAnalysisService.transformTrialDataToNetwork(trialverseData, includedInterventions, analysis, momentSelections);
+                  NetworkPlotService.drawNetwork(network, element, width, height);
+                });
+            });
+        }
         scope.$watch('network', function(newValue, oldValue) {
           if (oldValue !== newValue) {
             NetworkPlotService.drawNetwork(newValue, element, width, height);
@@ -32,7 +59,7 @@ define(['angular'], function(angular) {
         });
 
         angular.element($window).bind('resize', function() {
-          NetworkPlotService.drawNetwork(scope.network, element,sizingElement.width(), sizingElement.height());
+          NetworkPlotService.drawNetwork(scope.network, element, sizingElement.width(), sizingElement.height());
         });
 
       }
