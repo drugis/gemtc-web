@@ -37,6 +37,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
         }
 
         function exportImage(sourceImage) {
+          sourceImage.setAttribute('crossOrigin', 'anonymous');
           var $canvasElement = jQuery('<canvas/>')
             .prop({
               width: sourceImage.width,
@@ -65,6 +66,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
 
           //can't set svg instructions as image src directly
           var $image = createImage($svgElement);
+          $image.setAttribute('crossOrigin', 'anonymous');
           $image.load(_.partial(exportImage, $image[0]));
         }
 
