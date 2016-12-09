@@ -1,9 +1,9 @@
 'use strict';
 define(['angular'], function(angular) {
-  var dependencies = ['$q', '$stateParams', '$window', 'NetworkPlotService', 'AnalysisResource', 'EvidenceTableResource',
+  var dependencies = ['$q', '$stateParams', '$injector', '$window', 'NetworkPlotService', 'AnalysisResource',
     'InterventionResource', 'NetworkMetaAnalysisService'
   ];
-  var NetworkPlotDirective = function($q, $stateParams, $window, NetworkPlotService, AnalysisResource, EvidenceTableResource,
+  var NetworkPlotDirective = function($q, $stateParams, $injector, $window, NetworkPlotService, AnalysisResource,
     InterventionResource, NetworkMetaAnalysisService) {
     return {
       scope: {
@@ -38,6 +38,7 @@ define(['angular'], function(angular) {
           var interventions = InterventionResource.query($stateParams);
           $q.all([analysis.$promise, interventions.$promise])
             .then(function() {
+              var EvidenceTableResource = $injector.get('EvidenceTableResource');
               EvidenceTableResource.query({
                   projectId: $stateParams.projectId,
                   analysisId: analysis.id
