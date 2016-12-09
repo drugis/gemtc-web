@@ -9,7 +9,6 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
         dontFloatSibling: '='
       },
       link: function(scope, element) {
-
         var btnElement = $compile('<button ng-click="exportElement()" class="export-button info small">Export</button>')(scope);
         element.after(btnElement);
         if (!scope.dontFloatSibling) {
@@ -26,7 +25,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
 
         function showCopyPasteMessage() {
           $modal.open({
-            templateUrl: './js/util/copyDialog.html',
+            templateUrl: gemtcRootPath + '/js/util/copyDialog.html',
             windowClass: 'medium',
             scope: scope,
             controller: function($scope, $modalInstance) {
