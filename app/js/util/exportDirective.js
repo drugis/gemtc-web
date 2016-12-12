@@ -9,7 +9,6 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
         dontFloatSibling: '='
       },
       link: function(scope, element) {
-
         var btnElement = $compile('<button ng-click="exportElement()" class="export-button info small">Export</button>')(scope);
         element.after(btnElement);
         if (!scope.dontFloatSibling) {
@@ -26,7 +25,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
 
         function showCopyPasteMessage() {
           $modal.open({
-            templateUrl: './js/util/copyDialog.html',
+            templateUrl: gemtcRootPath + '/js/util/copyDialog.html',
             windowClass: 'medium',
             scope: scope,
             controller: function($scope, $modalInstance) {
@@ -38,6 +37,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
         }
 
         function exportImage(sourceImage) {
+          sourceImage.setAttribute('crossOrigin', 'anonymous');
           var $canvasElement = jQuery('<canvas/>')
             .prop({
               width: sourceImage.width,
@@ -66,6 +66,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
 
           //can't set svg instructions as image src directly
           var $image = createImage($svgElement);
+          $image.setAttribute('crossOrigin', 'anonymous');
           $image.load(_.partial(exportImage, $image[0]));
         }
 
@@ -75,6 +76,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
             .attr('width', $svgElement.width())
             .attr("version", 1.1)
             .attr("xmlns", "http://www.w3.org/2000/svg")
+            .attr('crossOrigin', 'anonymous')
             .parent()[0]
             .innerHTML;
 
