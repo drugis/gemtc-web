@@ -19,23 +19,23 @@ var httpsOptions = {
   port: process.env.PATAVI_PORT || 3000
 };
 
-try{
+try {
   httpsOptions.key = fs.readFileSync(process.env.PATAVI_CLIENT_KEY);
-}catch(e) {
+} catch (e) {
   logger.warn('could not read patavi client key at: ' + process.env.PATAVI_CLIENT_KEY);
   httpsOptions.key = 'empy-key';
 }
 
-try{
+try {
   httpsOptions.cert = fs.readFileSync(process.env.PATAVI_CLIENT_CRT);
-}catch(e) {
+} catch (e) {
   logger.warn('could not read patavi client certivicate key at: ' + process.env.PATAVI_CLIENT_CRT);
   httpsOptions.cert = 'empy-client-crt';
 }
 
-try{
+try {
   httpsOptions.ca = fs.readFileSync(process.env.PATAVI_CA);
-}catch(e) {
+} catch (e) {
   logger.warn('could not read patavi certivicate authority at: ' + process.env.PATAVI_CA);
   httpsOptions.ca = 'empy-ca';
 }

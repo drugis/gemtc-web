@@ -1,10 +1,7 @@
 'use strict';
 define(['angular'], function(angular) {
-  var dependencies = ['$q', '$stateParams', '$window', 'NetworkPlotService', 'AnalysisResource', 'EvidenceTableResource',
-    'InterventionResource', 'NetworkMetaAnalysisService'
-  ];
-  var NetworkPlotDirective = function($q, $stateParams, $window, NetworkPlotService, AnalysisResource, EvidenceTableResource,
-    InterventionResource, NetworkMetaAnalysisService) {
+  var dependencies = ['$q', '$stateParams', '$injector', '$window', 'NetworkPlotService', 'AnalysisResource'];
+  var NetworkPlotDirective = function($q, $stateParams, $injector, $window, NetworkPlotService, AnalysisResource) {
     return {
       scope: {
         analysisId: '=',
@@ -30,7 +27,10 @@ define(['angular'], function(angular) {
         var height = sizingElement.height();
 
 
-        if (scope.analysisId !== undefined) {
+        if (scope.analysisId !== undefined) { // we're in ADDIS not gemtc
+          var InterventionResource = $injector.get('InterventionResource');
+          var EvidenceTableResource = $injector.get('EvidenceTableResource');
+          var NetworkMetaAnalysisService = $injector.get('NetworkMetaAnalysisService');
           var analysis = AnalysisResource.get({
             projectId: $stateParams.projectId,
             analysisId: scope.analysisId
