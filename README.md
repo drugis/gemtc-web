@@ -1,7 +1,7 @@
 gemtc-web
 =========
 
-User interface for evidence synthesis based on the gemtc R package and Patavi
+User interface for evidence synthesis based on the gemtc R package and Patavi. For more information on all components of the drugis project, please refer to the OVERALL-README.md in the root folder of the ADDIS-CORE project.
 
 Setup for the stand-alone version
 ---------------------------------
