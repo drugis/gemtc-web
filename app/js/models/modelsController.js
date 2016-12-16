@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = ['$scope', '$state', '$stateParams', 'AnalysisResource', 'ModelResource', 'ModelAttributeResource'];
-  var ModelsController = function($scope, $state, $stateParams, AnalysisResource, ModelResource, ModelAttributeResource) {
+  var dependencies = ['$scope', '$state', '$stateParams', 'AnalysisResource', 'ModelResource'];
+  var ModelsController = function($scope, $state, $stateParams, AnalysisResource, ModelResource) {
     $scope.modelsLoaded = false;
     $scope.archivedFilter = archivedFilter;
     $scope.analysisId = $stateParams.analysisId;
@@ -55,7 +55,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function archiveModel(model) {
       var params = angular.copy($stateParams);
       params.modelId = model.id;
-      ModelAttributeResource.save(params, {
+      ModelResource.setAttributes(params, {
         archived: true
       }).$promise.then(loadModels);
     }
@@ -63,7 +63,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function unArchiveModel(model) {
       var params = angular.copy($stateParams);
       params.modelId = model.id;
-      ModelAttributeResource.save(params, {
+      ModelResource.setAttributes(params, {
         archived: false
       }).$promise.then(loadModels);
     }

@@ -15,14 +15,13 @@ define(function(require) {
     .controller('AddComparisonFunnelPlotController', require('models/addComparisonFunnelPlotController'))
 
   // resources
-  .factory('ModelResource', require('models/standaloneModelResource'))
-    .factory('ModelAttributeResource', require('models/standaloneModelAttributeResource'))
+    .factory('ModelResource', require('models/standaloneModelResource'))
     .factory('ProblemResource', require('models/standaloneProblemResource'))
     .factory('AnalysisResource', require('analyses/analysisResource'))
     .factory('FunnelPlotResource', require('models/funnelPlotResource'))
 
   //services
-  .factory('ModelService', require('models/modelService'))
+    .factory('ModelService', require('models/modelService'))
     .factory('RefineModelService', require('models/refineModelService'))
     .factory('AnalysisService', require('analyses/analysisService'))
     .factory('DevianceStatisticsService', require('models/devianceStatisticsService'))
@@ -31,7 +30,7 @@ define(function(require) {
     .factory('ResultsPlotService', require('gemtc-web/models/result/resultsPlotService'))
 
   //directives
-  .directive('gemtcRankPlot', require('models/rankPlotDirective'))
+    .directive('gemtcRankPlot', require('models/rankPlotDirective'))
     .directive('runLength', require('models/runLength/runLengthDirective'))
     .directive('nodesplitForestPlot', require('models/nodesplitForestPlot/nodesplitForestPlotDirective'))
     .directive('heterogeneityPrior', require('models/heterogeneityPrior/heterogeneityPriorDirective'))
