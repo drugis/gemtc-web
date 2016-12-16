@@ -70,7 +70,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
       frontEndModel.modelType = {
         mainType: model.modelType.type
-      }
+      };
 
       if (model.modelType.type === 'node-split') {
         frontEndModel.nodeSplitComparison = {
