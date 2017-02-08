@@ -6,6 +6,17 @@ define(['angular', 'lodash'], function(angular, _) {
 
     var LIKELIHOOD_LINK_SETTINGS = [{
       likelihood: "normal",
+      link: "smd",
+      scale: "mean difference",
+      analysisScale: "mean difference",
+      absoluteScale: 'mean',
+      columns: [
+        ["mean", "std.err"],
+        ["mean", "std.dev", "sampleSize"]
+      ],
+      missingColumnsLabel: "'mean' and 'std.err' or 'mean', 'std.dev', and 'sampleSize'"
+    }, {
+      likelihood: "normal",
       link: "identity",
       scale: "mean difference",
       analysisScale: "mean difference",

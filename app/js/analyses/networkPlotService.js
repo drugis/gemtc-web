@@ -23,7 +23,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       var n = network.interventions.length;
       var angle = 2.0 * Math.PI / n;
       var originX = width / 2;
-      var originY = width / 2; // use a squere area
+      var originY = width / 2; // use a square area
       var margin = 200;
       var radius = originY - margin / 2;
       var circleMaxSize = 30;
