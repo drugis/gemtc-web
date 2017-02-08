@@ -8,13 +8,12 @@ define(['angular', 'lodash'], function(angular, _) {
       likelihood: "normal",
       link: "smd",
       scale: "mean difference",
-      analysisScale: "mean difference",
-      absoluteScale: 'mean',
+      analysisScale: "standardized mean difference",
+      absoluteScale: 'standardized mean',
       columns: [
-        ["mean", "std.err"],
         ["mean", "std.dev", "sampleSize"]
       ],
-      missingColumnsLabel: "'mean' and 'std.err' or 'mean', 'std.dev', and 'sampleSize'"
+      missingColumnsLabel: "'mean', 'std.dev', and 'sampleSize'"
     }, {
       likelihood: "normal",
       link: "identity",
