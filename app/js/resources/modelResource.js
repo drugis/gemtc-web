@@ -12,6 +12,11 @@ define([], function() {
         method: 'GET',
         isArray: true
       },
+      queryByProject: {
+        url: '/projects/:projectId/models',
+        method: 'GET',
+        isArray: true
+      },
       getResult: {
         url: '/projects/:projectId/analyses/:analysisId/models/:modelId/result',
         method: 'GET'

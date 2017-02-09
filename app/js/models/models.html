@@ -36,11 +36,10 @@
           <button id="add-model-btn" ng-hide="loginUserId !== userId || !modelsLoaded" tabindex="0"
             class="button small right" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add model
           </button>
-          <button tabindex="1" ng-disabled="numberOfModelsArchived === 0" ng-hide="showArchived || !modelsLoaded"
-            class="button secondary small right" ng-click="showArchived = !showArchived"><i class="fa fa-eye"></i> Show archived ({{numberOfModelsArchived}})
-          </button>
-          <button tabindex="1" ng-show="showArchived  && modelsLoaded" class="button secondary small right"
-            ng-click="showArchived = !showArchived"><i class="fa fa-eye-slash"></i> Hide archived
+          <button tabindex="1" ng-disabled="numberOfModelsArchived === 0" ng-hide="!modelsLoaded"
+            class="button secondary small right" ng-click="showArchived = !showArchived"><i class="fa fa-eye"></i>{{showArchived ? ' Hide' : ' Show'}} archived
+            {{showArchived ? '' : '('}}{{showArchived?'':numberOfModelsArchived}}{{showArchived
+            ? '' : ')'}}
           </button>
         </div>
       </div>
