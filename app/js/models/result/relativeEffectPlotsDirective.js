@@ -29,7 +29,7 @@ define(['lodash'], function(_) {
               return;
             }
 
-            if (scope.problem.treatments && scope.problem.treatments.length > 0) {
+            if (scope.problem.treatments && scope.problem.treatments.length) {
               scope.selectedBaseline = scope.problem.treatments[0];
             }
 
@@ -50,7 +50,6 @@ define(['lodash'], function(_) {
               }
             }
           });
-
       }
     };
   };
