@@ -1004,7 +1004,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
     describe('createLikelihoodLinkOptions', function() {
 
-      it('should create 5 options for dichotomous studies, having a title, likelihood and compatibility', function() {
+      it('should create 6 options for dichotomous studies, having a title, likelihood and compatibility', function() {
         var problem = {
           'entries': [{
             'study': 'Rudolph and Feiger, 1999',
@@ -1019,7 +1019,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
           }]
         };
         var likelihoodLinkOptions = analysisService.createLikelihoodLinkOptions(problem);
-        expect(likelihoodLinkOptions.length).toBe(5);
+        expect(likelihoodLinkOptions.length).toBe(6);
 
         expect(likelihoodLinkOptions[0].likelihood).toBe('normal');
         expect(likelihoodLinkOptions[0].link).toBe('identity');
@@ -1035,10 +1035,12 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         expect(likelihoodLinkOptions[3].compatibility).toBe('compatible');
         expect(likelihoodLinkOptions[4].label).toBe('poisson/log (hazard ratio)');
         expect(likelihoodLinkOptions[4].compatibility).toBe('incompatible');
+        expect(likelihoodLinkOptions[5].label).toBe('normal/smd (mean difference)');
+        expect(likelihoodLinkOptions[5].compatibility).toBe('incompatible');
       });
 
 
-      it('should create 5 options for continuous studies, having a title, likelihood and compatibility', function() {
+      it('should create 6 options for continuous studies, having a title, likelihood and compatibility', function() {
 
         var problem = {
           'entries': [{
@@ -1051,11 +1053,13 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
 
         var likelihoodLinkOptions = analysisService.createLikelihoodLinkOptions(problem);
 
+        expect(likelihoodLinkOptions.length).toBe(6);
         expect(likelihoodLinkOptions[0].compatibility).toBe('compatible');
         expect(likelihoodLinkOptions[1].compatibility).toBe('incompatible');
         expect(likelihoodLinkOptions[2].compatibility).toBe('incompatible');
         expect(likelihoodLinkOptions[3].compatibility).toBe('incompatible');
         expect(likelihoodLinkOptions[4].compatibility).toBe('incompatible');
+        expect(likelihoodLinkOptions[5].compatibility).toBe('incompatible');
       });
 
       it('should allow everything for zero entries (ie. most likely a relative effects problem)', function() {

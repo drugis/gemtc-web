@@ -54,7 +54,7 @@ define(['lodash'], function(_) {
           }
         });
 
-    function goToRefineModel(){
+    function goToRefineModel() {
       $state.go('refineModel', $stateParams);
     }
 
@@ -65,16 +65,6 @@ define(['lodash'], function(_) {
     function getTaskUrl(taskInfo) {
       $scope.taskUri = taskInfo.uri;
       return taskInfo.uri;
-    }
-
-    function nameRankProbabilities(rankProbabilities, treatments) {
-      return _.reduce(_.toPairs(rankProbabilities), function(memo, pair) {
-        var treatmentName = _.find(treatments, function(treatment) {
-          return treatment.id.toString() === pair[0];
-        }).name;
-        memo[treatmentName] = pair[1];
-        return memo;
-      }, {});
     }
 
     function openRunLengthDialog() {
@@ -130,7 +120,7 @@ define(['lodash'], function(_) {
     }).$promise;
 
     function prefixPlots(result, taskUri) {
-      var resultPlotPrefix = taskUri +  '/results/';
+      var resultPlotPrefix = taskUri + '/results/';
       result.convergencePlots.trace = ResultsPlotService.prefixImageUris(result.convergencePlots.trace, resultPlotPrefix);
       result.convergencePlots.density = ResultsPlotService.prefixImageUris(result.convergencePlots.density, resultPlotPrefix);
       result.convergencePlots.psrf = ResultsPlotService.prefixImageUris(result.convergencePlots.psrf, resultPlotPrefix);
@@ -158,33 +148,23 @@ define(['lodash'], function(_) {
         var unsorted = _.values($scope.diagnosticMap);
         $scope.diagnostics = unsorted.sort(DiagnosticsService.compareDiagnostics);
 
-        if ($scope.model.modelType.type !== 'node-split') {
-          $scope.rankProbabilitiesByLevel = _.map(result.rankProbabilities, function(rankProbability, key) {
-            return {
-              level: key,
-              data: nameRankProbabilities(rankProbability, problem.treatments)
-            };
-          });
-          $scope.relativeEffectsTables = _.map(result.relativeEffects, function(relativeEffect, key) {
-            return {
-              level: key,
-              table: RelativeEffectsTableService.buildTable(relativeEffect, isLogScale, problem.treatments)
-            };
-          });
 
-          if ($scope.model.regressor && ModelService.isVariableBinary($scope.model.regressor.variable, $scope.problem)) {
-            $scope.rankProbabilitiesByLevel = ModelService.filterCentering($scope.rankProbabilitiesByLevel);
-            $scope.relativeEffectsTables = ModelService.filterCentering($scope.relativeEffectsTables);
-            $scope.relativeEffectsTable = $scope.relativeEffectsTables[0];
-            $scope.rankProbabilities = $scope.rankProbabilitiesByLevel[0];
-          } else {
-            $scope.relativeEffectsTable = ModelService.findCentering($scope.relativeEffectsTables);
-            $scope.rankProbabilities = ModelService.findCentering($scope.rankProbabilitiesByLevel);
-            if ($scope.model.regressor) {
-              $scope.relativeEffectsTable.level = 'centering (' + $scope.result.regressor.modelRegressor.mu + ')';
-              $scope.rankProbabilities.level = 'centering (' + $scope.result.regressor.modelRegressor.mu + ')';
-            }
-          }
+        if ($scope.model.modelType.type !== 'node-split') {
+          var rankProbabilitiesByLevel = ModelService.addLevelandProcessData(result.rankProbabilities,
+            problem.treatments, ModelService.nameRankProbabilities);
+          var relativeEffectsTablesByLevel = ModelService.addLevelandProcessData(result.relativeEffects,
+            problem.treatments, _.partialRight(RelativeEffectsTableService.buildTable, isLogScale));
+
+          var rankProbabilities = ModelService.selectLevel($scope.model.regressor, $scope.problem, rankProbabilitiesByLevel,
+            $scope.result.regressor);
+          $scope.rankProbabilitiesByLevel = rankProbabilities.all;
+          $scope.rankProbabilities = rankProbabilities.selected;
+
+          var relativeEffectsTables = ModelService.selectLevel($scope.model.regressor, $scope.problem, relativeEffectsTablesByLevel,
+            $scope.result.regressor);
+          $scope.relativeEffectsTables = relativeEffectsTables.all;
+          $scope.relativeEffectsTable = relativeEffectsTables.selected;
+
         } // end not nodesplit
 
         $scope.absoluteDevianceStatisticsTable = DevianceStatisticsService.buildAbsoluteTable(result.devianceStatistics, problem);

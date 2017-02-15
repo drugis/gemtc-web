@@ -20,6 +20,9 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
     }
 
     function drawNetwork(network, element, width) {
+      if (!network) {
+        return;
+      }
       var n = network.interventions.length;
       var angle = 2.0 * Math.PI / n;
       var originX = width / 2;

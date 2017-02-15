@@ -1,6 +1,7 @@
 'use strict';
 define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3, nv) {
   var dependencies = [];
+  var clearListener;
   var RankPlotDirective = function() {
     return {
       restrict: 'E',
@@ -13,10 +14,6 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
           .attr("width", "100%")
           .attr("height", "100%")
           .style('font-size', '12px');
-
-        scope.$on('$locationChangeStart', function() {
-          window.onresize = null;
-        });
 
         function parsePx(str) {
           return parseInt(str.replace(/px/gi, ''));
@@ -41,9 +38,9 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
             var values = el[1];
             for (var i = 0; i < values.length; i++) {
               var obj = result[i] || {
-                  key: "Rank " + (i + 1),
-                  values: []
-                };
+                key: "Rank " + (i + 1),
+                values: []
+              };
               obj.values.push({
                 x: key,
                 y: values[i]
@@ -56,11 +53,16 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
 
         scope.$watch('value', function(newVal) {
           if (!newVal) {
-           return;
-         }
-          d3.selectAll("svg > *").remove();
+            return;
+          }
+          var node = d3.select($(element).get(0));
+
+          node.selectAll("svg > *").remove();
 
           nv.addGraph(function() {
+            if (clearListener) {
+              clearListener.clear();
+            }
             svg.append("rect")
               .attr("width", "100%")
               .attr("height", "100%")
@@ -71,15 +73,18 @@ define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3
 
 
             chart.yAxis.tickFormat(d3.format(',.3f'));
+            chart.xAxis.tickFormat(function(d) {
+              return d;
+            });
             chart.stacked(attrs.stacked);
             chart.reduceXTicks(false);
             chart.staggerLabels(true);
-            chart.tooltips(false);
+            chart.tooltip.hidden(true);
 
             svg.datum(data)
               .transition().duration(100).call(chart);
 
-            nv.utils.windowResize(chart.update);
+            clearListener = nv.utils.windowResize(chart.update);
           });
         }, true);
       }
