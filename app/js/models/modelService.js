@@ -225,18 +225,61 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
+
+    function nameRankProbabilities(rankProbabilities, treatments) {
+      var treatmentsById = _.keyBy(treatments, 'id');
+      return _.chain(rankProbabilities)
+        .toPairs()
+        .map(function(pair) {
+          var treatmentName = treatmentsById[pair[0]].name;
+          return [treatmentName, pair[1]];
+        })
+        .fromPairs()
+        .value();
+    }
+
+
+    function addLevelandProcessData(rankProbabilities, treatments, dataProcessingFunction) {
+      return _.map(rankProbabilities, function(rankProbability, key) {
+        return {
+          level: key,
+          data: dataProcessingFunction(rankProbability, treatments)
+        };
+      });
+    }
+
+    function selectLevel(regressor, problem, data, resultRegressor) {
+      var result = {
+        all: data
+      };
+      if (regressor && isVariableBinary(regressor.variable, problem)) {
+        result.all = filterCentering(result.all);
+        result.selected = result.all[0];
+      } else {
+        result.selected = findCentering(result.all);
+        if (regressor) {
+          result.selected.level = 'centering (' + resultRegressor.modelRegressor.mu + ')';
+        }
+      }
+      return result;
+    }
+
+
     return {
-      findPrimaryModel: findPrimaryModel,
       cleanModel: cleanModel,
-      createModelBatch: createModelBatch,
-      isVariableBinary: isVariableBinary,
+      toFrontEnd: toFrontEnd,
       getBinaryCovariateNames: getBinaryCovariateNames,
       isProblemWithCovariates: isProblemWithCovariates,
       getCovariateBounds: getCovariateBounds,
+      createLeaveOneOutBatch: createLeaveOneOutBatch,
+      findPrimaryModel: findPrimaryModel,
+      createModelBatch: createModelBatch,
+      isVariableBinary: isVariableBinary,
       findCentering: findCentering,
       filterCentering: filterCentering,
-      createLeaveOneOutBatch: createLeaveOneOutBatch,
-      toFrontEnd: toFrontEnd
+      addLevelandProcessData: addLevelandProcessData,
+      nameRankProbabilities: nameRankProbabilities,
+      selectLevel: selectLevel
     };
   };
 

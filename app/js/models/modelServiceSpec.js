@@ -5,7 +5,6 @@ define(['angular', 'angular-mocks', 'services'], function() {
 
     var modelService;
 
-
     beforeEach(inject(function(ModelService) {
       modelService = ModelService;
     }));
@@ -348,7 +347,6 @@ define(['angular', 'angular-mocks', 'services'], function() {
           max: undefined
         });
       });
-
     });
 
     describe('createLeaveOneOutBatch', function() {
@@ -371,6 +369,254 @@ define(['angular', 'angular-mocks', 'services'], function() {
         }];
         var result = modelService.createLeaveOneOutBatch(model, leaveOneOutOptions);
         expect(result.size).toEqual(result.size);
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('createModelBatch', function() {
+      it('should create a pairwise batch', function() {
+        var modelBase = {
+          title: 'pairwise base',
+          modelType: {
+            mainType: 'pairwise'
+          }
+        };
+        var option1 = {
+          from: {
+            name: 'parox'
+          },
+          to: {
+            name: 'fluox'
+          }
+        };
+        var option2 = {
+          from: {
+            name: 'fluox'
+          },
+          to: {
+            name: 'sertra'
+          }
+        }
+        var comparisonOptions = [option1, option2];
+        var expectedResult = [{
+          title: 'pairwise base (parox - fluox)',
+          modelType: {
+            mainType: 'pairwise'
+          },
+          pairwiseComparison: option1
+        }, {
+          title: 'pairwise base (fluox - sertra)',
+          modelType: {
+            mainType: 'pairwise'
+          },
+          pairwiseComparison: option2
+        }];
+
+        var result = modelService.createModelBatch(modelBase, comparisonOptions, null);
+
+        expect(result).toEqual(expectedResult);
+      });
+      it('should create a nodesplit batch', function() {
+        var modelBase = {
+          title: 'nodesplit base',
+          modelType: {
+            mainType: 'node-split'
+          }
+        };
+        var option1 = {
+          from: {
+            name: 'parox'
+          },
+          to: {
+            name: 'fluox'
+          }
+        };
+        var option2 = {
+          from: {
+            name: 'fluox'
+          },
+          to: {
+            name: 'sertra'
+          }
+        }
+        var nodeSplitOptions = [option1, option2];
+        var expectedResult = [{
+          title: 'nodesplit base (parox - fluox)',
+          modelType: {
+            mainType: 'node-split'
+          },
+          nodeSplitComparison: option1
+        }, {
+          title: 'nodesplit base (fluox - sertra)',
+          modelType: {
+            mainType: 'node-split'
+          },
+          nodeSplitComparison: option2
+        }];
+
+        var result = modelService.createModelBatch(modelBase, null, nodeSplitOptions);
+
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('isVariableBinary', function() {
+      it('should return whether the variable is binary', function() {
+        var covariateName = 'age';
+        var binaryProblem = {
+          studyLevelCovariates: [{
+            age: 1
+          }, {
+            age: 0,
+            sex: 'm'
+          }]
+        };
+        var nonBinaryProblem = {
+          studyLevelCovariates: [{
+            age: 11
+          }, {
+            age: 92,
+            sex: 'm'
+          }]
+        };
+        expect(modelService.isVariableBinary(covariateName, binaryProblem)).toBeTruthy();
+        expect(modelService.isVariableBinary(covariateName, nonBinaryProblem)).toBeFalsy();
+      });
+    });
+
+    describe('nameRankProbabilities', function() {
+      it('should replace the id keys with the names of the matching treatment', function() {
+        var data = {
+          1: 'klaas',
+          2: 'henk'
+        };
+        var treatments = [{
+          id: 1,
+          name: 'jan'
+        }, {
+          id: 2,
+          name: 'piet'
+        }];
+
+        var expectedResult = {
+          jan: 'klaas',
+          piet: 'henk'
+        };
+
+        var result = modelService.nameRankProbabilities(data, treatments);
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('addLevelandProcessData', function() {
+      it('should call the supplied function for the data & add the level', function() {
+        var expectedResult = [{
+          level: 'level1',
+          data: {
+            fluox: [0.2205, 0.739, 0.0405],
+            parox: [4, 5, 6]
+          }
+        }, {
+          level: 'level2',
+          data: {
+            fluox: [0.19512, 0.49938, 0.3055],
+            parox: [1, 2, 3]
+          }
+        }];
+        var rankProbabilities = {
+          level1: {
+            322: [0.2205, 0.739, 0.0405],
+            323: [4, 5, 6]
+          },
+          level2: {
+            322: [0.19512, 0.49938, 0.3055],
+            323: [1, 2, 3]
+          }
+        };
+        var treatments = [{
+          id: 322,
+          name: 'fluox'
+        }, {
+          id: 323,
+          name: 'parox'
+        }];
+        var result = modelService.addLevelandProcessData(rankProbabilities, treatments, modelService.nameRankProbabilities);
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('selectLevel', function() {
+      it('should work for a binary covariate in a regression model', function() {
+        var levelCentering = {
+          level: 'centering'
+        };
+        var level0 = {
+          level: 0
+        };
+        var level1 = {
+          level: 1
+        };
+        var regressor = {
+          levels: [],
+          variable: 'isCool'
+        };
+        var binaryProblem = {
+          studyLevelCovariates: [{
+            isCool: 1
+          }]
+        };
+        var data = [level0, level1, levelCentering];
+        var resultRegressor = null;
+        var expectedResult = {
+          all: [level0, level1],
+          selected: level0
+        };
+        var result = modelService.selectLevel(regressor, binaryProblem, data, resultRegressor);
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should work for a nonbinary covariate in a regression model', function() {
+        var levelCentering = {
+          level: 'centering'
+        };
+        var level100 = {
+          level: 100
+        };
+        var regressor = {
+          levels: [],
+          variable: 'aher'
+        };
+        var nonBinaryProblem = {
+          studyLevelCovariates: [{
+            aher: 3.7
+          }]
+        };
+        var data = [levelCentering, level100];
+        var resultRegressor = {
+          modelRegressor: {
+            mu: 37
+          }
+        };
+        var expectedResult = {
+          all: [levelCentering, level100],
+          selected: {
+            level: 'centering (37)'
+          }
+        };
+        var result = modelService.selectLevel(regressor, nonBinaryProblem, data, resultRegressor);
+        expect(result).toEqual(expectedResult);
+      });
+      
+      it('should work for a non-regression model', function() {
+        var levelCentering = {
+          level: 'centering'
+        };
+        var data = [levelCentering];
+        var expectedResult = {
+          all: [levelCentering],
+          selected: levelCentering
+        };
+        var result = modelService.selectLevel(null, null, data, null);
         expect(result).toEqual(expectedResult);
       });
     });

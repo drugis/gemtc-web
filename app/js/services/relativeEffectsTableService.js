@@ -15,7 +15,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
 
-    function buildTable(relativeEffects, isLogScale, treatments) {
+    function buildTable(relativeEffects, treatments, isLogScale) {
       var table = {
         rows: []
       };

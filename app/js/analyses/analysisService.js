@@ -6,16 +6,6 @@ define(['angular', 'lodash'], function(angular, _) {
 
     var LIKELIHOOD_LINK_SETTINGS = [{
       likelihood: "normal",
-      link: "smd",
-      scale: "mean difference",
-      analysisScale: "standardized mean difference",
-      absoluteScale: 'standardized mean',
-      columns: [
-        ["mean", "std.dev", "sampleSize"]
-      ],
-      missingColumnsLabel: "'mean', 'std.dev', and 'sampleSize'"
-    }, {
-      likelihood: "normal",
       link: "identity",
       scale: "mean difference",
       analysisScale: "mean difference",
@@ -65,6 +55,16 @@ define(['angular', 'lodash'], function(angular, _) {
         ["responders", "exposure"]
       ],
       missingColumnsLabel: "'responders' and 'exposure'"
+    }, {
+      likelihood: "normal",
+      link: "smd",
+      scale: "mean difference",
+      analysisScale: "standardized mean difference",
+      absoluteScale: 'standardized mean',
+      columns: [
+        ["mean", "std.dev", "sampleSize"]
+      ],
+      missingColumnsLabel: "'mean', 'std.dev', and 'sampleSize'"
     }];
 
     function problemToStudyMap(problemArg) {

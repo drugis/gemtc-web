@@ -99,12 +99,15 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       modalMock = jasmine.createSpyObj('$modal', ['open']);
       metaRegressionService = jasmine.createSpyObj('MetaRegressionService', ['buildCovariatePlotOptions', 'getCovariateSummaries']);
       metaRegressionService.buildCovariatePlotOptions.and.returnValue([]);
-      modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary', 'filterCentering', 'findCentering']);
+      modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary', 'filterCentering', 'findCentering',
+        'addLevelandProcessData', 'selectLevel'
+      ]);
       modelserviceMock.isVariableBinary.and.returnValue(true);
       modelserviceMock.filterCentering.and.callFake(function(param) {
         return param;
       });
-
+      modelserviceMock.addLevelandProcessData.and.returnValue([]);
+      modelserviceMock.selectLevel.and.returnValue({});
       $controller('ModelController', {
         $scope: scope,
         $stateParams: mockStateParams,
@@ -194,10 +197,14 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
               expect(diagnosticsService.compareDiagnostics).toHaveBeenCalled();
             });
 
-            it('the relativeEffectsTable should be constructed', function() {
-              expect(relativeEffectsTableService.buildTable).toHaveBeenCalled();
+            it('the modelService should process input & add levels for both relative effects and rank probabilities', function() {
+              expect(modelserviceMock.addLevelandProcessData).toHaveBeenCalled();
+              expect(modelserviceMock.addLevelandProcessData.calls.count()).toBe(2);
             });
-
+            it('the modelService should retrieve the rankProbabilitiesByLevel, the relativeEffectsTables and their default', function() {
+              expect(modelserviceMock.selectLevel).toHaveBeenCalled();
+              expect(modelserviceMock.selectLevel.calls.count()).toBe(2);
+            });
             it('the gelman diagnostics should be labelled', function() {
               expect(diagnosticsService.buildDiagnosticMap).toHaveBeenCalled();
             });
