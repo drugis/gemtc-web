@@ -42,7 +42,7 @@
     "lodash": "~4.2.0",
     "modernizr": "~2.8.0",
     "moment": "~2.10.0",
-    "nvd3": "1.8.1",
+    "nvd3": "1.8.5",
     "papaparse": "~4.1.1",
     "requirejs": "~2.1.10",
     "requirejs-domready": "~2.0.1",
