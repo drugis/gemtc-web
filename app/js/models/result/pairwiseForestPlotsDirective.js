@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(['lodash'], function(_) {
   var dependencies = ['gemtcRootPath', '$q'];
   var pairwiseForestPlotsDirective = function(gemtcRootPath, $q) {
     return {
