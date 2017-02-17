@@ -62,7 +62,7 @@
       <table export>
         <caption>Comparison of the included interventions: {{::scaleName}} (95% CrI). Each cell gives the effect of the column-defining intervention relative to the row-defining intervention.
         </caption>
-        <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.table.rows">
+        <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.data.rows">
           <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
             <span ng-switch-when="effect">
               {{relativeEffectsCell.mean | number: 3}} ({{relativeEffectsCell.lowerBound | number: 3}}, {{relativeEffectsCell.upperBound | number: 3}})
