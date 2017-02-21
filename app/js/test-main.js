@@ -18,6 +18,7 @@ require.config({
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
+    'clipboard': 'bower_components/clipboard/dist/clipboard.min',
     'jquery-slider': 'lib/jslider/bin/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/build/nv.d3.min',
