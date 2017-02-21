@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'clipboard'], function(_, Clipboard) {
   var dependencies = ['$scope', '$q', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'FunnelPlotResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService',
@@ -30,6 +30,7 @@ define(['lodash'], function(_) {
     $scope.goToRefineModel = goToRefineModel;
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
+    var clipboard = new Clipboard('.clipboard-button');
 
     // pass information to parent for use in breadcrumbs
     $scope.$parent.model = $scope.model;

@@ -14,6 +14,12 @@ define(['angular', 'lodash'], function(angular, _) {
       return array;
     }
 
+    function mapTreatmentIdToName(treatments) {
+      return _.reduce(treatments, function(memo, treatment) {
+        memo[treatment.id] = treatment.name;
+        return memo;
+      }, {});
+    }
 
     function buildTable(relativeEffects, treatments, isLogScale) {
       var table = {
@@ -23,10 +29,7 @@ define(['angular', 'lodash'], function(angular, _) {
       var rowIndex = -1;
       var currentEffect;
       var row;
-      var treatmentIdToNameMap = _.reduce(treatments, function(memo, treatment) {
-        memo[treatment.id] = treatment.name;
-        return memo;
-      }, {});
+      var treatmentIdToNameMap = mapTreatmentIdToName(treatments);
 
       angular.forEach(relativeEffects, function(relativeEffect) {
         if (relativeEffect.t1 !== currentEffect) {
@@ -62,8 +65,35 @@ define(['angular', 'lodash'], function(angular, _) {
       return table;
     }
 
+    function buildRow(relativeEffects, treatments, baselineId, isLogScale) {
+      var treatmentIdToNameMap = mapTreatmentIdToName(treatments);
+      var row = [];
+      _.forEach(relativeEffects, function(relativeEffect) {
+        if (parseInt(relativeEffect.t1) === baselineId && _.find(treatments, ['id', parseInt(relativeEffect.t2)])) {
+          row.push({
+            id: relativeEffect.t2,
+            name: treatmentIdToNameMap[relativeEffect.t2],
+            median: isLogScale ? Math.exp(relativeEffect.quantiles['50%']) : relativeEffect.quantiles['50%'],
+            lowerBound: isLogScale ? Math.exp(relativeEffect.quantiles['2.5%']) : relativeEffect.quantiles['2.5%'],
+            upperBound: isLogScale ? Math.exp(relativeEffect.quantiles['97.5%']) : relativeEffect.quantiles['97.5%']
+          });
+        }
+        if (parseInt(relativeEffect.t2) === baselineId && _.find(treatments, ['id', parseInt(relativeEffect.t1)])) {
+          row.push({
+            id: relativeEffect.t1,
+            name: treatmentIdToNameMap[relativeEffect.t1],
+            median: isLogScale ? Math.exp(relativeEffect.quantiles['50%']) : relativeEffect.quantiles['50%'],
+            lowerBound: isLogScale ? Math.exp(relativeEffect.quantiles['2.5%']) : relativeEffect.quantiles['2.5%'],
+            upperBound: isLogScale ? Math.exp(relativeEffect.quantiles['97.5%']) : relativeEffect.quantiles['97.5%']
+          });
+        }
+      });
+      return row;
+    }
+
     return {
-      buildTable: buildTable
+      buildTable: buildTable,
+      buildRow: buildRow
     };
   };
   return dependencies.concat(RelativeEffectsTableService);

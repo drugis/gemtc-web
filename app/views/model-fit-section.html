@@ -19,8 +19,9 @@
 
 <div class="row" ng-if="result">
   <div class="columns large-8 medium-6 small-12">
+
     <div>
-      <table export>
+      <table id="modelFitCopy">
         <caption>Model fit statistics</caption>
         <tbody>
           <tr>
@@ -52,19 +53,24 @@
         </tbody>
       </table>
     </div>
+  </div class="columns large-4">
+  <div>
+    <button class="clipboard-button" data-clipboard-target="#modelFitCopy">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
   </div>
 </div>
 
 <div class="row" ng-if="result">
   <div class="columns large-12 medium-12 small-12">
-    <img export file-name="'residualDeviancePlot'"  crossOrigin="anonymous" ng-src="{{result.deviancePlot[0].href}}">
+    <img export file-name="'residualDeviancePlot'" crossOrigin="anonymous" ng-src="{{result.deviancePlot[0].href}}">
   </div>
 </div>
 
 
 <div class="row" ng-if="result && absoluteDevianceStatisticsTable.length > 0">
-  <div class="columns large-12 medium-12 small-12">
-    <table export>
+  <div class="columns large-8 medium-12 small-12">
+    <table id="residualDeviance1Copy">
       <thead>
         <caption>Residual deviance per arm per study
           <data-inline-help help-key="residual-deviance"></data-inline-help>
@@ -86,10 +92,16 @@
       </tbody>
     </table>
   </div>
+    <div class="columns large-4">
+    <button class="clipboard-button" data-clipboard-target="#residualDeviance1Copy">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
+  </div>
 </div>
+
 <div class="row" ng-if="result && relativeDevianceStatisticsTable.length > 0">
-  <div class="columns large-12 medium-12 small-12">
-    <table export>
+  <div class="columns large-8 medium-12 small-12">
+    <table id="resisdualDeviance2Copy">
       <thead>
         <caption>Residual deviance per study (contrast-based data)
           <data-inline-help help-key="residual-deviance"></data-inline-help>
@@ -108,5 +120,10 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="columns large-4">
+    <button class="clipboard-button" data-clipboard-target="#resisdualDeviance2Copy">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
   </div>
 </div>
