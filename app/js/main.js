@@ -7,6 +7,7 @@ require.config({
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
+    'clipboard': 'bower_components/clipboard/dist/clipboard.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'modernizr': 'bower_components/modernizr/modernizr',
