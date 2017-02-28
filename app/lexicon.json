@@ -4,6 +4,11 @@
     "text": "In GeMTC, an analysis consists of a dataset and any number of models constructed over that dataset. Typically, an analysis will aim to answer a single question, but it may be necessary to create multiple models to answer sub-questions, e.g. whether the model is consistent.",
     "link": "/manual.html#analyses-and-models"
   },
+  "baseline-distribution": {
+    "title": "Baseline distribution",
+    "text": "The distribution of the baseline effects, used to calculate the absolute treatment effects from the relative effects",
+    "link": "/manual.html#absolute-effects"
+  },
   "burn-in-iterations": {
     "title": "Burn-in iterations",
     "text": "The number of iterations of the MCMC simulation that are discarded before the inference phase is started.",

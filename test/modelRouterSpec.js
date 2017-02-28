@@ -22,14 +22,16 @@ var modelRepository = {},
   modelService = {},
   pataviTaskRepository = {},
   analysisRepository = {},
-  funnelPlotRepository = {};
+  funnelPlotRepository = {},
+  modelBaselineRepository = {};
 
 var modelRouter = proxyquire('../standalone-app/modelRouter', {
   './modelRepository': modelRepository,
   './modelService': modelService,
   './pataviTaskRepository': pataviTaskRepository,
   './analysisRepository': analysisRepository,
-  './funnelPlotRepository': funnelPlotRepository
+  './funnelPlotRepository': funnelPlotRepository,
+  './modelBaselineRepository': modelBaselineRepository
 });
 
 describe('modelRouter', function() {
@@ -51,7 +53,7 @@ describe('modelRouter', function() {
     server.close();
   });
 
-  describe('request to /', function() {
+  describe('GET request to /', function() {
     var taskUrl = 101;
     var taskUrl2 = 102;
 
@@ -105,7 +107,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('POST request to / with owner that is not the session user', function() {
 
     beforeEach(function() {
@@ -183,7 +184,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('GET request to /:modelID/result', function() {
     var model = {
       id: 2,
@@ -211,7 +211,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('GET request to /:modelID/result for model with no taskUrl', function() {
     var model = {
       id: 2
@@ -232,7 +231,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('POST request to /:modelId where the user is not the analysis owner', function() {
     beforeEach(function() {
       var analysis = {
@@ -255,7 +253,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('POST request to /:modelId with owner that is the logged in user', function() {
     var model = {
       analysisId: 1,
@@ -291,7 +288,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('POST request to /:modelId with inconsistent model.analysisID and analysisID', function() {
     var model = {
       analysisId: 2,
@@ -322,7 +318,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('POST request to /:modelId where the modelservice returns an error', function() {
     var model = {
       analysisId: 1,
@@ -360,7 +355,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('POST request to /:modelId/attributes with owner that is the logged in user', function() {
     var model = {
       analysisId: 1,
@@ -399,7 +393,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('POST request to /:modelId/funnelPlots with owner that is the logged in user', function() {
     var funnelCreate;
     var model = {
@@ -419,6 +412,7 @@ describe('modelRouter', function() {
     afterEach(function() {
       analysisRepository.get.restore();
       funnelPlotRepository.create.restore();
+      modelRepository.get.restore();
     });
 
     it('should create the funnel plot and have status CREATED', function(done) {
@@ -439,11 +433,10 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('GET request to /:modelId/funnelPlots', function() {
     var modelId = 1;
     var funnelPlots = [{
-      id:1,
+      id: 1,
       modelId: modelId,
       t1: 1,
       t2: 3
@@ -465,7 +458,6 @@ describe('modelRouter', function() {
         });
     });
   });
-
   describe('GET request to /:modelId/funnelPlots/:plotId', function() {
     var modelId = 1;
     var plotId = 2;
@@ -492,4 +484,72 @@ describe('modelRouter', function() {
         });
     });
   });
+  describe('GET request from /:modelId/baseline', function() {
+    var modelId = 1;
+    var baseline = {
+      "scale": "mean",
+      "mu": 4,
+      "sigma": 56,
+      "name": "D",
+      "type": "dnorm"
+    };
+
+    beforeEach(function() {
+      sinon.stub(modelBaselineRepository, 'get').onCall(0).yields(null, baseline);
+    });
+    afterEach(function() {
+      modelBaselineRepository.get.restore();
+    });
+    it('should return the baseline for the model', function(done) {
+      request
+        .get(BASE_PATH + '1/models/' + modelId + '/baseline')
+        .end(function(err, res) {
+          assert(!err);
+          res.should.have.property('status', httpStatus.OK);
+          assert.deepEqual(baseline, res.body);
+          done();
+        });
+    });
+  });
+  describe('PUT request to /:modelId/baseline', function() {
+    var modelId = 1;
+    var baseline = {
+      "scale": "mean",
+      "mu": 4,
+      "sigma": 56,
+      "name": "D",
+      "type": "dnorm"
+    };
+    var analysis = {
+      owner: userId,
+    };
+    var model = {
+      analysisId: 1,
+      id: modelId
+    };
+
+    beforeEach(function() {
+      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
+      sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
+      sinon.stub(modelBaselineRepository, 'set').onCall(0).yields(null);
+    });
+
+    afterEach(function() {
+      analysisRepository.get.restore();
+      modelRepository.get.restore();
+      modelBaselineRepository.set.restore();
+    });
+
+    it('should set the baseline of the model to the new value', function(done) {
+      request
+        .put(BASE_PATH + '1/models/' + modelId + '/baseline')
+        .send(baseline)
+        .end(function(err,res){
+          assert(!err);
+          res.should.have.property('status', httpStatus.OK);
+          done();          
+        });
+    });
+  });
+
 });

@@ -9,7 +9,8 @@ var logger = require('./logger'),
   modelService = require('./modelService'),
   pataviTaskRouter = require('./pataviTaskRouter'),
   pataviTaskRepository = require('./pataviTaskRepository'),
-  funnelPlotRepository = require('./funnelPlotRepository');
+  funnelPlotRepository = require('./funnelPlotRepository'),
+  modelBaselineRepository = require('./modelBaselineRepository');
 
 module.exports = express.Router({
     mergeParams: true
@@ -19,6 +20,8 @@ module.exports = express.Router({
   .get('/:modelId', getModel)
   .post('/:modelId', extendRunLength)
   .get('/:modelId/result', getResult)
+  .get('/:modelId/baseline', getBaseline)
+  .put('/:modelId/baseline', setBaseline)
   .post('/:modelId/attributes', setAttributes)
   .post('/:modelId/funnelPlots', addFunnelPlot)
   .get('/:modelId/funnelPlots', queryFunnnelPlots)
@@ -78,7 +81,7 @@ function find(request, response, next) {
 function getResult(request, response, next) {
   logger.debug('modelRouter.getResult');
   logger.debug('request.params.analysisId' + request.params.analysisId);
-  var modelId = request.params.modelId;
+  var modelId = Number.parseInt(request.params.modelId);
   var modelCache;
 
   async.waterfall([
@@ -118,7 +121,7 @@ function getResult(request, response, next) {
 function createModel(request, response, next) {
   logger.debug('create model.');
   logger.debug('request.params.analysisId' + request.params.analysisId);
-  var analysisId = request.params.analysisId;
+  var analysisId = Number.parseInt(request.params.analysisId);
   var userId = request.session.userId;
 
   async.waterfall([
@@ -176,13 +179,12 @@ function extendRunLength(request, response, next) {
   logger.debug('analysisId ' + request.params.analysisId);
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = Number.parseInt(request.session.userId);
+  var userId = request.session.userId;
 
   var modelCache;
   var newModel = request.body;
 
   async.waterfall([
-
     function(callback) {
       analysisRepository.get(analysisId, callback);
     },
@@ -212,7 +214,8 @@ function addFunnelPlot(request, response, next) {
   logger.debug('add funnel plot');
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = Number.parseInt(request.session.userId);
+  var userId = request.session.userId;
+
   async.waterfall([
     function(callback) {
       analysisRepository.get(analysisId, callback);
@@ -236,7 +239,7 @@ function addFunnelPlot(request, response, next) {
 }
 
 function queryFunnnelPlots(request, response, next) {
-  var modelId = request.params.modelId;
+  var modelId = Number.parseInt(request.params.modelId);
   funnelPlotRepository.findByModelId(modelId, function(error, result) {
     if (error) {
       next({
@@ -250,7 +253,7 @@ function queryFunnnelPlots(request, response, next) {
 }
 
 function getFunnelPlot(request, response, next) {
-  var plotId = request.params.plotId;
+  var plotId = Number.parseInt(request.params.plotId);
   funnelPlotRepository.findByPlotId(plotId, function(error, result) {
     if (error) {
       next({
@@ -261,6 +264,48 @@ function getFunnelPlot(request, response, next) {
       response.json(result);
     }
   });
+}
+
+function getBaseline(request, response, next) {
+  var modelId = Number.parseInt(request.params.modelId);
+  modelBaselineRepository.get(modelId, function(error, result) {
+    if (error) {
+      next({
+        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+        message: error
+      });
+    } else {
+      response.json(result);
+    }
+  });
+}
+
+function setBaseline(request, response, next) {
+  logger.debug('set model baseline');
+  var analysisId = Number.parseInt(request.params.analysisId);
+  var modelId = Number.parseInt(request.params.modelId);
+  var userId = request.session.userId;
+  var baseline = request.body;
+  async.waterfall([
+    function(callback) {
+      analysisRepository.get(analysisId, callback);
+    },
+    function(analysis, callback) {
+      checkOwnership(analysis.owner, userId, callback);
+    },
+    function(callback) {
+      modelRepository.get(modelId, callback);
+    },
+    function(model, callback) {
+      checkCoordinates(analysisId, model, callback);
+    },
+    function(callback) {
+      modelBaselineRepository.set(modelId, baseline, callback);
+    },
+    function() {
+      response.sendStatus(httpStatus.OK);
+    }
+  ], next);
 }
 
 function setAttributes(request, response, next) {
@@ -294,7 +339,7 @@ function setAttributes(request, response, next) {
 }
 
 function getModel(request, response, next) {
-  var modelId = request.params.modelId;
+  var modelId = Number.parseInt(request.params.modelId);
   modelRepository.get(modelId, function(error, result) {
     if (error) {
       next({

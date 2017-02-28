@@ -12,7 +12,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.unArchiveModel = unArchiveModel;
     $scope.gotoCreateModel = gotoCreateModel;
     $scope.gotoModel = gotoModel;
-    $scope.hasPimaryLabel = hasPimaryLabel;
+    $scope.hasPrimaryLabel = hasPrimaryLabel;
     $scope.showArchived = false;
     $scope.numberOfModelsArchived = 0;
     $scope.loadModels();
@@ -76,7 +76,7 @@ define(['lodash', 'angular'], function(_, angular) {
       $state.go('model', $scope.modelParams(model));
     }
 
-    function hasPimaryLabel(model) {
+    function hasPrimaryLabel(model) {
       return model && $scope.$parent.primaryModel && model.id === $scope.$parent.primaryModel.id;
     }
 

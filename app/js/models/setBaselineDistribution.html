@@ -1,0 +1,47 @@
+<form novalidate ng-submit="setBaselineDistribution(baselineDistribution)">
+  <div class="row">
+    <div class="large-12 columns end">
+      <h3 class="ng-scope">{{outcomeWithAnalysis.outcome.name}} baseline distribution</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-8 columns end">
+      <label>Alternative
+        <select
+          ng-model="baselineDistribution.selectedAlternative"
+          ng-options="alternative.name for alternative in alternatives"></select>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns end">
+      <label>Normal distribution ({{baselineDistribution.scale}})</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-4 medium-6 columns">
+      <label>mean
+        <input
+          type="number"
+          ng-model="baselineDistribution.mu"></label>
+    </div>
+    <div class="large-4 medium-6 columns end">
+      <label>sd</label>
+      <input
+        type="number"
+        step="0.001"
+        ng-model="baselineDistribution.sigma">
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
+      <button ng-disabled="baselineDistribution.mu === undefined ||
+       baselineDistribution.mu === null ||
+       baselineDistribution.sigma === undefined ||
+       baselineDistribution.sigma === null ||
+       baselineDistribution.sigma < 0" class="button small success" type="submit">Set
+      </button>
+    </div>
+  </div>
+  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+</form>

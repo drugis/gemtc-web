@@ -63,6 +63,34 @@
   </div>
 </div>
 
+<div ng-if="result && model.modelType.type === 'network'">
+  <div class="row">
+    <div class="columns large-12">
+      <p>
+        <strong>Baseline distribution
+          <data-inline-help help-key="baseline-distribution"></data-inline-help>
+        </strong>
+        {{baselineDistribution.scale}} ({{baselineDistribution.name}}) ~ N({{baselineDistribution.mu}},
+        {{baselineDistribution.sigma}})
+      </p>
+
+      <button ng-click="openBaselineDistributionModal()">Set Baseline Distribution</button>
+      <table>
+        <thead>
+          <th ng-repeat="treatment in problem.treatments">{{treatment.name}}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td ng-repeat="treatment in problem.treatments"> {{scales[treatment.name]['50%']}}
+            ({{scales[treatment.name]['2.5%']}},
+             {{scales[treatment.name]['97.5%']}})</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <div ng-if="result && model.modelType.type !== 'node-split'">
   <div class="row" style="padding-top: 1rem;">
     <div class="columns large-4">

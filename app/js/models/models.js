@@ -13,9 +13,11 @@ define(function(require) {
     .controller('CreateNodeSplitModelController', require('models/createNodeSplitModelController'))
     .controller('CreateNetworkModelController', require('models/createNetworkModelController'))
     .controller('AddComparisonFunnelPlotController', require('models/addComparisonFunnelPlotController'))
+    .controller('SetBaselineDistributionController', require('models/setBaselineDistributionController'))
 
   // resources
     .factory('ModelResource', require('models/standaloneModelResource'))
+    .factory('ModelBaselineResource', require('models/standaloneModelBaselineResource'))
     .factory('ProblemResource', require('models/standaloneProblemResource'))
     .factory('AnalysisResource', require('analyses/analysisResource'))
     .factory('FunnelPlotResource', require('models/funnelPlotResource'))

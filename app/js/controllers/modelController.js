@@ -1,11 +1,13 @@
 'use strict';
 define(['lodash', 'clipboard'], function(_, Clipboard) {
-  var dependencies = ['$scope', '$q', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'FunnelPlotResource', 'PataviService',
+  var dependencies = ['$scope', '$q', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'ModelBaselineResource',
+    'FunnelPlotResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService',
     'ResultsPlotService'
   ];
-  var ModelController = function($scope, $q, $modal, $state, $stateParams, gemtcRootPath, ModelResource, FunnelPlotResource, PataviService,
+  var ModelController = function($scope, $q, $modal, $state, $stateParams, gemtcRootPath, ModelResource, ModelBaselineResource,
+    FunnelPlotResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, ModelService,
     DiagnosticsService, AnalysisService, DevianceStatisticsService, MetaRegressionService,
     ResultsPlotService) {
@@ -19,6 +21,9 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     $scope.metaRegressionTemplate = gemtcRootPath + 'views/meta-regression-section.html';
 
     $scope.analysis = AnalysisResource.get($stateParams);
+    ModelBaselineResource.get($stateParams).$promise.then(function(result) {
+      $scope.baselineDistribution = result.baseline;
+    });
     $scope.progress = {
       percentage: 0
     };
@@ -27,6 +32,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     $scope.comparisonAdjustedFunnelPlots = FunnelPlotResource.query($stateParams);
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;
+    $scope.openBaselineDistributionModal = openBaselineDistributionModal;
     $scope.goToRefineModel = goToRefineModel;
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
@@ -184,7 +190,40 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
       });
     }
 
+    function openBaselineDistributionModal() {
+      $modal.open({
+        templateUrl: gemtcRootPath + 'js/models/setBaselineDistribution.html',
+        controller: 'SetBaselineDistributionController',
+        windowClass: 'small',
+        resolve: {
+          outcomeWithAnalysis: function() {
+            var outcome = _.cloneDeep($scope.analysis.outcome);
+            var analysis = _.cloneDeep($scope.analysis);
+            delete analysis.outcome;
+            outcome.analysis = analysis;
+            outcome.selectedModel = $scope.model;
+            return outcome;
+          },
+          alternatives: function() {
+            return $scope.problem.treatments;
+          },
+          interventionInclusions: function() {
+            return $scope.analysis.interventionInclusions;
+          },
+          setBaselineDistribution: function() {
+            return function(baseline) {
+              $scope.baselineDistribution = baseline;
+              ModelBaselineResource.put($stateParams, baseline);
+              resetScales();
+            };
+          }
+        }
+      });
+    }
 
+    function resetScales() {
+      var problem = ModelService.buildScalesProblem($scope.analysis, $scope.baselineDistribution, $scope.results);
+    }
 
   };
   return dependencies.concat(ModelController);
