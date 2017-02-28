@@ -4,6 +4,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
     var scope,
       analysisResource,
       modelResource,
+      modelBaselineResource,
       problemResource,
       pataviTaskIdResource,
       funnelPlotResourceMock,
@@ -15,6 +16,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       mockAnalysis,
       modelDeferred,
       mockModel,
+      modelBaselineDefer,
+      mockModelBaseline,
       problemDeferred,
       mockProblem,
       mockPataviTaskId = {
@@ -47,6 +50,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       modelDeferred = $q.defer();
       mockModel = {
         $promise: modelDeferred.promise
+      };
+      modelBaselineDefer = $q.defer();
+      mockModelBaseline = {
+        $promise: modelBaselineDefer.promise
       };
       analysisDeferred = $q.defer();
       mockAnalysis = {
@@ -83,6 +90,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       analysisResource.get.and.returnValue(mockAnalysis);
       modelResource = jasmine.createSpyObj('ModelResource', ['get']);
       modelResource.get.and.returnValue(mockModel);
+      modelBaselineResource = jasmine.createSpyObj('ModelBaselineResource', ['get']);
+      modelBaselineResource.get.and.returnValue(mockModelBaseline);
       problemResource = jasmine.createSpyObj('ProblemResource', ['get']);
       problemResource.get.and.returnValue(mockProblem);
       pataviTaskIdResource = jasmine.createSpyObj('PataviTaskIdResource', ['get']);
@@ -114,6 +123,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         $modal: modalMock,
         $state: stateMock,
         ModelResource: modelResource,
+        ModelBaselineResource: modelBaselineResource,
         FunnelPlotResource: funnelPlotResourceMock,
         ProblemResource: problemResource,
         PataviService: pataviService,

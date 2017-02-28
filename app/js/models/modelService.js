@@ -264,6 +264,109 @@ define(['angular', 'lodash'], function(angular, _) {
       return result;
     }
 
+    function buildScalesProblem(analysis, problem, baselineDistribution) {
+      var criteria = {};
+      criteria[analysis.outcome.name] = {
+        scale: baselineDistribution.scale === 'mean' ? null : [0, 1],
+        pvf: null,
+        title: analysis.outcome.name,
+        unitOfMeasurement: baselineDistribution.scale === 'mean' ? null : 'proportion'
+      };
+
+      var alternatives = _.fromPairs(_.map(problem.treatments, function(treatment) {
+        return [treatment.name, {
+          alternative: treatment.id,
+          title: treatment.name
+        }];
+      }));
+
+      var performanceTable = _.map(criteria, function(criterion, criterionName) {
+        var result = {
+          criterion: criterionName
+        };
+
+
+
+        return result;
+      });
+
+      return {
+        criteria: criteria,
+        alternatives: alternatives,
+        performanceTable: performanceTable
+      };
+
+      //out
+      // expectedResult = {
+      //     "criteria": {
+      //       "HAM-D Responders": {
+      //         "criterionUri": "http://trials.drugis.org/concepts/hamd",
+      //         "scale": [
+      //           0,
+      //           1
+      //         ],
+      //         "pvf": null,
+      //         "title": "HAM-D Responders",
+      //         "unitOfMeasurement": "proportion"
+      //       }
+      //     },
+      //     "alternatives": {
+      //       "Paroxetine": {
+      //         "alternative": 260,
+      //         "title": "Paroxetine"
+      //       },
+      //       "Fluoxetine": {
+      //         "alternative": 259,
+      //         "title": "Fluoxetine"
+      //       },
+      //       "Sertraline": {
+      //         "alternative": 258,
+      //         "title": "Sertraline"
+      //       }
+      //     },
+      //     "performanceTable": [{
+      //       "criterion": "HAM-D Responders",
+      //       "performance": {
+      //         "type": "relative-logit-normal",
+      //         "parameters": {
+      //           "baseline": {
+      //             "scale": "log odds",
+      //             "mu": 0.5,
+      //             "sigma": 3,
+      //             "name": "Fluoxetine",
+      //             "type": "dnorm"
+      //           },
+      //           "relative": {
+      //             "type": "dmnorm",
+      //             "mu": {
+      //               "Paroxetine": 0.20157,
+      //               "Fluoxetine": 0,
+      //               "Sertraline": 0.2784
+      //             },
+      //             "cov": {
+      //               "rownames": [
+      //                 "Fluoxetine",
+      //                 "Paroxetine",
+      //                 "Sertraline"
+      //               ],
+      //               "colnames": [
+      //                 "Fluoxetine",
+      //                 "Paroxetine",
+      //                 "Sertraline"
+      //               ],
+      //               "data": [
+      //                 [0, 0, 0],
+      //                 [0, 0.031691, 0.0038127],
+      //                 [0, 0.0038127, 0.031576]
+      //               ]
+      //             }
+      //           }
+      //         }
+      //       }
+      //     }]
+      //   };
+    }
+
 
     return {
       cleanModel: cleanModel,
@@ -279,7 +382,8 @@ define(['angular', 'lodash'], function(angular, _) {
       filterCentering: filterCentering,
       addLevelandProcessData: addLevelandProcessData,
       nameRankProbabilities: nameRankProbabilities,
-      selectLevel: selectLevel
+      selectLevel: selectLevel,
+      buildScalesProblem: buildScalesProblem
     };
   };
 

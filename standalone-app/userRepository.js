@@ -1,3 +1,4 @@
+'use strict';
 var
   dbUtil = require('./dbUtil'),
   db = require('./db')(dbUtil.gemtcDBUrl),

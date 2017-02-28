@@ -26,7 +26,7 @@
               </div>
             </div>
             <div class="small-3 columns">
-              <button ng-hide="loginUserId !== userId" ng-disabled="!primaryModel" ng-click="$parent.primaryModel = null"
+              <button ng-hide="loginUserId !== userId || analysis.archived" ng-disabled="!primaryModel" ng-click="$parent.primaryModel = null"
                 class="alert postfix no-padding-left-right" ng-show="!model.isPrimary">Unset</button>
             </div>
           </div>
@@ -34,7 +34,7 @@
         <div class="columns large-6 medium-12">
           <!-- NB ng-hide code only for ADDIS purposes (can't see others' models in gemtc standalone)-->
           <button id="add-model-btn" ng-hide="loginUserId !== userId || !modelsLoaded" tabindex="0"
-            class="button small right" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked"><i class="fa fa-plus"></i> Add model
+            class="button small right" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked || analysis.archived"><i class="fa fa-plus"></i> Add model
           </button>
           <button tabindex="1" ng-disabled="numberOfModelsArchived === 0" ng-hide="!modelsLoaded"
             class="button secondary small right" ng-click="showArchived = !showArchived"><i class="fa fa-eye"></i>{{showArchived ? ' Hide' : ' Show'}} archived
@@ -62,13 +62,13 @@
               <tr ng-repeat="model in models | orderBy:title | filter:archivedFilter">
                 <td>
                   <a ng-click="gotoModel(model)">{{model.title}} <span ng-show=model.archived>(archived {{model.archivedOn | date}})</span></a>
-                  <span ng-show="hasPimaryLabel(model)"> (primary model)</span>
+                  <span ng-show="hasPrimaryLabel(model)"> (primary model)</span>
                   <span ng-hide="loginUserId !== userId">
-                    <button ng-if="!model.archived &&  !hasPimaryLabel(model)" ng-click="archiveModel(model)"
+                    <button ng-disabled="analysis.archived" ng-if="!model.archived &&  !hasPrimaryLabel(model)" ng-click="archiveModel(model)"
                       type="button" class="tiny right info radius" style="margin-bottom:0;">archive</button>
                   </span>
                   <span ng-hide="loginUserId !== userId">
-                    <button ng-if="model.archived" ng-click="unArchiveModel(model)" type="button" class="tiny right alert radius"
+                    <button ng-disabled="analysis.archived"  ng-if="model.archived" ng-click="unArchiveModel(model)" type="button" class="tiny right alert radius"
                       style="margin-bottom:0;">unarchive</button>
                   </span>
                 </td>

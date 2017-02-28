@@ -606,7 +606,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         var result = modelService.selectLevel(regressor, nonBinaryProblem, data, resultRegressor);
         expect(result).toEqual(expectedResult);
       });
-      
+
       it('should work for a non-regression model', function() {
         var levelCentering = {
           level: 'centering'
@@ -620,5 +620,83 @@ define(['angular', 'angular-mocks', 'services'], function() {
         expect(result).toEqual(expectedResult);
       });
     });
+
+    describe('buildScalesProblem', function() {
+      it('should create a problem for calculating the scales of a dichotomous outcome', function() {
+
+        var expectedResult = {
+          "criteria": {
+            "HAM-D Responders": {
+              "criterionUri": "http://trials.drugis.org/concepts/hamd",
+              "scale": [
+                0,
+                1
+              ],
+              "pvf": null,
+              "title": "HAM-D Responders",
+              "unitOfMeasurement": "proportion"
+            }
+          },
+          "alternatives": {
+            "Paroxetine": {
+              "alternative": 260,
+              "title": "Paroxetine"
+            },
+            "Fluoxetine": {
+              "alternative": 259,
+              "title": "Fluoxetine"
+            },
+            "Sertraline": {
+              "alternative": 258,
+              "title": "Sertraline"
+            }
+          },
+          "performanceTable": [{
+            "criterion": "HAM-D Responders",
+            "performance": {
+              "type": "relative-logit-normal",
+              "parameters": {
+                "baseline": {
+                  "scale": "log odds",
+                  "mu": 0.5,
+                  "sigma": 3,
+                  "name": "Fluoxetine",
+                  "type": "dnorm"
+                },
+                "relative": {
+                  "type": "dmnorm",
+                  "mu": {
+                    "Paroxetine": 0.20157,
+                    "Fluoxetine": 0,
+                    "Sertraline": 0.2784
+                  },
+                  "cov": {
+                    "rownames": [
+                      "Fluoxetine",
+                      "Paroxetine",
+                      "Sertraline"
+                    ],
+                    "colnames": [
+                      "Fluoxetine",
+                      "Paroxetine",
+                      "Sertraline"
+                    ],
+                    "data": [
+                      [0, 0, 0],
+                      [0, 0.031691, 0.0038127],
+                      [0, 0.0038127, 0.031576]
+                    ]
+                  }
+                }
+              }
+            }
+          }]
+        };
+        var result = modelService.buildScalesProblem();
+        expect(result).toEqual(expectedResult);
+
+      });
+    });
+
   });
 });
