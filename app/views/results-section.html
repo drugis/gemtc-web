@@ -69,7 +69,9 @@
       <p>
         <Strong>Absolute treatment effects</Strong>
       </p>
-      <p ng-if="!baselineDistribution"><em>Set baseline distribution to calculate absolute effects.</em></p>
+      <p ng-if="!baselineDistribution">
+        <em>Set baseline distribution to calculate absolute effects.</em>
+      </p>
     </div>
   </div>
   <div class="row" ng-if="baselineDistribution">
@@ -81,9 +83,8 @@
         </thead>
         <tbody>
           <tr>
-            <td ng-repeat="treatment in problem.treatments"> {{scales[treatment.name]['50%']| number: 3}}
-            ({{scales[treatment.name]['2.5%']| number: 3}},
-             {{scales[treatment.name]['97.5%']| number: 3}})</td>
+            <td ng-repeat="treatment in problem.treatments"> {{scales[treatment.name]['50%']| number: 3}} ({{scales[treatment.name]['2.5%']|
+              number: 3}}, {{scales[treatment.name]['97.5%']| number: 3}})</td>
           </tr>
         </tbody>
       </table>
@@ -122,14 +123,9 @@
           ng-model="relativeEffectsTable"></select>
       </label>
     </div>
-    <div class="columns large-4">
-      <button class="clipboard-button" data-clipboard-target="#relativeEffectsTableCopy">
-        <i class="fa fa-clipboard"></i> Copy to clipboard
-      </button>
-    </div>
   </div>
   <div class="row">
-    <div class="columns large-12">
+    <div class="columns large-8">
       <table id="relativeEffectsTableCopy">
         <caption>Comparison of the included interventions: {{::scaleName}} (95% CrI). Each
           cell gives the effect of the column-defining intervention relative to the
@@ -149,6 +145,11 @@
           </td>
         </tr>
       </table>
+    </div>
+    <div class="columns large-4">
+      <button class="clipboard-button" data-clipboard-target="#relativeEffectsTableCopy">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
     </div>
   </div>
 </div>
