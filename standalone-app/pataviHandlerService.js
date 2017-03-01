@@ -27,7 +27,7 @@ function createPataviTask(analysis, model, callback) {
   if (problemPlusModelSettings.sensitivity && problemPlusModelSettings.sensitivity.omittedStudy) {
     problemPlusModelSettings = leaveStudyOut(problemPlusModelSettings);
   }
-  pataviTaskRepository.create(problemPlusModelSettings, callback);
+  pataviTaskRepository.create(problemPlusModelSettings, 'service=gemtc', callback);
 }
 
 function leaveStudyOut(problemPlusSettings) {

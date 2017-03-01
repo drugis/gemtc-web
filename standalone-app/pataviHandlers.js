@@ -3,12 +3,13 @@ var logger = require('./logger'),
   async = require('async'),
   modelRepository = require('./modelRepository'),
   pataviHandlerService = require('./pataviHandlerService'),
+  pataviTaskRepository = require('./pataviTaskRepository'),
   analysisRepository = require('./analysisRepository'),
-  httpStatus = require('http-status-codes')
-;
+  httpStatus = require('http-status-codes');
 var modelCache;
 module.exports = {
-  getPataviTask: getPataviTask
+  getPataviTask: getPataviTask,
+  getMcdaPataviTask: getMcdaPataviTask
 };
 
 
@@ -16,7 +17,7 @@ function getPataviTask(request, response) {
   var modelId = request.params.modelId;
   var analysisId = request.params.analysisId;
 
-  var createdIdCache;
+  var createdUrlCache;
   async.waterfall([
       function(callback) {
         modelRepository.get(modelId, callback);
@@ -35,13 +36,13 @@ function getPataviTask(request, response) {
       function(analysis, callback) {
         pataviHandlerService.createPataviTask(analysis, modelCache, callback);
       },
-      function(createdId, callback) {
-        createdIdCache = createdId;
-        modelRepository.setTaskUrl(modelCache.id, createdId, callback);
+      function(createdUrl, callback) {
+        createdUrlCache = createdUrl;
+        modelRepository.setTaskUrl(modelCache.id, createdUrl, callback);
       },
       function() {
         response.json({
-          uri: createdIdCache
+          uri: createdUrlCache
         });
       }
     ],
@@ -52,4 +53,20 @@ function getPataviTask(request, response) {
         response.end();
       }
     });
+}
+
+function getMcdaPataviTask(request, response) {
+  logger.debug('getMcdaPataviTask, ' + request.body);
+
+  pataviTaskRepository.create(request.body, 'service=smaa_v2&ttl=PT5M', function(error, taskUrl) {
+    if (error && error !== 'stop') {
+      logger.error(error);
+      response.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+      response.end();
+    } else {
+      response.json({
+        uri: taskUrl
+      });
+    }
+  });
 }

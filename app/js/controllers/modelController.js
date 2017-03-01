@@ -1,12 +1,12 @@
 'use strict';
 define(['lodash', 'clipboard'], function(_, Clipboard) {
-  var dependencies = ['$scope', '$q', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'ModelBaselineResource',
+  var dependencies = ['$scope', '$q', '$http', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'ModelBaselineResource',
     'FunnelPlotResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService',
     'ResultsPlotService'
   ];
-  var ModelController = function($scope, $q, $modal, $state, $stateParams, gemtcRootPath, ModelResource, ModelBaselineResource,
+  var ModelController = function($scope, $q, $http, $modal, $state, $stateParams, gemtcRootPath, ModelResource, ModelBaselineResource,
     FunnelPlotResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, ModelService,
     DiagnosticsService, AnalysisService, DevianceStatisticsService, MetaRegressionService,
@@ -186,6 +186,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
         $scope.model.$promise.then(function(model) {
           modelDefer.resolve(model);
         });
+        resetScales();
         return result;
       });
     }
@@ -222,7 +223,36 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     }
 
     function resetScales() {
-      var problem = ModelService.buildScalesProblem($scope.analysis, $scope.baselineDistribution, $scope.results);
+      if (!$scope.baselineDistribution) {
+        return;
+      }
+      var problem = ModelService.buildScalesProblem($scope.analysis, $scope.baselineDistribution, $scope.result);
+      $http.post('/patavi', problem)
+        .then(function(result) {
+          var uri = result.data.uri;
+          if (result.status === 200 && uri) {
+            return uri;
+          }
+        }, function(error) {
+          $scope.$root.$broadcast('error', {
+            type: 'BACK_END_ERROR',
+            code: error.code || undefined,
+            message: 'unable to submit the problem to the server'
+          });
+        })
+        .then(function(uri) {
+          return PataviService.listen(uri);
+        })
+        .then(
+          function(result) {
+            $scope.scales = result[$scope.analysis.outcome.name];
+          },
+          function(pataviError) {
+            $scope.$root.$broadcast('error', {
+              type: 'PATAVI',
+              message: pataviError.desc
+            });
+          });
     }
 
   };

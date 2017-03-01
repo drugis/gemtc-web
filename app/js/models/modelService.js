@@ -264,7 +264,7 @@ define(['angular', 'lodash'], function(angular, _) {
       return result;
     }
 
-    function buildScalesProblem(analysis, problem, baselineDistribution) {
+    function buildScalesProblem(analysis, baselineDistribution, result) {
       var criteria = {};
       criteria[analysis.outcome.name] = {
         scale: baselineDistribution.scale === 'mean' ? null : [0, 1],
@@ -272,8 +272,11 @@ define(['angular', 'lodash'], function(angular, _) {
         title: analysis.outcome.name,
         unitOfMeasurement: baselineDistribution.scale === 'mean' ? null : 'proportion'
       };
-
-      var alternatives = _.fromPairs(_.map(problem.treatments, function(treatment) {
+      var baselineId;
+      var alternatives = _.fromPairs(_.map(analysis.problem.treatments, function(treatment) {
+        if (baselineDistribution.name === treatment.name) {
+          baselineId = treatment.id;
+        }
         return [treatment.name, {
           alternative: treatment.id,
           title: treatment.name
@@ -281,90 +284,58 @@ define(['angular', 'lodash'], function(angular, _) {
       }));
 
       var performanceTable = _.map(criteria, function(criterion, criterionName) {
-        var result = {
-          criterion: criterionName
+        var mu = _.fromPairs(_.map(analysis.problem.treatments, function(treatment) {
+          var value;
+          if (treatment.id === baselineId) {
+            value = 0.0;
+          } else {
+            value = result.multivariateSummary[baselineId].mu['d.' + baselineId + '.' + treatment.id];
+          }
+          return [treatment.name, value];
+        }));
+
+        var treatmentsSorted = _.sortBy(analysis.problem.treatments, function(treatment) {
+          return treatment.id === baselineId ? -1 : 1;
+        });
+        var names = _.map(treatmentsSorted, function(alternative) {
+          return alternative.name;
+        });
+        var data = _.map(treatmentsSorted, function(treatmentX, idxX) {
+          return _.map(treatmentsSorted, function(treatmentY, idxY) {
+            if (idxX === 0 || idxY === 0) {
+              return 0;
+            }
+            return result.multivariateSummary[baselineId].sigma['d.' + baselineId + '.' + treatmentY.id]['d.' + baselineId + '.' + treatmentX.id];
+          });
+        });
+
+        var returnResult = {
+          criterion: criterionName,
+          performance: {
+            type: result.link === 'identity' ? 'relative-normal' : 'relative-' + result.link + '-normal',
+            parameters: {
+              baseline: baselineDistribution,
+              relative: {
+                type: 'dmnorm',
+                mu: mu,
+                cov: {
+                  rownames: names,
+                  colnames: names,
+                  data: data
+                }
+              }
+            }
+          }
         };
-
-
-
-        return result;
+        return returnResult;
       });
 
       return {
+        method: 'scales',
         criteria: criteria,
         alternatives: alternatives,
         performanceTable: performanceTable
       };
-
-      //out
-      // expectedResult = {
-      //     "criteria": {
-      //       "HAM-D Responders": {
-      //         "criterionUri": "http://trials.drugis.org/concepts/hamd",
-      //         "scale": [
-      //           0,
-      //           1
-      //         ],
-      //         "pvf": null,
-      //         "title": "HAM-D Responders",
-      //         "unitOfMeasurement": "proportion"
-      //       }
-      //     },
-      //     "alternatives": {
-      //       "Paroxetine": {
-      //         "alternative": 260,
-      //         "title": "Paroxetine"
-      //       },
-      //       "Fluoxetine": {
-      //         "alternative": 259,
-      //         "title": "Fluoxetine"
-      //       },
-      //       "Sertraline": {
-      //         "alternative": 258,
-      //         "title": "Sertraline"
-      //       }
-      //     },
-      //     "performanceTable": [{
-      //       "criterion": "HAM-D Responders",
-      //       "performance": {
-      //         "type": "relative-logit-normal",
-      //         "parameters": {
-      //           "baseline": {
-      //             "scale": "log odds",
-      //             "mu": 0.5,
-      //             "sigma": 3,
-      //             "name": "Fluoxetine",
-      //             "type": "dnorm"
-      //           },
-      //           "relative": {
-      //             "type": "dmnorm",
-      //             "mu": {
-      //               "Paroxetine": 0.20157,
-      //               "Fluoxetine": 0,
-      //               "Sertraline": 0.2784
-      //             },
-      //             "cov": {
-      //               "rownames": [
-      //                 "Fluoxetine",
-      //                 "Paroxetine",
-      //                 "Sertraline"
-      //               ],
-      //               "colnames": [
-      //                 "Fluoxetine",
-      //                 "Paroxetine",
-      //                 "Sertraline"
-      //               ],
-      //               "data": [
-      //                 [0, 0, 0],
-      //                 [0, 0.031691, 0.0038127],
-      //                 [0, 0.0038127, 0.031576]
-      //               ]
-      //             }
-      //           }
-      //         }
-      //       }
-      //     }]
-      //   };
     }
 
 

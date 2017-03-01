@@ -23,21 +23,21 @@ try {
   httpsOptions.key = fs.readFileSync(process.env.PATAVI_CLIENT_KEY);
 } catch (e) {
   logger.warn('could not read patavi client key at: ' + process.env.PATAVI_CLIENT_KEY);
-  httpsOptions.key = 'empy-key';
+  httpsOptions.key = 'empty-key';
 }
 
 try {
   httpsOptions.cert = fs.readFileSync(process.env.PATAVI_CLIENT_CRT);
 } catch (e) {
   logger.warn('could not read patavi client certivicate key at: ' + process.env.PATAVI_CLIENT_CRT);
-  httpsOptions.cert = 'empy-client-crt';
+  httpsOptions.cert = 'empty-client-crt';
 }
 
 try {
   httpsOptions.ca = fs.readFileSync(process.env.PATAVI_CA);
 } catch (e) {
   logger.warn('could not read patavi certivicate authority at: ' + process.env.PATAVI_CA);
-  httpsOptions.ca = 'empy-ca';
+  httpsOptions.ca = 'empty-ca';
 }
 
 function getJson(url, callback) {
@@ -100,10 +100,11 @@ function getPataviTasksStatus(taskUrls, callback) {
   });
 }
 
-function createPataviTask(problem, callback) {
-  logger.debug('pataviTaskRepository.createPataviTask');
+function createPataviTask(problem, params, callback) {
+  logger.debug('pataviTaskRepository.createPataviTask; params: ' + params);
+  var paramStr = params ? '?' + params : '';
   var reqOptions = {
-    path: '/task?service=gemtc',
+    path: '/task' + paramStr,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

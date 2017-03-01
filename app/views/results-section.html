@@ -67,26 +67,43 @@
   <div class="row">
     <div class="columns large-12">
       <p>
+        <Strong>Absolute treatment effects</Strong>
+      </p>
+      <p ng-if="!baselineDistribution"><em>Set baseline distribution to calculate absolute effects.</em></p>
+    </div>
+  </div>
+  <div class="row" ng-if="baselineDistribution">
+    <div class="columns large-8">
+      <table id="absolute-effects-table">
+        <caption>Absolute effects table</caption>
+        <thead>
+          <th ng-repeat="treatment in problem.treatments">{{treatment.name}}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td ng-repeat="treatment in problem.treatments"> {{scales[treatment.name]['50%']| number: 3}}
+            ({{scales[treatment.name]['2.5%']| number: 3}},
+             {{scales[treatment.name]['97.5%']| number: 3}})</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
         <strong>Baseline distribution
           <data-inline-help help-key="baseline-distribution"></data-inline-help>
         </strong>
         {{baselineDistribution.scale}} ({{baselineDistribution.name}}) ~ N({{baselineDistribution.mu}},
         {{baselineDistribution.sigma}})
       </p>
-
+    </div>
+    <div class="columns large-4">
+      <button class="clipboard-button" data-clipboard-target="#absolute-effects-table">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
       <button ng-click="openBaselineDistributionModal()">Set Baseline Distribution</button>
-      <table>
-        <thead>
-          <th ng-repeat="treatment in problem.treatments">{{treatment.name}}</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td ng-repeat="treatment in problem.treatments"> {{scales[treatment.name]['50%']}}
-            ({{scales[treatment.name]['2.5%']}},
-             {{scales[treatment.name]['97.5%']}})</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </div>
