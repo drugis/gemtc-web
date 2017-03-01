@@ -19,48 +19,44 @@
 
 <div class="row" ng-if="result">
   <div class="columns large-8 medium-6 small-12">
-
-    <div>
-      <table id="modelFitCopy">
-        <caption>Model fit statistics</caption>
-        <tbody>
-          <tr>
-            <td>Residual deviance (
-              <span style="text-decoration: overline;">D</span><sub>res</sub>)
-              <data-inline-help help-key="residual-deviance"></data-inline-help>
-            </td>
-            <td>{{result.residualDeviance | number : 1}}</td>
-          </tr>
-          <tr>
-            <td>
-              Leverage (p<sub>D</sub>)
-              <data-inline-help help-key="leverage"></data-inline-help>
-            </td>
-            <td>{{result.leverage | number : 1}}</td>
-          </tr>
-          <tr>
-            <td>DIC
-              <data-inline-help help-key="deviance-information-criterion"></data-inline-help>
-            </td>
-            <td>{{result.DIC | number : 1}}</td>
-          </tr>
-          <tr>
-            <td>Number of data points
-              <data-inline-help help-key="number-of-data-points"></data-inline-help>
-            </td>
-            <td>{{result.devianceStatistics.nDataPoints}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div class="columns large-4">
-  <div>
+    <table id="modelFitCopy">
+      <caption>Model fit statistics</caption>
+      <tbody>
+        <tr>
+          <td>Residual deviance (
+            <span style="text-decoration: overline;">D</span><sub>res</sub>)
+            <data-inline-help help-key="residual-deviance"></data-inline-help>
+          </td>
+          <td>{{result.residualDeviance | number : 1}}</td>
+        </tr>
+        <tr>
+          <td>
+            Leverage (p<sub>D</sub>)
+            <data-inline-help help-key="leverage"></data-inline-help>
+          </td>
+          <td>{{result.leverage | number : 1}}</td>
+        </tr>
+        <tr>
+          <td>DIC
+            <data-inline-help help-key="deviance-information-criterion"></data-inline-help>
+          </td>
+          <td>{{result.DIC | number : 1}}</td>
+        </tr>
+        <tr>
+          <td>Number of data points
+            <data-inline-help help-key="number-of-data-points"></data-inline-help>
+          </td>
+          <td>{{result.devianceStatistics.nDataPoints}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="columns large-4">
     <button class="clipboard-button" data-clipboard-target="#modelFitCopy">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
 </div>
-
 <div class="row" ng-if="result">
   <div class="columns large-12 medium-12 small-12">
     <img export file-name="'residualDeviancePlot'" crossOrigin="anonymous" ng-src="{{result.deviancePlot[0].href}}">
@@ -92,7 +88,7 @@
       </tbody>
     </table>
   </div>
-    <div class="columns large-4">
+  <div class="columns large-4">
     <button class="clipboard-button" data-clipboard-target="#residualDeviance1Copy">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>

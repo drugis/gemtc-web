@@ -11,6 +11,5 @@ define(function(require) {
     .controller('CreateNetworkModelController', require('gemtc-web/models/createNetworkModelController'))
     .controller('AddComparisonFunnelPlotController', require('gemtc-web/models/addComparisonFunnelPlotController'))
     .controller('PlotNavigationController', require('gemtc-web/util/graphModalDirective/plotNavigationController'))
-    .controller('SetBaselineDistributionController', require('models/setBaselineDistributionController'))
     ;
 });

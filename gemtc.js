@@ -8,6 +8,7 @@ var express = require('express'),
   userRepository = require('./standalone-app/userRepository'),
   analysisRouter = require('./standalone-app/analysisRouter'),
   modelRouter = require('./standalone-app/modelRouter'),
+  mcdaPataviTaskRouter = require('./standalone-app/mcdaPataviTaskRouter'),
   errorHandler = require('./standalone-app/errorHandler'),
   logger = require('./standalone-app/logger');
 
@@ -76,6 +77,7 @@ module.exports = app
   .use(loginUtils.setXSRFTokenMiddleware)
   .all('*', loginUtils.securityMiddleware)
   .get('/user', loginUtils.emailHashMiddleware)
+  .use('/patavi', mcdaPataviTaskRouter)
   .use('/analyses', analysisRouter)
   .use('/analyses/:analysisId/models', modelRouter)
   .use(express.static('app'))

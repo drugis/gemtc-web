@@ -624,64 +624,141 @@ define(['angular', 'angular-mocks', 'services'], function() {
     describe('buildScalesProblem', function() {
       it('should create a problem for calculating the scales of a dichotomous outcome', function() {
 
-        var expectedResult = {
-          "criteria": {
-            "HAM-D Responders": {
-              "criterionUri": "http://trials.drugis.org/concepts/hamd",
-              "scale": [
-                0,
-                1
-              ],
-              "pvf": null,
-              "title": "HAM-D Responders",
-              "unitOfMeasurement": "proportion"
-            }
+        var analysis = {
+          outcome: {
+            name: 'HAM-D Responders'
           },
-          "alternatives": {
-            "Paroxetine": {
-              "alternative": 260,
-              "title": "Paroxetine"
-            },
-            "Fluoxetine": {
-              "alternative": 259,
-              "title": "Fluoxetine"
-            },
-            "Sertraline": {
-              "alternative": 258,
-              "title": "Sertraline"
-            }
-          },
-          "performanceTable": [{
-            "criterion": "HAM-D Responders",
-            "performance": {
-              "type": "relative-logit-normal",
-              "parameters": {
-                "baseline": {
-                  "scale": "log odds",
-                  "mu": 0.5,
-                  "sigma": 3,
-                  "name": "Fluoxetine",
-                  "type": "dnorm"
+          problem: {
+            treatments: [{
+              id: 260,
+              name: 'Paroxetine'
+            }, {
+              id: 259,
+              name: 'Fluoxetine'
+            }, {
+              id: 258,
+              name: 'Sertraline'
+            }]
+          }
+        };
+
+        var baselineDistribution = {
+          scale: 'log odds',
+          mu: 0.5,
+          sigma: 3,
+          name: 'Fluoxetine',
+          type: 'dnorm'
+        };
+
+        var pataviResult = {
+          link: 'logit',
+          multivariateSummary: {
+            258: {
+              mu: {
+                'd.258.259': -0.2784,
+                'd.258.260': -0.07683
+              },
+              sigma: {
+                'd.258.259': {
+                  'd.258.259': 0.031576,
+                  'd.258.260': 0.027764
                 },
-                "relative": {
-                  "type": "dmnorm",
-                  "mu": {
-                    "Paroxetine": 0.20157,
-                    "Fluoxetine": 0,
-                    "Sertraline": 0.2784
+                'd.258.260': {
+                  'd.258.259': 0.027764,
+                  'd.258.260': 0.055642
+                }
+              }
+            },
+            259: {
+              mu: {
+                'd.259.258': 0.2784,
+                'd.259.260': 0.20157
+              },
+              sigma: {
+                'd.259.258': {
+                  'd.259.258': 0.031576,
+                  'd.259.260': 0.0038127
+                },
+                'd.259.260': {
+                  'd.259.258': 0.0038127,
+                  'd.259.260': 0.031691
+                }
+              }
+            },
+            260: {
+              mu: {
+                'd.260.258': 0.07683,
+                'd.260.259': -0.20157
+              },
+              sigma: {
+                'd.260.258': {
+                  'd.260.258': 0.055642,
+                  'd.260.259': 0.027879
+                },
+                'd.260.259': {
+                  'd.260.258': 0.027879,
+                  'd.260.259': 0.031691
+                }
+              }
+            }
+          }
+        }
+
+        var expectedResult = {
+          method: 'scales',
+          'criteria': {
+            'HAM-D Responders': {
+              'scale': [0, 1],
+              'pvf': null,
+              'title': 'HAM-D Responders',
+              'unitOfMeasurement': 'proportion'
+            }
+          },
+          'alternatives': {
+            'Paroxetine': {
+              'alternative': 260,
+              'title': 'Paroxetine'
+            },
+            'Fluoxetine': {
+              'alternative': 259,
+              'title': 'Fluoxetine'
+            },
+            'Sertraline': {
+              'alternative': 258,
+              'title': 'Sertraline'
+            }
+          },
+          'performanceTable': [{
+            'criterion': 'HAM-D Responders',
+            'performance': {
+              'type': 'relative-logit-normal',
+              'parameters': {
+                'baseline': {
+                  'scale': 'log odds',
+                  'mu': 0.5,
+                  'sigma': 3,
+                  'name': 'Fluoxetine',
+                  'type': 'dnorm'
+                },
+                'relative': {
+                  'type': 'dmnorm',
+                  'mu': {
+                    'Paroxetine': 0.20157,
+                    'Fluoxetine': 0,
+                    'Sertraline': 0.2784
                   },
-                  "cov": {
-                    "rownames": [
-                      "Fluoxetine",
-                      "Paroxetine",
-                      "Sertraline"
+                  'cov': {
+                    'rownames': [
+                      'Fluoxetine',
+                      'Paroxetine',
+                      'Sertraline'
                     ],
-                    "colnames": [
-                      "Fluoxetine",
-                      "Paroxetine",
-                      "Sertraline"
+                    'colnames': [
+                      'Fluoxetine',
+                      'Paroxetine',
+                      'Sertraline'
                     ],
-                    "data": [
+                    'data': [
                       [0, 0, 0],
                       [0, 0.031691, 0.0038127],
                       [0, 0.0038127, 0.031576]
@@ -692,7 +769,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
             }
           }]
         };
-        var result = modelService.buildScalesProblem();
+        var result = modelService.buildScalesProblem(analysis, baselineDistribution, pataviResult);
         expect(result).toEqual(expectedResult);
 
       });

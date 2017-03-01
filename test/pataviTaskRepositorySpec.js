@@ -106,7 +106,7 @@ describe('the patavi task repository', function() {
       sinon.stub(httpsStub, 'request')
         .onCall(0).yields(response)
         .onCall(0).returns({write: function(){}, end: function(){}});
-      pataviTaskRepository.create(problem, checkResponseAndCleanup);
+      pataviTaskRepository.create(problem, 'service=gemtc', checkResponseAndCleanup);
     });
   });
 
