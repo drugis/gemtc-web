@@ -214,7 +214,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
           setBaselineDistribution: function() {
             return function(baseline) {
               $scope.baselineDistribution = baseline;
-              ModelBaselineResource.put($stateParams, baseline);
+              ModelBaselineResource.set($stateParams, baseline);
               resetScales();
             };
           }
