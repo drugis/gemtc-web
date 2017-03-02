@@ -3,7 +3,7 @@ define([], function() {
   var dependencies = ['$resource'];
   var StandaloneModelBaselineResource = function($resource) {
     return $resource('/analyses/:analysisId/models/:modelId/baseline', null, {
-      'put': {
+      'set': {
         method: 'PUT'
       }
     });
