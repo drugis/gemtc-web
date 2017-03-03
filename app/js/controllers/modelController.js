@@ -226,11 +226,11 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
       if (!$scope.baselineDistribution) {
         return;
       }
-      var problem = ModelService.buildScalesProblem($scope.analysis, $scope.baselineDistribution, $scope.result);
+      var problem = ModelService.buildScalesProblem($scope.analysis, $scope.problem, $scope.baselineDistribution, $scope.result);
       $http.post('/patavi', problem)
         .then(function(result) {
           var uri = result.data.uri;
-          if (result.status === 200 && uri) {
+          if (result.status === 201 && uri) {
             return uri;
           }
         }, function(error) {

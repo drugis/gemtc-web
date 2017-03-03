@@ -70,7 +70,7 @@
         <Strong>Absolute treatment effects</Strong>
       </p>
       <p ng-if="!baselineDistribution">
-        <em>Set baseline distribution to calculate absolute effects.</em>
+        <em>No baseline distribution set.</em>
       </p>
     </div>
   </div>
@@ -104,7 +104,7 @@
   </div>
   <div class="row">
     <div class="columns large-12">
-      <button ng-click="openBaselineDistributionModal()">Set Baseline Distribution</button>
+      <button ng-if="!editMode.disableEditing" ng-click="openBaselineDistributionModal()">Set Baseline Distribution</button>
     </div>
   </div>
 </div>
