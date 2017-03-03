@@ -41,10 +41,11 @@ function getPataviTask(request, response) {
         modelRepository.setTaskUrl(modelCache.id, createdUrl, callback);
       },
       function() {
-        response.sendStatus(httpStatus.CREATED);
-        response.json({
-          uri: createdUrlCache
-        });
+        response
+          .status(httpStatus.CREATED)
+          .json({
+            uri: createdUrlCache
+          });
       }
     ],
     function(error) {
@@ -65,9 +66,11 @@ function getMcdaPataviTask(request, response) {
       response.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
       response.end();
     } else {
-      response.json({
-        uri: taskUrl
-      });
+      response
+        .status(httpStatus.CREATED)
+        .json({
+          uri: taskUrl
+        });
     }
   });
 }
