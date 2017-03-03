@@ -41,6 +41,7 @@ function getPataviTask(request, response) {
         modelRepository.setTaskUrl(modelCache.id, createdUrl, callback);
       },
       function() {
+        response.sendStatus(httpStatus.CREATED);
         response.json({
           uri: createdUrlCache
         });

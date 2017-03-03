@@ -627,19 +627,20 @@ define(['angular', 'angular-mocks', 'services'], function() {
         var analysis = {
           outcome: {
             name: 'HAM-D Responders'
-          },
-          problem: {
-            treatments: [{
-              id: 260,
-              name: 'Paroxetine'
-            }, {
-              id: 259,
-              name: 'Fluoxetine'
-            }, {
-              id: 258,
-              name: 'Sertraline'
-            }]
           }
+        };
+
+        var problem = {
+          treatments: [{
+            id: 260,
+            name: 'Paroxetine'
+          }, {
+            id: 259,
+            name: 'Fluoxetine'
+          }, {
+            id: 258,
+            name: 'Sertraline'
+          }]
         };
 
         var baselineDistribution = {
@@ -769,7 +770,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
             }
           }]
         };
-        var result = modelService.buildScalesProblem(analysis, baselineDistribution, pataviResult);
+        var result = modelService.buildScalesProblem(analysis, problem, baselineDistribution, pataviResult);
         expect(result).toEqual(expectedResult);
 
       });

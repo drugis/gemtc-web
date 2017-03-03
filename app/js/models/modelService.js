@@ -264,7 +264,7 @@ define(['angular', 'lodash'], function(angular, _) {
       return result;
     }
 
-    function buildScalesProblem(analysis, baselineDistribution, result) {
+    function buildScalesProblem(analysis, problem, baselineDistribution, result) {
       var criteria = {};
       criteria[analysis.outcome.name] = {
         scale: baselineDistribution.scale === 'mean' ? null : [0, 1],
@@ -273,7 +273,7 @@ define(['angular', 'lodash'], function(angular, _) {
         unitOfMeasurement: baselineDistribution.scale === 'mean' ? null : 'proportion'
       };
       var baselineId;
-      var alternatives = _.fromPairs(_.map(analysis.problem.treatments, function(treatment) {
+      var alternatives = _.fromPairs(_.map(problem.treatments, function(treatment) {
         if (baselineDistribution.name === treatment.name) {
           baselineId = treatment.id;
         }
@@ -284,7 +284,7 @@ define(['angular', 'lodash'], function(angular, _) {
       }));
 
       var performanceTable = _.map(criteria, function(criterion, criterionName) {
-        var mu = _.fromPairs(_.map(analysis.problem.treatments, function(treatment) {
+        var mu = _.fromPairs(_.map(problem.treatments, function(treatment) {
           var value;
           if (treatment.id === baselineId) {
             value = 0.0;
@@ -294,7 +294,7 @@ define(['angular', 'lodash'], function(angular, _) {
           return [treatment.name, value];
         }));
 
-        var treatmentsSorted = _.sortBy(analysis.problem.treatments, function(treatment) {
+        var treatmentsSorted = _.sortBy(problem.treatments, function(treatment) {
           return treatment.id === baselineId ? -1 : 1;
         });
         var names = _.map(treatmentsSorted, function(alternative) {
