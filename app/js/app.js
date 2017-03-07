@@ -111,28 +111,7 @@ define(
           .state('createModel', {
             url: '/analyses/:analysisId/models/createModel',
             templateUrl: 'js/models/createModel.html',
-            controller: 'CreateModelController',
-            resolve: {
-              model: function() {
-                return {
-                  linearModel: 'random',
-                  modelType: {
-                    mainType: 'network'
-                  },
-                  outcomeScale: {
-                    type: 'heuristically'
-                  },
-                  burnInIterations: 5000,
-                  inferenceIterations: 20000,
-                  thinningFactor: 10,
-                  heterogeneityPrior: {
-                    type: 'automatic'
-                  },
-                  treatmentInteraction: 'shared',
-                  leaveOneOut: {}
-                };
-              }
-            }
+            controller: 'CreateModelController'
           })
           .state('refineModel', {
             url: '/analyses/:analysisId/models/:modelId/refineModel',
