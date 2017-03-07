@@ -1,12 +1,28 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
   var dependencies = ['$scope', '$q', '$stateParams', '$state',
-    'ModelResource', 'ModelService', 'AnalysisService', 'ProblemResource', 'model'
+    'ModelResource', 'ModelService', 'AnalysisService', 'ProblemResource'
   ];
   var CreateModelController = function($scope, $q, $stateParams, $state,
-    ModelResource, ModelService, AnalysisService, ProblemResource, model) {
+    ModelResource, ModelService, AnalysisService, ProblemResource) {
 
-    $scope.model = model;
+    $scope.model = {
+      linearModel: 'random',
+      modelType: {
+        mainType: 'network'
+      },
+      outcomeScale: {
+        type: 'heuristically'
+      },
+      burnInIterations: 5000,
+      inferenceIterations: 20000,
+      thinningFactor: 10,
+      heterogeneityPrior: {
+        type: 'automatic'
+      },
+      treatmentInteraction: 'shared',
+      leaveOneOut: {}
+    };
 
     $scope.isTaskTooLong = false;
     $scope.isValidHeterogeneityPrior = true;

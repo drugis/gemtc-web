@@ -26,7 +26,7 @@
               </div>
             </div>
             <div class="small-3 columns">
-              <button ng-hide="loginUserId !== userId || analysis.archived" ng-disabled="!primaryModel" ng-click="$parent.primaryModel = null"
+              <button ng-hide="loginUserId !== userId || analysis.archived" ng-disabled="!primaryModel || analysis.archived" ng-click="$parent.primaryModel = null"
                 class="alert postfix no-padding-left-right" ng-show="!model.isPrimary">Unset</button>
             </div>
           </div>
