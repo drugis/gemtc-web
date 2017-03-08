@@ -4,9 +4,14 @@
     "text": "In GeMTC, an analysis consists of a dataset and any number of models constructed over that dataset. Typically, an analysis will aim to answer a single question, but it may be necessary to create multiple models to answer sub-questions, e.g. whether the model is consistent.",
     "link": "/manual.html#analyses-and-models"
   },
+  "absolute-effects": {
+    "title": "Absolute effects",
+    "text": "The effect of individual treatments on the outcome of interest, for example the incidence of adverse events or change from baseline values of a continuous variable. This is in contrast to relative effects, which represent differences between treatments.",
+    "link": "/manual.html#absolute-effects"
+  },
   "baseline-distribution": {
     "title": "Baseline distribution",
-    "text": "The distribution of the baseline effects, used to calculate the absolute treatment effects from the relative effects",
+    "text": "The distribution of the absolute effect of a treatment that is chosen as the reference (baseline) when calculating absolute effects from relative effects.",
     "link": "/manual.html#absolute-effects"
   },
   "burn-in-iterations": {
