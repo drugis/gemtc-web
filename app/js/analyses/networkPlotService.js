@@ -27,8 +27,8 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       var angle = 2.0 * Math.PI / n;
       var originX = width / 2;
       var originY = width / 2; // use a square area
-      var margin = 200;
-      var radius = originY - margin / 2;
+      var margin = 100;
+      var radius = originY - margin;
       var circleMaxSize = 30;
       var circleMinSize = 5;
       var node = d3.select($(element).get(0));
@@ -54,15 +54,16 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
         drawEdge(svg, edge.from.name, edge.to.name, edge.studies.length, circleDataMap);
       });
 
-      var enter = svg.selectAll('g')
+      var circleAndNameGraph = svg.selectAll('g')
         .data(_.values(circleDataMap))
         .enter()
         .append('g')
+        .attr('class', 'intervention-label')
         .attr('transform', function(d) {
           return 'translate(' + d.cx + ',' + d.cy + ')';
         });
 
-      enter.append('circle')
+      circleAndNameGraph.append('circle')
         .style('fill', 'grey')
         .attr('r', function(d) {
           return d.r;
@@ -77,7 +78,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       }
 
       var cos45 = Math.sqrt(2) * 0.5;
-      enter.append('text')
+      circleAndNameGraph.append('text')
         .attr('dx', function(d) {
           var offset = cos45 * d.r + labelMargin;
           return nearCenter(d) * offset;
@@ -110,6 +111,42 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
         .text(function(d) {
           return d.id;
         });
+
+      circleAndNameGraph
+        .each(wrap, width);
+
+    }
+
+    function wrap(texts, width) {
+      var g = d3.select(this);
+      texts.each(function(textNode) {
+        var text = d3.select(textNode),
+          y = textNode.cy,
+          dy = 0,
+          words = text.text().split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          gx = textNode.cx,
+          maxWidth = text.attr('text-anchor') === 'end' ? gx : width - gx,
+          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+        tspan.text(text);
+        word = words.pop();
+        while (word) {
+          line.push(word);
+          tspan.text(line.join(" "));
+          if (tspan.node().getComputedTextLength() > maxWidth) {
+            line.pop();
+            tspan.text(line.join(" "));
+            line = [word];
+            tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+          }
+          word = words.pop();
+        }
+        var calcwidth = tspan.node().getComputedTextLength();
+        console.log(calcwidth);
+      });
     }
 
     return {
