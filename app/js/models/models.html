@@ -27,7 +27,9 @@
             </div>
             <div class="small-3 columns">
               <button ng-hide="loginUserId !== userId || analysis.archived" ng-disabled="!primaryModel || analysis.archived" ng-click="$parent.primaryModel = null"
-                class="alert postfix no-padding-left-right" ng-show="!model.isPrimary">Unset</button>
+                class="alert postfix" 
+                style="padding-left: 0px; padding-right: 0px; text-align: center;"
+                ng-show="!model.isPrimary">Unset</button>
             </div>
           </div>
         </div>
