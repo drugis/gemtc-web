@@ -4,6 +4,8 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
 
   var NetworkPlotService = function() {
 
+    var LABEL_MARGIN = 5;
+
     function drawEdge(enter, fromId, toId, width, circleData) {
       enter.append('line')
         .attr('x1', circleData[fromId].cx)
@@ -27,7 +29,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       var angle = 2.0 * Math.PI / n;
       var originX = width / 2;
       var originY = width / 2; // use a square area
-      var margin = 100;
+      var margin = 130;
       var radius = originY - margin;
       var circleMaxSize = 30;
       var circleMinSize = 5;
@@ -69,26 +71,19 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
           return d.r;
         });
 
-      var labelMargin = 5;
-      var nearCenterMargin = 20;
-
-      function nearCenter(d) {
-        var delta = d.cx - originX;
-        return delta < -nearCenterMargin ? -1 : (delta > nearCenterMargin ? 1 : 0);
-      }
 
       var cos45 = Math.sqrt(2) * 0.5;
       circleAndNameGraph.append('text')
         .attr('dx', function(d) {
-          var offset = cos45 * d.r + labelMargin;
-          return nearCenter(d) * offset;
+          var offset = cos45 * d.r + LABEL_MARGIN;
+          return nearCenter(d.cx, originX) * offset;
         })
         .attr('dy', function(d) {
-          var offset = (nearCenter(d) === 0 ? d.r : cos45 * d.r) + labelMargin;
+          var offset = (nearCenter(d.cx, originX) === 0 ? d.r : cos45 * d.r) + LABEL_MARGIN;
           return (d.cy >= originY ? offset : -offset);
         })
         .attr('text-anchor', function(d) {
-          switch (nearCenter(d)) {
+          switch (nearCenter(d.cx, originX)) {
             case -1:
               return 'end';
             case 0:
@@ -98,7 +93,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
           }
         })
         .attr('dominant-baseline', function(d) {
-          if (nearCenter(d) !== 0) {
+          if (nearCenter(d.cx, originX) !== 0) {
             return 'central';
           }
           if (d.cy - originY < 0) {
@@ -113,39 +108,53 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
         });
 
       circleAndNameGraph
-        .each(wrap, width);
+        .each(_.partial(wrap, width));
 
     }
 
-    function wrap(texts, width) {
-      var g = d3.select(this);
+
+    function nearCenter(coord, originCoord) {
+      var nearCenterMargin = 20;
+      var delta = coord - originCoord;
+      return delta < -nearCenterMargin ? -1 : (delta > nearCenterMargin ? 1 : 0);
+    }
+
+
+    function wrap(width, graph) {
+      /* jshint validthis: true */
+      var gr = d3.select(this);
+      var texts = gr.select('text');
       texts.each(function(textNode) {
-        var text = d3.select(textNode),
-          y = textNode.cy,
-          dy = 0,
+        var text = d3.select(this),
+          y = 0,
+          dy = parseFloat(text.attr('dy')),
+          dx = parseFloat(text.attr('dx')),
           words = text.text().split(/\s+/).reverse(),
           word,
           line = [],
           lineNumber = 0,
-          lineHeight = 1.1, // ems
+          lineHeight = 17,
           gx = textNode.cx,
-          maxWidth = text.attr('text-anchor') === 'end' ? gx : width - gx,
-          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+          maxWidth = text.attr('text-anchor') === 'end' ? gx - LABEL_MARGIN * 2 : width - gx - LABEL_MARGIN * 2,
+          tspan = text.text(null).append('tspan').attr('dx',dx).attr('x', 0).attr('y', y).attr('dy', dy);
         tspan.text(text);
         word = words.pop();
         while (word) {
           line.push(word);
-          tspan.text(line.join(" "));
+          tspan.text(line.join(' '));
           if (tspan.node().getComputedTextLength() > maxWidth) {
             line.pop();
-            tspan.text(line.join(" "));
+            tspan.text(line.join(' '));
             line = [word];
-            tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+            tspan = text.append('tspan').attr('x', 0).attr('dx',dx).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy).text(word);
           }
           word = words.pop();
         }
-        var calcwidth = tspan.node().getComputedTextLength();
-        console.log(calcwidth);
+        if (nearCenter(graph.cy, width / 2) < 0) {
+          text.attr('transform', function(d) {
+          return 'translate(0, ' + lineNumber * -lineHeight + ')';
+        });
+        }
       });
     }
 
