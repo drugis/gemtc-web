@@ -217,6 +217,9 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
               ModelBaselineResource.set($stateParams, baseline);
               resetScales();
             };
+          },
+          problem: function(){
+            return $scope.problem;
           }
         }
       });
