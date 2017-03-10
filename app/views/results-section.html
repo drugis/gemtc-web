@@ -27,38 +27,41 @@
           <th>Median (95% CrI)</th>
         </tr>
       </thead>
-      <tr>
-        <td>
-          <strong>Direct estimate </strong>
-          <data-inline-help help-key="direct-estimate"></data-inline-help>
-        </td>
-        <td>{{::result.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.summaries.quantiles['d.direct']['2.5%']
-          | number: 3}}, {{::result.summaries.quantiles['d.direct']['97.5%'] | number:
-          3}})
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <strong>Indirect estimate </strong>
-          <data-inline-help help-key="indirect-estimate"></data-inline-help>
-        </td>
-        <td>{{::result.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.summaries.quantiles['d.indirect']['2.5%']
-          | number: 3}}, {{::result.summaries.quantiles['d.indirect']['97.5%'] |
-          number: 3}})</td>
-      </tr>
-      <tr>
-        <td>
-          <strong>Inconsistency factor</strong>
-        </td>
-        <td>{{::result.nodeSplit.diff.quantiles['50%'] | number: 3}} ({{::result.nodeSplit.diff.quantiles['2.5%']
-          | number: 3}}, {{::result.nodeSplit.diff.quantiles['97.5%'] | number: 3}})</td>
-      </tr>
-      <tr>
-        <td>
-          <strong>Inconsistency P-value</strong>
-        </td>
-        <td>{{::result.nodeSplit['incons.p'] | number: 3}}</td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Direct estimate </strong>
+            <data-inline-help help-key="direct-estimate"></data-inline-help>
+          </td>
+          <td>{{::result.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.summaries.quantiles['d.direct']['2.5%']
+            | number: 3}}, {{::result.summaries.quantiles['d.direct']['97.5%'] |
+            number: 3}})
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Indirect estimate </strong>
+            <data-inline-help help-key="indirect-estimate"></data-inline-help>
+          </td>
+          <td>{{::result.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.summaries.quantiles['d.indirect']['2.5%']
+            | number: 3}}, {{::result.summaries.quantiles['d.indirect']['97.5%']
+            | number: 3}})</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Inconsistency factor</strong>
+          </td>
+          <td>{{::result.nodeSplit.diff.quantiles['50%'] | number: 3}} ({{::result.nodeSplit.diff.quantiles['2.5%']
+            | number: 3}}, {{::result.nodeSplit.diff.quantiles['97.5%'] | number:
+            3}})</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Inconsistency P-value</strong>
+          </td>
+          <td>{{::result.nodeSplit['incons.p'] | number: 3}}</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>
@@ -68,7 +71,8 @@
     <div class="columns large-12">
       <p>
         <Strong>Absolute treatment effects
-          <data-inline-help help-key="absolute-effects"></data-inline-help></Strong>
+          <data-inline-help help-key="absolute-effects"></data-inline-help>
+        </Strong>
       </p>
       <p ng-if="!baselineDistribution">
         <em>No baseline distribution set.</em>

@@ -7,9 +7,7 @@
   <div class="row">
     <div class="large-8 columns end">
       <label>Alternative
-        <select
-          ng-model="baselineDistribution.selectedAlternative"
-          ng-options="alternative.name for alternative in alternatives"></select>
+        <select ng-model="baselineDistribution.selectedAlternative" ng-options="alternative.name for alternative in alternatives" ng-change="alternativeSelectionChanged()"></select>
       </label>
     </div>
   </div>
@@ -18,28 +16,57 @@
       <label>Normal distribution ({{baselineDistribution.scale}})</label>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-if="!isModelBaseline || baselineDistribution.scale === 'mean'">
     <div class="large-4 medium-6 columns">
       <label>mean
-        <input
-          type="number"
-          ng-model="baselineDistribution.mu"></label>
+        <input type="number" ng-model="baselineDistribution.mu">
+      </label>
     </div>
     <div class="large-4 medium-6 columns end">
       <label>sd</label>
-      <input
-        type="number"
-        step="0.001"
-        ng-model="baselineDistribution.sigma">
+      <input type="number" step="0.001" ng-model="baselineDistribution.sigma">
     </div>
   </div>
+  <div class="row" ng-if="isModelBaseline && baselineDistribution.scale === 'log odds'">
+    <div class="large-4 medium-6 columns">
+      <label>alpha
+        <input type="number" ng-model="baselineDistribution.alpha">
+      </label>
+    </div>
+    <div class="large-4 medium-6 columns end">
+      <label>beta</label>
+      <input type="number" step="0.001" ng-model="baselineDistribution.beta">
+    </div>
+  </div>
+  <div ng-if="isModelBaseline" class="row" ng-if="true">
+    <div class="columns large-12">
+      <caption>Evidence for baseline alternative</caption>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Study</th>
+            <th>Treatment</th>
+            <th>Performance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="arm in arms">
+            <td>
+              <input type="radio" ng-model="selections.armIdx" ng-value="arm.idx" ng-change="armSelectionChanged()"></input>
+            </td>
+            <td> {{arm.studyName}} </td>
+            <td> {{arm.alternativeName}} </td>
+            <td> {{arm.performance}} </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="row">
     <div class="columns large-12">
-      <button ng-disabled="baselineDistribution.mu === undefined ||
-       baselineDistribution.mu === null ||
-       baselineDistribution.sigma === undefined ||
-       baselineDistribution.sigma === null ||
-       baselineDistribution.sigma < 0" class="button small success" type="submit">Set
+      <button ng-disabled="isInValidBaseline(baselineDistribution)" class="button small success" type="submit">Set
       </button>
     </div>
   </div>
