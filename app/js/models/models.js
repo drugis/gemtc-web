@@ -41,5 +41,9 @@ define(function(require) {
     .directive('nodeSplitDensityPlots', require('models/result/nodeSplitDensityPlotsDirective'))
     .directive('funnelPlot', require('models/funnelPlot/funnelPlotDirective'))
     .directive('comparisonAdjustedFunnelPlot', require('models/comparisonAdjustedFunnelPlot/comparisonAdjustedFunnelPlotDirective'))
-    .directive('metaRegressionCovPlots', require('models/result/metaRegressionCovPlotsDirective'));
+    .directive('metaRegressionCovPlots', require('models/result/metaRegressionCovPlotsDirective'))
+
+    //filters
+    .filter('distributionToStringFilter', require('models/distributionToStringFilter'))
+    ;
 });

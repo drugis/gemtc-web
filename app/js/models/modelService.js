@@ -309,7 +309,7 @@ define(['angular', 'lodash'], function(angular, _) {
           });
         });
 
-        var returnResult = {
+        return {
           criterion: criterionName,
           performance: {
             type: result.link === 'identity' ? 'relative-normal' : 'relative-' + result.link + '-normal',
@@ -327,7 +327,6 @@ define(['angular', 'lodash'], function(angular, _) {
             }
           }
         };
-        return returnResult;
       });
 
       return {
@@ -338,7 +337,70 @@ define(['angular', 'lodash'], function(angular, _) {
       };
     }
 
+    function betaEntryBuilder(alternative, entry, idx) {
+      return {
+        idx: idx,
+        studyName: entry.study,
+        alternativeName: alternative.name,
+        performance: entry.responders + '/' + entry.sampleSize,
+        responders: entry.responders,
+        sampleSize: entry.sampleSize
+      };
+    }
 
+    function tEntryBuilder(alternative, entry, idx) {
+      var stdErr = entry['std.err'] ? entry['std.err'] : entry['std.dev'] / Math.sqrt(entry.sampleSize);
+      return {
+        idx: idx,
+        studyName: entry.study,
+        alternativeName: alternative.name,
+        performance: 'μ: ' + entry.mean + '; SE: ' + stdErr.toPrecision(3) + '; N=' + entry.sampleSize,
+        mu: entry.mean,
+        stdErr: stdErr,
+        sampleSize: entry.sampleSize
+      };
+    }
+
+    function buildBaselineSelectionEvidence(problem, alternatives, scale) {
+      var entryBuilder;
+      if (scale === 'log odds') {
+        entryBuilder = betaEntryBuilder;
+      } else if (scale === 'mean') {
+        entryBuilder = tEntryBuilder;
+      }
+      return _.reduce(alternatives, function(accum, alternative) {
+        var filteredEntries = _.filter(problem.entries, ['treatment', alternative.id]);
+        var evidenceTable;
+
+        evidenceTable = _.map(filteredEntries, _.partial(entryBuilder, alternative));
+        accum[alternative.id] = evidenceTable;
+        return accum;
+      }, {});
+    }
+
+    function isInValidBaseline(baselineDistribution) {
+      if (baselineDistribution.type === 'dbeta-logit') {
+        return (baselineDistribution.alpha === undefined ||
+          baselineDistribution.alpha === null ||
+          baselineDistribution.alpha < 1 ||
+          baselineDistribution.beta === undefined ||
+          baselineDistribution.beta === null ||
+          baselineDistribution.beta < 1);
+      } else if (baselineDistribution.type === 'dnorm') {
+        return (baselineDistribution.mu === undefined ||
+          baselineDistribution.mu === null ||
+          baselineDistribution.sigma === undefined ||
+          baselineDistribution.sigma === null ||
+          baselineDistribution.sigma < 0);
+      } else if (baselineDistribution.type === 'dt') {
+          return (baselineDistribution.mu === undefined ||
+          baselineDistribution.mu === null ||
+          baselineDistribution.stdErr === undefined ||
+          baselineDistribution.stdErr === null ||
+          baselineDistribution.stdErr < 0);
+      }
+      return true; // unknown types are always invalid
+    }
     return {
       cleanModel: cleanModel,
       toFrontEnd: toFrontEnd,
@@ -354,7 +416,9 @@ define(['angular', 'lodash'], function(angular, _) {
       addLevelandProcessData: addLevelandProcessData,
       nameRankProbabilities: nameRankProbabilities,
       selectLevel: selectLevel,
-      buildScalesProblem: buildScalesProblem
+      buildScalesProblem: buildScalesProblem,
+      buildBaselineSelectionEvidence: buildBaselineSelectionEvidence,
+      isInValidBaseline: isInValidBaseline
     };
   };
 

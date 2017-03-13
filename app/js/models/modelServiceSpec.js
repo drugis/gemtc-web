@@ -703,7 +703,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
               }
             }
           }
-        }
+        };
 
         var expectedResult = {
           method: 'scales',
@@ -775,6 +775,234 @@ define(['angular', 'angular-mocks', 'services'], function() {
 
       });
     });
+    describe('buildBaselineSelectionEvidence', function() {
+      it('should build the evidence for dichotomous alternatives', function() {
+        var problem = {
+          entries: [{
+            responders: 20,
+            sampleSize: 50,
+            study: '1',
+            treatment: 0
+          }, {
+            responders: 21,
+            sampleSize: 51,
+            study: '1',
+            treatment: 1
+          }],
+          treatments: [{
+            name: 'parox',
+            id: 0
+          }, {
+            name: 'fluox',
+            id: 1
+          }]
+        };
+        var alternatives = problem.treatments;
+        var scale = 'log odds';
+        var result = modelService.buildBaselineSelectionEvidence(problem, alternatives, scale);
 
+        var expectedResult = {
+          0: [{
+            idx: 0,
+            studyName: problem.entries[0].study,
+            alternativeName: alternatives[0].name,
+            performance: problem.entries[0].responders + '/' + problem.entries[0].sampleSize,
+            responders: problem.entries[0].responders,
+            sampleSize: problem.entries[0].sampleSize
+          }],
+          1: [{
+            idx: 0,
+            studyName: problem.entries[1].study,
+            alternativeName: alternatives[1].name,
+            performance: problem.entries[1].responders + '/' + problem.entries[1].sampleSize,
+            responders: problem.entries[1].responders,
+            sampleSize: problem.entries[1].sampleSize
+          }]
+        };
+
+        expect(result).toEqual(expectedResult);
+      });
+      it('should build the evidence for continuous alternatives', function() {
+        var problem = {
+          entries: [{
+            mean: 20,
+            'std.dev': 1.5,
+            sampleSize: 50,
+            study: '1',
+            treatment: 0
+          }, {
+            mean: 21,
+            'std.dev': 1.5,
+            sampleSize: 51,
+            study: '1',
+            treatment: 1
+          }],
+          treatments: [{
+            name: 'parox',
+            id: 0
+          }, {
+            name: 'fluox',
+            id: 1
+          }]
+        };
+        var alternatives = problem.treatments;
+        var scale = 'mean';
+        var result = modelService.buildBaselineSelectionEvidence(problem, alternatives, scale);
+
+        var expectedResult = {
+          0: [{
+            idx: 0,
+            studyName: problem.entries[0].study,
+            alternativeName: alternatives[0].name,
+            performance: 'μ: ' + problem.entries[0].mean + '; SE: ' + problem.entries[0]['std.dev'] / Math.sqrt(problem.entries[0].sampleSize) + '; N=' + problem.entries[0].sampleSize,
+            mu: problem.entries[0].mean,
+            stdErr: problem.entries[0]['std.dev'] / Math.sqrt(problem.entries[0].sampleSize),
+            sampleSize: problem.entries[0].sampleSize
+          }],
+          1: [{
+            idx: 0,
+            studyName: problem.entries[1].study,
+            alternativeName: alternatives[1].name,
+            performance: 'μ: ' + problem.entries[1].mean + '; SE: ' + problem.entries[1]['std.dev'] / Math.sqrt(problem.entries[1].sampleSize) + '; N=' + problem.entries[1].sampleSize,
+            mu: problem.entries[1].mean,
+            stdErr: problem.entries[1]['std.dev'] / Math.sqrt(problem.entries[1].sampleSize),
+            sampleSize: problem.entries[1].sampleSize
+          }]
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('isInValidBaseline', function() {
+      it('should approve valid beta baseline', function() {
+        var validBaseline = {
+          type: 'dbeta-logit',
+          alpha: 10,
+          beta: 3
+        };
+        expect(modelService.isInValidBaseline(validBaseline)).toBeFalsy();
+      });
+      it('should not approve invalid beta baselines', function() {
+        var invalidBaseline1 = {
+          type: 'dbeta-logit',
+          beta: 3
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline1)).toBeTruthy();
+        var invalidBaseline2 = {
+          type: 'dbeta-logit',
+          alpha: null,
+          beta: 3
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline2)).toBeTruthy();
+        var invalidBaseline3 = {
+          type: 'dbeta-logit',
+          alpha: -23,
+          beta: 3
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline3)).toBeTruthy();
+        var invalidBaseline4 = {
+          type: 'dbeta-logit',
+          alpha: 3
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline4)).toBeTruthy();
+        var invalidBaseline5 = {
+          type: 'dbeta-logit',
+          alpha: 5,
+          beta: null
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline5)).toBeTruthy();
+        var invalidBaseline6 = {
+          type: 'dbeta-logit',
+          alpha: 5,
+          beta: -7
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline6)).toBeTruthy();
+
+      });
+      it('should approve valid t baseline', function() {
+        var validBaseline = {
+          type: 'dt',
+          mu: 10,
+          stdErr: 3
+        };
+        expect(modelService.isInValidBaseline(validBaseline)).toBeFalsy();
+      });
+      it('should not approve invalid t baselines', function() {
+        var invalidBaseline1 = {
+          type: 'dt',
+          mu: null,
+          stdErr: 6
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline1)).toBeTruthy();
+        var invalidBaseline2 = {
+          type: 'dt',
+          stdErr: 6
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline2)).toBeTruthy();
+        var invalidBaseline3 = {
+          type: 'dt',
+          mu: 10,
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline3)).toBeTruthy();
+        var invalidBaseline4 = {
+          type: 'dt',
+          mu: 10,
+          stdErr: null
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline4)).toBeTruthy();
+        var invalidBaseline5 = {
+          type: 'dt',
+          mu: 10,
+          stdErr: -1.123
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline5)).toBeTruthy();
+      });
+
+      it('should approve valid dnorm baseline', function() {
+        var validBaseline = {
+          type: 'dnorm',
+          mu: 10,
+          sigma: 3
+        };
+        expect(modelService.isInValidBaseline(validBaseline)).toBeFalsy();
+      });
+
+      it('should not approve invalid dnorm baselines', function() {
+        var invalidBaseline1 = {
+          type: 'dnorm',
+          mu: null,
+          sigma: 6
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline1)).toBeTruthy();
+        var invalidBaseline2 = {
+          type: 'dnorm',
+          sigma: 6
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline2)).toBeTruthy();
+        var invalidBaseline3 = {
+          type: 'dnorm',
+          mu: 10,
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline3)).toBeTruthy();
+        var invalidBaseline4 = {
+          type: 'dnorm',
+          mu: 10,
+          sigma: null
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline4)).toBeTruthy();
+        var invalidBaseline5 = {
+          type: 'dnorm',
+          mu: 10,
+          sigma: -1.123
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline5)).toBeTruthy();
+      });
+      it('should not approve unknown types', function() {
+        var invalidBaseline = {
+          type: 'nonsense'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline)).toBeTruthy();
+      });
+    });
   });
 });
