@@ -97,8 +97,7 @@
         <strong>Baseline distribution
           <data-inline-help help-key="baseline-distribution"></data-inline-help>
         </strong>
-        {{baselineDistribution.scale}} ({{baselineDistribution.name}}) ~ N({{baselineDistribution.mu}},
-        {{baselineDistribution.sigma}})
+        {{baselineDistribution | distributionToStringFilter}}
       </p>
     </div>
     <div class="columns large-4">

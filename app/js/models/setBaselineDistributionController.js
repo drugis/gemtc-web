@@ -1,11 +1,24 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'AnalysisService',
-    'outcomeWithAnalysis', 'interventionInclusions', 'setBaselineDistribution', 'alternatives', 'problem'
+  var dependencies = ['$scope',
+    '$modalInstance',
+    'AnalysisService',
+    'outcomeWithAnalysis',
+    'interventionInclusions',
+    'setBaselineDistribution',
+    'alternatives',
+    'problem',
+    'ModelService'
   ];
   var SetBaselineDistributionController = function($scope,
-    $modalInstance, AnalysisService, outcomeWithAnalysis, interventionInclusions,
-    setBaselineDistribution, alternatives, problem) {
+    $modalInstance,
+    AnalysisService,
+    outcomeWithAnalysis,
+    interventionInclusions,
+    setBaselineDistribution,
+    alternatives,
+    problem,
+    ModelService) {
     $scope.isModelBaseline = !!problem;
     $scope.selections = {};
     $scope.outcomeWithAnalysis = outcomeWithAnalysis;
@@ -14,10 +27,12 @@ define(['lodash'], function(_) {
 
     $scope.isInValidBaseline = isInValidBaseline;
 
+    var localAlternatives;
+
     if (!interventionInclusions) { // in gemtc there's no inclusions
-      $scope.alternatives = alternatives;
+      localAlternatives = alternatives;
     } else {
-      $scope.alternatives = _.filter(alternatives, function(alternative) {
+      localAlternatives = _.filter(alternatives, function(alternative) {
         return _.find(interventionInclusions, function(interventionInclusion) {
           return interventionInclusion.interventionId === alternative.id;
         });
@@ -25,8 +40,7 @@ define(['lodash'], function(_) {
     }
 
     $scope.baselineDistribution = {
-      selectedAlternative: $scope.alternatives[0],
-      type: 'dnorm'
+      selectedAlternative: localAlternatives[0]
     };
     $scope.baselineDistribution.scale = _.find(AnalysisService.LIKELIHOOD_LINK_SETTINGS, function(setting) {
       return setting.likelihood === outcomeWithAnalysis.selectedModel.likelihood &&
@@ -34,56 +48,43 @@ define(['lodash'], function(_) {
     }).absoluteScale;
 
     if ($scope.isModelBaseline) {
-      $scope.arms = buildArms(problem);
+      $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives, $scope.baselineDistribution.scale);
+      $scope.baselineDistribution.type = $scope.baselineDistribution.scale === 'log odds' ? 'dbeta-logit' : 'dt';
       $scope.selections.armIdx = 0;
       $scope.armSelectionChanged();
+    } else {
+      $scope.baselineDistribution.type = 'dnorm';
     }
 
-    function buildArms(problem) {
-      var filteredEntries = _.filter(problem.entries, ['treatment', $scope.baselineDistribution.selectedAlternative.id]);
+    $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
+      return $scope.arms[alternative.id].length;
+    });
 
-      if ($scope.baselineDistribution.scale === 'log odds') {
-        return _.map(filteredEntries, function(entry, idx) {
-          return {
-            idx: idx,
-            studyName: entry.study,
-            alternativeName: $scope.baselineDistribution.selectedAlternative.name,
-            performance: entry.responders + '/' + entry.sampleSize,
-            responders: entry.responders,
-            sampleSize: entry.sampleSize
-          };
-        });
-      } else if ($scope.baselineDistribution.scale === 'mean') {
-        return _.map(filteredEntries, function(entry, idx) {
-          return {
-            idx: idx,
-            studyName: entry.study,
-            alternativeName: $scope.baselineDistribution.selectedAlternative.name,
-            performance: 'μ: ' + entry.mean + ' / σ: ' + entry['std.dev'],
-            mu: entry.mean,
-            sigma: entry['std.dev'],
-            sampleSize: entry.sampleSize
-          };
-        });
-      }
+    function isInValidBaseline(baselineDistribution) {
+      return ModelService.isInValidBaseline(baselineDistribution);
     }
 
     function armSelectionChanged() {
-      var selectedArm = $scope.arms[$scope.selections.armIdx];
+      var selectedArm = $scope.arms[$scope.baselineDistribution.selectedAlternative.id][$scope.selections.armIdx];
       var newBaselineDistribution = {
         selectedAlternative: $scope.baselineDistribution.selectedAlternative,
         scale: $scope.baselineDistribution.scale,
         name: selectedArm.alternativeName
 
       };
-      if ($scope.baselineDistribution.scale === 'log odds') {
+      if ($scope.baselineDistribution.type === 'dbeta-logit') {
         newBaselineDistribution.alpha = selectedArm.responders + 1;
         newBaselineDistribution.beta = selectedArm.sampleSize - selectedArm.responders + 1;
         newBaselineDistribution.type = 'dbeta-logit';
-      } else if ($scope.baselineDistribution.scale === 'mean') {
+      } else if ($scope.baselineDistribution.type === 'dnorm') {
         newBaselineDistribution.mu = selectedArm.mu;
         newBaselineDistribution.sigma = selectedArm.sigma;
         newBaselineDistribution.type = 'dnorm';
+      } else if ($scope.baselineDistribution.type === 'dt') {
+        newBaselineDistribution.mu = selectedArm.mu;
+        newBaselineDistribution.stdErr = selectedArm.stdErr;
+        newBaselineDistribution.dof = selectedArm.sampleSize - 1;
+        newBaselineDistribution.type = 'dt';
       } else {
         return;
       }
@@ -91,29 +92,8 @@ define(['lodash'], function(_) {
     }
 
 
-    function isInValidBaseline(baselineDistribution) {
-      if (baselineDistribution.scale === 'log odds') {
-        return (baselineDistribution.alpha === undefined ||
-          baselineDistribution.alpha === null ||
-          baselineDistribution.alpha < 1 ||
-          baselineDistribution.beta === undefined ||
-          baselineDistribution.beta === null ||
-          baselineDistribution.beta < 1);
-      } else if (baselineDistribution.scale === 'mean') {
-        return (baselineDistribution.mu === undefined ||
-          baselineDistribution.mu === null ||
-          baselineDistribution.sigma === undefined ||
-          baselineDistribution.sigma === null ||
-          baselineDistribution.sigma < 0);
-      } else {
-        return true;
-      }
-
-    }
-
     function alternativeSelectionChanged() {
       if ($scope.isModelBaseline) {
-        $scope.arms = buildArms(problem);
         $scope.selections.armIdx = 0;
         $scope.armSelectionChanged();
       }
