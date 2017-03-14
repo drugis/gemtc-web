@@ -14,7 +14,7 @@
   </div>
   <div class="row">
     <div class="large-12 columns end">
-      <label>{{baselineDistribution.type}} distribution ({{baselineDistribution.scale}})</label>
+      <label>{{distributionName}} distribution ({{baselineDistribution.scale}})</label>
     </div>
   </div>
   <div class="row" ng-if="!isModelBaseline">
@@ -63,9 +63,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="arm in arms[baselineDistribution.selectedAlternative.id]">
+          <tr style="cursor:pointer" ng-click="selections.armIdx = arm.idx; armSelectionChanged()" ng-repeat="arm in arms[baselineDistribution.selectedAlternative.id]">
             <td>
-              <input type="radio" ng-model="selections.armIdx" ng-value="arm.idx" ng-change="armSelectionChanged()"></input>
+              <input type="radio" style="margin-bottom:0; vertical-align: middle;" ng-model="selections.armIdx" ng-value="arm.idx" ng-change="armSelectionChanged()"></input>
             </td>
             <td> {{arm.studyName}} </td>
             <td> {{arm.alternativeName}} </td>
