@@ -50,15 +50,17 @@ define(['lodash'], function(_) {
     if ($scope.isModelBaseline) {
       $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives, $scope.baselineDistribution.scale);
       $scope.baselineDistribution.type = $scope.baselineDistribution.scale === 'log odds' ? 'dbeta-logit' : 'dt';
+      $scope.distributionName = $scope.baselineDistribution.scale === 'log odds' ? 'Beta' : 'Student\'s t';
       $scope.selections.armIdx = 0;
       $scope.armSelectionChanged();
+      $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
+        return $scope.arms[alternative.id].length;
+      });
     } else {
       $scope.baselineDistribution.type = 'dnorm';
+      $scope.distributionName = 'Normal';
+      $scope.filteredAlternatives = localAlternatives;
     }
-
-    $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
-      return $scope.arms[alternative.id].length;
-    });
 
     function isInValidBaseline(baselineDistribution) {
       return ModelService.isInValidBaseline(baselineDistribution);
