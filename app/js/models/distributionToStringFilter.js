@@ -13,7 +13,8 @@ define([], function() {
       };
       var parameters = {
         'dbeta-logit': distribution.alpha + ', ' + distribution.beta,
-        dnorm: distribution.mu + ', ' + distribution.sigma
+        dnorm: distribution.mu + ', ' + distribution.sigma,
+        dt: '<sub>' + distribution.dof + '</sub>'
       };
 
       return distribution.scale + ' (' + distribution.name + ') ~ ' +
