@@ -46,7 +46,7 @@ define(['angular', 'angular-mocks'], function() {
         type: 'dt',
         name: 'Sertraline',
         mu: 5,
-        sigma: 2
+        stdErr: 2
       };
       var expectedResult = 'mean (Sertraline) ~ t(100, 5, 2)';
       var result = distributionToStringFilter(tDistribution);

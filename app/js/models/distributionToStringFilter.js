@@ -14,7 +14,7 @@ define([], function() {
       var parameters = {
         'dbeta-logit': distribution.alpha + ', ' + distribution.beta,
         dnorm: distribution.mu + ', ' + distribution.sigma,
-        dt: distribution.dof + ', ' + distribution.mu + ', ' + distribution.sigma
+        dt: distribution.dof + ', ' + distribution.mu + ', ' + distribution.stdErr
       };
 
       return distribution.scale + ' (' + distribution.name + ') ~ ' +
