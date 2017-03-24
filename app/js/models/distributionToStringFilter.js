@@ -3,7 +3,7 @@ define([], function() {
   var dependencies = [];
   var DistributionToStringFilter = function() {
     return function(distribution) {
-      if (!distribution) {
+      if(!distribution) {
         return undefined;
       }
       var distributions = {
@@ -12,14 +12,14 @@ define([], function() {
         dt: 't'
       };
       var parameters = {
-        'dbeta-logit': '(' + distribution.alpha + ', ' + distribution.beta + ')',
-        dnorm: '(' + distribution.mu + ', ' + distribution.sigma + ')',
-        dt: '<sub>' + distribution.dof + '</sub>'
+        'dbeta-logit': distribution.alpha + ', ' + distribution.beta,
+        dnorm: distribution.mu + ', ' + distribution.sigma,
+        dt: distribution.dof + ', ' + distribution.mu + ', ' + distribution.sigma
       };
 
       return distribution.scale + ' (' + distribution.name + ') ~ ' +
         distributions[distribution.type] +
-        parameters[distribution.type];
+        '(' + parameters[distribution.type] + ')';
     };
   };
   return dependencies.concat(DistributionToStringFilter);
