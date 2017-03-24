@@ -2,7 +2,6 @@
 define(['angular', 'angular-mocks'], function() {
   describe('The distribution to string filter', function() {
     var distributionToStringFilter;
-    var measurementMomentService;
 
     beforeEach(module('gemtc.models'));
 
@@ -27,7 +26,7 @@ define(['angular', 'angular-mocks'], function() {
       expect(result).toBe(expectedResult);
     });
 
-    it('should render a normal distribution', function(){
+    it('should render a normal distribution', function() {
       var normalDistribution = {
         mu: 64,
         sigma: 1.5,
@@ -38,6 +37,18 @@ define(['angular', 'angular-mocks'], function() {
       var expectedResult = 'mean (Sertraline) ~ N(64, 1.5)';
       var result = distributionToStringFilter(normalDistribution);
       expect(result).toBe(expectedResult);
+    });
+
+    it('should render a student\'s t distribution', function() {
+      var tDistribution = {
+        dof: 100,
+        scale: 'mean',
+        type: 'dt',
+        name: 'Sertraline'
+      };
+      var expectedResult = 'mean (Sertraline) ~ t<sub>100</sub>';
+      var result = distributionToStringFilter(tDistribution);
+      expect(result).toEqual(expectedResult);
     });
   });
 });
