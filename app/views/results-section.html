@@ -97,7 +97,7 @@
         <strong>Baseline distribution
           <data-inline-help help-key="baseline-distribution"></data-inline-help>
         </strong>
-        {{baselineDistribution | distributionToStringFilter}}
+        <span ng-bind-html="baselineDistribution | distributionToStringFilter"></span>
       </p>
     </div>
     <div class="columns large-4">

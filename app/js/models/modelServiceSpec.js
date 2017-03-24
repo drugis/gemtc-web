@@ -438,7 +438,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
           to: {
             name: 'sertra'
           }
-        }
+        };
         var nodeSplitOptions = [option1, option2];
         var expectedResult = [{
           title: 'nodesplit base (parox - fluox)',
@@ -854,7 +854,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
             idx: 0,
             studyName: problem.entries[0].study,
             alternativeName: alternatives[0].name,
-            performance: 'μ: ' + problem.entries[0].mean + '; SE: ' + problem.entries[0]['std.dev'] / Math.sqrt(problem.entries[0].sampleSize) + '; N=' + problem.entries[0].sampleSize,
+            performance: 'μ: ' + problem.entries[0].mean + '; SE: ' + (problem.entries[0]['std.dev'] / Math.sqrt(problem.entries[0].sampleSize)).toPrecision(3) + '; N=' + problem.entries[0].sampleSize,
             mu: problem.entries[0].mean,
             stdErr: problem.entries[0]['std.dev'] / Math.sqrt(problem.entries[0].sampleSize),
             sampleSize: problem.entries[0].sampleSize
@@ -863,7 +863,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
             idx: 0,
             studyName: problem.entries[1].study,
             alternativeName: alternatives[1].name,
-            performance: 'μ: ' + problem.entries[1].mean + '; SE: ' + problem.entries[1]['std.dev'] / Math.sqrt(problem.entries[1].sampleSize) + '; N=' + problem.entries[1].sampleSize,
+            performance: 'μ: ' + problem.entries[1].mean + '; SE: ' + (problem.entries[1]['std.dev'] / Math.sqrt(problem.entries[1].sampleSize)).toPrecision(3) + '; N=' + problem.entries[1].sampleSize,
             mu: problem.entries[1].mean,
             stdErr: problem.entries[1]['std.dev'] / Math.sqrt(problem.entries[1].sampleSize),
             sampleSize: problem.entries[1].sampleSize
