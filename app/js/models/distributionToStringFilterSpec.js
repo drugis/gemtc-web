@@ -46,9 +46,9 @@ define(['angular', 'angular-mocks'], function() {
         type: 'dt',
         name: 'Sertraline',
         mu: 5,
-        stdErr: 2
+        stdErr: 2.32
       };
-      var expectedResult = 'mean (Sertraline) ~ t(100, 5, 2)';
+      var expectedResult = 'mean (Sertraline) ~ t(100, 5, 2.32)';
       var result = distributionToStringFilter(tDistribution);
       expect(result).toEqual(expectedResult);
     });
