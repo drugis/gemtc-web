@@ -79,6 +79,9 @@ define(['angular', 'lodash'], function(angular, _) {
       if (armData.hasOwnProperty('std.dev')) {
         evidence.stdDev = armData['std.dev'];
       }
+      if (armData.hasOwnProperty('std.err')) {
+        evidence.stdErr = armData['std.err'];
+      }
       return evidence;
     }
 
