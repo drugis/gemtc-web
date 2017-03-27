@@ -1,12 +1,13 @@
 {
   "name": "gemtc-web",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "homepage": "http://drugis.org/software/addis2/",
   "authors": [
     "Connor Stroomberg <c.stroomberg@gmail.com>",
     "Gert van Valkenhoef <g.h.m.van.valkenhoef@rug.nl>",
     "Joël Kuiper",
-    "Daan Reid <osmosisch@gmail.com>"
+    "Daan Reid <osmosisch@gmail.com>",
+    "Joris de Keijser"
   ],
   "description": "User interface for evidence synthesis based on the gemtc R package and Patavi",
   "main": "/app/js/main.js",
