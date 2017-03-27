@@ -43,9 +43,10 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       var circleDataMap = {};
 
       _.each(network.interventions, function(intervention, i) {
+        var sampleSize = intervention.sampleSize ? intervention.sampleSize : 0;
         var circleDatum = {
           id: intervention.name,
-          r: circleMinSize + ((circleMaxSize - circleMinSize) * tanh(intervention.sampleSize / 10000)),
+          r: circleMinSize + ((circleMaxSize - circleMinSize) * tanh(sampleSize / 10000)),
           cx: originX - radius * Math.cos(angle * i),
           cy: originY + radius * Math.sin(angle * i)
         };

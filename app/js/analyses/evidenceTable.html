@@ -10,9 +10,10 @@
           </th>
           <th rowspan="2" class="large-3">Treatment</th>
           <th rowspan="2" ng-show="outcomeType === 'dichotomous'" class="large-2">Subjects with outcome</th>
-          <th rowspan="2" ng-show="outcomeType === 'continuous'" class="large-1">&mu;</th>
-          <th rowspan="2" ng-show="outcomeType === 'continuous'" class="large-1">&sigma;</th>
-          <th rowspan="2" class="large-1">N</th>
+          <th rowspan="2" ng-show="outcomeType === 'continuous' && showMean" class="large-1">&mu;</th>
+          <th rowspan="2" ng-show="outcomeType === 'continuous' && showStdDev" class="large-1">&sigma;</th>
+          <th rowspan="2" ng-show="outcomeType === 'continuous' && showStdErr" class="large-1">Standard error</th>
+          <th rowspan="2" class="large-1" ng-show="showSampleSize">N</th>
         </tr>
         <tr>
           <th ng-repeat="covariate in tableRows[0].covariatesColumns">{{covariate.headerTitle}}</th>
@@ -26,19 +27,22 @@
           <td ng-repeat="covariate in treatment.covariatesColumns" rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}" style="vertical-align:top" class="text-center">
             {{covariate.data}}
           </td>
-          <td >
+          <td>
             {{treatment.treatmentTitle}}
           </td>
           <td class="text-center" ng-show="outcomeType === 'dichotomous'">
             {{treatment.evidence.responders}}
           </td>
-          <td class="text-center" ng-show="outcomeType === 'continuous'">
+          <td class="text-center" ng-show="outcomeType === 'continuous'  && showMean">
             {{treatment.evidence.mean}}
-          </td class="text-center">
-          <td ng-show="outcomeType === 'continuous'">
+          </td>
+          <td class="text-center" ng-show="outcomeType === 'continuous'  && showStdDev">
             {{treatment.evidence.stdDev}}
           </td>
-          <td class="text-center" >
+          <td class="text-center" ng-show="outcomeType === 'continuous'  && showStdErr">
+            {{treatment.evidence.stdErr}}
+          </td>
+          <td class="text-center" ng-show="showSampleSize">
             {{treatment.evidence.sampleSize}}
           </td>
 

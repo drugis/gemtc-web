@@ -12,7 +12,6 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     }));
 
     describe('studyMapToStudyArray', function() {
-
       var studyMap = {
         'Study1': {
           arms: {
@@ -65,7 +64,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
             responders: 10,
             sampleSize: 20,
             mean: 5.5,
-            'std.dev': 0.001
+            'std.dev': 0.001,
+            'std.err': 0.002
           }
         }, {
           title: 'arm2',
@@ -88,12 +88,18 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
         evidenceRows = evidenceTableService.studyListToEvidenceRows(studyList);
       });
 
-      it('create a list of evidenceRows from a list of study objects', function() {
+      it('should create a list of evidenceRows from a list of study objects', function() {
         expect(evidenceRows.length).toEqual(3);
-        expect(evidenceRows[0].studyTitle).toBeDefined();
-        expect(evidenceRows[0].studyRowSpan).toBeDefined();
-        expect(evidenceRows[0].treatmentTitle).toBeDefined();
-        expect(evidenceRows[0].evidence).toBeDefined();
+        expect(evidenceRows[0].studyTitle).toBe(studyList[0].title);
+        expect(evidenceRows[0].studyRowSpan).toBe(2);
+        expect(evidenceRows[0].treatmentTitle).toBe(studyList[0].arms[0].title);
+        expect(evidenceRows[0].evidence).toEqual({
+          responders: 10,
+          sampleSize: 20,
+          mean: 5.5,
+          stdDev: 0.001,
+          stdErr: 0.002
+        });
         expect(evidenceRows[0].showStudyColumn).toBeDefined();
 
         expect(evidenceRows[0].evidence.responders).toEqual(10);

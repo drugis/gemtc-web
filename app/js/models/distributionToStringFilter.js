@@ -1,5 +1,8 @@
 'use strict';
 define([], function() {
+  function format3Precision(number) {
+    return parseFloat(number.toPrecision(3));
+  }
   var dependencies = [];
   var DistributionToStringFilter = function() {
     return function(distribution) {
@@ -16,11 +19,11 @@ define([], function() {
           break;
         case 'dnorm':
           distributionLabel = 'N';
-          parameterString = distribution.mu + ', ' + distribution.sigma;
+          parameterString = format3Precision(distribution.mu) + ', ' + format3Precision(distribution.sigma);
           break;
         case 'dt':
           distributionLabel = 't';
-          parameterString = distribution.dof + ', ' + distribution.mu + ', ' + distribution.stdErr.toPrecision(3);
+          parameterString = distribution.dof + ', ' + format3Precision(distribution.mu) + ', ' + format3Precision(distribution.stdErr);
       }
 
       return distribution.scale + ' (' + distribution.name + ') ~ ' +

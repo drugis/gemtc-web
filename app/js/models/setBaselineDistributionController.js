@@ -49,8 +49,18 @@ define(['lodash'], function(_) {
 
     if ($scope.isModelBaseline) {
       $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives, $scope.baselineDistribution.scale);
-      $scope.baselineDistribution.type = $scope.baselineDistribution.scale === 'log odds' ? 'dbeta-logit' : 'dt';
-      $scope.distributionName = $scope.baselineDistribution.scale === 'log odds' ? 'Beta' : 'Student\'s t';
+      $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
+        return _.find(armList, function(arm) {
+          return arm.sampleSize === undefined;
+        });
+      });
+      if ($scope.isMissingSampleSize) {
+        $scope.baselineDistribution.type = 'dnorm';
+        $scope.distributionName = 'Normal';
+      } else {
+        $scope.baselineDistribution.type = $scope.baselineDistribution.scale === 'log odds' ? 'dbeta-logit' : 'dt';
+        $scope.distributionName = $scope.baselineDistribution.scale === 'log odds' ? 'Beta' : 'Student\'s t';
+      }
       $scope.selections.armIdx = 0;
       $scope.armSelectionChanged();
       $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
@@ -80,7 +90,7 @@ define(['lodash'], function(_) {
         newBaselineDistribution.type = 'dbeta-logit';
       } else if ($scope.baselineDistribution.type === 'dnorm') {
         newBaselineDistribution.mu = selectedArm.mu;
-        newBaselineDistribution.sigma = selectedArm.sigma;
+        newBaselineDistribution.sigma = $scope.isMissingSampleSize ? selectedArm.stdErr : selectedArm.sigma;
         newBaselineDistribution.type = 'dnorm';
       } else if ($scope.baselineDistribution.type === 'dt') {
         newBaselineDistribution.mu = selectedArm.mu;
