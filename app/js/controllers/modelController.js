@@ -151,6 +151,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
         $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
 
         $scope.result = prefixPlots(result, $scope.taskUri);
+        getTaskDetails($scope.taskUri); // refresh task to get script uri for sure
         if (problem.treatments && problem.treatments.length > 0) {
           $scope.selectedBaseline = problem.treatments[0];
         }
