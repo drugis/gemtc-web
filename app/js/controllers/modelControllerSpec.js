@@ -40,7 +40,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
 
     beforeEach(module('gemtc.controllers'));
 
-    beforeEach(inject(function($rootScope, $controller, $q) {
+    beforeEach(inject(function($rootScope, $controller, $q, $httpBackend) {
       scope = $rootScope;
       scope.$parent = {
         analysis: {
@@ -117,6 +117,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       });
       modelserviceMock.addLevelandProcessData.and.returnValue([]);
       modelserviceMock.selectLevel.and.returnValue({});
+
+      $httpBackend.when('GET', mockPataviTaskId.uri).respond('foo');
+
       $controller('ModelController', {
         $scope: scope,
         $stateParams: mockStateParams,
