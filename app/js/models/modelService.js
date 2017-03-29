@@ -369,7 +369,7 @@ define(['angular', 'lodash'], function(angular, _) {
         entryBuilder = tEntryBuilder;
       }
       return _.reduce(alternatives, function(accum, alternative) {
-        var filteredEntries = _.filter(problem.entries, ['treatment', alternative.id]);
+        var filteredEntries = _.sortBy(_.filter(problem.entries, ['treatment', alternative.id]), 'study');
         var evidenceTable;
 
         evidenceTable = _.map(filteredEntries, _.partial(entryBuilder, alternative));
