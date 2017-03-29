@@ -4,7 +4,7 @@
     <progressbar ng-hide="result" value="progress.percentage"></progressbar>
     <div ng-if="result" style="padding-top: 1rem;">
       <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 "
-      class="row">Go to node-split overview</a>
+        class="row">Go to node-split overview</a>
       <div class="panel callout">
         <h5>
           <strong>Model settings</strong>
@@ -155,8 +155,10 @@
         </table>
         <button ng-if="!editMode.disableEditing" ng-click="goToRefineModel()">Refine model</button>
         <button ng-click="goToModelData()">Get model data</button>
-        <button ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R script</button>
-        <div ng-if="!taskInfo._links.script">Script not available for models from before 29-03-2017</div>
+        <button ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R script{{!taskInfo._links.script ? '*' : ''}}</button>
+        <div ng-if="!taskInfo._links.script">
+          <em>*Script not available for models from before 29-03-2017</em>
+        </div>
       </div>
       <!-- end callout panel -->
     </div>
