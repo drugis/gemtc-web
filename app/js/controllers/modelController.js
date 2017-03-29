@@ -230,7 +230,14 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
             };
           },
           problem: function() {
-            return $scope.problem;
+            if($scope.model.sensitivity && $scope.model.sensitivity.omittedStudy) {
+              return {
+                entries: _.reject($scope.problem.entries, ['study', $scope.model.sensitivity.omittedStudy]),
+                treatments: $scope.problem.treatments
+              };
+            } else {
+              return $scope.problem;
+            }
           }
         }
       });
