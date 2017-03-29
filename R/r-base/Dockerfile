@@ -17,5 +17,5 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-rglpk
 
 # RUN R -e 'install.packages("gemtc", repos="http://cran.rstudio.com/"); if (!require("gemtc")) quit(save="no", status=8)'
 COPY gemtc_0.8-2.tar.gz gemtc_0.8.tar.gz
-# RUN R -e 'install.packages("gemtc_0.8.tar.gz", repos=NULL, type="source"); if (!require("gemtc")) quit(save="no", status=8)'
+RUN R -e 'install.packages("gemtc_0.8.tar.gz", repos=NULL, type="source"); if (!require("gemtc")) quit(save="no", status=8)'
 
