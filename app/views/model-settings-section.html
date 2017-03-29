@@ -154,6 +154,8 @@
           </tr>
         </table>
         <button ng-if="!editMode.disableEditing" ng-click="goToRefineModel()">Refine model</button>
+        <button ng-click="goToModelData()">Get model data</button>
+        <button ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R script</button>
       </div>
       <!-- end callout panel -->
     </div>

@@ -1,12 +1,12 @@
 'use strict';
 define(['lodash', 'clipboard'], function(_, Clipboard) {
-  var dependencies = ['$scope', '$q', '$http', '$modal', '$state', '$stateParams', 'gemtcRootPath', 'ModelResource', 'ModelBaselineResource',
+  var dependencies = ['$scope', '$q', '$http', '$modal', '$state', '$stateParams', '$window', 'gemtcRootPath', 'ModelResource', 'ModelBaselineResource',
     'FunnelPlotResource', 'PataviService',
     'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
     'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService',
     'ResultsPlotService'
   ];
-  var ModelController = function($scope, $q, $http, $modal, $state, $stateParams, gemtcRootPath, ModelResource, ModelBaselineResource,
+  var ModelController = function($scope, $q, $http, $modal, $state, $stateParams, $window, gemtcRootPath, ModelResource, ModelBaselineResource,
     FunnelPlotResource, PataviService,
     RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, ModelService,
     DiagnosticsService, AnalysisService, DevianceStatisticsService, MetaRegressionService,
@@ -33,7 +33,9 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;
     $scope.openBaselineDistributionModal = openBaselineDistributionModal;
+    $scope.goToModelData = goToModelData;
     $scope.goToRefineModel = goToRefineModel;
+    $scope.goToRScript = goToRScript;
     $scope.selectedBaseline = undefined;
     $scope.stateParams = $stateParams;
     var clipboard = new Clipboard('.clipboard-button');
@@ -46,6 +48,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
       .$promise
       .then(getTaskInfo)
       .then(getTaskUrl)
+      .then(getTaskDetails)
       .then(PataviService.listen)
       .then(pataviRunSuccessCallback,
         function(pataviError) {
@@ -72,6 +75,13 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     function getTaskUrl(taskInfo) {
       $scope.taskUri = taskInfo.uri;
       return taskInfo.uri;
+    }
+
+    function getTaskDetails(taskUrl) {
+      $http.get(taskUrl).then(function(response){
+        $scope.taskInfo = response.data;
+      });
+      return taskUrl;
     }
 
     function openRunLengthDialog() {
@@ -218,7 +228,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
               resetScales();
             };
           },
-          problem: function(){
+          problem: function() {
             return $scope.problem;
           }
         }
@@ -258,6 +268,12 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
           });
     }
 
+    function goToModelData(){
+      $window.open($scope.taskInfo._links.task.href, '_blank');
+    }
+    function goToRScript(){
+      $window.open($scope.taskInfo._links.script.href, '_blank');
+    }
   };
   return dependencies.concat(ModelController);
 });
