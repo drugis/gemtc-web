@@ -854,18 +854,18 @@ define(['angular', 'angular-mocks', 'services'], function() {
             idx: 0,
             studyName: problem.entries[0].study,
             alternativeName: alternatives[0].name,
-            performance: 'μ: ' + problem.entries[0].mean + '; SE: ' + (problem.entries[0]['std.dev'] / Math.sqrt(problem.entries[0].sampleSize)).toPrecision(3) + '; N=' + problem.entries[0].sampleSize,
+            performance: 'μ: ' + problem.entries[0].mean + '; σ: ' + problem.entries[0]['std.dev'].toPrecision(3) + '; N=' + problem.entries[0].sampleSize,
             mu: problem.entries[0].mean,
-            stdErr: problem.entries[0]['std.dev'] / Math.sqrt(problem.entries[0].sampleSize),
+            sigma: problem.entries[0]['std.dev'],
             sampleSize: problem.entries[0].sampleSize
           }],
           1: [{
             idx: 0,
             studyName: problem.entries[1].study,
             alternativeName: alternatives[1].name,
-            performance: 'μ: ' + problem.entries[1].mean + '; SE: ' + (problem.entries[1]['std.dev'] / Math.sqrt(problem.entries[1].sampleSize)).toPrecision(3) + '; N=' + problem.entries[1].sampleSize,
+            performance: 'μ: ' + problem.entries[1].mean + '; σ: ' + problem.entries[1]['std.dev'].toPrecision(3) + '; N=' + problem.entries[1].sampleSize,
             mu: problem.entries[1].mean,
-            stdErr: problem.entries[1]['std.dev'] / Math.sqrt(problem.entries[1].sampleSize),
+            sigma: problem.entries[1]['std.dev'],
             sampleSize: problem.entries[1].sampleSize
           }]
         };
@@ -923,7 +923,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         var validBaseline = {
           type: 'dt',
           mu: 10,
-          stdErr: 3
+          sigma: 3
         };
         expect(modelService.isInValidBaseline(validBaseline)).toBeFalsy();
       });
