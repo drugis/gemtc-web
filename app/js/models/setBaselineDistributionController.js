@@ -94,7 +94,11 @@ define(['lodash'], function(_) {
         newBaselineDistribution.type = 'dnorm';
       } else if ($scope.baselineDistribution.type === 'dt') {
         newBaselineDistribution.mu = selectedArm.mu;
-        newBaselineDistribution.stdErr = selectedArm.stdErr;
+        if($scope.isMissingSampleSize){
+          newBaselineDistribution.stdErr = selectedArm.stdErr;
+        } else{
+          newBaselineDistribution.sigma = selectedArm.sigma;
+        }
         newBaselineDistribution.dof = selectedArm.sampleSize - 1;
         newBaselineDistribution.type = 'dt';
       } else {
