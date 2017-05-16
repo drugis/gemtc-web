@@ -400,7 +400,7 @@ gemtc <- function(params) {
     if (!is.null(params[['outcomeScale']])) {
       mtc.model.params <- c(mtc.model.params, list('om.scale' = params[['outcomeScale']]))
     }
-    if(!is.null(params[['sensitivity']]) && 'adjustmentVector' %in% names(params[['sensitivity']])) {
+    if(!is.null(params[['sensitivity']]) && 'adjustmentFactor' %in% names(params[['sensitivity']])) {
       mtc.model.params <- c(mtc.model.params, list(powerAdjust="powerAdjust"))
     }
     if(modelType == 'node-split') {
