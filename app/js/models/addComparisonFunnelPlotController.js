@@ -8,6 +8,9 @@ define(['lodash'], function(_) {
     $scope.comparisons = buildComparisons();
     $scope.savePlot = savePlot;
     $scope.cancel = cancel;
+    $scope.selectAll = selectAll;
+    $scope.deselectAll = deselectAll;
+    $scope.isAddButtonDisabled = isAddButtonDisabled;
 
     function buildComparisons() {
       return problem.treatments.reduce(function(accum, treatment) {
@@ -45,9 +48,14 @@ define(['lodash'], function(_) {
       };
     }
 
+    function isAddButtonDisabled() {
+      return !_.find($scope.comparisons, function(comparison) {
+        return comparison.isIncluded;
+      });
+    }
+
     function savePlot() {
       $scope.isSaving = true;
-
       FunnelPlotResource
         .save($stateParams, buildPlotObject($scope.comparisons))
         .$promise.then(function() {
@@ -56,6 +64,18 @@ define(['lodash'], function(_) {
         });
     }
 
+    function selectAll() {
+      _.forEach($scope.comparisons, function(comparison) {
+        comparison.isIncluded = true;
+        comparison.biasDirection = comparison.t1;
+      });
+    }
+
+    function deselectAll() {
+      _.forEach($scope.comparisons, function(comparison) {
+        comparison.isIncluded = false;
+      });
+    }
   };
   return dependencies.concat(AddComparisonFunnelPlotController);
 });
