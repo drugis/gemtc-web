@@ -315,7 +315,8 @@ function setAttributes(request, response, next) {
   var userId = Number.parseInt(request.session.userId);
   var isArchived = request.body.archived;
   var modelToSet;
-  async.waterfall([
+  var archivedOn = isArchived ? new Date() : null;
+    async.waterfall([
     function(callback) {
       analysisRepository.get(analysisId, callback);
     },
@@ -330,7 +331,7 @@ function setAttributes(request, response, next) {
       checkCoordinates(analysisId, model, callback);
     },
     function(callback) {
-      modelRepository.setArchive(modelToSet.id, isArchived, callback);
+      modelRepository.setArchive(modelToSet.id, isArchived, archivedOn, callback);
     },
     function() {
       response.sendStatus(httpStatus.OK);
