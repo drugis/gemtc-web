@@ -82,10 +82,11 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function setAsPrimary(primaryModel) {
       var modelId = primaryModel ? primaryModel.id : null;
-      return AnalysisResource.setPrimaryModel(_.extend($scope.analysis, {
-        modelId: modelId,
-        analysisId: $scope.analysis.id
-      }));
+      return AnalysisResource.setPrimaryModel({
+        projectId: $scope.analysis.projectId,
+        analysisId: $scope.analysis.id,
+        modelId: modelId
+      }, null);
     }
 
   };
