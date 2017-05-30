@@ -118,8 +118,7 @@ function setTaskUrl(modelId, taskUrl, callback) {
   });
 }
 
-function setArchive(modelId, isArchived, callback) {
-  var archivedOn = isArchived ? new Date() : null;
+function setArchive(modelId, isArchived, archivedOn, callback) {
   db.query('UPDATE model SET archived=$2, archived_on=$3  WHERE id = $1', [modelId, isArchived, archivedOn],
     function(error) {
       if (error) {
