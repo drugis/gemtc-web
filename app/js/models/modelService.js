@@ -349,28 +349,16 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function tEntryBuilder(alternative, entry, idx) {
-      if (entry['std.dev'] && entry.sampleSize) {
-        return {
-          idx: idx,
-          studyName: entry.study,
-          alternativeName: alternative.name,
-          performance: 'μ: ' + entry.mean + '; σ: ' + entry['std.dev'].toPrecision(3) + '; N=' + entry.sampleSize,
-          mu: entry.mean,
-          sigma: entry['std.dev'],
-          sampleSize: entry.sampleSize
-        };
-      } else {
-        var stdErr = entry['std.err'] ? entry['std.err'] : entry['std.dev'] / Math.sqrt(entry.sampleSize);
-        return {
-          idx: idx,
-          studyName: entry.study,
-          alternativeName: alternative.name,
-          performance: 'μ: ' + entry.mean + '; SE: ' + stdErr.toPrecision(3) + '; N=' + entry.sampleSize,
-          mu: entry.mean,
-          stdErr: stdErr,
-          sampleSize: entry.sampleSize
-        };
-      }
+      var stdErr = entry['std.err'] ? entry['std.err'] : entry['std.dev'] / Math.sqrt(entry.sampleSize);
+      return {
+        idx: idx,
+        studyName: entry.study,
+        alternativeName: alternative.name,
+        performance: 'μ: ' + entry.mean + '; SE: ' + stdErr.toPrecision(3) + '; N=' + entry.sampleSize,
+        mu: entry.mean,
+        stdErr: stdErr,
+        sampleSize: entry.sampleSize
+      };
     }
 
     function buildBaselineSelectionEvidence(problem, alternatives, scale) {
@@ -405,11 +393,11 @@ define(['angular', 'lodash'], function(angular, _) {
           baselineDistribution.sigma === null ||
           baselineDistribution.sigma < 0);
       } else if (baselineDistribution.type === 'dt') {
-        return (baselineDistribution.mu === undefined ||
+          return (baselineDistribution.mu === undefined ||
           baselineDistribution.mu === null ||
-          baselineDistribution.sigma === undefined ||
-          baselineDistribution.sigma === null ||
-          baselineDistribution.sigma < 0);
+          baselineDistribution.stdErr === undefined ||
+          baselineDistribution.stdErr === null ||
+          baselineDistribution.stdErr < 0);
       }
       return true; // unknown types are always invalid
     }

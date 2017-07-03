@@ -89,6 +89,9 @@ pwEffects <- function(result, t1, t2) {
     } else {
       gemtc:::rel.mle.re(data.re[data.re[['study']] == study, , drop=TRUE], pairs)[1,]
     }
+    if(t1 > t2) {
+      est <- -est # gemtc expects treatment ids to be sorted
+    }
 
     if (is.null(alpha)) {
       est
@@ -451,7 +454,12 @@ times$sample <- system.time({
 
 if(modelType != 'node-split') {
   times$releffect <- system.time({
-    treatmentIds <- as.character(network[['treatments']][['id']])
+    if(modelType == 'pairwise') {
+      treatmentIds = c(as.character(params[['modelType']][['details']][['from']][['id']]),
+                       as.character(params[['modelType']][['details']][['to']][['id']]))
+    } else {
+      treatmentIds <- as.character(network[['treatments']][['id']])
+    }
     comps <- combn(treatmentIds, 2)
     t1 <- comps[1,]
     t2 <- comps[2,]
