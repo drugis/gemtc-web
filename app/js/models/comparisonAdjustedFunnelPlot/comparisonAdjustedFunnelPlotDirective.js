@@ -93,13 +93,13 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               var difference = studyEffects.t1[idx] === pooledRelativeEffect.t1 ?
                   studyEffects.mean[idx] - pooledEffectSize :
                   studyEffects.mean[idx] + pooledEffectSize ;
-              return comparison.biasDirection === "t1" ? difference : -1 * difference;
+              return comparison.biasDirection === 't1' ? difference : -1 * difference;
             }
 
-            root.append("rect")
-              .attr("width", "100%")
-              .attr("height", "100%")
-              .attr("fill", "white");
+            root.append('rect')
+              .attr('width', '100%')
+              .attr('height', '100%')
+              .attr('fill', 'white');
 
             var chart = nvd3.models.scatterChart()
               .color(d3.scale.category10().range())
@@ -133,6 +133,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
               .style('height', '500px')
               .datum(myData)
               .call(chart);
+            drawInterval();
 
             chart.dispatch.on('renderEnd', drawInterval);
             nvd3.utils.windowResize(function() {

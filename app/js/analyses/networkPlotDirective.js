@@ -52,14 +52,12 @@ define(['angular'], function(angular) {
                 });
             });
         }
-        scope.$watch('network', function(newValue, oldValue) {
-          if (oldValue !== newValue) {
-            NetworkPlotService.drawNetwork(newValue, element, width, height);
-          }
-        });
+        scope.$watch('network.network', function(newValue, oldValue) {
+          NetworkPlotService.drawNetwork(newValue, element, width, height);
+        }, true);
 
         angular.element($window).bind('resize', function() {
-          NetworkPlotService.drawNetwork(scope.network, element, sizingElement.width(), sizingElement.height());
+          NetworkPlotService.drawNetwork(scope.network.network, element, sizingElement.width(), sizingElement.height());
         });
 
       }

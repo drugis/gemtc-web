@@ -47,8 +47,8 @@
       </label>
     </div>
     <div class="large-4 medium-6 columns end">
-      <label>{{isMissingSampleSize ? 'standard error' : 'sigma'}}</label>
-      <input type="number" step="0.001" ng-model="baselineDistribution.sigma">
+      <label>standard error</label>
+      <input type="number" step="0.001" ng-model="baselineDistribution.stdErr">
     </div>
   </div>
   <div ng-if="isModelBaseline" class="row" ng-if="true">
