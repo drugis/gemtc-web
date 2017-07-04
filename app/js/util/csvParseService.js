@@ -309,8 +309,11 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       }
 
       function addToRelativeEffectData(accum, entry) {
+        function isNullOrNa(val){
+          return val === 'NA' || val === null;
+        }
         function isBaseEntry(entry) {
-          return entry['re.diff'] === 'NA' && entry['re.diff.se'] === 'NA';
+          return isNullOrNa(entry['re.diff']) && isNullOrNa(entry['re.diff.se']);
         }
 
         if (!accum.data) {
