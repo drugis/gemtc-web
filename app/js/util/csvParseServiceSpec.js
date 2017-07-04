@@ -33,7 +33,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
     var validRelativeOnlyCsv = 'study,treatment,re.diff,re.diff.se,re.base.se\n' +
       '1,A,NA,NA,0.5035062\n' +
       '1,C,-0.31,0.668089651,NA\n' +
-      '2,A,NA,NA,0.2821224\n' +
+      '2,A,,,0.2821224\n' +
       '2,B,-1.7,0.382640605,NA\n';
 
 
@@ -161,13 +161,13 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
           '"S2","A",-0.7,3.7,172,,0\n' +
           '"S2","B",-2.4,3.4,173,,0\n';
         var expectedCovariates = {
-          "S1": {
-            "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-            "LENGTH_OF_FOLLOW_UP": 31
+          S1: {
+            'BLINDING_AT_LEAST_DOUBLE_BLIND': 1.0,
+            'LENGTH_OF_FOLLOW_UP': 31
           },
-          "S2": {
-            "BLINDING_AT_LEAST_DOUBLE_BLIND": 0.0,
-            "LENGTH_OF_FOLLOW_UP": null
+          S2: {
+            BLINDING_AT_LEAST_DOUBLE_BLIND: 0.0,
+            LENGTH_OF_FOLLOW_UP: null
           }
         };
 
