@@ -78,7 +78,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     }
 
     function getTaskDetails(taskUrl) {
-      $http.get(taskUrl).then(function(response){
+      $http.get(taskUrl).then(function(response) {
         $scope.taskInfo = response.data;
       });
       return taskUrl;
@@ -197,6 +197,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
         $scope.model.$promise.then(function(model) {
           modelDefer.resolve(model);
         });
+        $scope.$emit('modelResultsAvailable', _.pick($stateParams, 'modelId', 'projectId'));
         resetScales();
         return result;
       });
@@ -230,7 +231,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
             };
           },
           problem: function() {
-            if($scope.model.sensitivity && $scope.model.sensitivity.omittedStudy) {
+            if ($scope.model.sensitivity && $scope.model.sensitivity.omittedStudy) {
               return {
                 entries: _.reject($scope.problem.entries, ['study', $scope.model.sensitivity.omittedStudy]),
                 treatments: $scope.problem.treatments
@@ -276,10 +277,11 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
           });
     }
 
-    function goToModelData(){
+    function goToModelData() {
       $window.open($scope.taskInfo._links.task.href, '_blank');
     }
-    function goToRScript(){
+
+    function goToRScript() {
       $window.open($scope.taskInfo._links.script.href, '_blank');
     }
   };
