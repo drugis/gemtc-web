@@ -18,7 +18,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.loadModels();
 
     function modelParams(model) {
-      return _.extend($stateParams, {
+      return _.extend({}, $stateParams, {
         modelId: model.id
       });
     }
