@@ -826,13 +826,13 @@ define(['angular', 'angular-mocks', 'services'], function() {
         var problem = {
           entries: [{
             mean: 20,
-            'std.dev': 1.5,
+            'std.err': 1.5,
             sampleSize: 50,
             study: '1',
             treatment: 0
           }, {
             mean: 21,
-            'std.dev': 1.5,
+            'std.err': 1.5,
             sampleSize: 51,
             study: '1',
             treatment: 1
@@ -854,18 +854,18 @@ define(['angular', 'angular-mocks', 'services'], function() {
             idx: 0,
             studyName: problem.entries[0].study,
             alternativeName: alternatives[0].name,
-            performance: 'μ: ' + problem.entries[0].mean + '; σ: ' + problem.entries[0]['std.dev'].toPrecision(3) + '; N=' + problem.entries[0].sampleSize,
+            performance: 'μ: ' + problem.entries[0].mean + '; SE: ' + problem.entries[0]['std.err'].toPrecision(3) + '; N=' + problem.entries[0].sampleSize,
             mu: problem.entries[0].mean,
-            sigma: problem.entries[0]['std.dev'],
+            stdErr: problem.entries[0]['std.err'],
             sampleSize: problem.entries[0].sampleSize
           }],
           1: [{
             idx: 0,
             studyName: problem.entries[1].study,
             alternativeName: alternatives[1].name,
-            performance: 'μ: ' + problem.entries[1].mean + '; σ: ' + problem.entries[1]['std.dev'].toPrecision(3) + '; N=' + problem.entries[1].sampleSize,
+            performance: 'μ: ' + problem.entries[1].mean + '; SE: ' + problem.entries[1]['std.err'].toPrecision(3) + '; N=' + problem.entries[1].sampleSize,
             mu: problem.entries[1].mean,
-            sigma: problem.entries[1]['std.dev'],
+            stdErr: problem.entries[1]['std.err'],
             sampleSize: problem.entries[1].sampleSize
           }]
         };
@@ -923,7 +923,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         var validBaseline = {
           type: 'dt',
           mu: 10,
-          sigma: 3
+          stdErr: 3
         };
         expect(modelService.isInValidBaseline(validBaseline)).toBeFalsy();
       });
