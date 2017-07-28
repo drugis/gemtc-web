@@ -320,7 +320,7 @@ define(['angular', 'lodash'], function(angular, _) {
         });
       } else {
         createAndPostModel(model, function(result) {
-          $state.go('model', _.extend($stateParams, {
+          $state.go('model', _.extend({}, $stateParams, {
             modelId: result.id
           }));
         });
