@@ -8,7 +8,7 @@ define([], function() {
         fileName: '='
       },
       restrict: 'E',
-      // using template because loading teplateUrl irritating in submodule
+      // using template because loading templateUrl irritating in submodule
       templateUrl: gemtcRootPath + 'js/util/pagedSvgPlotDirective.html',
       link: function(scope) {
         scope.selectNextPage = selectNextPage;

@@ -191,7 +191,8 @@
   },
   "primary-model": {
     "title": "Primary model",
-    "text": "The model the analyst believes to be most appropriate for the data at hand."
+    "text": "The model the analyst believes to be most appropriate for the data at hand.",
+    "link": "/manual.html#primary-model"
   },
   "rank-probabilities": {
     "title": "Rank probabilities",
