@@ -197,6 +197,13 @@
       $(function () {
         $.scrollUp();
       });
+      if (window.location.hash) {
+        setTimeout(function() { // wait for reflows to finish
+          $('html, body').animate({
+            scrollTop: $(window.location.hash).offset().top
+          }, 1000);
+        }, 1);
+      }
     });
    </script>
   </body>
