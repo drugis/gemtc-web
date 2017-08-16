@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="large-8 columns end">
+    <div class="large-9 columns end">
       <label>Alternative
         <select ng-model="baselineDistribution.selectedAlternative" ng-options="filteredAlternative.name for filteredAlternative in filteredAlternatives"
           ng-change="alternativeSelectionChanged()"></select>
@@ -14,8 +14,9 @@
   </div>
   <div class="row">
     <div class="large-12 columns end">
-      <label>{{distributionName}} distribution ({{baselineDistribution.scale}})</label>
-      <span ng-if="isMissingSampleSize"><i class="fa fa-exclamation-triangle"></i> Sample size unknown, therefore estimate using Normal distribution</span>
+      <label>{{distributionName}} distribution ({{distributionSort}})</label>
+      <span ng-if="isMissingSampleSize"><i class="fa fa-exclamation-triangle"></i> Sample size unknown, therefore estimate
+        using Normal distribution</span>
     </div>
   </div>
   <div class="row" ng-if="!isModelBaseline || isMissingSampleSize">
@@ -41,14 +42,20 @@
     </div>
   </div>
   <div class="row" ng-if="isModelBaseline && !isMissingSampleSize && baselineDistribution.scale === 'mean'">
-    <div class="large-4 medium-6 columns">
-      <label>mean
-        <input type="number" ng-model="baselineDistribution.mu">
+    <div class="large-3 medium-6 columns">
+      <label>μ
+        <input type="number" step="0.001" ng-model="baselineDistribution.mu">
       </label>
     </div>
-    <div class="large-4 medium-6 columns end">
-      <label>standard error</label>
-      <input type="number" step="0.001" ng-model="baselineDistribution.stdErr">
+    <div class="large-3 medium-6 columns end">
+      <label>σ
+        <input type="number" step="0.001" ng-model="baselineDistribution.stdErr">
+      </label>
+    </div>
+    <div class="large-3 medium-6 columns end">
+      <label>Degrees of Freedom
+        <input type="number" step="1" ng-model="baselineDistribution.dof">
+      </label>
     </div>
   </div>
   <div ng-if="isModelBaseline" class="row" ng-if="true">
@@ -64,9 +71,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr style="cursor:pointer" ng-click="selections.armIdx = arm.idx; armSelectionChanged()" ng-repeat="arm in arms[baselineDistribution.selectedAlternative.id]">
+          <tr style="cursor:pointer" ng-click="selections.armIdx = arm.idx; armSelectionChanged()"
+            ng-repeat="arm in arms[baselineDistribution.selectedAlternative.id]">
             <td>
-              <input type="radio" style="margin-bottom:0; vertical-align: middle;" ng-model="selections.armIdx" ng-value="arm.idx" ng-change="armSelectionChanged()"></input>
+              <input type="radio" style="margin-bottom:0; vertical-align: middle;" ng-model="selections.armIdx"
+                ng-value="arm.idx" ng-change="armSelectionChanged()"></input>
             </td>
             <td> {{arm.studyName}} </td>
             <td> {{arm.alternativeName}} </td>
