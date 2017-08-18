@@ -82,6 +82,10 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function setAsPrimary(primaryModel) {
       var modelId = primaryModel ? primaryModel.id : null;
+      $scope.$emit('primaryModelSet', {
+        analysisId: $scope.analysisId,
+        projectId: $scope.analysis.projectId
+      });
       return AnalysisResource.setPrimaryModel({
         projectId: $scope.analysis.projectId,
         analysisId: $scope.analysis.id,
