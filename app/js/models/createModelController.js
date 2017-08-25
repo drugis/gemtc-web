@@ -86,8 +86,8 @@ define(['angular', 'lodash'], function(angular, _) {
         $scope.model.likelihoodLink = compatible[0];
       } else {
         $scope.model.likelihoodLink = _.find($scope.likelihoodLinkOptions, function(option) {
-          return option.link === model.likelihoodLink.link &&
-            option.likelihood === model.likelihoodLink.likelihood;
+          return option.link === $scope.model.likelihoodLink.link &&
+            option.likelihood === $scope.model.likelihoodLink.likelihood;
         });
       }
 
