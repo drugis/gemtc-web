@@ -257,7 +257,7 @@ define(['angular', 'lodash'], function(angular, _) {
       } else {
         result.selected = findCentering(result.all);
         if (regressor) {
-          result.selected.level = 'centering (' + resultRegressor.modelRegressor.mu + ')';
+          result.selected.level = 'centering (' + resultRegressor.modelRegressor.center + ')';
         }
       }
       return result;
