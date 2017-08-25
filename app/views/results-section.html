@@ -67,7 +67,7 @@
 </div>
 
 <div ng-if="result && model.modelType.type === 'network'">
-  <div class="row">
+  <div class="row" ng-if="problem.entries.length">
     <div class="columns large-12">
       <p>
         <Strong>Absolute treatment effects
@@ -106,7 +106,7 @@
       </button>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-if="problem.entries.length">
     <div class="columns large-12">
       <button ng-if="!editMode.disableEditing" ng-click="openBaselineDistributionModal()">Set Baseline Distribution</button>
     </div>

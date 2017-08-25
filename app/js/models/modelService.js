@@ -238,7 +238,6 @@ define(['angular', 'lodash'], function(angular, _) {
         .value();
     }
 
-
     function addLevelandProcessData(rankProbabilities, treatments, dataProcessingFunction) {
       return _.map(rankProbabilities, function(rankProbability, key) {
         return {

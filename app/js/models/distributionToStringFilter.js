@@ -12,9 +12,11 @@ define([], function() {
 
       var distributionLabel;
       var parameterString;
+      var distributionScaleLabel = distribution.scale;
       switch (distribution.type) {
         case 'dbeta-logit':
           distributionLabel = 'Beta';
+          distributionScaleLabel = 'probability';
           parameterString = distribution.alpha + ', ' + distribution.beta;
           break;
         case 'dnorm':
@@ -26,7 +28,7 @@ define([], function() {
           parameterString = distribution.dof + ', ' + format3Precision(distribution.mu) + ', ' + format3Precision(distribution.stdErr);
       }
 
-      return distribution.scale + ' (' + distribution.name + ') ~ ' +
+      return distributionScaleLabel + ' (' + distribution.name + ') ~ ' +
         distributionLabel + '(' + parameterString + ')';
     };
   };

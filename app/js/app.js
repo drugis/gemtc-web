@@ -20,7 +20,7 @@ define(
     'help-popup',
     'error-reporting'
   ],
-  function(angular, require, $) {
+  function(angular) {
 
     var dependencies = [
       'ui.router',
@@ -43,11 +43,6 @@ define(
 
     app.run(['$rootScope', '$window', '$http', '$location', '$anchorScroll', 'HelpPopupService',
       function($rootScope, $window, $http, $location, $anchorScroll, HelpPopupService) {
-
-        $rootScope.$on('$viewContentLoaded', function() {
-          $(document).foundation();
-        });
-
         $rootScope.$safeApply = function($scope, fn) {
           var phase = $scope.$root.$$phase;
           if (phase === '$apply' || phase === '$digest') {
@@ -64,7 +59,7 @@ define(
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide',
       function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
 
-        $provide.decorator('$uiViewScroll', function($delegate) {
+        $provide.decorator('$uiViewScroll', function() {
           return function(uiViewElement) {
             window.scrollTo(0, (uiViewElement[0].getBoundingClientRect().top - 200));
           };

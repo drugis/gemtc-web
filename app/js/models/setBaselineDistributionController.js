@@ -46,7 +46,7 @@ define(['lodash'], function(_) {
       return setting.likelihood === outcomeWithAnalysis.selectedModel.likelihood &&
         setting.link === outcomeWithAnalysis.selectedModel.link;
     }).absoluteScale;
-    $scope.distributionSort = $scope.baselineDistribution.scale === 'log odds' ? 'probability' : $scope.baselineDistribution.scale;
+    $scope.scaleLabel = $scope.baselineDistribution.scale === 'log odds' ? 'probability' : $scope.baselineDistribution.scale;
 
     if ($scope.isModelBaseline) {
       $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives, $scope.baselineDistribution.scale);
