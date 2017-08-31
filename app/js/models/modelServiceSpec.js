@@ -594,7 +594,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         var data = [levelCentering, level100];
         var resultRegressor = {
           modelRegressor: {
-            mu: 37
+            center: 37
           }
         };
         var expectedResult = {

@@ -18,6 +18,7 @@ define(['lodash'], function(_) {
       $scope.showStdDev = _.find($scope.tableRows, matcherFactory('stdDev'));
       $scope.showStdErr = _.find($scope.tableRows, matcherFactory('stdErr'));
       $scope.showSampleSize = _.find($scope.tableRows, matcherFactory('sampleSize'));
+      $scope.showExposure = _.find($scope.tableRows, matcherFactory('exposure'));
     });
 
   };

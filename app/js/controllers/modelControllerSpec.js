@@ -41,11 +41,9 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
     beforeEach(module('gemtc.controllers'));
 
     beforeEach(inject(function($rootScope, $controller, $q, $httpBackend) {
-      scope = $rootScope;
-      scope.$parent = {
-        analysis: {
-          outcome: 'outcome'
-        }
+      scope = $rootScope.$new();
+      scope.$parent.analysis = {
+        outcome: 'outcome'
       };
       modelDeferred = $q.defer();
       mockModel = {
