@@ -29,6 +29,17 @@ define(['lodash'], function(_) {
 
     var localAlternatives;
 
+    $scope.summaryMeasureOptions = [{
+      label: 'median survival',
+      id: 'median'
+    }, {
+      label: 'mean survival',
+      id: 'mean'
+    }, {
+      label: 'survival at time',
+      id: 'survivalAtTime'
+    }];
+
     if (!interventionInclusions) { // in gemtc there's no inclusions
       localAlternatives = alternatives;
     } else {
@@ -50,18 +61,24 @@ define(['lodash'], function(_) {
 
     if ($scope.isModelBaseline) {
       $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives, $scope.baselineDistribution.scale);
+      $scope.isSurvival = $scope.baselineDistribution.scale === 'log hazard';
       $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
         return _.find(armList, function(arm) {
           return arm.sampleSize === undefined;
         });
       });
-      if ($scope.isMissingSampleSize) {
+
+      if ($scope.baselineDistribution.scale === 'log hazard') {
+        $scope.baselineDistribution.type = 'dsurv';
+        $scope.distributionName = 'Gamma';
+      } else if ($scope.isMissingSampleSize) {
         $scope.baselineDistribution.type = 'dnorm';
         $scope.distributionName = 'Normal';
       } else {
         $scope.baselineDistribution.type = $scope.baselineDistribution.scale === 'log odds' ? 'dbeta-logit' : 'dt';
         $scope.distributionName = $scope.baselineDistribution.scale === 'log odds' ? 'Beta' : 'Student\'s t';
       }
+
       $scope.selections.armIdx = 0;
       $scope.armSelectionChanged();
       $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
@@ -98,6 +115,11 @@ define(['lodash'], function(_) {
         newBaselineDistribution.stdErr = selectedArm.stdErr;
         newBaselineDistribution.dof = selectedArm.sampleSize - 1;
         newBaselineDistribution.type = 'dt';
+      } else if ($scope.baselineDistribution.type === 'dsurv') {
+        newBaselineDistribution.alpha = selectedArm.responders + 0.001;
+        newBaselineDistribution.beta = selectedArm.exposure + 0.001;
+        newBaselineDistribution.type = 'dsurv';
+        newBaselineDistribution.summaryMeasure = 'mean';
       } else {
         return;
       }
@@ -122,7 +144,7 @@ define(['lodash'], function(_) {
     };
 
     $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
+      $modalInstance.close('cancel');
     };
   };
   return dependencies.concat(SetBaselineDistributionController);
