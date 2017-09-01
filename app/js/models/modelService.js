@@ -370,11 +370,19 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function survEntryBuilder(alternative, entry, idx) {
+        var scaleStrings = {
+          P1D: ' days',
+          P1W: ' weeks',
+          P1M: ' months',
+          P1Y: ' years'
+        };
+      var performanceStr = entry.timeScale ? entry.responders + ' events over ' + entry.exposure + scaleStrings[entry.timeScale] :
+        entry.responders + '/' + entry.exposure; // timescale not necessarily there in gemtc standalone
       return {
         idx: idx,
         studyName: entry.study,
         alternativeName: alternative.name,
-        performance: entry.responders + '/' + entry.exposure,
+        performance: performanceStr,
         responders: entry.responders,
         exposure: entry.exposure
       };
