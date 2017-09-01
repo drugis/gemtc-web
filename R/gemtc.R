@@ -612,6 +612,7 @@ times$summary <- system.time({
     summary[['thinningFactor']] <- params[['thinningFactor']]
     summary[['outcomeScale']] <- model[['om.scale']]
     preferredDirection <- nullCheckWithDefault(params[['preferredDirection']], 1)  # 1 (higher is beter) as default
+    preferredDirection <- if(model[['likelihood']] == 'poisson') -preferredDirection else preferredDirection
     summary[['preferredDirection']] <- preferredDirection
     if(modelType != 'node-split') {
       summary[['relativeEffects']] <- releffect
