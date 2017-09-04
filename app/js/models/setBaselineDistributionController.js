@@ -19,7 +19,6 @@ define(['lodash'], function(_) {
     alternatives,
     problem,
     ModelService) {
-    $scope.isModelBaseline = !!problem;
     $scope.selections = {};
     $scope.outcomeWithAnalysis = outcomeWithAnalysis;
     $scope.armSelectionChanged = armSelectionChanged;
@@ -59,7 +58,6 @@ define(['lodash'], function(_) {
     }).absoluteScale;
     $scope.scaleLabel = $scope.baselineDistribution.scale === 'log odds' ? 'probability' : $scope.baselineDistribution.scale;
 
-    if ($scope.isModelBaseline) {
       $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives, $scope.baselineDistribution.scale);
       $scope.isSurvival = $scope.baselineDistribution.scale === 'log hazard';
       $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
@@ -84,11 +82,6 @@ define(['lodash'], function(_) {
       $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
         return $scope.arms[alternative.id].length;
       });
-    } else {
-      $scope.baselineDistribution.type = 'dnorm';
-      $scope.distributionName = 'Normal';
-      $scope.filteredAlternatives = localAlternatives;
-    }
 
     function isInValidBaseline(baselineDistribution) {
       return ModelService.isInValidBaseline(baselineDistribution);
@@ -128,10 +121,8 @@ define(['lodash'], function(_) {
 
 
     function alternativeSelectionChanged() {
-      if ($scope.isModelBaseline) {
         $scope.selections.armIdx = 0;
         $scope.armSelectionChanged();
-      }
     }
 
     $scope.setBaselineDistribution = function(baselineDistribution) {
