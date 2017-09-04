@@ -14,22 +14,25 @@
   </div>
   <div class="row">
     <div class="large-12 columns end">
-      <label>{{distributionName}} distribution ({{scaleLabel}})</label>
-      <span ng-if="isMissingSampleSize"><i class="fa fa-exclamation-triangle"></i> Sample size unknown, therefore estimate
-        using Normal distribution</span>
+      <label>{{distributionName}} distribution ({{scaleLabel}})
+        <span ng-if="!isSurvival && isMissingSampleSize"><i class="fa fa-exclamation-triangle"></i> Sample size unknown, therefore
+          estimate using Normal distribution</span>
+      </label>
     </div>
   </div>
-  <div class="row" ng-if="!isModelBaseline || isMissingSampleSize">
+  <div class="row" ng-if="!isSurvival && (!isModelBaseline || isMissingSampleSize)">
     <div class="large-4 medium-6 columns">
       <label>mean
         <input type="number" ng-model="baselineDistribution.mu">
       </label>
     </div>
     <div class="large-4 medium-6 columns end">
-      <label>standard deviation</label>
-      <input type="number" step="0.001" ng-model="baselineDistribution.sigma">
+      <label>standard deviation
+        <input type="number" step="0.001" ng-model="baselineDistribution.sigma">
+      </label>
     </div>
   </div>
+
   <div class="row" ng-if="isModelBaseline && baselineDistribution.scale === 'log odds'">
     <div class="large-4 medium-6 columns">
       <label>alpha
@@ -37,10 +40,12 @@
       </label>
     </div>
     <div class="large-4 medium-6 columns end">
-      <label>beta</label>
-      <input type="number" step="0.001" ng-model="baselineDistribution.beta">
+      <label>beta
+        <input type="number" step="0.001" ng-model="baselineDistribution.beta">
+      </label>
     </div>
   </div>
+
   <div class="row" ng-if="isModelBaseline && !isMissingSampleSize && baselineDistribution.scale === 'mean'">
     <div class="large-3 medium-6 columns">
       <label>μ
@@ -58,6 +63,34 @@
       </label>
     </div>
   </div>
+
+  <div class="row" ng-if="isModelBaseline && baselineDistribution.scale === 'log hazard'">
+    <div class="large-4 medium-6 columns">
+      <label>alpha
+        <input type="number" ng-model="baselineDistribution.alpha">
+      </label>
+    </div>
+    <div class="large-4 medium-6 columns end">
+      <label>beta
+        <input type="number" step="0.001" ng-model="baselineDistribution.beta">
+      </label>
+    </div>
+    <div class="large-4 medium-6 columns end">
+      <label>Summary measure
+        <select ng-model="baselineDistribution.summaryMeasure" ng-options="summaryMeasure.id as summaryMeasure.label for summaryMeasure in summaryMeasureOptions"></select>
+      </label>
+    </div>
+    <div class="large-4 medium-6 columns end" ng-show="baselineDistribution.summaryMeasure === 'survivalAtTime'">
+      <label>Survival at time
+        <input type="number" step="0.001" ng-model="baselineDistribution.time">
+      </label>
+    </div>
+
+  </div>
+
+
+
+
   <div ng-if="isModelBaseline" class="row" ng-if="true">
     <div class="columns large-12">
       <caption>Evidence for baseline alternative</caption>

@@ -5,7 +5,10 @@ define(['angular', 'lodash'], function(angular, _) {
   var EvidenceTableService = function() {
 
     function determineOutcomeType(studyList) {
-      return studyList[0].arms[0].data.responders ? "dichotomous" : "continuous";
+      if(studyList[0].arms[0].data.responders) {
+        return studyList[0].arms[0].data.exposure ? 'survival' : 'dichotomous';
+      }
+      return 'continuous';
     }
 
     function studyMapToStudyArray(studyMap) {
@@ -40,7 +43,8 @@ define(['angular', 'lodash'], function(angular, _) {
         return arm.data.hasOwnProperty('sampleSize') ||
           arm.data.hasOwnProperty('responders') ||
           arm.data.hasOwnProperty('mean') ||
-          arm.data.hasOwnProperty('stdDev');
+          arm.data.hasOwnProperty('stdDev') ||
+          arm.data.hasOwnProperty('exposure');
       });
     }
 
@@ -81,6 +85,9 @@ define(['angular', 'lodash'], function(angular, _) {
       }
       if (armData.hasOwnProperty('std.err')) {
         evidence.stdErr = armData['std.err'];
+      }
+      if (armData.hasOwnProperty('exposure')) {
+        evidence.exposure = armData.exposure;
       }
       return evidence;
     }

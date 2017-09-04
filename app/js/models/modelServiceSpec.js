@@ -594,7 +594,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
         var data = [levelCentering, level100];
         var resultRegressor = {
           modelRegressor: {
-            mu: 37
+            center: 37
           }
         };
         var expectedResult = {
@@ -622,6 +622,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
     });
 
     describe('buildScalesProblem', function() {
+      // almost no conditional code in the function so one test suffices
       it('should create a problem for calculating the scales of a dichotomous outcome', function() {
 
         var analysis = {
@@ -772,7 +773,6 @@ define(['angular', 'angular-mocks', 'services'], function() {
         };
         var result = modelService.buildScalesProblem(analysis, problem, baselineDistribution, pataviResult);
         expect(result).toEqual(expectedResult);
-
       });
     });
     describe('buildBaselineSelectionEvidence', function() {
@@ -869,6 +869,52 @@ define(['angular', 'angular-mocks', 'services'], function() {
             sampleSize: problem.entries[1].sampleSize
           }]
         };
+        expect(result).toEqual(expectedResult);
+      });
+      it('should build the evidence for dichotomous alternatives', function() {
+        var problem = {
+          entries: [{
+            responders: 20,
+            exposure: 5000,
+            study: '1',
+            treatment: 0
+          }, {
+            responders: 21,
+            exposure: 5100,
+            study: '1',
+            treatment: 1
+          }],
+          treatments: [{
+            name: 'parox',
+            id: 0
+          }, {
+            name: 'fluox',
+            id: 1
+          }]
+        };
+        var alternatives = problem.treatments;
+        var scale = 'log hazard';
+        var result = modelService.buildBaselineSelectionEvidence(problem, alternatives, scale);
+
+        var expectedResult = {
+          0: [{
+            idx: 0,
+            studyName: problem.entries[0].study,
+            alternativeName: alternatives[0].name,
+            performance: problem.entries[0].responders + '/' + problem.entries[0].exposure,
+            responders: problem.entries[0].responders,
+            exposure: problem.entries[0].exposure
+          }],
+          1: [{
+            idx: 0,
+            studyName: problem.entries[1].study,
+            alternativeName: alternatives[1].name,
+            performance: problem.entries[1].responders + '/' + problem.entries[1].exposure,
+            responders: problem.entries[1].responders,
+            exposure: problem.entries[1].exposure
+          }]
+        };
+
         expect(result).toEqual(expectedResult);
       });
     });
@@ -996,6 +1042,116 @@ define(['angular', 'angular-mocks', 'services'], function() {
           sigma: -1.123
         };
         expect(modelService.isInValidBaseline(invalidBaseline5)).toBeTruthy();
+      });
+      it('should approve valid gamma baseline', function() {
+        var validSurvivalAtTimeBaseline = {
+          type: 'dsurv',
+          alpha: 10,
+          beta: 3,
+          summaryMeasure: 'survivalAtTime',
+          time: 103
+        };
+        expect(modelService.isInValidBaseline(validSurvivalAtTimeBaseline)).toBeFalsy();
+        var validMeanBaseline = {
+          type: 'dsurv',
+          alpha: 10,
+          beta: 3,
+          summaryMeasure: 'meanOrMedian'
+        };
+        expect(modelService.isInValidBaseline(validMeanBaseline)).toBeFalsy();
+      });
+      it('should not approve invalid gamma baselines', function() {
+        var invalidBaseline1 = {
+          type: 'dsurv',
+          beta: 3,
+          summaryMeasure: 'mean'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline1)).toBeTruthy();
+        var invalidBaseline2 = {
+          type: 'dsurv',
+          alpha: null,
+          beta: 3,
+          summaryMeasure: 'mean'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline2)).toBeTruthy();
+        var invalidBaseline3 = {
+          type: 'dsurv',
+          alpha: -23,
+          beta: 3,
+          summaryMeasure: 'mean'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline3)).toBeTruthy();
+        var invalidBaseline4 = {
+          type: 'dsurv',
+          alpha: 3,
+          summaryMeasure: 'mean'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline4)).toBeTruthy();
+        var invalidBaseline5 = {
+          type: 'dsurv',
+          alpha: 5,
+          beta: null,
+          summaryMeasure: 'mean'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline5)).toBeTruthy();
+        var invalidBaseline6 = {
+          type: 'dsurv',
+          alpha: 5,
+          beta: -7,
+          summaryMeasure: 'mean'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline6)).toBeTruthy();
+        var invalidBaseline7 = {
+          type: 'dsurv',
+          alpha: 5,
+          beta: 7
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline7)).toBeTruthy();
+        var invalidBaseline8 = {
+          type: 'dsurv',
+          alpha: 5,
+          beta: 7,
+          summaryMeasure: 'survivalAtTime'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline8)).toBeTruthy();
+        var invalidBaseline9 = {
+          type: 'dsurv',
+          alpha: 5,
+          beta: 7,
+          summaryMeasure: 'survivalAtTime',
+          time: -5
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline9)).toBeTruthy();
+        var invalidBaseline10 = {
+          type: 'dsurv',
+          alpha: 5,
+          beta: 7,
+          summaryMeasure: 'survivalAtTime',
+          time: null
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline10)).toBeTruthy();
+        var invalidBaseline11 = {
+          type: 'dsurv',
+          alpha: 5,
+          beta: 7,
+          summaryMeasure: 'survivalAtTime',
+          time: undefined
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline11)).toBeTruthy();
+        var invalidBaseline12 = {
+          type: 'dsurv',
+          alpha: 5,
+          beta: 0,
+          summaryMeasure: 'mean'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline12)).toBeTruthy();
+        var invalidBaseline13 = {
+          type: 'dsurv',
+          alpha: 0,
+          beta: 24,
+          summaryMeasure: 'mean'
+        };
+        expect(modelService.isInValidBaseline(invalidBaseline13)).toBeTruthy();
       });
       it('should not approve unknown types', function() {
         var invalidBaseline = {

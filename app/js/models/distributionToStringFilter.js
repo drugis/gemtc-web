@@ -26,6 +26,10 @@ define([], function() {
         case 'dt':
           distributionLabel = 't';
           parameterString = distribution.dof + ', ' + format3Precision(distribution.mu) + ', ' + format3Precision(distribution.stdErr);
+          break;
+        case 'dsurv' :
+          distributionLabel = 'Gamma';
+          parameterString = distribution.alpha + ', ' + distribution.beta;
       }
 
       return distributionScaleLabel + ' (' + distribution.name + ') ~ ' +
