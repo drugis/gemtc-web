@@ -21,7 +21,7 @@ define(['angular', 'angular-mocks'], function() {
         scale: 'log odds',
         type: 'dbeta-logit'
       };
-      var expectedResult = 'log odds (Sertraline) ~ Beta(64, 60)';
+      var expectedResult = 'probability (Sertraline) ~ Beta(64, 60)';
       var result = distributionToStringFilter(betaDistribution);
       expect(result).toBe(expectedResult);
     });

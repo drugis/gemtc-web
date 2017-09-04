@@ -257,7 +257,7 @@ define(['angular', 'lodash'], function(angular, _) {
       } else {
         result.selected = findCentering(result.all);
         if (regressor) {
-          result.selected.level = 'centering (' + resultRegressor.modelRegressor.mu + ')';
+          result.selected.level = 'centering (' + resultRegressor.modelRegressor.center + ')';
         }
       }
       return result;
@@ -308,10 +308,19 @@ define(['angular', 'lodash'], function(angular, _) {
           });
         });
 
+        var performanceType;
+        if (result.link === 'identity') {
+          performanceType = 'relative-normal';
+        } else if (result.likelihood === 'poisson') {
+          performanceType = 'relative-survival';
+        } else {
+          performanceType = 'relative-' + result.link + '-normal';
+        }
+
         return {
           criterion: criterionName,
           performance: {
-            type: result.link === 'identity' ? 'relative-normal' : 'relative-' + result.link + '-normal',
+            type: performanceType,
             parameters: {
               baseline: baselineDistribution,
               relative: {
@@ -360,12 +369,33 @@ define(['angular', 'lodash'], function(angular, _) {
       };
     }
 
+    function survEntryBuilder(alternative, entry, idx) {
+        var scaleStrings = {
+          P1D: ' days',
+          P1W: ' weeks',
+          P1M: ' months',
+          P1Y: ' years'
+        };
+      var performanceStr = entry.timeScale ? entry.responders + ' events over ' + entry.exposure + scaleStrings[entry.timeScale] :
+        entry.responders + '/' + entry.exposure; // timescale not necessarily there in gemtc standalone
+      return {
+        idx: idx,
+        studyName: entry.study,
+        alternativeName: alternative.name,
+        performance: performanceStr,
+        responders: entry.responders,
+        exposure: entry.exposure
+      };
+    }
+
     function buildBaselineSelectionEvidence(problem, alternatives, scale) {
       var entryBuilder;
       if (scale === 'log odds') {
         entryBuilder = betaEntryBuilder;
       } else if (scale === 'mean') {
         entryBuilder = tEntryBuilder;
+      } else if (scale === 'log hazard') {
+        entryBuilder = survEntryBuilder;
       }
       return _.reduce(alternatives, function(accum, alternative) {
         var filteredEntries = _.sortBy(_.filter(problem.entries, ['treatment', alternative.id]), 'study');
@@ -392,11 +422,22 @@ define(['angular', 'lodash'], function(angular, _) {
           baselineDistribution.sigma === null ||
           baselineDistribution.sigma < 0);
       } else if (baselineDistribution.type === 'dt') {
-          return (baselineDistribution.mu === undefined ||
+        return (baselineDistribution.mu === undefined ||
           baselineDistribution.mu === null ||
           baselineDistribution.stdErr === undefined ||
           baselineDistribution.stdErr === null ||
           baselineDistribution.stdErr < 0);
+      } else if (baselineDistribution.type === 'dsurv') {
+        return (baselineDistribution.alpha === undefined ||
+          baselineDistribution.alpha === null ||
+          baselineDistribution.alpha <= 0 ||
+          baselineDistribution.beta === undefined ||
+          baselineDistribution.beta === null ||
+          baselineDistribution.beta <= 0 ||
+          baselineDistribution.summaryMeasure === undefined ||
+          (baselineDistribution.summaryMeasure === 'survivalAtTime' && baselineDistribution.time === undefined) ||
+          (baselineDistribution.summaryMeasure === 'survivalAtTime' && baselineDistribution.time === null) ||
+          (baselineDistribution.summaryMeasure === 'survivalAtTime' && baselineDistribution.time < 0));
       }
       return true; // unknown types are always invalid
     }
