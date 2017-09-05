@@ -20,7 +20,7 @@
       </label>
     </div>
   </div>
-  <div class="row" ng-if="!isSurvival && (!isModelBaseline || isMissingSampleSize)">
+  <div class="row" ng-if="!isSurvival && (isMissingSampleSize)">
     <div class="large-4 medium-6 columns">
       <label>mean
         <input type="number" ng-model="baselineDistribution.mu">
@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <div class="row" ng-if="isModelBaseline && baselineDistribution.scale === 'log odds'">
+  <div class="row" ng-if="baselineDistribution.scale === 'log odds'">
     <div class="large-4 medium-6 columns">
       <label>alpha
         <input type="number" ng-model="baselineDistribution.alpha">
@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <div class="row" ng-if="isModelBaseline && !isMissingSampleSize && baselineDistribution.scale === 'mean'">
+  <div class="row" ng-if="!isMissingSampleSize && baselineDistribution.scale === 'mean'">
     <div class="large-3 medium-6 columns">
       <label>μ
         <input type="number" step="0.001" ng-model="baselineDistribution.mu">
@@ -64,7 +64,8 @@
     </div>
   </div>
 
-  <div class="row" ng-if="isModelBaseline && baselineDistribution.scale === 'log hazard'">
+  <!-- Survival -->
+  <div class="row" ng-if="baselineDistribution.scale === 'log hazard'">
     <div class="large-4 medium-6 columns">
       <label>alpha
         <input type="number" ng-model="baselineDistribution.alpha">
@@ -89,9 +90,7 @@
   </div>
 
 
-
-
-  <div ng-if="isModelBaseline" class="row" ng-if="true">
+  <div class="row">
     <div class="columns large-12">
       <caption>Evidence for baseline alternative</caption>
       <table>
