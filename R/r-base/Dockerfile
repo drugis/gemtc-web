@@ -7,6 +7,9 @@ USER root
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-rjags
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-xml
 
+
+RUN apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
+
 RUN R -e 'install.packages("plyr", repos="http://cran.rstudio.com/"); if (!require("plyr")) quit(save="no", status=8)'
 RUN R -e 'install.packages("igraph", repos="http://cran.rstudio.com/"); if (!require("igraph")) quit(save="no", status=8)'
 RUN R -e 'install.packages("meta", repos="http://cran.rstudio.com/"); if (!require("meta")) quit(save="no", status=8)'
