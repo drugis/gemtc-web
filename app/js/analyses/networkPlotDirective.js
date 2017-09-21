@@ -1,7 +1,9 @@
 'use strict';
 define(['angular'], function(angular) {
-  var dependencies = ['$q', '$stateParams', '$injector', '$window', 'NetworkPlotService', 'AnalysisResource'];
-  var NetworkPlotDirective = function($q, $stateParams, $injector, $window, NetworkPlotService, AnalysisResource) {
+  var dependencies = ['$q', '$stateParams', '$injector', '$window', 'NetworkPlotService',
+   'AnalysisResource'];
+  var NetworkPlotDirective = function($q, $stateParams, $injector, $window, NetworkPlotService,
+   AnalysisResource) {
     return {
       scope: {
         analysisId: '=',
