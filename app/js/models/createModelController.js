@@ -1,11 +1,32 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = ['$scope', '$q', '$stateParams', '$state',
+  var dependencies = ['$scope', '$q', '$stateParams', '$state', 'isGemtcStandAlone',
     'ModelResource', 'ModelService', 'AnalysisService', 'ProblemResource'
   ];
-  var CreateModelController = function($scope, $q, $stateParams, $state,
+  var CreateModelController = function($scope, $q, $stateParams, $state, isGemtcStandAlone,
     ModelResource, ModelService, AnalysisService, ProblemResource) {
+    // functions
+    $scope.createModel = createModel;
+    $scope.isAddButtonDisabled = isAddButtonDisabled;
+    $scope.effectsTypeChange = effectsTypeChange;
+    $scope.modelTypeChange = modelTypeChange;
+    $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
+    $scope.heterogeneityPriorTypechange = heterogeneityPriorTypechange;
+    $scope.heterogeneityParamsChange = heterogeneityParamsChange;
+    $scope.covariateChange = covariateChange;
+    $scope.changeIsWeighted = changeIsWeighted;
+    $scope.changeIsLeaveOneOut = changeIsLeaveOneOut;
+    $scope.addLevel = addLevel;
+    $scope.addLevelOnEnter = addLevelOnEnter;
+    $scope.levelAlreadyPresent = levelAlreadyPresent;
+    $scope.isCovariateLevelOutOfBounds = isCovariateLevelOutOfBounds;
+    $scope.isAllowedLeaveOneOut = isAllowedLeaveOneOut;
+    $scope.isNumber = isNumber;
+    $scope.pairwiseSubTypeChange = pairwiseSubTypeChange;
+    $scope.resetLeaveOneOut = resetLeaveOneOut;
 
+    // init
+    $scope.isGemtcStandAlone = isGemtcStandAlone;
     $scope.model = {
       linearModel: 'random',
       modelType: {
@@ -26,26 +47,8 @@ define(['angular', 'lodash'], function(angular, _) {
 
     $scope.isTaskTooLong = false;
     $scope.isValidHeterogeneityPrior = true;
-    $scope.createModel = createModel;
-    $scope.isAddButtonDisabled = isAddButtonDisabled;
-    $scope.effectsTypeChange = effectsTypeChange;
-    $scope.modelTypeChange = modelTypeChange;
-    $scope.outcomeScaleTypeChange = outcomeScaleTypeChange;
-    $scope.heterogeneityPriorTypechange = heterogeneityPriorTypechange;
-    $scope.heterogeneityParamsChange = heterogeneityParamsChange;
-    $scope.covariateChange = covariateChange;
-    $scope.changeIsWeighted = changeIsWeighted;
-    $scope.changeIsLeaveOneOut = changeIsLeaveOneOut;
-    $scope.addLevel = addLevel;
-    $scope.addLevelOnEnter = addLevelOnEnter;
-    $scope.levelAlreadyPresent = levelAlreadyPresent;
-    $scope.isCovariateLevelOutOfBounds = isCovariateLevelOutOfBounds;
-    $scope.isAllowedLeaveOneOut = isAllowedLeaveOneOut;
-    $scope.isNumber = isNumber;
     $scope.problem = ProblemResource.get($stateParams);
     $scope.selectedCovariateValueHasNullValues = false;
-    $scope.pairwiseSubTypeChange = pairwiseSubTypeChange;
-    $scope.resetLeaveOneOut = resetLeaveOneOut;
     $scope.covariateBounds = {
       min: undefined,
       max: undefined
@@ -73,7 +76,15 @@ define(['angular', 'lodash'], function(angular, _) {
       }
       $scope.binaryCovariateNames = ModelService.getBinaryCovariateNames(problem);
       $scope.isProblemWithCovariates = ModelService.isProblemWithCovariates(problem);
-      $scope.likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
+       var likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
+      if(!isGemtcStandAlone){
+        $scope.likelihoodLinkOptions = _.reject(likelihoodLinkOptions, function(option){
+          return option.link === 'smd' && option.likelihood === 'normal';
+        });
+      } else {
+        $scope.likelihoodLinkOptions = likelihoodLinkOptions;
+      }
+
       var compatible = $scope.likelihoodLinkOptions.filter(function(option) {
         return option.compatibility === "compatible";
       });

@@ -290,8 +290,11 @@
   <div class="row ">
     <div class="columns large-8 medium-10 small-12">
       <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel
-        }}.</label>
-      <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'" style="margin-bottom:2.25rem">
+        }}.</label>      
+        <label ng-show="model.likelihoodLink.scale === 'risk ratio' && !isGemtcStandAlone" style="margin-bottom:1rem; color:red">
+          This option cannot be used in benefit risk analyses.
+        </label>
+      <label ng-show="model.likelihoodLink.compatibility !== 'incompatible' || (model.likelihoodLink.scale === 'risk ratio' && !isGemtcStandAlone)" style="margin-bottom:2.25rem">
       </label>
       <!-- spacer -->
     </div>

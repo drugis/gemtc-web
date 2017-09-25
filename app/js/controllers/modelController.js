@@ -1,25 +1,43 @@
 'use strict';
 define(['lodash', 'clipboard'], function(_, Clipboard) {
   var dependencies = ['$scope', '$q', '$http', '$modal', '$state', '$stateParams', '$window', 'gemtcRootPath', 'ModelResource', 'ModelBaselineResource',
-    'FunnelPlotResource', 'PataviService',
-    'RelativeEffectsTableService', 'PataviTaskIdResource', 'ProblemResource', 'AnalysisResource', 'ModelService',
-    'DiagnosticsService', 'AnalysisService', 'DevianceStatisticsService', 'MetaRegressionService',
+    'isGemtcStandAlone', 
+    'FunnelPlotResource', 
+    'PataviService',
+    'RelativeEffectsTableService', 
+    'PataviTaskIdResource', 
+    'ProblemResource', 
+    'AnalysisResource', 
+    'ModelService',
+    'DiagnosticsService', 
+    'AnalysisService', 
+    'DevianceStatisticsService', 
+    'MetaRegressionService',
     'ResultsPlotService'
   ];
   var ModelController = function($scope, $q, $http, $modal, $state, $stateParams, $window, gemtcRootPath, ModelResource, ModelBaselineResource,
-    FunnelPlotResource, PataviService,
-    RelativeEffectsTableService, PataviTaskIdResource, ProblemResource, AnalysisResource, ModelService,
-    DiagnosticsService, AnalysisService, DevianceStatisticsService, MetaRegressionService,
+    isGemtcStandAlone, 
+    FunnelPlotResource, 
+    PataviService,
+    RelativeEffectsTableService, 
+    PataviTaskIdResource, 
+    ProblemResource, 
+    AnalysisResource, 
+    ModelService,
+    DiagnosticsService, 
+    AnalysisService, 
+    DevianceStatisticsService, 
+    MetaRegressionService,
     ResultsPlotService) {
+    // functions
+    $scope.openRunLengthDialog = openRunLengthDialog;
+    $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;
+    $scope.openBaselineDistributionModal = openBaselineDistributionModal;
+    $scope.goToModelData = goToModelData;
+    $scope.goToRefineModel = goToRefineModel;
+    $scope.goToRScript = goToRScript;
 
-    var modelDefer = $q.defer();
-
-    $scope.resultsViewTemplate = gemtcRootPath + 'views/results-section.html';
-    $scope.modelSettingsViewTemplate = gemtcRootPath + 'views/model-settings-section.html';
-    $scope.convergenceDiagnosticsViewTemplate = gemtcRootPath + 'views/convergence-diagnostics-section.html';
-    $scope.modelFitViewTemplate = gemtcRootPath + 'views/model-fit-section.html';
-    $scope.metaRegressionTemplate = gemtcRootPath + 'views/meta-regression-section.html';
-
+    // init
     $scope.analysis = AnalysisResource.get($stateParams);
     ModelBaselineResource.get($stateParams).$promise.then(function(result) {
       $scope.baselineDistribution = result.baseline;
@@ -27,18 +45,18 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     $scope.progress = {
       percentage: 0
     };
+    var modelDefer = $q.defer();
     $scope.model = ModelResource.get($stateParams);
     $scope.modelPromise = modelDefer.promise;
     $scope.comparisonAdjustedFunnelPlots = FunnelPlotResource.query($stateParams);
-    $scope.openRunLengthDialog = openRunLengthDialog;
-    $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;
-    $scope.openBaselineDistributionModal = openBaselineDistributionModal;
-    $scope.goToModelData = goToModelData;
-    $scope.goToRefineModel = goToRefineModel;
-    $scope.goToRScript = goToRScript;
-    $scope.selectedBaseline = undefined;
+    $scope.resultsViewTemplate = gemtcRootPath + 'views/results-section.html';
+    $scope.modelSettingsViewTemplate = gemtcRootPath + 'views/model-settings-section.html';
+    $scope.convergenceDiagnosticsViewTemplate = gemtcRootPath + 'views/convergence-diagnostics-section.html';
+    $scope.modelFitViewTemplate = gemtcRootPath + 'views/model-fit-section.html';
+    $scope.metaRegressionTemplate = gemtcRootPath + 'views/meta-regression-section.html';
     $scope.stateParams = $stateParams;
     var clipboard = new Clipboard('.clipboard-button');
+    $scope.selectedBaseline = undefined;
 
     // pass information to parent for use in breadcrumbs
     $scope.$parent.model = $scope.model;
