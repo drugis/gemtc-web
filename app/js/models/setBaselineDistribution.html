@@ -20,7 +20,7 @@
       </label>
     </div>
   </div>
-  <div class="row" ng-if="!isSurvival && (isMissingSampleSize)">
+  <div class="row" ng-if="!isSurvival && isMissingSampleSize && baselineDistribution.type !== 'dbeta-cloglog'">
     <div class="large-4 medium-6 columns">
       <label>mean
         <input type="number" ng-model="baselineDistribution.mu">
@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <div class="row" ng-if="baselineDistribution.scale === 'log odds'">
+  <div class="row" ng-if="baselineDistribution.scale === 'log odds' || baselineDistribution.type === 'dbeta-cloglog'">
     <div class="large-4 medium-6 columns">
       <label>alpha
         <input type="number" ng-model="baselineDistribution.alpha">
@@ -65,7 +65,7 @@
   </div>
 
   <!-- Survival -->
-  <div class="row" ng-if="baselineDistribution.scale === 'log hazard'">
+  <div class="row" ng-if="baselineDistribution.scale === 'log hazard' && baselineDistribution.link === 'log'">
     <div class="large-4 medium-6 columns">
       <label>alpha
         <input type="number" ng-model="baselineDistribution.alpha">

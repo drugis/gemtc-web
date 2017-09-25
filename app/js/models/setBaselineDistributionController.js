@@ -19,11 +19,13 @@ define(['lodash'], function(_) {
     alternatives,
     problem,
     ModelService) {
-    $scope.selections = {};
+    // functions
     $scope.outcomeWithAnalysis = outcomeWithAnalysis;
     $scope.armSelectionChanged = armSelectionChanged;
     $scope.alternativeSelectionChanged = alternativeSelectionChanged;
 
+    // init
+    $scope.selections = {};
     $scope.isInValidBaseline = isInValidBaseline;
 
     var localAlternatives;
@@ -52,36 +54,45 @@ define(['lodash'], function(_) {
     $scope.baselineDistribution = {
       selectedAlternative: localAlternatives[0]
     };
-    $scope.baselineDistribution.scale = _.find(AnalysisService.LIKELIHOOD_LINK_SETTINGS, function(setting) {
+
+    var settings = _.find(AnalysisService.LIKELIHOOD_LINK_SETTINGS, function(setting) {
       return setting.likelihood === outcomeWithAnalysis.selectedModel.likelihood &&
         setting.link === outcomeWithAnalysis.selectedModel.link;
-    }).absoluteScale;
+    });
+    $scope.baselineDistribution.scale = settings.absoluteScale;
+    $scope.baselineDistribution.link = settings.link;
     $scope.scaleLabel = $scope.baselineDistribution.scale === 'log odds' ? 'probability' : $scope.baselineDistribution.scale;
 
-      $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives, $scope.baselineDistribution.scale);
-      $scope.isSurvival = $scope.baselineDistribution.scale === 'log hazard';
-      $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
-        return _.find(armList, function(arm) {
-          return arm.sampleSize === undefined;
-        });
+    $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives,
+      $scope.baselineDistribution.scale, $scope.baselineDistribution.link);
+    $scope.isSurvival = $scope.baselineDistribution.scale === 'log hazard' && $scope.baselineDistribution.link === 'log';
+    $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
+      return _.find(armList, function(arm) {
+        return arm.sampleSize === undefined;
       });
+    });
 
-      if ($scope.baselineDistribution.scale === 'log hazard') {
+    if ($scope.baselineDistribution.scale === 'log hazard') {
+      if ($scope.baselineDistribution.link === 'cloglog') {
+        $scope.baselineDistribution.type = 'dbeta-cloglog';
+        $scope.distributionName = 'Beta';
+      } else {
         $scope.baselineDistribution.type = 'dsurv';
         $scope.distributionName = 'Gamma';
-      } else if ($scope.isMissingSampleSize) {
-        $scope.baselineDistribution.type = 'dnorm';
-        $scope.distributionName = 'Normal';
-      } else {
-        $scope.baselineDistribution.type = $scope.baselineDistribution.scale === 'log odds' ? 'dbeta-logit' : 'dt';
-        $scope.distributionName = $scope.baselineDistribution.scale === 'log odds' ? 'Beta' : 'Student\'s t';
       }
+    } else if ($scope.isMissingSampleSize) {
+      $scope.baselineDistribution.type = 'dnorm';
+      $scope.distributionName = 'Normal';
+    } else {
+      $scope.baselineDistribution.type = $scope.baselineDistribution.scale === 'log odds' ? 'dbeta-logit' : 'dt';
+      $scope.distributionName = $scope.baselineDistribution.scale === 'log odds' ? 'Beta' : 'Student\'s t';
+    }
 
-      $scope.selections.armIdx = 0;
-      $scope.armSelectionChanged();
-      $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
-        return $scope.arms[alternative.id].length;
-      });
+    $scope.selections.armIdx = 0;
+    $scope.armSelectionChanged();
+    $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
+      return $scope.arms[alternative.id].length;
+    });
 
     function isInValidBaseline(baselineDistribution) {
       return ModelService.isInValidBaseline(baselineDistribution);
@@ -93,7 +104,6 @@ define(['lodash'], function(_) {
         selectedAlternative: $scope.baselineDistribution.selectedAlternative,
         scale: $scope.baselineDistribution.scale,
         name: selectedArm.alternativeName
-
       };
       if ($scope.baselineDistribution.type === 'dbeta-logit') {
         newBaselineDistribution.alpha = selectedArm.responders + 1;
@@ -113,6 +123,10 @@ define(['lodash'], function(_) {
         newBaselineDistribution.beta = selectedArm.exposure + 0.001;
         newBaselineDistribution.type = 'dsurv';
         newBaselineDistribution.summaryMeasure = 'mean';
+      } else if ($scope.baselineDistribution.type === 'dbeta-cloglog') {
+        newBaselineDistribution.alpha = selectedArm.responders + 1;
+        newBaselineDistribution.beta = selectedArm.sampleSize - selectedArm.responders + 1;
+        newBaselineDistribution.type = 'dbeta-cloglog';
       } else {
         return;
       }
@@ -121,8 +135,8 @@ define(['lodash'], function(_) {
 
 
     function alternativeSelectionChanged() {
-        $scope.selections.armIdx = 0;
-        $scope.armSelectionChanged();
+      $scope.selections.armIdx = 0;
+      $scope.armSelectionChanged();
     }
 
     $scope.setBaselineDistribution = function(baselineDistribution) {

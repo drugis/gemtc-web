@@ -894,7 +894,8 @@ define(['angular', 'angular-mocks', 'services'], function() {
         };
         var alternatives = problem.treatments;
         var scale = 'log hazard';
-        var result = modelService.buildBaselineSelectionEvidence(problem, alternatives, scale);
+        var link = 'log';
+        var result = modelService.buildBaselineSelectionEvidence(problem, alternatives, scale, link);
 
         var expectedResult = {
           0: [{
@@ -912,6 +913,54 @@ define(['angular', 'angular-mocks', 'services'], function() {
             performance: problem.entries[1].responders + '/' + problem.entries[1].exposure,
             responders: problem.entries[1].responders,
             exposure: problem.entries[1].exposure
+          }]
+        };
+
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should build the evidence for hazard ratio alternatives', function() {
+        var problem = {
+          entries: [{
+            responders: 20,
+            exposure: 5000,
+            study: '1',
+            treatment: 0
+          }, {
+            responders: 21,
+            exposure: 5100,
+            study: '1',
+            treatment: 1
+          }],
+          treatments: [{
+            name: 'parox',
+            id: 0
+          }, {
+            name: 'fluox',
+            id: 1
+          }]
+        };
+        var alternatives = problem.treatments;
+        var scale = 'log hazard';
+        var link = 'cloglog';
+        var result = modelService.buildBaselineSelectionEvidence(problem, alternatives, scale, link);
+
+        var expectedResult = {
+          0: [{
+            idx: 0,
+            studyName: problem.entries[0].study,
+            alternativeName: alternatives[0].name,
+            performance: problem.entries[0].responders + '/' + problem.entries[0].sampleSize,
+            responders: problem.entries[0].responders,
+            sampleSize: problem.entries[0].sampleSize
+          }],
+          1: [{
+            idx: 0,
+            studyName: problem.entries[1].study,
+            alternativeName: alternatives[1].name,
+            performance: problem.entries[1].responders + '/' + problem.entries[1].sampleSize,
+            responders: problem.entries[1].responders,
+            sampleSize: problem.entries[1].sampleSize
           }]
         };
 
