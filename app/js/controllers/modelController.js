@@ -1,7 +1,6 @@
 'use strict';
 define(['lodash', 'clipboard'], function(_, Clipboard) {
   var dependencies = ['$scope', '$q', '$http', '$modal', '$state', '$stateParams', '$window', 'gemtcRootPath', 'ModelResource', 'ModelBaselineResource',
-    'isGemtcStandAlone', 
     'FunnelPlotResource', 
     'PataviService',
     'RelativeEffectsTableService', 
@@ -16,7 +15,6 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     'ResultsPlotService'
   ];
   var ModelController = function($scope, $q, $http, $modal, $state, $stateParams, $window, gemtcRootPath, ModelResource, ModelBaselineResource,
-    isGemtcStandAlone, 
     FunnelPlotResource, 
     PataviService,
     RelativeEffectsTableService, 

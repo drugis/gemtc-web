@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'lodash'], function(angular, _) {
+define(['lodash'], function(_) {
   var dependencies = [];
 
   var ModelService = function() {
@@ -370,12 +370,12 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function survEntryBuilder(alternative, entry, idx) {
-        var scaleStrings = {
-          P1D: ' days',
-          P1W: ' weeks',
-          P1M: ' months',
-          P1Y: ' years'
-        };
+      var scaleStrings = {
+        P1D: ' days',
+        P1W: ' weeks',
+        P1M: ' months',
+        P1Y: ' years'
+      };
       var performanceStr = entry.timeScale ? entry.responders + ' events over ' + entry.exposure + scaleStrings[entry.timeScale] :
         entry.responders + '/' + entry.exposure; // timescale not necessarily there in gemtc standalone
       return {
@@ -388,14 +388,16 @@ define(['angular', 'lodash'], function(angular, _) {
       };
     }
 
-    function buildBaselineSelectionEvidence(problem, alternatives, scale) {
+    function buildBaselineSelectionEvidence(problem, alternatives, scale, link) {
       var entryBuilder;
       if (scale === 'log odds') {
         entryBuilder = betaEntryBuilder;
       } else if (scale === 'mean') {
         entryBuilder = tEntryBuilder;
-      } else if (scale === 'log hazard') {
+      } else if (scale === 'log hazard' && link === 'log') {
         entryBuilder = survEntryBuilder;
+      } else if (scale === 'log hazard' && link === 'cloglog') {
+        entryBuilder = betaEntryBuilder;
       }
       return _.reduce(alternatives, function(accum, alternative) {
         var filteredEntries = _.sortBy(_.filter(problem.entries, ['treatment', alternative.id]), 'study');
@@ -408,7 +410,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function isInValidBaseline(baselineDistribution) {
-      if (baselineDistribution.type === 'dbeta-logit') {
+      if (baselineDistribution.type === 'dbeta-logit' || baselineDistribution.type === 'dbeta-cloglog') {
         return (baselineDistribution.alpha === undefined ||
           baselineDistribution.alpha === null ||
           baselineDistribution.alpha < 1 ||

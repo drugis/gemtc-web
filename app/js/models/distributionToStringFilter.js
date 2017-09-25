@@ -30,6 +30,11 @@ define([], function() {
         case 'dsurv' :
           distributionLabel = 'Gamma';
           parameterString = distribution.alpha + ', ' + distribution.beta;
+          break;
+        case 'dbeta-cloglog' :
+          distributionLabel = 'Beta';
+          distributionScaleLabel = 'hazard ratio';
+          parameterString = distribution.alpha + ', ' + distribution.beta;
       }
 
       return distributionScaleLabel + ' (' + distribution.name + ') ~ ' +

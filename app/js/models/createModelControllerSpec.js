@@ -65,6 +65,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         $q: q,
         $stateParams: stateParamsMock,
         $state: stateMock,
+        isGemtcStandAlone: true,
         ModelService: modelServiceMock,
         ModelResource: modelResourceMock,
         AnalysisService: analysisServiceMock,
