@@ -61,7 +61,7 @@ define(['lodash'], function(_) {
     });
     $scope.baselineDistribution.scale = settings.absoluteScale;
     $scope.baselineDistribution.link = settings.link;
-    $scope.scaleLabel = $scope.baselineDistribution.scale === 'log odds' ? 'probability' : $scope.baselineDistribution.scale;
+    $scope.scaleLabel = $scope.baselineDistribution.scale === 'log odds' || 'hazard ratio' ? 'probability' : $scope.baselineDistribution.scale;
 
     $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives,
       $scope.baselineDistribution.scale, $scope.baselineDistribution.link);
