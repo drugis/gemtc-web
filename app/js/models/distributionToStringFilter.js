@@ -33,7 +33,7 @@ define([], function() {
           break;
         case 'dbeta-cloglog' :
           distributionLabel = 'Beta';
-          distributionScaleLabel = 'hazard ratio';
+          distributionScaleLabel = 'probability';
           parameterString = distribution.alpha + ', ' + distribution.beta;
       }
 
