@@ -58,8 +58,8 @@ define(
 
     app.constant('isGemtcStandAlone', true);
 
-    app.config(['isGemtcStandAlone', '$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide',
-      function(isGemtcStandAlone, $stateProvider, $urlRouterProvider, $httpProvider, $provide) {
+    app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide',
+      function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
 
         $provide.decorator('$uiViewScroll', function() {
           return function(uiViewElement) {
