@@ -1,5 +1,5 @@
 // Uncomment to use rem-calc() in your settings
-@import "foundation/functions";
+@import "util/util";
 $rem-base: 16px;
 
 $row-width: rem-calc(1500);

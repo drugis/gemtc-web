@@ -1,40 +1,35 @@
-  <div class="fixed">
-    <nav class="top-bar" data-topbar>
-      <ul class="title-area">
-        <li class="name">
-          <h1>
+<div class="fixed">
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <ul class="dropdown menu" data-dropdown-menu>
+        <li class="menu-text">
             <a id="logo" ui-sref="analyses">gemtc.drugis.org</a>
-          </h1>
         </li>
       </ul>
-
-      <section class="top-bar-section">
-        <!-- Left Nav Section -->
-        <ng-transclude></ng-transclude>
-
-        <!-- Right Nav Section -->
-        <ul class="right">
-          <li>
-            <a class="manual" href="/manual.html" target="_blank">
+    </div>
+    <div class="top-bar-right">
+      <ul class="dropdown menu" data-dropdown-menu>
+        <li>
+          <a class="manual" href="/manual.html" target="_blank">
               Manual
             </a>
-          </li>
-          <li class="has-dropdown not-click">
-            <a href="#">
-              <img class="user-image" ng-src="{{user.imageUrl}}">
-              <span ng-show="!navSettings.isHidden">{{user.name}}</span>
-            </a>
-            <ul class="dropdown">
-              <li>
-                <a href="logout">Sign out</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </section>
-    </nav>
-
-    <section>
-      <div class="color-stripe"></div>
-    </section>
+        </li>
+        <li>
+          <a href="#">
+            <img class="user-image" ng-src="{{user.imageUrl}}">
+            <span ng-show="!navSettings.isHidden">{{user.name}}</span>
+          </a>
+          <ul class="menu vertical">
+            <li>
+              <a href="logout">Sign out</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
+
+  <section>
+    <div class="color-stripe"></div>
+  </section>
+</div>
