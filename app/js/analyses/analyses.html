@@ -1,21 +1,21 @@
-<div ui-view autoscroll="true">
-  <div class="row nav-bar-spacer" style="margin-bottom: 2rem;">
-    <div class="columns center large-12">
+<div ui-view autoscroll="true" class="grid-container">
+  <div class="grid-x nav-bar-spacer" style="margin-bottom: 2rem;">
+    <div class="cell center">
       <h1 id="analyses-header">Analyses<inline-help help-key="analysis"></inline-help></h1>
     </div>
   </div>
-  <div ng-show="!analysesLoaded" class="row">
-    <div class="columns center large-12">
+  <div ng-show="!analysesLoaded" class="grid-x">
+    <div class="cell center">
       <i class="fa fa-spinner fa-spin fa-3x"></i>
       <p>Loading analyses...
       </p>
     </div>
   </div>
-  <div class="row" ng-show="analysesLoaded">
-    <div class="columns large-12">
+  <div class="grid-x" ng-show="analysesLoaded">
+    <div class="cell">
       <button id="add-analysis-btn" ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button small" ng-click="createAnalysisDialog()"><i class="fa fa-plus"></i> Add new analysis</button>
     </div>
-    <div class="columns large-12">
+    <div class="cell large-6 medium-8">
       <em ng-show="analyses.length === 0">No analyses have been created</em>
       <table ng-show="analyses.length > 0">
         <tr>

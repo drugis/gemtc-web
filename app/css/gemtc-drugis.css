@@ -59,37 +59,37 @@
   opacity: .5;
 }
 
-/* line 1, ../sass/_gemtc-drugis-base.scss */
+/* line 2, ../sass/_gemtc-drugis-base.scss */
 .alert-box.alert {
   margin-top: 1.25rem;
 }
 
-/* line 6, ../sass/_gemtc-drugis-base.scss */
+/* line 7, ../sass/_gemtc-drugis-base.scss */
 .export-button {
   margin-left: 1rem;
 }
 
-/* line 10, ../sass/_gemtc-drugis-base.scss */
+/* line 11, ../sass/_gemtc-drugis-base.scss */
 .inline {
   display: inline;
 }
 
-/* line 14, ../sass/_gemtc-drugis-base.scss */
+/* line 15, ../sass/_gemtc-drugis-base.scss */
 .image-selector {
   margin-top: 2rem;
 }
-/* line 16, ../sass/_gemtc-drugis-base.scss */
+/* line 17, ../sass/_gemtc-drugis-base.scss */
 .image-selector div.columns, .image-selector div.column {
   padding: 0;
 }
 
-/* line 21, ../sass/_gemtc-drugis-base.scss */
+/* line 22, ../sass/_gemtc-drugis-base.scss */
 label.form-item-header {
   font-size: 1.2rem;
   margin-top: 1rem;
 }
 
-/* line 26, ../sass/_gemtc-drugis-base.scss */
+/* line 27, ../sass/_gemtc-drugis-base.scss */
 a.next {
   display: block;
   position: absolute;
@@ -97,7 +97,7 @@ a.next {
   left: 494pt;
 }
 
-/* line 33, ../sass/_gemtc-drugis-base.scss */
+/* line 34, ../sass/_gemtc-drugis-base.scss */
 a.previous {
   display: block;
   position: absolute;
@@ -105,19 +105,19 @@ a.previous {
   left: 10pt;
 }
 
-/* line 40, ../sass/_gemtc-drugis-base.scss */
+/* line 41, ../sass/_gemtc-drugis-base.scss */
 img.paged-png {
   position: relative;
   left: 60pt;
 }
 
-/* line 45, ../sass/_gemtc-drugis-base.scss */
+/* line 46, ../sass/_gemtc-drugis-base.scss */
 .main-category-header {
   color: #008CBA;
   font-weight: bold;
 }
 
-/* line 50, ../sass/_gemtc-drugis-base.scss */
+/* line 51, ../sass/_gemtc-drugis-base.scss */
 .breadcrumbs.fixed {
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
@@ -3607,7 +3607,7 @@ a {
 }
 /* line 378, ../js/bower_components/foundation-sites/scss/typography/_base.scss */
 a:hover, a:focus {
-  color: #3b2878;
+  color: #2d1f5b;
 }
 /* line 386, ../js/bower_components/foundation-sites/scss/typography/_base.scss */
 a img {
@@ -4739,11 +4739,11 @@ select[multiple] {
 }
 /* line 90, ../js/bower_components/foundation-sites/scss/components/_accordion-menu.scss */
 .accordion-menu a {
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 0.7rem;
 }
 /* line 97, ../js/bower_components/foundation-sites/scss/components/_accordion-menu.scss */
 .accordion-menu .is-accordion-submenu a {
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 0.7rem;
 }
 /* line 101, ../js/bower_components/foundation-sites/scss/components/_accordion-menu.scss */
 .accordion-menu .nested.is-accordion-submenu {
@@ -5211,7 +5211,7 @@ select[multiple] {
   line-height: 1;
   text-decoration: none;
   display: block;
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 0.7rem;
 }
 /* line 81, ../js/bower_components/foundation-sites/scss/components/_menu.scss */
 .menu input,
@@ -5395,7 +5395,7 @@ select[multiple] {
 }
 /* line 474, ../js/bower_components/foundation-sites/scss/components/_menu.scss */
 .menu .menu-text {
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 0.7rem;
   font-weight: bold;
   line-height: 1;
   color: inherit;
@@ -5490,7 +5490,7 @@ select[multiple] {
 
 /* line 88, ../js/bower_components/foundation-sites/scss/components/_drilldown.scss */
 .drilldown a {
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 0.7rem;
   background: #fefefe;
 }
 /* line 94, ../js/bower_components/foundation-sites/scss/components/_drilldown.scss */
@@ -5515,7 +5515,7 @@ select[multiple] {
 }
 /* line 115, ../js/bower_components/foundation-sites/scss/components/_drilldown.scss */
 .drilldown .is-drilldown-submenu a {
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 0.7rem;
 }
 /* line 120, ../js/bower_components/foundation-sites/scss/components/_drilldown.scss */
 .drilldown .nested.is-drilldown-submenu {
@@ -5556,7 +5556,7 @@ select[multiple] {
   content: '';
   border-right-width: 0;
   border-left-style: solid;
-  border-color: transparent transparent transparent grey;
+  border-color: transparent transparent transparent #8a8a8a;
 }
 /* line 63, ../js/bower_components/foundation-sites/scss/components/_drilldown.scss */
 .drilldown.align-right .is-drilldown-submenu-parent > a::after {
@@ -5569,7 +5569,7 @@ select[multiple] {
   content: '';
   border-left-width: 0;
   border-right-style: solid;
-  border-color: transparent grey transparent transparent;
+  border-color: transparent #8a8a8a transparent transparent;
 }
 /* line 131, ../js/bower_components/foundation-sites/scss/components/_drilldown.scss */
 .drilldown .js-drilldown-back > a::before {
@@ -5652,14 +5652,14 @@ select[multiple] {
   content: '';
   border-bottom-width: 0;
   border-top-style: solid;
-  border-color: grey transparent transparent;
+  border-color: #8a8a8a transparent transparent;
   right: 5px;
   left: auto;
   margin-top: -3px;
 }
 /* line 149, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
 .dropdown.menu a {
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 0.7rem;
 }
 /* line 202, ../js/bower_components/foundation-sites/scss/util/_mixins.scss */
 [data-whatinput='mouse'] .dropdown.menu a {
@@ -5668,7 +5668,7 @@ select[multiple] {
 /* line 155, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
 .dropdown.menu .is-active > a {
   background: transparent;
-  color: #452F8C;
+  color: #fefefe;
 }
 /* line 160, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
 .no-js .dropdown.menu ul {
@@ -5709,7 +5709,7 @@ select[multiple] {
   content: '';
   border-left-width: 0;
   border-right-style: solid;
-  border-color: transparent grey transparent transparent;
+  border-color: transparent #8a8a8a transparent transparent;
 }
 /* line 77, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
 .dropdown.menu.vertical > li.opens-right > a::after {
@@ -5720,7 +5720,7 @@ select[multiple] {
   content: '';
   border-right-width: 0;
   border-left-style: solid;
-  border-color: transparent transparent transparent grey;
+  border-color: transparent transparent transparent #8a8a8a;
 }
 @media print, screen and (min-width: 40em) {
   /* line 85, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
@@ -5749,7 +5749,7 @@ select[multiple] {
     content: '';
     border-bottom-width: 0;
     border-top-style: solid;
-    border-color: grey transparent transparent;
+    border-color: #8a8a8a transparent transparent;
     right: 5px;
     left: auto;
     margin-top: -3px;
@@ -5784,7 +5784,7 @@ select[multiple] {
     content: '';
     border-left-width: 0;
     border-right-style: solid;
-    border-color: transparent grey transparent transparent;
+    border-color: transparent #8a8a8a transparent transparent;
   }
   /* line 77, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
   .dropdown.menu.medium-vertical > li.opens-right > a::after {
@@ -5795,7 +5795,7 @@ select[multiple] {
     content: '';
     border-right-width: 0;
     border-left-style: solid;
-    border-color: transparent transparent transparent grey;
+    border-color: transparent transparent transparent #8a8a8a;
   }
 }
 @media print, screen and (min-width: 64em) {
@@ -5825,7 +5825,7 @@ select[multiple] {
     content: '';
     border-bottom-width: 0;
     border-top-style: solid;
-    border-color: grey transparent transparent;
+    border-color: #8a8a8a transparent transparent;
     right: 5px;
     left: auto;
     margin-top: -3px;
@@ -5860,7 +5860,7 @@ select[multiple] {
     content: '';
     border-left-width: 0;
     border-right-style: solid;
-    border-color: transparent grey transparent transparent;
+    border-color: transparent #8a8a8a transparent transparent;
   }
   /* line 77, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
   .dropdown.menu.large-vertical > li.opens-right > a::after {
@@ -5871,7 +5871,7 @@ select[multiple] {
     content: '';
     border-right-width: 0;
     border-left-style: solid;
-    border-color: transparent transparent transparent grey;
+    border-color: transparent transparent transparent #8a8a8a;
   }
 }
 /* line 187, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
@@ -5926,12 +5926,12 @@ select[multiple] {
   z-index: 1;
   display: none;
   min-width: 200px;
-  border: 1px solid #cacaca;
+  border: 0;
   background: #fefefe;
 }
 /* line 248, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
 .dropdown .is-dropdown-submenu a {
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 0.7rem;
 }
 /* line 67, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
 .is-dropdown-submenu .is-dropdown-submenu-parent > a::after {
@@ -5948,7 +5948,7 @@ select[multiple] {
   content: '';
   border-left-width: 0;
   border-right-style: solid;
-  border-color: transparent grey transparent transparent;
+  border-color: transparent #8a8a8a transparent transparent;
 }
 /* line 77, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
 .is-dropdown-submenu .is-dropdown-submenu-parent.opens-right > a::after {
@@ -5959,11 +5959,11 @@ select[multiple] {
   content: '';
   border-right-width: 0;
   border-left-style: solid;
-  border-color: transparent transparent transparent grey;
+  border-color: transparent transparent transparent #8a8a8a;
 }
 /* line 259, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
 .is-dropdown-submenu .is-dropdown-submenu {
-  margin-top: -1px;
+  margin-top: 0;
 }
 /* line 264, ../js/bower_components/foundation-sites/scss/components/_dropdown-menu.scss */
 .is-dropdown-submenu > li {
@@ -7607,13 +7607,13 @@ a.thumbnail image {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0;
   flex-wrap: wrap;
 }
 /* line 47, ../js/bower_components/foundation-sites/scss/components/_top-bar.scss */
 .top-bar,
 .top-bar ul {
-  background-color: #e6e6e6;
+  background-color: #333;
 }
 /* line 60, ../js/bower_components/foundation-sites/scss/components/_top-bar.scss */
 .top-bar input {
@@ -8124,7 +8124,7 @@ a.thumbnail image {
     flex-direction: column-reverse;
   }
 }
-/* line 3, ../drugis-css/_drugis.scss */
+/* line 6, ../drugis-css/_drugis.scss */
 #hero {
   background: #F57C00;
   height: 420px;
@@ -8133,13 +8133,13 @@ a.thumbnail image {
   padding: 100px 20px 0 20px;
 }
 
-/* line 11, ../drugis-css/_drugis.scss */
+/* line 14, ../drugis-css/_drugis.scss */
 .color-stripe {
   background: #F57C00;
   height: 0.45rem;
 }
 
-/* line 17, ../drugis-css/_drugis.scss */
+/* line 20, ../drugis-css/_drugis.scss */
 .user-image {
   margin-top: -1px;
   margin-right: 4px;
@@ -8147,165 +8147,165 @@ a.thumbnail image {
   border-radius: 15px;
 }
 
-/* line 24, ../drugis-css/_drugis.scss */
+/* line 27, ../drugis-css/_drugis.scss */
 .inline-header {
   display: inline;
 }
 
-/* line 28, ../drugis-css/_drugis.scss */
+/* line 31, ../drugis-css/_drugis.scss */
 .indent-one {
   margin-left: 2rem;
 }
 
-/* line 32, ../drugis-css/_drugis.scss */
+/* line 35, ../drugis-css/_drugis.scss */
 navbar-directive ul li > a.manual:hover {
   text-decoration: underline;
 }
 
-/* line 36, ../drugis-css/_drugis.scss */
+/* line 39, ../drugis-css/_drugis.scss */
 .alert {
   color: #E66464;
 }
 
-/* line 40, ../drugis-css/_drugis.scss */
+/* line 43, ../drugis-css/_drugis.scss */
 .warning {
   color: #f2973c;
 }
 
-/* line 44, ../drugis-css/_drugis.scss */
+/* line 47, ../drugis-css/_drugis.scss */
 .info {
   color: #77c0de;
 }
 
-/* line 48, ../drugis-css/_drugis.scss */
+/* line 51, ../drugis-css/_drugis.scss */
 .error-message {
   display: block;
   color: #F57C00;
 }
 
-/* line 53, ../drugis-css/_drugis.scss */
+/* line 56, ../drugis-css/_drugis.scss */
 .alert-box-message {
   padding-right: 1.25rem;
 }
 
-/* line 57, ../drugis-css/_drugis.scss */
+/* line 60, ../drugis-css/_drugis.scss */
 body.test {
   background-image: url("../img/test.png");
   background-repeat: repeat-x repeat-y;
 }
 
-/* line 64, ../drugis-css/_drugis.scss */
+/* line 67, ../drugis-css/_drugis.scss */
 table {
   border-collapse: collapse;
 }
-/* line 65, ../drugis-css/_drugis.scss */
+/* line 68, ../drugis-css/_drugis.scss */
 table caption {
   text-align: left;
   font-weight: lighter;
 }
-/* line 70, ../drugis-css/_drugis.scss */
+/* line 73, ../drugis-css/_drugis.scss */
 table tr:nth-of-type(even) {
   background-color: transparent;
 }
-/* line 73, ../drugis-css/_drugis.scss */
+/* line 76, ../drugis-css/_drugis.scss */
 table tr {
   height: 1rem;
 }
-/* line 75, ../drugis-css/_drugis.scss */
+/* line 78, ../drugis-css/_drugis.scss */
 table tr th.sortable {
   cursor: pointer;
 }
-/* line 78, ../drugis-css/_drugis.scss */
+/* line 81, ../drugis-css/_drugis.scss */
 table tr th {
   text-align: center;
   background-color: #F5F5F5;
 }
-/* line 82, ../drugis-css/_drugis.scss */
+/* line 85, ../drugis-css/_drugis.scss */
 table tr th,
 table tr td {
-  border: solid 1px #aeaeae;
+  border: solid 1px #cacaca;
 }
-/* line 85, ../drugis-css/_drugis.scss */
+/* line 88, ../drugis-css/_drugis.scss */
 table tr th a:hover,
 table tr td a:hover {
   text-decoration: underline;
 }
-/* line 89, ../drugis-css/_drugis.scss */
+/* line 92, ../drugis-css/_drugis.scss */
 table tr td.button-cell {
   text-align: center;
 }
-/* line 91, ../drugis-css/_drugis.scss */
+/* line 94, ../drugis-css/_drugis.scss */
 table tr td.button-cell button {
   margin-bottom: 0;
-  font-size: 0.875rem;
+  font-size: 100%;
 }
-/* line 96, ../drugis-css/_drugis.scss */
+/* line 99, ../drugis-css/_drugis.scss */
 table tr td.input-cell {
   padding: 0;
 }
-/* line 98, ../drugis-css/_drugis.scss */
+/* line 101, ../drugis-css/_drugis.scss */
 table tr td.input-cell select,
 table tr td.input-cell input[type="number"] {
   margin: 0;
   border: 0;
   text-align: center;
 }
-/* line 104, ../drugis-css/_drugis.scss */
+/* line 107, ../drugis-css/_drugis.scss */
 table tr td.input-cell select {
   padding-right: 1rem;
 }
-/* line 107, ../drugis-css/_drugis.scss */
+/* line 110, ../drugis-css/_drugis.scss */
 table tr td.input-cell input[type="number"].ng-invalid,
 table tr td.input-cell input[type="number"].ng-invalid-number,
 table tr td.input-cell input[type="number"].invalid-trialverse-number {
   background-color: #ed9090;
 }
 
-/* line 116, ../drugis-css/_drugis.scss */
+/* line 119, ../drugis-css/_drugis.scss */
 tr.disabled-row td {
   background: lightgrey;
   color: #666;
 }
 
-/* line 121, ../drugis-css/_drugis.scss */
+/* line 124, ../drugis-css/_drugis.scss */
 tr.clickable td {
   color: #452F8C;
 }
 
-/* line 125, ../drugis-css/_drugis.scss */
+/* line 128, ../drugis-css/_drugis.scss */
 td.empty-cell {
-  background-color: #aeaeae;
+  background-color: #cacaca;
 }
 
-/* line 130, ../drugis-css/_drugis.scss */
+/* line 133, ../drugis-css/_drugis.scss */
 tr.on-hover:hover {
   background: #757575;
   cursor: pointer;
   text-decoration: none;
 }
 
-/* line 136, ../drugis-css/_drugis.scss */
+/* line 139, ../drugis-css/_drugis.scss */
 table.layout-table {
   border: none;
   background-color: #F3F0FA;
 }
-/* line 139, ../drugis-css/_drugis.scss */
+/* line 142, ../drugis-css/_drugis.scss */
 table.layout-table td {
   border: none;
 }
 
-/* line 145, ../drugis-css/_drugis.scss */
+/* line 148, ../drugis-css/_drugis.scss */
 .error-message {
   display: block;
   color: #F57C00;
 }
 
-/* line 150, ../drugis-css/_drugis.scss */
+/* line 153, ../drugis-css/_drugis.scss */
 .application-link a {
   text-decoration: underline;
 }
 
-/* line 155, ../drugis-css/_drugis.scss */
+/* line 158, ../drugis-css/_drugis.scss */
 input[type="number"],
 input[type="text"],
 select,
@@ -8313,7 +8313,18 @@ select option {
   line-height: 1.1rem;
 }
 
-/* line 183, ../drugis-css/_drugis.scss */
+/* line 166, ../drugis-css/_drugis.scss */
+.menu a, .menu a:hover, .menu a:active {
+  color: white;
+}
+
+/* line 169, ../drugis-css/_drugis.scss */
+.breadcrumbs {
+  background: #f4f4f4;
+  padding: 0.4rem 0.7rem;
+}
+
+/* line 175, ../drugis-css/_drugis.scss */
 #hero h1 {
   font-size: 4em;
   color: white;
@@ -8322,19 +8333,19 @@ select option {
   line-height: 100%;
 }
 
-/* line 191, ../drugis-css/_drugis.scss */
+/* line 183, ../drugis-css/_drugis.scss */
 #hero h1 small {
   color: white;
 }
 
-/* line 195, ../drugis-css/_drugis.scss */
+/* line 187, ../drugis-css/_drugis.scss */
 #hero h4 {
   font-size: 1.35em;
   color: white;
   font-weight: 300;
 }
 
-/* line 201, ../drugis-css/_drugis.scss */
+/* line 193, ../drugis-css/_drugis.scss */
 header {
   background: #F57C00;
   text-align: left;
@@ -8342,7 +8353,7 @@ header {
   padding: 25px 20px 35px 0px;
 }
 
-/* line 208, ../drugis-css/_drugis.scss */
+/* line 200, ../drugis-css/_drugis.scss */
 header h2 {
   font-size: 3.5em;
   color: white;
@@ -8351,70 +8362,70 @@ header h2 {
   line-height: 100%;
 }
 
-/* line 216, ../drugis-css/_drugis.scss */
+/* line 208, ../drugis-css/_drugis.scss */
 header h4 {
   color: white;
 }
 
-/* line 220, ../drugis-css/_drugis.scss */
+/* line 212, ../drugis-css/_drugis.scss */
 header small {
   color: white;
 }
 
-/* line 224, ../drugis-css/_drugis.scss */
+/* line 216, ../drugis-css/_drugis.scss */
 .content {
   padding-top: 20px;
 }
 
-/* line 228, ../drugis-css/_drugis.scss */
+/* line 220, ../drugis-css/_drugis.scss */
 h3 img {
   float: right;
   margin-right: 10px;
 }
 
-/* line 233, ../drugis-css/_drugis.scss */
+/* line 225, ../drugis-css/_drugis.scss */
 .row-divider {
   margin: 2rem 0;
 }
 
-/* line 237, ../drugis-css/_drugis.scss */
+/* line 229, ../drugis-css/_drugis.scss */
 .screen-shot {
   border: 1px solid #dddddd;
   padding: 4px;
   margin: 0.5rem;
 }
 
-/* line 243, ../drugis-css/_drugis.scss */
+/* line 235, ../drugis-css/_drugis.scss */
 .footer {
   background: #333333;
   padding: 24px 0 10px;
 }
 
-/* line 248, ../drugis-css/_drugis.scss */
+/* line 240, ../drugis-css/_drugis.scss */
 .footer a,
 .footer h4,
 .footer p {
   color: #666666;
 }
 
-/* line 254, ../drugis-css/_drugis.scss */
+/* line 246, ../drugis-css/_drugis.scss */
 .footer a:hover {
   color: #777777;
 }
 
 /* ---------sticky footer --------------*/
-/* line 263, ../drugis-css/_drugis.scss */
+/* line 257, ../drugis-css/_drugis.scss */
 * {
   margin: 0;
 }
 
-/* line 267, ../drugis-css/_drugis.scss */
+/* line 261, ../drugis-css/_drugis.scss */
 html,
 body {
   height: 100%;
 }
 
-/* line 272, ../drugis-css/_drugis.scss */
+/* line 266, ../drugis-css/_drugis.scss */
 .wrapper {
   min-height: 100%;
   height: auto !important;
@@ -8422,52 +8433,52 @@ body {
   margin: 0 auto -4rem;
 }
 
-/* line 279, ../drugis-css/_drugis.scss */
+/* line 273, ../drugis-css/_drugis.scss */
 .push {
   height: 4.5rem;
 }
 
-/* line 283, ../drugis-css/_drugis.scss */
+/* line 277, ../drugis-css/_drugis.scss */
 .footer {
   height: 4.5rem;
 }
 
-/* line 287, ../drugis-css/_drugis.scss */
+/* line 281, ../drugis-css/_drugis.scss */
 .footer,
 .push {
   clear: both;
 }
 
-/* line 292, ../drugis-css/_drugis.scss */
+/* line 286, ../drugis-css/_drugis.scss */
 .copyright {
   display: inline;
 }
 
 /* -------- end sticky footer---------*/
-/* line 300, ../drugis-css/_drugis.scss */
+/* line 296, ../drugis-css/_drugis.scss */
 #map_canvas {
   height: 280px;
 }
 
 /* standard */
-/* line 308, ../drugis-css/_drugis.scss */
+/* line 306, ../drugis-css/_drugis.scss */
 pre {
   margin-bottom: 1rem;
   border: 1px solid #434343;
   background-color: #767676;
   padding: 0.8em;
-  font-size: 1rem;
+  font-size: 100%;
   overflow-x: auto;
 }
 
-/* line 317, ../drugis-css/_drugis.scss */
+/* line 315, ../drugis-css/_drugis.scss */
 pre code {
   border: none;
   background: none;
   padding: 0px;
 }
 
-/* line 323, ../drugis-css/_drugis.scss */
+/* line 321, ../drugis-css/_drugis.scss */
 code {
   border: 1px solid #434343;
   background-color: #767676;
@@ -8503,7 +8514,7 @@ inline-help a:hover {
 }
 
 /* -------- end inline help directive---------*/
-/* line 360, ../drugis-css/_drugis.scss */
+/* line 362, ../drugis-css/_drugis.scss */
 .reveal-modal {
   overflow-x: auto;
   min-width: 540px;

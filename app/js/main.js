@@ -33,7 +33,8 @@ require.config({
       exports: 'angular'
     },
     'angular-touch': {
-      deps: ['angular']
+      deps: ['angular'],
+      exports: 'ngTouch'
     },
     'angularanimate': {
       deps: ['angular']
