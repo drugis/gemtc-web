@@ -1,11 +1,11 @@
-<div class="row">
-  <div class="columns columns large-9 medium-11 small-12">
+<div class="grid-x">
+  <div class="cell large-9 medium-11 small-12">
     <h4 ng-if="!result" class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
     <progressbar ng-hide="result" value="progress.percentage"></progressbar>
     <div ng-if="result" style="padding-top: 1rem;">
       <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 "
-        class="row">Go to node-split overview</a>
-      <div class="panel callout">
+        class="grid-x">Go to node-split overview</a>
+      <div class="panel callout primary">
         <h5>
           <strong>Model settings</strong>
         </h5>
@@ -153,9 +153,11 @@
             </td>
           </tr>
         </table>
-        <button ng-if="!editMode.disableEditing" ng-click="goToRefineModel()">Refine model</button>
-        <button ng-click="goToModelData()">Get model data</button>
-        <button ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R script{{!taskInfo._links.script ? '*' : ''}}</button>
+        <div class="button-group">
+          <button class="button" ng-if="!editMode.disableEditing" ng-click="goToRefineModel()">Refine model</button>
+          <button class="button" ng-click="goToModelData()">Get model data</button>
+          <button class="button" ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R script{{!taskInfo._links.script ? '*' : ''}}</button>
+        </div>
         <div ng-if="!taskInfo._links.script">
           <em>*Script not available for models from before 29-03-2017</em>
         </div>
@@ -164,6 +166,5 @@
     </div>
     <!-- end setting show in result section -->
   </div>
-  <!-- end settings columns -->
+  <!-- end settings cell -->
 </div>
-<!-- end settings row -->
