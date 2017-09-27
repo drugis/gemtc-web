@@ -1,72 +1,73 @@
 <form id="add-analysis-form" novalidate ng-submit="addAnalysis(analysis)">
-  <div class="row">
-    <div class="large-9 columns">
-      <h3>Add a new Analysis</h3>
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="cell large-9">
+        <h3>Add a new Analysis</h3>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="large-9 columns">
-      <label>Title
-        <input id="title-input" autofocus="true" type="text" ng-model="analysis.title">
-      </label>
+    <div class="grid-x">
+      <div class="cell large-9">
+        <label>Title
+          <input id="title-input" autofocus="true" type="text" ng-model="analysis.title">
+        </label>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="large-9 columns">
-      <label>Outcome
-        <inline-help help-key="outcome"></inline-help>
-        <input id="outcome-input" type="text" ng-model="analysis.outcome.name">
-      </label>
+    <div class="grid-x">
+      <div class="cell large-9">
+        <label>Outcome
+          <inline-help help-key="outcome"></inline-help>
+          <input id="outcome-input" type="text" ng-model="analysis.outcome.name">
+        </label>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="large-9 columns">
-      <label>Outcome direction</label>
-          <input type="radio" id="higher-is-better-radio" ng-value="1" ng-model="analysis.outcome.direction">
-          <label for="higher-is-better-radio">Higher is better</label>
-          <input type="radio" id="lower-is-better-radio" ng-value="-1" ng-model="analysis.outcome.direction">
-          <label for="lower-is-better-radio">Lower is better</label>
+    <div class="grid-x">
+      <div class="cell large-9">
+        <label>Outcome direction</label>
+        <input type="radio" id="higher-is-better-radio" ng-value="1" ng-model="analysis.outcome.direction">
+        <label for="higher-is-better-radio">Higher is better</label>
+        <input type="radio" id="lower-is-better-radio" ng-value="-1" ng-model="analysis.outcome.direction">
+        <label for="lower-is-better-radio">Lower is better</label>
+      </div>
     </div>
-  </div>
-      </label>
+    </label>
+    <div class="grid-x">
+      <div class="cell large-9" ng-model="showInfo">
+        <span style="line-height: 2.5em">
+          <label style="display: inline;">Dataset file
+            <inline-help help-key="dataset-file"></inline-help>
+          </label>
+        </span>
+        <file-reader model="problemFile" accept-types="'.json,.csv'"></file-reader>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="large-9 columns" ng-model="showInfo">
-      <span style="line-height: 2.5em">
-                <label style="display: inline;">Dataset file<inline-help help-key="dataset-file"></inline-help></label>
-            </span>
-      <file-reader model="problemFile" accept-types="'.json,.csv'"></file-reader>
+    <div class="grid-x">
+      <div class="cell large-4 medium-4 small-8" ng-show="uploadResult.isValid && problemFile.extension === 'csv' && uploadResult.problem.relativeEffectData.data !== undefined">
+        <label for="scale-input">
+          Scale for contrast-based data
+          <select id="scale-select" ng-options="option.analysisScale group by option.compatibility for option in scaleOptions"
+            ng-model="selectedScale" ng-change="addScale(selectedScale)">
+          </select>
+        </label>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="large-4 medium-4 small-8 columns" ng-show="uploadResult.isValid && problemFile.extension === 'csv' && uploadResult.problem.relativeEffectData.data !== undefined">
-      <label for="scale-input">
-        Scale for contrast-based data
-        <select
-        id="scale-select"
-        ng-options="option.analysisScale group by option.compatibility for option in scaleOptions"
-        ng-model="selectedScale"
-        ng-change="addScale(selectedScale)">
-        </select>
-      </label>
+    <div class="grid-x ">
+      <div class="columns large-8 medium-10 small-12">
+        <label ng-show="isScaleIncompatible()" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{selectedScale.missingColumnsLabel}}.</label>
+      </div>
     </div>
-  </div>
-  <div class="row ">
-    <div class="columns large-8 medium-10 small-12">
-      <label ng-show="isScaleIncompatible()" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{selectedScale.missingColumnsLabel}}.</label>
+    <div class="grid-x">
+      <div class="cell large-9" ng-show="uploadResult && !uploadResult.isValid">
+        <span style="color: red;">The problem is invalid</span>
+        <div style="color: red;">{{uploadResult.message}}</div>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="large-9 columns" ng-show="uploadResult && !uploadResult.isValid">
-      <span style="color: red;">The problem is invalid</span>
-      <div style="color: red;">{{uploadResult.message}}</div>
+    <div class="grid-x modal-bottom-button-bar">
+      <div class="cell large-9">
+        <button id="submit-add-analysis-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(analysis) || !uploadResult.isValid">Add</button>
+      </div>
     </div>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
-  <div class="row modal-bottom-button-bar">
-    <div class="large-9 columns">
-      <button id="submit-add-analysis-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled(analysis) || !uploadResult.isValid">Add</button>
-    </div>
-  </div>
-  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
 </form>

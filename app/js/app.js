@@ -25,6 +25,7 @@ define(
 
     var dependencies = [
       'ui.router',
+      'ngTouch',
       'ngSanitize',
       'mm.foundation',
       'gemtc.controllers',

@@ -1,6 +1,6 @@
-<div ui-view>
-  <div class="row">
-    <div class="columns large-12" id="model-results-header">
+<div ui-view class="grid-container">
+  <div class="grid-x">
+    <div class="cell" id="model-results-header">
       <h1>Model <data-inline-help help-key="model"></data-inline-help></h1>
       <h5 class="subheader inline">Title: </h5><h5 id="model-label" class="inline">{{::model.title}} <h5>
       <h5 class="subheader inline">Analysis: </h5><a ui-sref="networkMetaAnalysis(stateParams)"><h5 id="model-view-analysis" class="inline">{{::analysis.title}} </a><data-inline-help help-key="analysis"></data-inline-help><h5>

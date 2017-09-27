@@ -2,29 +2,31 @@
   <li><a href="#/analyses">Analyses</a></li>
   <li class="current active">{{analysis.title}}</li>
 </ul>
-<div class="row">
-  <div class="columns center large-12">
-    <h1 id="analysis-header">Analysis</h1>
-    <div ui-view="analysis" autoscroll="true"></div>
-    <hr>
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="cell center">
+      <h1 id="analysis-header">Analysis</h1>
+      <div ui-view="analysis" autoscroll="true"></div>
+      <hr>
+    </div>
   </div>
-</div>
-<div class="row" data-equalizer>
-  <div class="columns large-6">
-    <div ui-view="models"></div>
+  <div class="grid-x" data-equalizer>
+    <div class="cell large-6">
+      <div ui-view="models"></div>
+    </div>
+    <div id="network-graph-container" class="cell large-6">
+      <div ui-view="networkGraph"></div>
+    </div>
   </div>
-  <div id="network-graph-container" class="columns large-6">
-    <div ui-view="networkGraph"></div>
+  <div class="grid-x" ng-if="analysis.problem.entries.length">
+    <div class="cell">
+      <hr>
+      <div ui-view="evidenceTable"></div>
+    </div>
   </div>
-</div>
-<div class="row" ng-if="analysis.problem.entries.length">
-  <div class="columns large-12">
-    <hr>
-    <div ui-view="evidenceTable"></div>
-  </div>
-</div>
-<div class="row" ng-if="analysis.problem.relativeEffectData && analysis.problem.relativeEffectData.data">
-  <div class="columns large-12">
-    <div ui-view="relativeEffectTable"></div>
+  <div class="grid-x" ng-if="analysis.problem.relativeEffectData && analysis.problem.relativeEffectData.data">
+    <div class="cell">
+      <div ui-view="relativeEffectTable"></div>
+    </div>
   </div>
 </div>

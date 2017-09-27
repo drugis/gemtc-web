@@ -1,14 +1,16 @@
-<div class="row">
-  <div class="columns large-4 medium-5">
-    <h5 class="subheader">Title</h5>
-    <h5 id="analysisTitle" class="inline">{{::analysis.title}}</h5>
-        <h5 class="subheader">Outcome
-          <inline-help help-key="outcome"></inline-help>
-        </h5>
-        <h5 id="analysisOutcome" class="inline">
-          {{::analysis.outcome.name}}
-          <span ng-if="analysis.outcome.direction != -1"> (higher is better)</span>
-          <span ng-if="analysis.outcome.direction == -1"> (lower is better)</span>
-        </h5>
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="cell large-4 medium-5">
+      <h5 class="subheader">Title</h5>
+      <h5 id="analysisTitle" class="inline">{{::analysis.title}}</h5>
+      <h5 class="subheader">Outcome
+        <inline-help help-key="outcome"></inline-help>
+      </h5>
+      <h5 id="analysisOutcome" class="inline">
+        {{::analysis.outcome.name}}
+        <span ng-if="analysis.outcome.direction != -1"> (higher is better)</span>
+        <span ng-if="analysis.outcome.direction == -1"> (lower is better)</span>
+      </h5>
+    </div>
   </div>
 </div>
