@@ -137,7 +137,7 @@
                 </div>
                 <div class="small-3 cell">
                   <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel) || isCovariateLevelOutOfBounds(newLevel)"
-                    type="button" ng-click="addLevel(newLevel)" class="postfix">Add level</button>
+                    type="button" ng-click="addLevel(newLevel)" class="button postfix">Add level</button>
                 </div>
                 <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">Level already present.</div>
                 <div ng-show="newLevel !== unedefined && isCovariateLevelOutOfBounds(newLevel)" class="alert"
@@ -453,9 +453,9 @@
       inference-iterations="model.inferenceIterations" thinning-factor="model.thinningFactor"
       is-valid-run-length="isValidRunLength"></data-run-length>
 
-    <div class="grid-x bottom-button-bar">
+    <div class="grid-x">
       <div class="large-9 cell">
-        <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="!isValidRunLength || !isValidHeterogeneityPrior || isAddButtonDisabled(model, problem)">
+        <button id="submit-add-model-btn" class="button success" type="submit" ng-disabled="!isValidRunLength || !isValidHeterogeneityPrior || isAddButtonDisabled(model, problem)">
           Create Model(s)
         </button>
         <div class="alert" ng-show='!model.title'>Model title missing.</div>

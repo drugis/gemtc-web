@@ -1,11 +1,12 @@
 <form id="create-node-split-model-form" novalidate ng-submit="createNodeSplitModel(model)">
-  <div class="row">
-    <div class="large-12 columns">
+  <div class="grid-container">
+<div class="grid-x">
+    <div class="cell">
       <h3>Create {{modelTypeLabel}} model</h3>
     </div>
   </div>
-  <div class="row section">
-    <div class="large-12 columns">
+  <div class="grid-x section">
+    <div class="cell">
       <label class="form-item-header">Title
         <small>required</small>
         <input id="title-input" autofocus="true" type="text" ng-model="model.title">
@@ -19,12 +20,15 @@
   inference-iterations="model.inferenceIterations"
   thinning-factor="model.thinningFactor"
    is-valid-run-length="isValidRunLength"></run-length>
-  <div class="row modal-bottom-button-bar">
-    <div class="large-12 columns">
-      <button id="submit-extend-run-length-btn" class="success" type="submit" ng-disabled="!isValidRunLength || isCreatingModel || !model.title">Create model</button>
+  <div class="grid-x modal-bottom-button-bar">
+    <div class="cell">
+      <button id="submit-extend-run-length-btn" class="button success" type="submit" ng-disabled="!isValidRunLength || isCreatingModel || !model.title">Create model</button>
        <div class="alert" ng-show='!model.title'>Model title missing.</div>
     </div>
 
   </div>
-  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 </form>

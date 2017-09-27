@@ -9,7 +9,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
         dontFloatSibling: '='
       },
       link: function(scope, element) {
-        var btnElement = $compile('<button ng-click="exportElement()" class="export-button info small">Export</button>')(scope);
+        var btnElement = $compile('<button ng-click="exportElement()" class="export-button button info small">Export</button>')(scope);
         element.after(btnElement);
         if (!scope.dontFloatSibling) {
           element.css('float', 'left');
@@ -67,7 +67,7 @@ define(['lodash', 'd3', 'jQuery'], function(_, d3, jQuery) {
           //can't set svg instructions as image src directly
           var $image = createImage($svgElement);
           $image[0].setAttribute('crossOrigin', 'anonymous');
-          $image.load(_.partial(exportImage, $image[0]));
+          $image.on('load', _.partial(exportImage, $image[0]));
         }
 
         function createImage($svgElement) {

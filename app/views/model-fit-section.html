@@ -1,14 +1,14 @@
-<div class="row" ng-if="result" style="padding-top: 2rem;">
-  <div class="columns large-2">
+<div class="grid-x" ng-if="result" style="padding-top: 2rem;">
+  <div class="cell large-2">
     <h3 class="main-category-header">Model fit</h3>
   </div>
-  <div class="columns large-8 end">
+  <div class="cell large-8 end">
     <hr>
   </div>
 </div>
 
-<div class="row" ng-if="result && model.sensitivity">
-  <div class="columns large-6 medium-8 small-12">
+<div class="grid-x" ng-if="result && model.sensitivity">
+  <div class="cell large-6 medium-8 small-12">
     <div class="panel callout">
       The variance inflation model adjusts the variance of observations, which amounts
       to modifying the data. Therefore, model fit statistics such as DIC can not
@@ -17,8 +17,8 @@
   </div>
 </div>
 
-<div class="row" ng-if="result">
-  <div class="columns large-8 medium-6 small-12">
+<div class="grid-x" ng-if="result">
+  <div class="cell large-8 medium-6 small-12">
     <table id="modelFitCopy">
       <caption>Model fit statistics</caption>
       <tbody>
@@ -51,21 +51,21 @@
       </tbody>
     </table>
   </div>
-  <div class="columns large-4">
-    <button class="clipboard-button" data-clipboard-target="#modelFitCopy">
+  <div class="cell large-4">
+    <button class="button clipboard-button" data-clipboard-target="#modelFitCopy">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
 </div>
-<div class="row" ng-if="result">
-  <div class="columns large-12 medium-12 small-12">
+<div class="grid-x" ng-if="result">
+  <div class="cell">
     <img export file-name="'residualDeviancePlot'" crossOrigin="anonymous" ng-src="{{result.deviancePlot[0].href}}">
   </div>
 </div>
 
 
-<div class="row" ng-if="result && absoluteDevianceStatisticsTable.length > 0">
-  <div class="columns large-8 medium-12 small-12">
+<div class="grid-x" ng-if="result && absoluteDevianceStatisticsTable.length > 0">
+  <div class="cell large-8 medium-12 small-12">
     <table id="residualDeviance1Copy">
       <thead>
         <caption>Residual deviance per arm per study
@@ -88,15 +88,15 @@
       </tbody>
     </table>
   </div>
-  <div class="columns large-4">
-    <button class="clipboard-button" data-clipboard-target="#residualDeviance1Copy">
+  <div class="cell large-4">
+    <button class="button clipboard-button" data-clipboard-target="#residualDeviance1Copy">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
 </div>
 
-<div class="row" ng-if="result && relativeDevianceStatisticsTable.length > 0">
-  <div class="columns large-8 medium-12 small-12">
+<div class="grid-x" ng-if="result && relativeDevianceStatisticsTable.length > 0">
+  <div class="cell large-8 medium-12 small-12">
     <table id="resisdualDeviance2Copy">
       <thead>
         <caption>Residual deviance per study (contrast-based data)
@@ -117,8 +117,8 @@
       </tbody>
     </table>
   </div>
-  <div class="columns large-4">
-    <button class="clipboard-button" data-clipboard-target="#resisdualDeviance2Copy">
+  <div class="cell large-4">
+    <button class="button clipboard-button" data-clipboard-target="#resisdualDeviance2Copy">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>

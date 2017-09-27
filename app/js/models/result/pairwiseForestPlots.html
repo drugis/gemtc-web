@@ -1,15 +1,11 @@
 <div class="grid-container">
   <div class="grid-x" ng-if="results && model.modelType.type === 'pairwise'">
-    <div class="cell">
-      <div class="grid-x">
-        <div class="cell small-8">
-          <p>
-            <strong>Study effect forest plot </strong>
-            <data-inline-help help-key="forest-plot"></data-inline-help>
-          </p>
-          <data-paged-svg-plot file-name="'forestPlot'" pages="results.studyForestPlot"></data-paged-svg-plot>
-        </div>
-      </div>
+    <div class="cell small-8">
+      <p>
+        <strong>Study effect forest plot </strong>
+        <data-inline-help help-key="forest-plot"></data-inline-help>
+      </p>
+      <data-paged-svg-plot file-name="'forestPlot'" pages="results.studyForestPlot"></data-paged-svg-plot>
     </div>
   </div>
 </div>
