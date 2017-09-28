@@ -1,6 +1,7 @@
 'use strict';
 define(
   ['angular',
+    'angular-touch',
     'require',
     'jQuery',
     'lodash',
@@ -24,9 +25,9 @@ define(
 
     var dependencies = [
       'ui.router',
+      'ngTouch',
       'ngSanitize',
-      'mm.foundation.tpls',
-      'mm.foundation.modal',
+      'mm.foundation',
       'gemtc.controllers',
       'gemtc.constants',
       'gemtc.services',

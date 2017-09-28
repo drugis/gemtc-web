@@ -1,129 +1,134 @@
 <form novalidate ng-submit="setBaselineDistribution(baselineDistribution)">
-  <div class="row">
-    <div class="large-12 columns end">
-      <h3 class="ng-scope">{{outcomeWithAnalysis.outcome.name || outcomeWithAnalysis.name}} baseline distribution</h3>
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="cell end">
+        <h3 class="ng-scope">{{outcomeWithAnalysis.outcome.name || outcomeWithAnalysis.name}} baseline
+          distribution</h3>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="large-9 columns end">
-      <label>Alternative
-        <select ng-model="baselineDistribution.selectedAlternative" ng-options="filteredAlternative.name for filteredAlternative in filteredAlternatives"
-          ng-change="alternativeSelectionChanged()"></select>
-      </label>
+    <div class="grid-x">
+      <div class="cell large-9  end">
+        <label>Alternative
+          <select ng-model="baselineDistribution.selectedAlternative" ng-options="filteredAlternative.name for filteredAlternative in filteredAlternatives"
+            ng-change="alternativeSelectionChanged()"></select>
+        </label>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="large-12 columns end">
-      <label>{{distributionName}} distribution ({{scaleLabel}})
-        <span ng-if="!isSurvival && isMissingSampleSize"><i class="fa fa-exclamation-triangle"></i> Sample size unknown, therefore
-          estimate using Normal distribution</span>
-      </label>
+    <div class="grid-x">
+      <div class="cell end">
+        <label>{{distributionName}} distribution ({{scaleLabel}})
+          <span ng-if="!isSurvival && isMissingSampleSize"><i class="fa fa-exclamation-triangle"></i> Sample size unknown, therefore
+            estimate using Normal distribution</span>
+        </label>
+      </div>
     </div>
-  </div>
-  <div class="row" ng-if="!isSurvival && isMissingSampleSize && baselineDistribution.type !== 'dbeta-cloglog'">
-    <div class="large-4 medium-6 columns">
-      <label>mean
-        <input type="number" ng-model="baselineDistribution.mu">
-      </label>
-    </div>
-    <div class="large-4 medium-6 columns end">
-      <label>standard deviation
-        <input type="number" step="0.001" ng-model="baselineDistribution.sigma">
-      </label>
-    </div>
-  </div>
-
-  <div class="row" ng-if="baselineDistribution.scale === 'log odds' || baselineDistribution.type === 'dbeta-cloglog'">
-    <div class="large-4 medium-6 columns">
-      <label>alpha
-        <input type="number" ng-model="baselineDistribution.alpha">
-      </label>
-    </div>
-    <div class="large-4 medium-6 columns end">
-      <label>beta
-        <input type="number" step="0.001" ng-model="baselineDistribution.beta">
-      </label>
-    </div>
-  </div>
-
-  <div class="row" ng-if="!isMissingSampleSize && baselineDistribution.scale === 'mean'">
-    <div class="large-3 medium-6 columns">
-      <label>μ
-        <input type="number" step="0.001" ng-model="baselineDistribution.mu">
-      </label>
-    </div>
-    <div class="large-3 medium-6 columns end">
-      <label>σ
-        <input type="number" step="0.001" ng-model="baselineDistribution.stdErr">
-      </label>
-    </div>
-    <div class="large-3 medium-6 columns end">
-      <label>Degrees of Freedom
-        <input type="number" step="1" ng-model="baselineDistribution.dof">
-      </label>
-    </div>
-  </div>
-
-  <!-- Survival -->
-  <div class="row" ng-if="baselineDistribution.scale === 'log hazard' && baselineDistribution.link === 'log'">
-    <div class="large-4 medium-6 columns">
-      <label>alpha
-        <input type="number" ng-model="baselineDistribution.alpha">
-      </label>
-    </div>
-    <div class="large-4 medium-6 columns end">
-      <label>beta
-        <input type="number" step="0.001" ng-model="baselineDistribution.beta">
-      </label>
-    </div>
-    <div class="large-4 medium-6 columns end">
-      <label>Summary measure
-        <select ng-model="baselineDistribution.summaryMeasure" ng-options="summaryMeasure.id as summaryMeasure.label for summaryMeasure in summaryMeasureOptions"></select>
-      </label>
-    </div>
-    <div class="large-4 medium-6 columns end" ng-show="baselineDistribution.summaryMeasure === 'survivalAtTime'">
-      <label>Survival at time
-        <input type="number" step="0.001" ng-model="baselineDistribution.time">
-      </label>
+    <div class="grid-x" ng-if="!isSurvival && isMissingSampleSize && baselineDistribution.type !== 'dbeta-cloglog'">
+      <div class="cell large-4 medium-6">
+        <label>mean
+          <input type="number" ng-model="baselineDistribution.mu">
+        </label>
+      </div>
+      <div class="cell large-4 medium-6 end">
+        <label>standard deviation
+          <input type="number" step="0.001" ng-model="baselineDistribution.sigma">
+        </label>
+      </div>
     </div>
 
-  </div>
-
-
-  <div class="row">
-    <div class="columns large-12">
-      <caption>Evidence for baseline alternative</caption>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Study</th>
-            <th>Treatment</th>
-            <th>Performance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="cursor:pointer" ng-click="selections.armIdx = arm.idx; armSelectionChanged()"
-            ng-repeat="arm in arms[baselineDistribution.selectedAlternative.id]">
-            <td>
-              <input type="radio" style="margin-bottom:0; vertical-align: middle;" ng-model="selections.armIdx"
-                ng-value="arm.idx" ng-change="armSelectionChanged()"></input>
-            </td>
-            <td> {{arm.studyName}} </td>
-            <td> {{arm.alternativeName}} </td>
-            <td> {{arm.performance}} </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="grid-x" ng-if="baselineDistribution.scale === 'log odds' || baselineDistribution.type === 'dbeta-cloglog'">
+      <div class="cell large-4 medium-6">
+        <label>alpha
+          <input type="number" ng-model="baselineDistribution.alpha">
+        </label>
+      </div>
+      <div class="cell large-4 medium-6 end">
+        <label>beta
+          <input type="number" step="0.001" ng-model="baselineDistribution.beta">
+        </label>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="columns large-12">
-      <button ng-disabled="isInValidBaseline(baselineDistribution)" class="button small success"
-        type="submit">Set
-      </button>
+    <div class="grid-x" ng-if="!isMissingSampleSize && baselineDistribution.scale === 'mean'">
+      <div class="cell large-3 medium-6">
+        <label>μ
+          <input type="number" step="0.001" ng-model="baselineDistribution.mu">
+        </label>
+      </div>
+      <div class="cell large-3 medium-6 end">
+        <label>σ
+          <input type="number" step="0.001" ng-model="baselineDistribution.stdErr">
+        </label>
+      </div>
+      <div class="cell large-3 medium-6 end">
+        <label>Degrees of Freedom
+          <input type="number" step="1" ng-model="baselineDistribution.dof">
+        </label>
+      </div>
     </div>
+
+    <!-- Survival -->
+    <div class="grid-x" ng-if="baselineDistribution.scale === 'log hazard' && baselineDistribution.link === 'log'">
+      <div class="cell large-4 medium-6">
+        <label>alpha
+          <input type="number" ng-model="baselineDistribution.alpha">
+        </label>
+      </div>
+      <div class="cell large-4 medium-6 end">
+        <label>beta
+          <input type="number" step="0.001" ng-model="baselineDistribution.beta">
+        </label>
+      </div>
+      <div class="cell large-4 medium-6 end">
+        <label>Summary measure
+          <select ng-model="baselineDistribution.summaryMeasure" ng-options="summaryMeasure.id as summaryMeasure.label for summaryMeasure in summaryMeasureOptions"></select>
+        </label>
+      </div>
+      <div class="cell large-4 medium-6 end" ng-show="baselineDistribution.summaryMeasure === 'survivalAtTime'">
+        <label>Survival at time
+          <input type="number" step="0.001" ng-model="baselineDistribution.time">
+        </label>
+      </div>
+
+    </div>
+
+
+    <div class="grid-x">
+      <div class="cell">
+        <caption>Evidence for baseline alternative</caption>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Study</th>
+              <th>Treatment</th>
+              <th>Performance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="cursor:pointer" ng-click="selections.armIdx = arm.idx; armSelectionChanged()"
+              ng-repeat="arm in arms[baselineDistribution.selectedAlternative.id]">
+              <td>
+                <input type="radio" style="margin-bottom:0; vertical-align: middle;" ng-model="selections.armIdx"
+                  ng-value="arm.idx" ng-change="armSelectionChanged()"></input>
+              </td>
+              <td> {{arm.studyName}} </td>
+              <td> {{arm.alternativeName}} </td>
+              <td> {{arm.performance}} </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-x">
+      <div class="cell">
+        <button ng-disabled="isInValidBaseline(baselineDistribution)" class="button small success"
+          type="submit">Set
+        </button>
+      </div>
+    </div>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
-  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
 </form>

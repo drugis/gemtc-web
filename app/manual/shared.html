@@ -245,39 +245,45 @@ The DIC is used to compare fit between models for the same data; differences in 
 </ol>
 <p>To address the first issue the first NB iterations, called the burn-in period, are discarded from the sample. In addition, the number of inference iterations, NI, must be sufficient to explore most of the parameter space. In order to assess the first condition it helps to compare early iterations to later iterations and to compare the results of independent runs (“chains”) with different starting values. For example, in the time series plot on the left, the four different chains (dashed green, blue, red, and black lines) follow clearly distinguishable paths, and their moving averages (solid lines) are clearly different between the first and second half of samples:</p>
 
-<div class="row">
-  <div class="columns large-6 ">
+<div class="grid-container">
+<div class="grid-x">
+  <div class="cell large-6">
     <img src="img/time_series_bad.png" alt="time series bad" >
   </div>
-  <div class="columns large-6 ">
+  <div class="cell large-6">
      <img src="img/time_series_good.png" alt="time series good">
   </div>
+</div>
 </div>
 
 <p>In this case, it would be wise to increase both the number of burn-in iterations (NB) and the number of inference iterations, which leads to much better results, as illustrated by the time series plot on the right. The Brooks-Gelman-Rubin diagnostic incorporates these aspects in a numeric measure, the “Potential Scale Reduction Factor” (PSRF), which compares the variation within each chain to the variation between chains. The PSRF starts with a high value, and slowly approaches 1.0 as the chains become more similar. As a rule of thumb, the PSRF should at least be below 1.05. Plots can also show whether the PSRF is stable, as illustrated below.</p>
 
 <p>Again, the plot on the left shows a run with insufficient burn-in and inference iterations, where the</p>
 
-<div class="row">
-  <div class="columns large-6 ">
+<div class="grid-container">
+<div class="grid-x">
+  <div class="cell large-6">
     <img src="img/psrf_bad.png" alt="psrf plot bad">
   </div>
-  <div class="columns large-6 ">
+  <div class="cell large-6">
      <img src="img/psrf_good.png" alt="psrf plot good" >
   </div>
+</div>
 </div>
 
 <p>PSRF is unstable and has high values. On the right, the PSRF steadily decreases and rapidly reaches stable values below 1.01.</p>
 
 <p>The second issue, i.e. that the number of iterations should be enough to estimate the quantities of interest with sufficient accuracy, depends on the first condition being met. If this is the case, the Monte Carlo error provides an idea of the accuracy of the estimates, and should be small compared to the standard deviation of the quantities being estimated. In addition, the time series plots can give some idea of the estimation accuracy, as can the density plots.</p>
 
-<div class="row">
-  <div class="columns large-6 ">
+<div class="grid-container">
+<div class="grid-x">
+  <div class="cell large-6">
     <img src="img/density_bad.png" alt="Density plot bad" >
   </div>
-  <div class="columns large-6 ">
+  <div class="cell large-6">
      <img src="img/density_good.png" alt="Density plot good" >
   </div>
+</div>
 </div>
 
 <p>In the density plots above, the figure on the left has outlying values in the tail of the distribution (the small vertical lines at the bottom, indicating sampled values), and doesn’t have an entirely regular shape. The density on the right is much smoother and has a more expected tapering off of extreme values in the tails.</p>

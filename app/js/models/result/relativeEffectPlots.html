@@ -1,26 +1,27 @@
 <div ng-if="results && (model.modelType.type === 'network' || model.modelType.type === 'regression')">
-  <div class="row">
-    <div class="columns large-6 small-8">
+  <div class="grid-x">
+    <div class="cell large-6 small-8">
       <p>
         <strong>Relative effects plots </strong>
         <data-inline-help help-key="relative-effects"></data-inline-help>
       </p>
-      <label>Select baseline: <select ng-options="treatment.name for treatment in problem.treatments" ng-model="selectedBaseline"></select></label>
-    </div>
-  </div>
-  <div class="row">
-    <div class="columns large-6 small-8">
-      <label ng-show="relativeEffectPlots.length > 1">
-        Covariate level
-        <select
-          ng-options="relativeEffectPlot as relativeEffectPlot.level for relativeEffectPlot in relativeEffectPlots"
-          ng-model="relativeEffectPlot"
-          ></select>
+      <label>Select baseline:
+        <select ng-options="treatment.name for treatment in problem.treatments"
+          ng-model="selectedBaseline"></select>
       </label>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-12 center">
+  <div class="grid-x">
+    <div class="cell large-6 small-8">
+      <label ng-show="relativeEffectPlots.length > 1">
+        Covariate level
+        <select ng-options="relativeEffectPlot as relativeEffectPlot.level for relativeEffectPlot in relativeEffectPlots"
+          ng-model="relativeEffectPlot"></select>
+      </label>
+    </div>
+  </div>
+  <div class="grid-x">
+    <div class="cell large-12 center">
       <data-paged-svg-plot file-name="'relativeEffect'" pages="relativeEffectPlot.plots[selectedBaseline.id]"></data-paged-svg-plot>
     </div>
   </div>
