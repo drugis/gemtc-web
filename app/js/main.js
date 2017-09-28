@@ -6,17 +6,18 @@ require.config({
     'jQuery': 'bower_components/jquery/dist/jquery.min',
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
+    'angular-touch': 'bower_components/angular-touch/angular-touch',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'angularanimate': 'bower_components/angular-animate/angular-animate.min',
     'clipboard': 'bower_components/clipboard/dist/clipboard.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
-    'foundation': 'bower_components/foundation/js/foundation.min',
+    'foundation': 'bower_components/foundation-sites/dist/js/foundation.min',
     'modernizr': 'bower_components/modernizr/modernizr',
     'lodash': 'bower_components/lodash/dist/lodash.min',
     'd3': 'bower_components/d3/d3',
     'nvd3': 'bower_components/nvd3/build/nv.d3',
     'moment': 'bower_components/moment/min/moment.min',
-    'mmfoundation': 'bower_components/angular-foundation/dist/mm-foundation-tpls-0.9.0-SNAPSHOT',
+    'mmfoundation': 'bower_components/angular-foundation-6/dist/angular-foundation.min',
     'ngSanitize': 'bower_components/angular-sanitize/angular-sanitize.min',
     'papaparse': 'bower_components/papaparse/papaparse.min',
     'help-popup': 'bower_components/help-popup/help-directive',
@@ -30,6 +31,10 @@ require.config({
     'angular': {
       deps: ['jQuery'],
       exports: 'angular'
+    },
+    'angular-touch': {
+      deps: ['angular'],
+      exports: 'ngTouch'
     },
     'angularanimate': {
       deps: ['angular']

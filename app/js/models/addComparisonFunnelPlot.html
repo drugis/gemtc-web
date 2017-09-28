@@ -1,30 +1,34 @@
 <form id="add-comparison-funnel-plot-form" novalidate ng-submit="savePlot()">
-  <div class="row">
-    <div class="large-9 columns">
-      <h3>Add a comparison-adjusted funnel plot</h3>
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="large-9 cell">
+        <h3>Add a comparison-adjusted funnel plot</h3>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="large-9 columns">
-      <h4>Select comparisons</h4>
-      <button type="button" class="tiny" ng-click="selectAll()">Select all</button>
-      <button type="button" class="tiny" ng-click="deselectAll()">Deselect all</button>
+    <div class="grid-x">
+      <div class="large-9 cell">
+        <h4>Select comparisons</h4>
+        <button type="button" class="button small" ng-click="selectAll()">Select all</button>
+        <button type="button" class="button small" ng-click="deselectAll()">Deselect all</button>
 
-      <label for="comparison-checkbox-{{$index}}" ng-repeat="comparison in comparisons">
-        <input type="checkbox" id="comparison-checkbox-{{$index}}" ng-model="comparison.isIncluded"
-          ng-change="comparison.biasDirection = comparison.t1"> {{comparison.t1.name}} &mdash; {{comparison.t2.name}}
-        <select ng-if="comparison.isIncluded" ng-model="comparison.biasDirection" class="indent-one"
-          ng-options="treatment.name for treatment in [comparison.t1, comparison.t2]">
-        </select>
-      </label>
+        <label for="comparison-checkbox-{{$index}}" ng-repeat="comparison in comparisons">
+          <input type="checkbox" id="comparison-checkbox-{{$index}}" ng-model="comparison.isIncluded"
+            ng-change="comparison.biasDirection = comparison.t1"> {{comparison.t1.name}} &mdash; {{comparison.t2.name}}
+          <select ng-if="comparison.isIncluded" ng-model="comparison.biasDirection" class="indent-one"
+            ng-options="treatment.name for treatment in [comparison.t1, comparison.t2]">
+          </select>
+        </label>
+      </div>
     </div>
-  </div>
-  <div class="row modal-bottom-button-bar">
-    <div class="large-9 columns">
-      <button id="submit-add-model-btn" class="success" type="submit" ng-disabled="isAddButtonDisabled()">
-        Add
-      </button>
+    <div class="grid-x modal-bottom-button-bar">
+      <div class="large-9 cell">
+        <button id="submit-add-model-btn" class="button success" type="submit" ng-disabled="isAddButtonDisabled()">
+          Add
+        </button>
+      </div>
     </div>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
-  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
 </form>

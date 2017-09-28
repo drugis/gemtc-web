@@ -30,8 +30,8 @@ define(['lodash', 'angular'], function(_, angular) {
     function loadModels() {
       ModelResource.query($stateParams, function(result) {
         $scope.modelsLoaded = true;
-        $scope.$parent.primaryModel = _.find(result, function(model) {
-          return model.id === $scope.analysis.primaryModel;
+        $scope.$parent.analysis.$promise.then(function() {
+          $scope.$parent.primaryModel = _.find(result, ['id', $scope.analysis.primaryModel]);
         });
         $scope.$watch('$parent.primaryModel', function(newValue, oldValue) {
           if (oldValue !== newValue) {

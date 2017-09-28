@@ -1,15 +1,15 @@
 <!-- -start results section -->
-<div class="row" ng-if="result" style="padding-top: 1rem;">
-  <div class="columns large-1">
+<div class="grid-x" ng-if="result" style="padding-top: 1rem;">
+  <div class="cell large-1">
     <h3 id="model-results-results-header" class="main-category-header">Results</h3>
   </div>
-  <div class="columns large-8 end">
+  <div class="cell large-8 end">
     <hr>
   </div>
 </div>
 
-<div class="row" ng-show="result && model.linearModel === 'random'" style="padding-top: 1rem;">
-  <div class="columns large-12">
+<div class="grid-x" ng-show="result && model.linearModel === 'random'" style="padding-top: 1rem;">
+  <div class="cell">
     <p>
       <strong>Random effects standard deviation </strong> {{result.summaries.quantiles["sd.d"]["50%"]
       | number: 3}} ({{result.summaries.quantiles["sd.d"]["2.5%"] | number: 3}},
@@ -17,8 +17,8 @@
   </div>
 </div>
 
-<div class="row" ng-if="result && model.modelType.type === 'node-split'">
-  <div class="column large-12">
+<div class="grid-x" ng-if="result && model.modelType.type === 'node-split'">
+  <div class="column">
     <table>
       <caption>Node splitting results</caption>
       <thead>
@@ -53,7 +53,8 @@
           </td>
           <td>{{::result.nodeSplit.diff.quantiles['50%'] | number: 3}} ({{::result.nodeSplit.diff.quantiles['2.5%']
             | number: 3}}, {{::result.nodeSplit.diff.quantiles['97.5%'] | number:
-            3}})</td>
+            3}})
+          </td>
         </tr>
         <tr>
           <td>
@@ -67,8 +68,8 @@
 </div>
 
 <div ng-if="result && model.modelType.type === 'network' && scaleName !== 'risk ratio'">
-  <div class="row" ng-if="problem.entries.length">
-    <div class="columns large-12">
+  <div class="grid-x" ng-if="problem.entries.length">
+    <div class="cell">
       <p>
         <Strong>Absolute treatment effects
           <data-inline-help help-key="absolute-effects"></data-inline-help>
@@ -79,8 +80,8 @@
       </p>
     </div>
   </div>
-  <div class="row" ng-if="baselineDistribution">
-    <div class="columns large-8">
+  <div class="grid-x" ng-if="baselineDistribution">
+    <div class="cell large-8">
       <table id="absolute-effects-table">
         <caption>Absolute effects table</caption>
         <thead>
@@ -100,22 +101,22 @@
         {{baselineDistribution | distributionToStringFilter}}
       </p>
     </div>
-    <div class="columns large-4">
-      <button class="clipboard-button" data-clipboard-target="#absolute-effects-table">
+    <div class="cell large-4">
+      <button class="button clipboard-button" data-clipboard-target="#absolute-effects-table">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
   </div>
-  <div class="row" ng-if="problem.entries.length">
-    <div class="columns large-12">
-      <button ng-if="!editMode.disableEditing" ng-click="openBaselineDistributionModal()">Set Baseline Distribution</button>
+  <div class="grid-x" ng-if="problem.entries.length">
+    <div class="cell">
+      <button class="button" ng-if="!editMode.disableEditing" ng-click="openBaselineDistributionModal()">Set Baseline Distribution</button>
     </div>
   </div>
 </div>
 
 <div ng-if="result && model.modelType.type !== 'node-split'">
-  <div class="row" style="padding-top: 1rem;">
-    <div class="columns large-4">
+  <div class="grid-x" style="padding-top: 1rem;">
+    <div class="cell large-4">
       <p>
         <strong>Relative effects table
           <data-inline-help help-key="relative-effects"></data-inline-help>
@@ -128,8 +129,8 @@
       </label>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-8">
+  <div class="grid-x">
+    <div class="cell large-8">
       <table id="relativeEffectsTableCopy">
         <caption>Comparison of the included interventions: {{::scaleName}} (95% CrI). Each
           cell gives the effect of the column-defining intervention relative to the
@@ -150,8 +151,8 @@
         </tr>
       </table>
     </div>
-    <div class="columns large-4">
-      <button class="clipboard-button" data-clipboard-target="#relativeEffectsTableCopy">
+    <div class="cell large-4">
+      <button class="button clipboard-button" data-clipboard-target="#relativeEffectsTableCopy">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
@@ -164,8 +165,8 @@
   problem-promise="problemPromise"></pairwise-forest-plots>
 
 <div ng-if="result && model.modelType.type === 'pairwise'">
-  <div class="row">
-    <div class="columns large-12">
+  <div class="grid-x">
+    <div class="cell">
       <p>
         <strong>Study effect funnel plot </strong>
         <data-inline-help help-key="funnel-plot"></data-inline-help>
@@ -176,31 +177,31 @@
 </div>
 
 <div ng-if="result && model.modelType.type === 'network' && result.studyRelativeEffects">
-  <div class="row">
-    <div class="columns large-12">
+  <div class="grid-x">
+    <div class="cell">
       <p>
         <strong>Study effect funnel plot </strong>
         <data-inline-help help-key="funnel-plot"></data-inline-help>
       </p>
     </div>
   </div>
-  <div class="row" ng-if="comparisonAdjustedFunnelPlots.length > 0" ng-repeat="funnelPlot in comparisonAdjustedFunnelPlots">
-    <div class="columns large-12">
+  <div class="grid-x" ng-if="comparisonAdjustedFunnelPlots.length > 0" ng-repeat="funnelPlot in comparisonAdjustedFunnelPlots">
+    <div class="cell">
       <comparison-adjusted-funnel-plot plot-data="funnelPlot" problem-promise="problemPromise"
         results-promise="resultsPromise"></comparison-adjusted-funnel-plot>
     </div>
   </div>
-  <div class="row" ng-if="comparisonAdjustedFunnelPlots.length === 0">
-    <div class="columns large-12">
+  <div class="grid-x" ng-if="comparisonAdjustedFunnelPlots.length === 0">
+    <div class="cell">
       No funnel plots have been created
     </div>
   </div>
 </div>
 
 <div ng-if="result && model.modelType.type === 'network' && !editMode.disableEditing">
-  <div class="row">
-    <div class="columns large-12">
-      <button ng-click="openComparisonAdjustedModal()">Add comparison-adjusted funnel plot</button>
+  <div class="grid-x">
+    <div class="cell">
+      <button class="button" ng-click="openComparisonAdjustedModal()">Add comparison-adjusted funnel plot</button>
     </div>
   </div>
 </div>
@@ -209,16 +210,16 @@
   problem-promise="problemPromise"></node-split-density-plots>
 
 <div ng-if="result && model.modelType.type !== 'node-split'">
-  <div class="row" style="padding-top: 1rem;">
-    <div class="columns large-8">
+  <div class="grid-x" style="padding-top: 1rem;">
+    <div class="cell large-8">
       <div>
         <p>
           <strong>Rank probabilities </strong>
           <data-inline-help help-key="rank-probabilities"></data-inline-help>
         </p>
       </div>
-      <div class="row">
-        <div class="columns large-6 small-8">
+      <div class="grid-x">
+        <div class="cell large-6 small-8">
           <label ng-show="rankProbabilitiesByLevel.length > 1">
             Covariate level
             <select ng-options="rankProbabilities as rankProbabilities.level for rankProbabilities in rankProbabilitiesByLevel"
@@ -244,20 +245,20 @@
         </tbody>
       </table>
     </div>
-    <div class="columns large-4">
-      <button class="clipboard-button" data-clipboard-target="#rankProbabilitiesTableCopy">
+    <div class="cell large-4">
+      <button class="button clipboard-button" data-clipboard-target="#rankProbabilitiesTableCopy">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
   </div>
 
-  <div class="row" style="padding-top: 1rem;">
-    <div class="columns large-12">
+  <div class="grid-x" style="padding-top: 1rem;">
+    <div class="cell">
       Rank probabilities plot
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-12">
+  <div class="grid-x">
+    <div class="cell">
       <div class="addis-graph" style="width:450px; height:450px;" export file-name="'rankProbabilities'">
         <data-gemtc-rank-plot value="rankProbabilities.data" stacked="true"></data-gemtc-rank-plot>
       </div>

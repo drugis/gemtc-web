@@ -1,7 +1,4 @@
-.f-topbar-fixed {
-  margin-top: 32px; // clear breadcrumbs
-}
-
+@debug "loading gemtc-drugis-base";
 .alert-box.alert {
   margin-top: 1.25rem; // add space between beardcrumbs
 }
@@ -52,7 +49,6 @@ img.paged-png {
 }
 
 .breadcrumbs.fixed {
-  margin-top: 52px; // clear navbar
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   -moz-box-shadow:    0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.28);

@@ -1,45 +1,47 @@
-<div class="row">
-  <div class="columns large-12">
-    <table class="network-meta-analysis-table">
-    <caption>Evidence table (contrast-based data, {{scale}})</caption>
-      <thead>
-        <tr>
-          <th rowspan="2" class="large-3">Study</th>
-          <th ng-show="tableRows[0].covariatesColumns.length > 0"
-            colspan="{{tableRows[0].covariatesColumns.length}}">Covariates
-          </th>
-          <th rowspan="2" class="large-3">Treatment</th>
-          <th rowspan="2" class="large-1">Base arm standard error</th>
-          <th rowspan="2" class="large-1">Mean difference</th>
-          <th rowspan="2" class="large-1">Standard error</th>
-        </tr>
-        <tr>
-          <th ng-repeat="covariate in tableRows[0].covariatesColumns">{{covariate.headerTitle}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="treatment in tableRows">
-          <td rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}" style="vertical-align: top;">
-            {{treatment.studyTitle}}
-          </td>
-          <td ng-repeat="covariate in treatment.covariatesColumns" rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}" style="vertical-align:top" class="text-center">
-            {{covariate.data}}
-          </td>
-          <td >
-            {{treatment.treatmentTitle}}
-          </td>
-          <td class="text-center" >
-            {{treatment.baseArmStandardError}}
-          </td>
-          <td class="text-center" >
-            {{treatment.meanDifference}}
-          </td>
-          <td class="text-center" >
-            {{treatment.standardError}}
-          </td>
-
-        </tr>
-      </tbody>
-    </table>
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="cell">
+      <table class="network-meta-analysis-table">
+        <caption>Evidence table (contrast-based data, {{scale}})</caption>
+        <thead>
+          <tr>
+            <th rowspan="2" class="large-3">Study</th>
+            <th ng-show="tableRows[0].covariatesColumns.length > 0" colspan="{{tableRows[0].covariatesColumns.length}}">Covariates
+            </th>
+            <th rowspan="2" class="large-3">Treatment</th>
+            <th rowspan="2" class="large-1">Base arm standard error</th>
+            <th rowspan="2" class="large-1">Mean difference</th>
+            <th rowspan="2" class="large-1">Standard error</th>
+          </tr>
+          <tr>
+            <th ng-repeat="covariate in tableRows[0].covariatesColumns">{{covariate.headerTitle}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="treatment in tableRows">
+            <td rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}"
+              style="vertical-align: top;">
+              {{treatment.studyTitle}}
+            </td>
+            <td ng-repeat="covariate in treatment.covariatesColumns" rowspan="{{treatment.studyRowSpan}}"
+              ng-show="{{treatment.showStudyColumn}}" style="vertical-align:top" class="text-center">
+              {{covariate.data}}
+            </td>
+            <td>
+              {{treatment.treatmentTitle}}
+            </td>
+            <td class="text-center">
+              {{treatment.baseArmStandardError}}
+            </td>
+            <td class="text-center">
+              {{treatment.meanDifference}}
+            </td>
+            <td class="text-center">
+              {{treatment.standardError}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

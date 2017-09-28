@@ -1,15 +1,15 @@
-<div class="row" ng-if="result" style="padding-top: 1rem;">
-  <div class="columns large-3">
+<div class="grid-x" ng-if="result" style="padding-top: 1rem;">
+  <div class="cell large-3">
     <h3 class="main-category-header">Convergence diagnostics</h3>
   </div>
-  <div class="columns large-8 end">
+  <div class="cell large-8 end">
     <hr>
   </div>
 </div>
 <!-- end Convergence diagnostics header -->
 
-<div class="row" ng-if="result">
-  <div class="columns large-8 medium-6 small-12">
+<div class="grid-x" ng-if="result">
+  <div class="cell large-8 medium-6 small-12">
     <table id="convergenceCopy">
       <caption>Per-parameter convergence diagnostics</caption>
       <thead>
@@ -44,21 +44,19 @@
       </tbody>
     </table>
   </div>
-      <div class="columns large-4">
-      <button class="clipboard-button" data-clipboard-target="#convergenceCopy">
-        <i class="fa fa-clipboard"></i> Copy to clipboard
-      </button>
-    </div>
+  <div class="cell large-4">
+    <button class="button clipboard-button" data-clipboard-target="#convergenceCopy">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
+  </div>
 </div>
 <!-- end Convergence diagnostics content -->
 
-<div class="row" ng-if="result">
-  <div class="columns large-8 medium-6 small-12">
+<div class="grid-x" ng-if="result">
+  <div class="cell large-8 medium-6 small-12">
     <!-- gemtc stand-alone does not set editMode-->
     <button id="open-run-length-dialog-btn" ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()"
-      class="small">Extend run-length</button>
+      class="button">Extend run-length</button>
   </div>
 
 </div>
-
-<!-- end Extend runlength-btn row -->
