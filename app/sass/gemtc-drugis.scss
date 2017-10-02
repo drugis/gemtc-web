@@ -1,9 +1,6 @@
-@debug "loading gemtc-drugis";
 @import "settings";
-@debug $topbar-background; // single value
 
 @import "foundation";
-@debug $topbar-background; // single value
 @import "mmfoundation-animations";
 @import "gemtc-drugis-base";
 @include foundation-global-styles;
@@ -50,7 +47,6 @@
 @include foundation-visibility-classes;
 // @include foundation-float-classes;
 @include foundation-flex-classes;
-@debug $topbar-background; // single value
 
 // @include foundation-prototype-classes;
 @import "gemtc-settings";

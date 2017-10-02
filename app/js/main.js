@@ -17,7 +17,7 @@ require.config({
     'd3': 'bower_components/d3/d3',
     'nvd3': 'bower_components/nvd3/build/nv.d3',
     'moment': 'bower_components/moment/min/moment.min',
-    'mmfoundation': 'bower_components/angular-foundation-6/dist/angular-foundation.min',
+    'mmfoundation': 'bower_components/angular-foundation/dist/angular-foundation',
     'ngSanitize': 'bower_components/angular-sanitize/angular-sanitize.min',
     'papaparse': 'bower_components/papaparse/papaparse.min',
     'help-popup': 'bower_components/help-popup/help-directive',
