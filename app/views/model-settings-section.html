@@ -16,7 +16,7 @@
             </td>
             <td>
               {{::model.modelType.type}}
-              <data-inline-help help-key="model-type"></data-inline-help>
+              <inline-help help-key="model-type"></inline-help>
             </td>
           </tr>
           <tr ng-if="model.sensitivity.omittedStudy">
@@ -52,7 +52,7 @@
               <strong>treatment-interaction model</strong>
             </td>
             <td>{{::model.regressor.coefficient}} coefficient(s)
-              <data-inline-help help-key="treatment-interaction-model"></data-inline-help>
+              <inline-help help-key="treatment-interaction-model"></inline-help>
             </td>
           </tr>
           <tr ng-if="model.modelType.type === 'regression'">
@@ -60,7 +60,7 @@
               <strong>covariate</strong>
             </td>
             <td>{{::model.regressor.variable}}
-              <data-inline-help help-key="covariate"></data-inline-help>
+              <inline-help help-key="covariate"></inline-help>
             </td>
           </tr>
           <tr ng-if="model.modelType.type === 'regression' && result.regressor.modelRegressor.mu">
@@ -68,7 +68,7 @@
               <strong>standardization</strong>
             </td>
             <td>x' = (x - {{::result.regressor.modelRegressor.mu|number:3}})/{{::result.regressor.modelRegressor.sd|number:3}}
-              <data-inline-help help-key="covariate-standardization"></data-inline-help>
+              <inline-help help-key="covariate-standardization"></inline-help>
             </td>
           </tr>
           <tr ng-if="model.modelType.type === 'regression'">
@@ -76,7 +76,7 @@
               <strong>control treatment</strong>
             </td>
             <td>{{::controlTreatment.name}}
-              <data-inline-help help-key="regression-control"></data-inline-help>
+              <inline-help help-key="regression-control"></inline-help>
             </td>
           </tr>
           <tr>
@@ -85,7 +85,7 @@
             </td>
             <td>
               {{::result.linearModel}}
-              <data-inline-help help-key="effects-type"></data-inline-help>
+              <inline-help help-key="effects-type"></inline-help>
             </td>
           </tr>
           <tr>
@@ -94,11 +94,11 @@
             </td>
             <td ng-if="model.outcomeScale">
               {{::model.outcomeScale}}
-              <data-inline-help help-key="outcome-scale"></data-inline-help>
+              <inline-help help-key="outcome-scale"></inline-help>
             </td>
             <td ng-if="!model.outcomeScale">
               {{::result.outcomeScale}} (imputed)
-              <data-inline-help help-key="outcome-scale"></data-inline-help>
+              <inline-help help-key="outcome-scale"></inline-help>
             </td>
           </tr>
           <tr>
@@ -107,7 +107,7 @@
             </td>
             <td>
               {{::result.likelihood}} / {{::result.link}}
-              <data-inline-help help-key="likelihood-link"></data-inline-help>
+              <inline-help help-key="likelihood-link"></inline-help>
             </td>
           </tr>
           <tr ng-if="model.linearModel === 'random'">
@@ -116,7 +116,7 @@
             </td>
             <td>
               <heterogeneity-prior prior="result.heterogeneityPrior"></heterogeneity-prior>
-              <data-inline-help help-key="heterogeneity-prior-distribution"></data-inline-help>
+              <inline-help help-key="heterogeneity-prior-distribution"></inline-help>
             </td>
           </tr>
           <tr ng-if="model.sensitivity.adjustmentFactor">
@@ -128,7 +128,7 @@
                 <li style="padding-bottom: 0.5rem">adjustment for: {{model.sensitivity.adjustmentFactor}} = {{model.sensitivity.inflationValue}}</li>
                 <li>weighting factor : {{model.sensitivity.weightingFactor}}</li>
               </ul>
-              <data-inline-help help-key="design-adjustment"></data-inline-help>
+              <inline-help help-key="design-adjustment"></inline-help>
             </td>
           </tr>
           <tr>
@@ -139,15 +139,15 @@
               <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
                 <li style="padding-bottom: 0.5rem">
                   burn-in: {{::result.burnInIterations}}
-                  <data-inline-help help-key="burn-in-iterations"></data-inline-help>
+                  <inline-help help-key="burn-in-iterations"></inline-help>
                 </li>
                 <li style="padding-bottom: 0.5rem">
                   inference: {{::result.inferenceIterations}}
-                  <data-inline-help help-key="inference-iterations"></data-inline-help>
+                  <inline-help help-key="inference-iterations"></inline-help>
                 </li>
                 <li style="padding-bottom: 0.5rem">
                   thinning: {{::result.thinningFactor}}
-                  <data-inline-help help-key="thinning-factor"></data-inline-help>
+                  <inline-help help-key="thinning-factor"></inline-help>
                 </li>
               </ul>
             </td>

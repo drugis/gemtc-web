@@ -101,7 +101,6 @@ define(['angular', 'lodash'], function(angular, _) {
       return studyMap;
     }
 
-
     function generateEdges(interventions) {
       var edges = [];
       _.each(interventions, function(rowIntervention, index) {
