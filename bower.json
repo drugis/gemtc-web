@@ -7,7 +7,7 @@
     "Gert van Valkenhoef <g.h.m.van.valkenhoef@rug.nl>",
     "Joël Kuiper",
     "Daan Reid <osmosisch@gmail.com>",
-    "Joris de Keijser"
+    "Joris de Keijser <j.j.de.keijser@umcg.nl>"
   ],
   "description": "User interface for evidence synthesis based on the gemtc R package and Patavi",
   "main": "/app/js/main.js",
@@ -51,7 +51,6 @@
     "requirejs": "~2.1.10",
     "requirejs-domready": "~2.0.1",
     "scrollup": "~2.4.1",
-    "angular-foundation-6": "^0.11.11",
     "angular-touch": "^1.6.6"
   },
   "devDependencies": {
