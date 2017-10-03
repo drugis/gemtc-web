@@ -3,7 +3,7 @@
     <div class="cell large-6 small-8">
       <p>
         <strong>Relative effects plots </strong>
-        <data-inline-help help-key="relative-effects"></data-inline-help>
+        <inline-help help-key="relative-effects"></inline-help>
       </p>
       <label>Select baseline:
         <select ng-options="treatment.name for treatment in problem.treatments"
@@ -22,7 +22,7 @@
   </div>
   <div class="grid-x">
     <div class="cell large-12 center">
-      <data-paged-svg-plot file-name="'relativeEffect'" pages="relativeEffectPlot.plots[selectedBaseline.id]"></data-paged-svg-plot>
+      <paged-svg-plot file-name="'relativeEffect'" pages="relativeEffectPlot.plots[selectedBaseline.id]"></paged-svg-plot>
     </div>
   </div>
 </div>

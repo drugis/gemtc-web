@@ -6,15 +6,14 @@
           <div class="cell">
             <div class="large expanded button-group">
               <button class="button info" ng-disabled="type === 'tracePlot'" ng-click="type = 'tracePlot'">time series</button>
-              <button class="button info" ng-disabled="type === 'densityPlot'" ng-click="type='densityPlot'"
-                >density</button>
+              <button class="button info" ng-disabled="type === 'densityPlot'" ng-click="type='densityPlot'">density</button>
               <button class="button info" ng-disabled="type === 'psrfPlot'" ng-click="type='psrfPlot'">PSRF</button>
             </div>
-          </div>
-          <div class="grid-x">
-            <div class="cell large-centered text-center">
-              <img ng-src="{{diagnosticsMap[comparisonLabel][type].href}}" crossOrigin="anonymous"
-                export dont-float-sibling="true" file-name="type"></img>
+            <div class="grid-x">
+              <div class="cell large-centered text-center">
+                <img ng-src="{{diagnosticsMap[comparisonLabel][type].href}}" crossOrigin="anonymous"
+                  export dont-float-sibling="true" file-name="type"></img>
+              </div>
             </div>
           </div>
         </div>
@@ -40,3 +39,4 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
+</div>

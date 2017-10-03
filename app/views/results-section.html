@@ -31,7 +31,7 @@
         <tr>
           <td>
             <strong>Direct estimate </strong>
-            <data-inline-help help-key="direct-estimate"></data-inline-help>
+            <inline-help help-key="direct-estimate"></inline-help>
           </td>
           <td>{{::result.summaries.quantiles['d.direct']['50%'] | number: 3}} ({{::result.summaries.quantiles['d.direct']['2.5%']
             | number: 3}}, {{::result.summaries.quantiles['d.direct']['97.5%'] |
@@ -41,7 +41,7 @@
         <tr>
           <td>
             <strong>Indirect estimate </strong>
-            <data-inline-help help-key="indirect-estimate"></data-inline-help>
+            <inline-help help-key="indirect-estimate"></inline-help>
           </td>
           <td>{{::result.summaries.quantiles['d.indirect']['50%'] | number: 3}} ({{::result.summaries.quantiles['d.indirect']['2.5%']
             | number: 3}}, {{::result.summaries.quantiles['d.indirect']['97.5%']
@@ -72,7 +72,7 @@
     <div class="cell">
       <p>
         <Strong>Absolute treatment effects
-          <data-inline-help help-key="absolute-effects"></data-inline-help>
+          <inline-help help-key="absolute-effects"></inline-help>
         </Strong>
       </p>
       <p ng-if="!baselineDistribution">
@@ -96,7 +96,7 @@
       </table>
       <p>
         <strong>Baseline distribution
-          <data-inline-help help-key="baseline-distribution"></data-inline-help>
+          <inline-help help-key="baseline-distribution"></inline-help>
         </strong>
         {{baselineDistribution | distributionToStringFilter}}
       </p>
@@ -119,7 +119,7 @@
     <div class="cell large-4">
       <p>
         <strong>Relative effects table
-          <data-inline-help help-key="relative-effects"></data-inline-help>
+          <inline-help help-key="relative-effects"></inline-help>
         </strong>
       </p>
       <label ng-show="relativeEffectsTables.length > 1">
@@ -169,7 +169,7 @@
     <div class="cell">
       <p>
         <strong>Study effect funnel plot </strong>
-        <data-inline-help help-key="funnel-plot"></data-inline-help>
+        <inline-help help-key="funnel-plot"></inline-help>
       </p>
     </div>
   </div>
@@ -181,7 +181,7 @@
     <div class="cell">
       <p>
         <strong>Study effect funnel plot </strong>
-        <data-inline-help help-key="funnel-plot"></data-inline-help>
+        <inline-help help-key="funnel-plot"></inline-help>
       </p>
     </div>
   </div>
@@ -215,7 +215,7 @@
       <div>
         <p>
           <strong>Rank probabilities </strong>
-          <data-inline-help help-key="rank-probabilities"></data-inline-help>
+          <inline-help help-key="rank-probabilities"></inline-help>
         </p>
       </div>
       <div class="grid-x">
