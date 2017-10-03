@@ -123,15 +123,15 @@ pwForest <- function(result, t1, t2, ...) {
   pooledMean <- apply(pooled.effect, 2, mean)
   pooledSD <- apply(pooled.effect, 2, sd)
   studies <- study.effect[['study']]
-  m <- c(study.effect[['mean']], pooledMean)
-  e <- c(study.effect[['std.err']], pooledSD)
+  mean <- c(study.effect[['mean']], pooledMean)
+  error <- c(study.effect[['std.err']], pooledSD)
 
   fdata <- data.frame(
     id=c(as.character(studies), "Pooled"),
     style=c(rep("normal", length(studies)), "pooled"),
-    pe=m,
-    ci.l=m - 1.96*e,
-    ci.u=m + 1.96*e)
+    pe=mean,
+    ci.l=mean - 1.96*error,
+    ci.u=mean + 1.96*error)
 
   log.scale <- ll.call("scale.log", model)
 

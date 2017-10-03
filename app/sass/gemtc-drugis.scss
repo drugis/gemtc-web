@@ -1,19 +1,14 @@
-@debug "loading gemtc-drugis";
 @import "settings";
-@debug $topbar-background; // single value
 
 @import "foundation";
-@debug $topbar-background; // single value
 @import "mmfoundation-animations";
+$drugis-color: #F57C00; // https://www.materialpalette.com/orange/light-green
 @import "gemtc-drugis-base";
 @include foundation-global-styles;
-//@include foundation-grid;
-// @include foundation-flex-grid;
 @include foundation-xy-grid-classes;
 @include foundation-typography;
 @include foundation-button;
 @include foundation-forms;
-// @include foundation-range-input;
 @include foundation-accordion;
 @include foundation-accordion-menu;
 @include foundation-badge;
@@ -34,9 +29,6 @@
 @include foundation-orbit;
 @include foundation-pagination;
 @include foundation-progress-bar;
-// @include foundation-progress-element;
-// @include foundation-progress-element;
-// @include foundation-meter-element;
 @include foundation-slider;
 @include foundation-sticky;
 @include foundation-reveal;
@@ -48,10 +40,6 @@
 @include foundation-tooltip;
 @include foundation-top-bar;
 @include foundation-visibility-classes;
-// @include foundation-float-classes;
 @include foundation-flex-classes;
-@debug $topbar-background; // single value
 
-// @include foundation-prototype-classes;
-@import "gemtc-settings";
 @import "drugis";
