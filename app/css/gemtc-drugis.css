@@ -8573,16 +8573,15 @@ inline-help a:hover {
   background-color: #333333;
   font-size: 100%;
   line-height: 1.3;
-  margin-left: -1rem !important;
   padding: 1.5rem;
 }
 
-/* line 393, ../drugis-css/_drugis.scss */
+/* line 392, ../drugis-css/_drugis.scss */
 .tooltip a {
   color: #008CBA;
 }
 
-/* line 396, ../drugis-css/_drugis.scss */
+/* line 395, ../drugis-css/_drugis.scss */
 .tooltip.bottom::before {
   border-top-style: solid;
   border-color: #333333;
@@ -8591,7 +8590,7 @@ inline-help a:hover {
   border-right-color: transparent !important;
 }
 
-/* line 403, ../drugis-css/_drugis.scss */
+/* line 402, ../drugis-css/_drugis.scss */
 .tooltip.top::before {
   border-top-style: solid;
   border-color: #333333;
@@ -8603,19 +8602,19 @@ inline-help a:hover {
 }
 
 /* -------- end inline help directive---------*/
-/* line 414, ../drugis-css/_drugis.scss */
+/* line 413, ../drugis-css/_drugis.scss */
 .reveal-modal {
   overflow-x: auto;
   min-width: 540px;
 }
 
-/* line 419, ../drugis-css/_drugis.scss */
+/* line 418, ../drugis-css/_drugis.scss */
 .tooltip-content {
   max-height: 300px;
   overflow-y: auto;
 }
 
-/* line 425, ../drugis-css/_drugis.scss */
+/* line 424, ../drugis-css/_drugis.scss */
 .has-tip {
   border-bottom: none;
 }
