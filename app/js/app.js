@@ -6,7 +6,6 @@ define(
     'jQuery',
     'lodash',
     'mmfoundation',
-    'foundation',
     'angular-ui-router',
     'angularanimate',
     'ngSanitize',

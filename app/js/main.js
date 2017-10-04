@@ -11,7 +11,6 @@ require.config({
     'angularanimate': 'bower_components/angular-animate/angular-animate.min',
     'clipboard': 'bower_components/clipboard/dist/clipboard.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
-    'foundation': 'bower_components/foundation-sites/dist/js/foundation.min',
     'modernizr': 'bower_components/modernizr/modernizr',
     'lodash': 'bower_components/lodash/dist/lodash.min',
     'd3': 'bower_components/d3/d3',
@@ -68,9 +67,6 @@ require.config({
     },
     'lodash': {
       exports: '_'
-    },
-    'foundation': {
-      deps: ['jQuery', 'modernizr']
     },
     'domReady': {
       exports: 'domReady'
