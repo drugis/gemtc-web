@@ -1,8 +1,8 @@
+@import "gemtc-settings";
 @import "settings";
 
 @import "foundation";
 @import "mmfoundation-animations";
-$drugis-color: #F57C00; // https://www.materialpalette.com/orange/light-green
 @import "gemtc-drugis-base";
 @include foundation-global-styles;
 @include foundation-xy-grid-classes;
