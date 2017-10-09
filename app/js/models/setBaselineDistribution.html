@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="grid-x">
-      <div class="cell large-9  end">
+      <div class="cell">
         <label>Alternative
           <select ng-model="baselineDistribution.selectedAlternative" ng-options="filteredAlternative.name for filteredAlternative in filteredAlternatives"
             ng-change="alternativeSelectionChanged()"></select>
@@ -15,51 +15,51 @@
       </div>
     </div>
     <div class="grid-x">
-      <div class="cell end">
+      <div class="cell">
         <label>{{distributionName}} distribution ({{scaleLabel}})
           <span ng-if="!isSurvival && isMissingSampleSize"><i class="fa fa-exclamation-triangle"></i> Sample size unknown, therefore
             estimate using Normal distribution</span>
         </label>
       </div>
     </div>
-    <div class="grid-x" ng-if="!isSurvival && isMissingSampleSize && baselineDistribution.type !== 'dbeta-cloglog'">
-      <div class="cell large-4 medium-6">
+    <div class="grid-x grid-margin-x" ng-if="!isSurvival && isMissingSampleSize && baselineDistribution.type !== 'dbeta-cloglog'">
+      <div class="cell large-6 medium-6">
         <label>mean
           <input type="number" ng-model="baselineDistribution.mu">
         </label>
       </div>
-      <div class="cell large-4 medium-6 end">
+      <div class="cell large-6 medium-6">
         <label>standard deviation
           <input type="number" step="0.001" ng-model="baselineDistribution.sigma">
         </label>
       </div>
     </div>
 
-    <div class="grid-x" ng-if="baselineDistribution.scale === 'log odds' || baselineDistribution.type === 'dbeta-cloglog'">
-      <div class="cell large-4 medium-6">
+    <div class="grid-x grid-margin-x" ng-if="baselineDistribution.scale === 'log odds' || baselineDistribution.type === 'dbeta-cloglog'">
+      <div class="cell large-6 medium-6">
         <label>alpha
           <input type="number" ng-model="baselineDistribution.alpha">
         </label>
       </div>
-      <div class="cell large-4 medium-6 end">
+      <div class="cell large-6 medium-6">
         <label>beta
           <input type="number" step="0.001" ng-model="baselineDistribution.beta">
         </label>
       </div>
     </div>
 
-    <div class="grid-x" ng-if="!isMissingSampleSize && baselineDistribution.scale === 'mean'">
-      <div class="cell large-3 medium-6">
+    <div class="grid-x grid-margin-x" ng-if="!isMissingSampleSize && baselineDistribution.scale === 'mean'">
+      <div class="cell large-4 medium-6">
         <label>μ
           <input type="number" step="0.001" ng-model="baselineDistribution.mu">
         </label>
       </div>
-      <div class="cell large-3 medium-6 end">
+      <div class="cell large-4 medium-6">
         <label>σ
           <input type="number" step="0.001" ng-model="baselineDistribution.stdErr">
         </label>
       </div>
-      <div class="cell large-3 medium-6 end">
+      <div class="cell large-4 medium-6">
         <label>Degrees of Freedom
           <input type="number" step="1" ng-model="baselineDistribution.dof">
         </label>
@@ -67,23 +67,23 @@
     </div>
 
     <!-- Survival -->
-    <div class="grid-x" ng-if="baselineDistribution.scale === 'log hazard' && baselineDistribution.link === 'log'">
+    <div class="grid-x grid-margin-x" ng-if="baselineDistribution.scale === 'log hazard' && baselineDistribution.link === 'log'">
       <div class="cell large-4 medium-6">
         <label>alpha
           <input type="number" ng-model="baselineDistribution.alpha">
         </label>
       </div>
-      <div class="cell large-4 medium-6 end">
+      <div class="cell large-4 medium-6">
         <label>beta
           <input type="number" step="0.001" ng-model="baselineDistribution.beta">
         </label>
       </div>
-      <div class="cell large-4 medium-6 end">
+      <div class="cell large-4 medium-6">
         <label>Summary measure
           <select ng-model="baselineDistribution.summaryMeasure" ng-options="summaryMeasure.id as summaryMeasure.label for summaryMeasure in summaryMeasureOptions"></select>
         </label>
       </div>
-      <div class="cell large-4 medium-6 end" ng-show="baselineDistribution.summaryMeasure === 'survivalAtTime'">
+      <div class="cell large-4 medium-6" ng-show="baselineDistribution.summaryMeasure === 'survivalAtTime'">
         <label>Survival at time
           <input type="number" step="0.001" ng-model="baselineDistribution.time">
         </label>

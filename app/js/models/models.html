@@ -11,7 +11,7 @@
     </div>
     <div class="clearfix" ng-show="modelsLoaded">
       <div class="grid-x align-bottom">
-        <div class="cell medium-6 small-12" ng-show="models.length">
+        <div class="cell" ng-show="models.length">
           <h5 class="subheader">Primary model
             <inline-help help-key="primary-model"></inline-help>
           </h5>
@@ -31,14 +31,15 @@
             </div>
           </div>
         </div>
-        <div class="cell medium-6 small-12 text-right">
+        <div class="cell large-3">
           <!-- NB ng-hide code only for ADDIS purposes (can't see others' models in gemtc standalone)-->
           <button id="add-model-btn" ng-hide="loginUserId !== userId || !modelsLoaded" tabindex="0"
-            class="button" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked || analysis.archived"><i class="fa fa-plus"></i> Add model
+            class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked || analysis.archived"><i class="fa fa-plus"></i> Add model
           </button>
-          <br>
+        </div>
+        <div class="cell large-3 large-offset-6 text-right">
           <button tabindex="1" ng-disabled="numberOfModelsArchived === 0" ng-hide="!modelsLoaded"
-            class="button secondary" ng-click="showArchived = !showArchived"><i class="fa fa-eye"></i>{{showArchived ? ' Hide' : ' Show'}} archived
+            class="button small secondary" ng-click="showArchived = !showArchived"><i class="fa fa-eye"></i>{{showArchived ? ' Hide' : ' Show'}} archived
             {{showArchived ? '' : '('}}{{showArchived?'':numberOfModelsArchived}}{{showArchived
             ? '' : ')'}}
           </button>
