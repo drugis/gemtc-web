@@ -117,7 +117,7 @@ define(
             resolve: {
               model: ['$stateParams', 'RefineModelService',
                 function($stateParams, RefineModelService) {
-                  return RefineModelService.getRefinedModel($stateParams.analysisId, $stateParams.modelId);
+                  return RefineModelService.getRefinedModel($stateParams);
                 }
               ]
             }
