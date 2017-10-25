@@ -8,7 +8,7 @@ define([], function() {
         method: 'GET'
       },
       setAttributes: {
-        url: '/projects/:projectId/analyses/:analysisId/models/:modelId/attributes',
+        url: '/analyses/:analysisId/models/:modelId/attributes',
         method: 'POST'
       }
     });
