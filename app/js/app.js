@@ -18,7 +18,8 @@ define(
     'patavi/patavi',
     'angular-patavi-client',
     'help-popup',
-    'error-reporting'
+    'error-reporting',
+    'export-directive'
   ],
   function(angular) {
 
@@ -36,7 +37,8 @@ define(
       'gemtc.patavi',
       'patavi',
       'help-directive',
-      'errorReporting'
+      'errorReporting',
+      'export-directive'
     ];
 
     var app = angular.module('gemtc', dependencies);

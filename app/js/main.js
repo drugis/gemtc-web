@@ -21,7 +21,8 @@ require.config({
     'papaparse': 'bower_components/papaparse/papaparse.min',
     'help-popup': 'bower_components/help-popup/help-directive',
     'angular-patavi-client': 'bower_components/angular-patavi-client/patavi',
-    'error-reporting': 'bower_components/error-reporting/errorReportingDirective'
+    'error-reporting': 'bower_components/error-reporting/errorReportingDirective',
+    'export-directive': 'bower_components/export-directive/exportDirective'
   },
   shim: {
     'jQuery': {
@@ -70,6 +71,9 @@ require.config({
     },
     'domReady': {
       exports: 'domReady'
+    },
+    'export-directive': {
+      deps: ['angular', 'd3', 'lodash', 'jQuery']
     }
   },
   priority: ['angular']
