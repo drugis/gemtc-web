@@ -95,6 +95,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             root
               .style('width', '500px')
               .style('height', '500px')
+              .style('background', 'white')
               .datum(myData)
               .call(chart);
 
