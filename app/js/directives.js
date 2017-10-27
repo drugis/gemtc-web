@@ -16,6 +16,5 @@ define(function(require) {
     .directive('relativeEffectPlots', require('gemtc-web/models/result/relativeEffectPlotsDirective'))
     .directive('pairwiseForestPlots', require('gemtc-web/models/result/pairwiseForestPlotsDirective'))
     .directive('nodeSplitDensityPlots', require('gemtc-web/models/result/nodeSplitDensityPlotsDirective'))
-    .directive('export', require('gemtc-web/util/exportDirective'))
     .directive('metaRegressionCovPlots', require('gemtc-web/models/result/metaRegressionCovPlotsDirective'));
 });
