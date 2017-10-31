@@ -3,7 +3,8 @@
     <div class="grid-x">
       <div class="cell end">
         <h3 class="ng-scope">{{outcomeWithAnalysis.outcome.name || outcomeWithAnalysis.name}} baseline
-          distribution</h3>
+          distribution
+        </h3>
       </div>
     </div>
     <div class="grid-x">
@@ -17,12 +18,12 @@
     <div class="grid-x">
       <div class="cell">
         <label>{{distributionName}} distribution ({{scaleLabel}})
-          <span ng-if="!isSurvival && isMissingSampleSize"><i class="fa fa-exclamation-triangle"></i> Sample size unknown, therefore
+          <span ng-if="isMissingSampleSize && baselineDistribution.type === 'dnorm'"><i class="fa fa-exclamation-triangle"></i> Sample size unknown, therefore
             estimate using Normal distribution</span>
         </label>
       </div>
     </div>
-    <div class="grid-x grid-margin-x" ng-if="!isSurvival && isMissingSampleSize && baselineDistribution.type !== 'dbeta-cloglog'">
+    <div class="grid-x grid-margin-x" ng-if="isMissingSampleSize && baselineDistribution.type === 'dnorm'">
       <div class="cell large-6 medium-6">
         <label>mean
           <input type="number" ng-model="baselineDistribution.mu">
@@ -35,7 +36,7 @@
       </div>
     </div>
 
-    <div class="grid-x grid-margin-x" ng-if="baselineDistribution.scale === 'log odds' || baselineDistribution.type === 'dbeta-cloglog'">
+    <div class="grid-x grid-margin-x" ng-if="baselineDistribution.type === 'dbeta-cloglog' || baselineDistribution.type === 'dbeta-logit'">
       <div class="cell large-6 medium-6">
         <label>alpha
           <input type="number" ng-model="baselineDistribution.alpha">
@@ -48,7 +49,7 @@
       </div>
     </div>
 
-    <div class="grid-x grid-margin-x" ng-if="!isMissingSampleSize && baselineDistribution.scale === 'mean'">
+    <div class="grid-x grid-margin-x" ng-if="baselineDistribution.type === 'dt'">
       <div class="cell large-4 medium-6">
         <label>μ
           <input type="number" step="0.001" ng-model="baselineDistribution.mu">
@@ -67,7 +68,7 @@
     </div>
 
     <!-- Survival -->
-    <div class="grid-x grid-margin-x" ng-if="baselineDistribution.scale === 'log hazard' && baselineDistribution.link === 'log'">
+    <div class="grid-x grid-margin-x" ng-if="baselineDistribution.type === 'dsurv'">
       <div class="cell large-4 medium-6">
         <label>alpha
           <input type="number" ng-model="baselineDistribution.alpha">

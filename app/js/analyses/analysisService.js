@@ -4,12 +4,23 @@ define(['angular', 'lodash'], function(angular, _) {
 
   var AnalysisService = function() {
 
+    var NO_BASELINE_ALLOWED = 'no baseline allowed';
+
     var LIKELIHOOD_LINK_SETTINGS = [{
       likelihood: "normal",
       link: "identity",
       scale: "mean difference",
       analysisScale: "mean difference",
       absoluteScale: 'mean',
+      getBaselineDistribution: function(isMissingSamplesize) {
+        return isMissingSamplesize ? {
+          type: 'dnorm',
+          scaleName: 'Normal'
+        } : {
+          type: 'dt',
+          scaleName: 'Student\'s t'
+        };
+      },
       columns: [
         ["mean", "std.err"],
         ["mean", "std.dev", "sampleSize"]
@@ -21,6 +32,12 @@ define(['angular', 'lodash'], function(angular, _) {
       scale: "odds ratio",
       analysisScale: "log odds ratio",
       absoluteScale: 'log odds',
+      getBaselineDistribution: function() {
+        return {
+          type: 'dbeta-logit',
+          scaleName: 'Beta'
+        };
+      },
       columns: [
         ["responders", "sampleSize"]
       ],
@@ -31,6 +48,9 @@ define(['angular', 'lodash'], function(angular, _) {
       scale: "risk ratio",
       analysisScale: "log risk ratio",
       absoluteScale: 'log risk',
+      getBaselineDistribution: function() {
+        return NO_BASELINE_ALLOWED;
+      },
       columns: [
         ["responders", "sampleSize"]
       ],
@@ -41,6 +61,12 @@ define(['angular', 'lodash'], function(angular, _) {
       scale: "hazard ratio",
       analysisScale: "log hazard ratio",
       absoluteScale: 'log hazard',
+      getBaselineDistribution: function() {
+        return {
+          type: 'dbeta-cloglog',
+          scaleName: 'Beta'
+        };
+      },
       columns: [
         ["responders", "sampleSize"]
       ],
@@ -51,6 +77,12 @@ define(['angular', 'lodash'], function(angular, _) {
       scale: "hazard ratio",
       analysisScale: "log hazard ratio",
       absoluteScale: 'log hazard',
+      getBaselineDistribution: function() {
+        return {
+          type: 'dsurv',
+          scaleName: 'Gamma'
+        };
+      },
       columns: [
         ["responders", "exposure"]
       ],
@@ -61,6 +93,9 @@ define(['angular', 'lodash'], function(angular, _) {
       scale: "mean difference",
       analysisScale: "standardized mean difference",
       absoluteScale: 'standardized mean',
+      getBaselineDistribution: function() {
+        return NO_BASELINE_ALLOWED;
+      },
       columns: [
         ["mean", "std.dev", "sampleSize"]
       ],
@@ -399,7 +434,8 @@ define(['angular', 'lodash'], function(angular, _) {
       createNodeSplitOptions: createNodeSplitOptions,
       createLikelihoodLinkOptions: createLikelihoodLinkOptions,
       getScaleName: getScaleName,
-      LIKELIHOOD_LINK_SETTINGS: LIKELIHOOD_LINK_SETTINGS
+      LIKELIHOOD_LINK_SETTINGS: LIKELIHOOD_LINK_SETTINGS,
+      NO_BASELINE_ALLOWED: NO_BASELINE_ALLOWED
     };
 
   };

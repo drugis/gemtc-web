@@ -29,6 +29,10 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
 
           nvd3.addGraph(function() {
             function drawInterval() {
+              root.append("rect")
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("fill", "white");
               var graph = d3.select(element[0].querySelector('g'));
 
               graph.append('line')
@@ -64,10 +68,6 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
                 -meanVal;
             }
 
-            root.append("rect")
-              .attr("width", "100%")
-              .attr("height", "100%")
-              .attr("fill", "white");
 
             var chart = nvd3.models.scatterChart()
               .showLegend(false)
