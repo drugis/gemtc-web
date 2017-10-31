@@ -31,6 +31,9 @@ define(['lodash'], function(_) {
     var localAlternatives;
 
     $scope.summaryMeasureOptions = [{
+      label: 'none',
+      id: 'none'
+    },{
       label: 'median survival',
       id: 'median'
     }, {
@@ -59,34 +62,24 @@ define(['lodash'], function(_) {
       return setting.likelihood === outcomeWithAnalysis.selectedModel.likelihood &&
         setting.link === outcomeWithAnalysis.selectedModel.link;
     });
-    $scope.baselineDistribution.scale = settings.absoluteScale;
-    $scope.baselineDistribution.link = settings.link;
-    $scope.scaleLabel = $scope.baselineDistribution.scale === 'log odds' || 'hazard ratio' ? 'probability' : $scope.baselineDistribution.scale;
-
-    $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives,
-      $scope.baselineDistribution.scale, $scope.baselineDistribution.link);
-    $scope.isSurvival = $scope.baselineDistribution.scale === 'log hazard' && $scope.baselineDistribution.link === 'log';
     $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
       return _.find(armList, function(arm) {
         return arm.sampleSize === undefined;
       });
     });
-
-    if ($scope.baselineDistribution.scale === 'log hazard') {
-      if ($scope.baselineDistribution.link === 'cloglog') {
-        $scope.baselineDistribution.type = 'dbeta-cloglog';
-        $scope.distributionName = 'Beta';
-      } else {
-        $scope.baselineDistribution.type = 'dsurv';
-        $scope.distributionName = 'Gamma';
-      }
-    } else if ($scope.isMissingSampleSize) {
-      $scope.baselineDistribution.type = 'dnorm';
-      $scope.distributionName = 'Normal';
-    } else {
-      $scope.baselineDistribution.type = $scope.baselineDistribution.scale === 'log odds' ? 'dbeta-logit' : 'dt';
-      $scope.distributionName = $scope.baselineDistribution.scale === 'log odds' ? 'Beta' : 'Student\'s t';
+    var baselineDistribution = settings.getBaselineDistribution($scope.isMissingSampleSize);
+    $scope.baselineDistribution.scale = settings.absoluteScale;
+    $scope.baselineDistribution.link = settings.link;
+    if(baselineDistribution !== AnalysisService.NO_BASELINE_ALLOWED) {
+      $scope.baselineDistribution.type = baselineDistribution.type;
+      $scope.distributionName = baselineDistribution.scaleName;
     }
+    $scope.scaleLabel = _.includes(['log odds', 'hazard ratio'], $scope.baselineDistribution.scale) ?
+      'probability' : $scope.baselineDistribution.scale;
+
+    $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives,
+      $scope.baselineDistribution.scale, $scope.baselineDistribution.link);
+    $scope.isSurvival = $scope.baselineDistribution.type === 'dsurv';
 
     $scope.selections.armIdx = 0;
     $scope.armSelectionChanged();
@@ -122,7 +115,7 @@ define(['lodash'], function(_) {
         newBaselineDistribution.alpha = selectedArm.responders + 0.001;
         newBaselineDistribution.beta = selectedArm.exposure + 0.001;
         newBaselineDistribution.type = 'dsurv';
-        newBaselineDistribution.summaryMeasure = 'mean';
+        newBaselineDistribution.summaryMeasure = 'none';
       } else if ($scope.baselineDistribution.type === 'dbeta-cloglog') {
         newBaselineDistribution.alpha = selectedArm.responders + 1;
         newBaselineDistribution.beta = selectedArm.sampleSize - selectedArm.responders + 1;
