@@ -60,7 +60,7 @@ define(['angular', 'lodash'], function(angular, _) {
       link: "cloglog",
       scale: "hazard ratio",
       analysisScale: "log hazard ratio",
-      absoluteScale: 'log hazard',
+      absoluteScale: 'hazard',
       getBaselineDistribution: function() {
         return {
           type: 'dbeta-cloglog',
