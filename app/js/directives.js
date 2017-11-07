@@ -1,20 +1,51 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+  'gemtc-web/analyses/networkPlotDirective',
+  'gemtc-web/models/rankPlotDirective',
+  'gemtc-web/util/pagedSvgPlotDirective',
+  'gemtc-web/util/pagedPngPlotDirective',
+  'gemtc-web/models/runLength/runLengthDirective',
+  'gemtc-web/models/nodesplitForestPlot/nodesplitForestPlotDirective',
+  'gemtc-web/models/heterogeneityPrior/heterogeneityPriorDirective',
+  'gemtc-web/models/funnelPlot/funnelPlotDirective',
+  'gemtc-web/models/comparisonAdjustedFunnelPlot/comparisonAdjustedFunnelPlotDirective',
+  'gemtc-web/util/graphModalDirective/graphModalDirective',
+  'gemtc-web/models/result/relativeEffectPlotsDirective',
+  'gemtc-web/models/result/pairwiseForestPlotsDirective',
+  'gemtc-web/models/result/nodeSplitDensityPlotsDirective',
+  'gemtc-web/models/result/metaRegressionCovPlotsDirective'
+];
+define(requires.concat(['angular']), function(
+  networkPlot,
+  gemtcRankPlot,
+  pagedSvgPlot,
+  pagedPngPlot,
+  runLength,
+  nodesplitForestPlot,
+  heterogeneityPrior,
+  funnelPlot,
+  comparisonAdjustedFunnelPlot,
+  graphModal,
+  relativeEffectPlots,
+  pairwiseForestPlots,
+  nodeSplitDensityPlots,
+  metaRegressionCovPlots,
+  angular
+) {
 
   return angular.module('gemtc.directives', [])
-    .directive('networkPlot', require('gemtc-web/analyses/networkPlotDirective'))
-    .directive('gemtcRankPlot', require('gemtc-web/models/rankPlotDirective'))
-    .directive('pagedSvgPlot', require('gemtc-web/util/pagedSvgPlotDirective'))
-    .directive('pagedPngPlot', require('gemtc-web/util/pagedPngPlotDirective'))
-    .directive('runLength', require('gemtc-web/models/runLength/runLengthDirective'))
-    .directive('nodesplitForestPlot', require('gemtc-web/models/nodesplitForestPlot/nodesplitForestPlotDirective'))
-    .directive('heterogeneityPrior', require('gemtc-web/models/heterogeneityPrior/heterogeneityPriorDirective'))
-    .directive('funnelPlot', require('gemtc-web/models/funnelPlot/funnelPlotDirective'))
-    .directive('comparisonAdjustedFunnelPlot', require('gemtc-web/models/comparisonAdjustedFunnelPlot/comparisonAdjustedFunnelPlotDirective'))
-    .directive('graphModal', require('gemtc-web/util/graphModalDirective/graphModalDirective'))
-    .directive('relativeEffectPlots', require('gemtc-web/models/result/relativeEffectPlotsDirective'))
-    .directive('pairwiseForestPlots', require('gemtc-web/models/result/pairwiseForestPlotsDirective'))
-    .directive('nodeSplitDensityPlots', require('gemtc-web/models/result/nodeSplitDensityPlotsDirective'))
-    .directive('metaRegressionCovPlots', require('gemtc-web/models/result/metaRegressionCovPlotsDirective'));
+    .directive('networkPlot', networkPlot)
+    .directive('gemtcRankPlot', gemtcRankPlot)
+    .directive('pagedSvgPlot', pagedSvgPlot)
+    .directive('pagedPngPlot', pagedPngPlot)
+    .directive('runLength', runLength)
+    .directive('nodesplitForestPlot', nodesplitForestPlot)
+    .directive('heterogeneityPrior', heterogeneityPrior)
+    .directive('funnelPlot', funnelPlot)
+    .directive('comparisonAdjustedFunnelPlot', comparisonAdjustedFunnelPlot)
+    .directive('graphModal', graphModal)
+    .directive('relativeEffectPlots', relativeEffectPlots)
+    .directive('pairwiseForestPlots', pairwiseForestPlots)
+    .directive('nodeSplitDensityPlots', nodeSplitDensityPlots)
+    .directive('metaRegressionCovPlots', metaRegressionCovPlots);
 });
