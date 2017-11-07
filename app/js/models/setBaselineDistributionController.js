@@ -63,29 +63,30 @@ define(['lodash'], function(_) {
         setting.link === outcomeWithAnalysis.selectedModel.link;
     });
 
-
+    $scope.baselineDistribution.scale = settings.absoluteScale;
+    $scope.baselineDistribution.link = settings.link;
+    
     $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives,
-      $scope.baselineDistribution.scale, $scope.baselineDistribution.link).$promise.then(function() {
-      $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
-        return _.find(armList, function(arm) {
-          return arm.sampleSize === undefined;
-        });
+      $scope.baselineDistribution.scale, $scope.baselineDistribution.link);
+
+    $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
+      return _.find(armList, function(arm) {
+        return arm.sampleSize === undefined;
       });
-      var baselineDistribution = settings.getBaselineDistribution($scope.isMissingSampleSize);
-      $scope.baselineDistribution.scale = settings.absoluteScale;
-      $scope.baselineDistribution.link = settings.link;
-      if (baselineDistribution !== AnalysisService.NO_BASELINE_ALLOWED) {
-        $scope.baselineDistribution.type = baselineDistribution.type;
-        $scope.distributionName = baselineDistribution.scaleName;
-      }
-      $scope.scaleLabel = _.includes(['log odds', 'hazard ratio'], $scope.baselineDistribution.scale) ?
-        'probability' : $scope.baselineDistribution.scale;
-      $scope.isSurvival = $scope.baselineDistribution.type === 'dsurv';
-      $scope.selections.armIdx = 0;
-      armSelectionChanged();
-      $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
-        return $scope.arms[alternative.id].length;
-      });
+    });
+    var baselineDistribution = settings.getBaselineDistribution($scope.isMissingSampleSize);
+    if (baselineDistribution !== AnalysisService.NO_BASELINE_ALLOWED) {
+      $scope.baselineDistribution.type = baselineDistribution.type;
+      $scope.distributionName = baselineDistribution.scaleName;
+    }
+    
+    $scope.scaleLabel = _.includes(['log odds', 'hazard ratio'], $scope.baselineDistribution.scale) ?
+      'probability' : $scope.baselineDistribution.scale;
+    $scope.isSurvival = $scope.baselineDistribution.type === 'dsurv';
+    $scope.selections.armIdx = 0;
+    armSelectionChanged();
+    $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
+      return $scope.arms[alternative.id].length;
     });
 
 
