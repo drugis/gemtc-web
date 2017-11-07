@@ -1,49 +1,111 @@
 'use strict';
-
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+  'models/modelsController',
+  'models/createModelController',
+  'models/extendRunLengthController',
+  'models/nodeSplitOverviewController',
+  'models/createNodeSplitModelController',
+  'models/createNetworkModelController',
+  'models/addComparisonFunnelPlotController',
+  'models/setBaselineDistributionController',
+  'models/standaloneModelResource',
+  'models/standaloneModelBaselineResource',
+  'models/standaloneProblemResource',
+  'analyses/analysisResource',
+  'models/funnelPlotResource',
+  'models/modelService',
+  'models/refineModelService',
+  'analyses/analysisService',
+  'models/devianceStatisticsService',
+  'models/nodeSplitOverviewService',
+  'gemtc-web/models/metaRegressionService',
+  'gemtc-web/models/result/resultsPlotService',
+  'models/rankPlotDirective',
+  'models/runLength/runLengthDirective',
+  'models/nodesplitForestPlot/nodesplitForestPlotDirective',
+  'models/heterogeneityPrior/heterogeneityPriorDirective',
+  'models/result/relativeEffectPlotsDirective',
+  'models/result/pairwiseForestPlotsDirective',
+  'models/result/nodeSplitDensityPlotsDirective',
+  'models/funnelPlot/funnelPlotDirective',
+  'models/comparisonAdjustedFunnelPlot/comparisonAdjustedFunnelPlotDirective',
+  'models/result/metaRegressionCovPlotsDirective',
+  'models/distributionToStringFilter'
+];
+define(requires.concat(['angular', 'angular-resource']), function(
+  ModelsController,
+  CreateModelController,
+  ExtendRunLengthController,
+  NodeSplitOverviewController,
+  CreateNodeSplitModelController,
+  CreateNetworkModelController,
+  AddComparisonFunnelPlotController,
+  SetBaselineDistributionController,
+  ModelResource,
+  ModelBaselineResource,
+  ProblemResource,
+  AnalysisResource,
+  FunnelPlotResource,
+  ModelService,
+  RefineModelService,
+  AnalysisService,
+  DevianceStatisticsService,
+  NodeSplitOverviewService,
+  MetaRegressionService,
+  ResultsPlotService,
+  gemtcRankPlot,
+  runLength,
+  nodesplitForestPlot,
+  heterogeneityPrior,
+  relativeEffectPlots,
+  pairwiseForestPlots,
+  nodeSplitDensityPlots,
+  funnelPlot,
+  comparisonAdjustedFunnelPlot,
+  metaRegressionCovPlots,
+  distributionToStringFilter,
+  angular
+) {
   var dependencies = ['ngResource'];
-
   return angular.module('gemtc.models', dependencies)
     // controllers
-    .controller('ModelsController', require('models/modelsController'))
-    .controller('CreateModelController', require('models/createModelController'))
-    .controller('ExtendRunLengthController', require('models/extendRunLengthController'))
-    .controller('NodeSplitOverviewController', require('models/nodeSplitOverviewController'))
-    .controller('CreateNodeSplitModelController', require('models/createNodeSplitModelController'))
-    .controller('CreateNetworkModelController', require('models/createNetworkModelController'))
-    .controller('AddComparisonFunnelPlotController', require('models/addComparisonFunnelPlotController'))
-    .controller('SetBaselineDistributionController', require('models/setBaselineDistributionController'))
+    .controller('ModelsController', ModelsController)
+    .controller('CreateModelController', CreateModelController)
+    .controller('ExtendRunLengthController', ExtendRunLengthController)
+    .controller('NodeSplitOverviewController', NodeSplitOverviewController)
+    .controller('CreateNodeSplitModelController', CreateNodeSplitModelController)
+    .controller('CreateNetworkModelController', CreateNetworkModelController)
+    .controller('AddComparisonFunnelPlotController', AddComparisonFunnelPlotController)
+    .controller('SetBaselineDistributionController', SetBaselineDistributionController)
 
-  // resources
-    .factory('ModelResource', require('models/standaloneModelResource'))
-    .factory('ModelBaselineResource', require('models/standaloneModelBaselineResource'))
-    .factory('ProblemResource', require('models/standaloneProblemResource'))
-    .factory('AnalysisResource', require('analyses/analysisResource'))
-    .factory('FunnelPlotResource', require('models/funnelPlotResource'))
+    // resources
+    .factory('ModelResource', ModelResource)
+    .factory('ModelBaselineResource', ModelBaselineResource)
+    .factory('ProblemResource', ProblemResource)
+    .factory('AnalysisResource', AnalysisResource)
+    .factory('FunnelPlotResource', FunnelPlotResource)
 
-  //services
-    .factory('ModelService', require('models/modelService'))
-    .factory('RefineModelService', require('models/refineModelService'))
-    .factory('AnalysisService', require('analyses/analysisService'))
-    .factory('DevianceStatisticsService', require('models/devianceStatisticsService'))
-    .factory('NodeSplitOverviewService', require('models/nodeSplitOverviewService'))
-    .factory('MetaRegressionService', require('gemtc-web/models/metaRegressionService'))
-    .factory('ResultsPlotService', require('gemtc-web/models/result/resultsPlotService'))
+    //services
+    .factory('ModelService', ModelService)
+    .factory('RefineModelService', RefineModelService)
+    .factory('AnalysisService', AnalysisService)
+    .factory('DevianceStatisticsService', DevianceStatisticsService)
+    .factory('NodeSplitOverviewService', NodeSplitOverviewService)
+    .factory('MetaRegressionService', MetaRegressionService)
+    .factory('ResultsPlotService', ResultsPlotService)
 
-  //directives
-    .directive('gemtcRankPlot', require('models/rankPlotDirective'))
-    .directive('runLength', require('models/runLength/runLengthDirective'))
-    .directive('nodesplitForestPlot', require('models/nodesplitForestPlot/nodesplitForestPlotDirective'))
-    .directive('heterogeneityPrior', require('models/heterogeneityPrior/heterogeneityPriorDirective'))
-    .directive('relativeEffectPlots', require('models/result/relativeEffectPlotsDirective'))
-    .directive('pairwiseForestPlots', require('models/result/pairwiseForestPlotsDirective'))
-    .directive('nodeSplitDensityPlots', require('models/result/nodeSplitDensityPlotsDirective'))
-    .directive('funnelPlot', require('models/funnelPlot/funnelPlotDirective'))
-    .directive('comparisonAdjustedFunnelPlot', require('models/comparisonAdjustedFunnelPlot/comparisonAdjustedFunnelPlotDirective'))
-    .directive('metaRegressionCovPlots', require('models/result/metaRegressionCovPlotsDirective'))
+    //directives
+    .directive('gemtcRankPlot', gemtcRankPlot)
+    .directive('runLength', runLength)
+    .directive('nodesplitForestPlot', nodesplitForestPlot)
+    .directive('heterogeneityPrior', heterogeneityPrior)
+    .directive('relativeEffectPlots', relativeEffectPlots)
+    .directive('pairwiseForestPlots', pairwiseForestPlots)
+    .directive('nodeSplitDensityPlots', nodeSplitDensityPlots)
+    .directive('funnelPlot', funnelPlot)
+    .directive('comparisonAdjustedFunnelPlot', comparisonAdjustedFunnelPlot)
+    .directive('metaRegressionCovPlots', metaRegressionCovPlots)
 
     //filters
-    .filter('distributionToStringFilter', require('models/distributionToStringFilter'))
-    ;
+    .filter('distributionToStringFilter', distributionToStringFilter);
 });

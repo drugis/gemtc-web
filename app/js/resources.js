@@ -1,10 +1,22 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+  'gemtc-web/resources/modelResource',
+  'gemtc-web/resources/modelBaselineResource',
+  'gemtc-web/resources/funnelPlotResource',
+  'gemtc-web/resources/problemResource',
+  'gemtc-web/resources/pataviTaskIdResource'
+];
+define(requires.concat(['angular', 'angular-resource']), function(
+  ModelResource,
+  ModelBaselineResource,
+  FunnelPlotResource,
+  ProblemResource,
+  PataviTaskIdResource,
+  angular) {
   return angular.module('gemtc.resources', ['ngResource'])
-    .factory('ModelResource', require('gemtc-web/resources/modelResource'))
-    .factory('ModelBaselineResource', require('gemtc-web/resources/modelBaselineResource'))
-    .factory('FunnelPlotResource', require('gemtc-web/resources/funnelPlotResource'))
-    .factory('ProblemResource', require('gemtc-web/resources/problemResource'))
-    .factory('PataviTaskIdResource', require('gemtc-web/resources/pataviTaskIdResource'));
+    .factory('ModelResource', ModelResource)
+    .factory('ModelBaselineResource', ModelBaselineResource)
+    .factory('FunnelPlotResource', FunnelPlotResource)
+    .factory('ProblemResource', ProblemResource)
+    .factory('PataviTaskIdResource', PataviTaskIdResource);
 });
