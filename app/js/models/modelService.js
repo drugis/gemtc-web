@@ -396,7 +396,7 @@ define(['lodash'], function(_) {
         entryBuilder = tEntryBuilder;
       } else if (scale === 'log hazard' && link === 'log') {
         entryBuilder = survEntryBuilder;
-      } else if (scale === 'log hazard' && link === 'cloglog') {
+      } else if (scale === 'hazard' && link === 'cloglog') {
         entryBuilder = betaEntryBuilder;
       }
       return _.reduce(alternatives, function(accum, alternative) {
