@@ -941,7 +941,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
           }]
         };
         var alternatives = problem.treatments;
-        var scale = 'log hazard';
+        var scale = 'hazard';
         var link = 'cloglog';
         var result = modelService.buildBaselineSelectionEvidence(problem, alternatives, scale, link);
 
