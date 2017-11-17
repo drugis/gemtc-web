@@ -1,17 +1,39 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+  'gemtc-web/controllers/modelController',
+  'gemtc-web/models/createModelController',
+  'gemtc-web/models/modelsController',
+  'gemtc-web/models/extendRunLengthController',
+  'gemtc-web/models/nodeSplitOverviewController',
+  'gemtc-web/models/createNodeSplitModelController',
+  'gemtc-web/models/createNetworkModelController',
+  'gemtc-web/models/addComparisonFunnelPlotController',
+  'gemtc-web/util/graphModalDirective/plotNavigationController',
+  'gemtc-web/models/setBaselineDistributionController'
+];
+define(requires.concat(['angular']), function(
+  ModelController,
+  CreateModelController,
+  ModelsController,
+  ExtendRunLengthController,
+  NodeSplitOverviewController,
+  CreateNodeSplitModelController,
+  CreateNetworkModelController,
+  AddComparisonFunnelPlotController,
+  PlotNavigationController,
+  SetBaselineDistributionController,
+  angular) {
   return angular.module('gemtc.controllers', [])
-    .controller('ModelController', require('gemtc-web/controllers/modelController'))
-    .controller('CreateModelController', require('gemtc-web/models/createModelController'))
-    .controller('ModelsController', require('gemtc-web/models/modelsController'))
-    .controller('ExtendRunLengthController', require('gemtc-web/models/extendRunLengthController'))
-    .controller('NodeSplitOverviewController', require('gemtc-web/models/nodeSplitOverviewController'))
-    .controller('CreateNodeSplitModelController', require('gemtc-web/models/createNodeSplitModelController'))
-    .controller('CreateNetworkModelController', require('gemtc-web/models/createNetworkModelController'))
-    .controller('AddComparisonFunnelPlotController', require('gemtc-web/models/addComparisonFunnelPlotController'))
-    .controller('PlotNavigationController', require('gemtc-web/util/graphModalDirective/plotNavigationController'))
-    .controller('SetBaselineDistributionController', require('gemtc-web/models/setBaselineDistributionController'))
+    .controller('ModelController', ModelController)
+    .controller('CreateModelController', CreateModelController)
+    .controller('ModelsController', ModelsController)
+    .controller('ExtendRunLengthController', ExtendRunLengthController)
+    .controller('NodeSplitOverviewController', NodeSplitOverviewController)
+    .controller('CreateNodeSplitModelController', CreateNodeSplitModelController)
+    .controller('CreateNetworkModelController', CreateNetworkModelController)
+    .controller('AddComparisonFunnelPlotController', AddComparisonFunnelPlotController)
+    .controller('PlotNavigationController', PlotNavigationController)
+    .controller('SetBaselineDistributionController', SetBaselineDistributionController)
 
   ;
 });

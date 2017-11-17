@@ -1,28 +1,52 @@
 'use strict';
-
-define(function (require) {
-  var angular = require('angular');
+var requires = [
+  'analyses/analysesController',
+  'analyses/analysisController',
+  'analyses/addAnalysisController',
+  'analyses/networkGraphController',
+  'analyses/evidenceTableController',
+  'analyses/relativeEffectTableController',
+  'analyses/analysisResource',
+  'analyses/problemResource',
+  'analyses/analysisService',
+  'analyses/networkPlotService',
+  'analyses/evidenceTableService',
+  'analyses/networkPlotDirective'
+];
+define(requires.concat(['angular', 'angular-resource']), function(
+  AnalysesController,
+  AnalysisController,
+  AddAnalysisController,
+  NetworkGraphController,
+  EvidenceTableController,
+  RelativeEffectTableController,
+  AnalysisResource,
+  ProblemResource,
+  AnalysisService,
+  NetworkPlotService,
+  EvidenceTableService,
+  networkPlot,
+  angular
+) {
   var dependencies = ['ngResource', 'gemtc.models'];
-
   return angular.module('gemtc.analyses', dependencies)
     // controllers
-    .controller('AnalysesController', require('analyses/analysesController'))
-    .controller('AnalysisController', require('analyses/analysisController'))
-    .controller('AddAnalysisController', require('analyses/addAnalysisController'))
-    .controller('NetworkGraphController', require('analyses/networkGraphController'))
-    .controller('EvidenceTableController', require('analyses/evidenceTableController'))
-    .controller('RelativeEffectTableController', require('analyses/relativeEffectTableController'))
+    .controller('AnalysesController', AnalysesController)
+    .controller('AnalysisController', AnalysisController)
+    .controller('AddAnalysisController', AddAnalysisController)
+    .controller('NetworkGraphController', NetworkGraphController)
+    .controller('EvidenceTableController', EvidenceTableController)
+    .controller('RelativeEffectTableController', RelativeEffectTableController)
 
     // resources
-    .factory('AnalysisResource', require('analyses/analysisResource'))
-    .factory('ProblemResource', require('analyses/problemResource'))
+    .factory('AnalysisResource', AnalysisResource)
+    .factory('ProblemResource', ProblemResource)
 
     //services
-    .factory('AnalysisService', require('analyses/analysisService'))
-    .factory('NetworkPlotService', require('analyses/networkPlotService'))
-    .factory('EvidenceTableService', require('analyses/evidenceTableService'))
+    .factory('AnalysisService', AnalysisService)
+    .factory('NetworkPlotService', NetworkPlotService)
+    .factory('EvidenceTableService', EvidenceTableService)
 
-    .directive('networkPlot', require('analyses/networkPlotDirective'))
-
-    ;
+    .directive('networkPlot', networkPlot)
+  ;
 });
