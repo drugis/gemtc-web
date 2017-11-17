@@ -1,7 +1,10 @@
 'use strict';
-define(function (require) {
-  var angular = require('angular');
+var requires = ['gemtc-web/models/distributionToStringFilter'];
+define(requires.concat(['angular']),function (
+	distributionToStringFilter,
+	 angular
+	) {
   return angular.module('gemtc.filters', [])
-    .filter('distributionToStringFilter', require('gemtc-web/models/distributionToStringFilter'))
+    .filter('distributionToStringFilter', distributionToStringFilter)
     ;
 });
