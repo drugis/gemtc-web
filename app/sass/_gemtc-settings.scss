@@ -1,0 +1,15 @@
+// Uncomment to use rem-calc() in your settings
+@import "util/util";
+$rem-base: 16px;
+
+$row-width: rem-calc(1500);
+$reveal-default-width:75% !default;
+
+$drugis-color: #F57C00; // https://www.materialpalette.com/orange/light-green
+$foundation-palette: (
+  primary: #452F8C,
+  secondary: #767676,
+  success:  #29A329,
+  warning: lighten(#f08a24, 5%),
+  alert: #E66464
+);
