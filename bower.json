@@ -30,13 +30,14 @@
     "angular": "~1.6",
     "angular-animate": "~1.6.0",
     "angular-foundation-6": "https://github.com/drugis/angular-foundation-6.git#master",
-    "angular-patavi-client": "https://github.com/drugis/angular-patavi-client.git#2.0.2",
+    "angular-patavi-client": "https://github.com/drugis/angular-patavi-client.git#2.0.3",
     "angular-resource": "~1.6.0",
     "angular-sanitize": "~1.6.0",
+    "angular-touch": "^1.6.6",
     "angular-ui-router": "~1.0.5",
     "bowser": "~0.7.3",
     "clipboard": "^1.6.0",
-    "d3": "3.5.6",
+    "d3": "~3.5.6",
     "error-reporting": "https://github.com/drugis/error-reporting.git#1.2.1",
     "export-directive": "https://github.com/drugis/export-directive.git#master",
     "font-awesome": "~4.3",
@@ -52,12 +53,13 @@
     "requirejs": "~2.1.10",
     "requirejs-domready": "~2.0.1",
     "scrollup": "~2.4.1",
-    "angular-touch": "^1.6.6"
+    "toc": "~0.3.2"
   },
   "devDependencies": {
     "angular-mocks": "~1.6"
   },
   "resolutions": {
-    "angular": "~1.6"
+    "angular": "~1.6",
+    "jquery": "~3.2.1"
   }
 }
