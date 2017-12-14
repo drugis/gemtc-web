@@ -32,7 +32,6 @@ define(requires.concat(['angular']), function(
   metaRegressionCovPlots,
   angular
 ) {
-
   return angular.module('gemtc.directives', [])
     .directive('networkPlot', networkPlot)
     .directive('gemtcRankPlot', gemtcRankPlot)

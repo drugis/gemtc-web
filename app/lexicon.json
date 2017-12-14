@@ -176,7 +176,7 @@
   },
   "outcome": {
     "title": "Outcome",
-    "text": "The outcome (i.e. variable of interest) investigated in this analysis.",
+    "text": "The outcome (i.e. variable of interest) investigated in this analysis. Can be any text.",
     "link": "/manual.html#analyses-and-models"
   },
   "outcome-scale": {
