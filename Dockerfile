@@ -26,7 +26,7 @@ USER gemtc
 WORKDIR /var/lib/gemtc
 ENV HOME /var/lib/gemtc
 
-RUN yarn --ignore-engines
+RUN yarn --production
 
 EXPOSE 3001
 
