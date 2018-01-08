@@ -12,7 +12,7 @@ RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
 RUN apt-get install -y nodejs
 
-RUN npm install -g bower
+RUN npm install -g yarn
 RUN npm install -g forever
 
 RUN apt-get install -y git # needed by angular-foundation
@@ -26,8 +26,7 @@ USER gemtc
 WORKDIR /var/lib/gemtc
 ENV HOME /var/lib/gemtc
 
-RUN npm install --production
-RUN bower update
+RUN yarn
 
 EXPOSE 3001
 
