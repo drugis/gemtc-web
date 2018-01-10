@@ -1,9 +1,11 @@
 <div class="grid-container">
-  <div ng-show="results && results.studyRelativeEffects" class="grid-x" style="padding-top: 1rem;">
-    <div class="cell">
+  <div ng-show="results" class="grid-x" style="padding-top: 1rem;">
+    <div class="cell" ng-show="results && results.studyRelativeEffects">
       <div class="addis-graph" export file-name="'funnelPlot'">
         <svg></svg>
       </div>
     </div>
+    <div class="cell" ng-show="results && !results.studyRelativeEffects">
+      <p>Funnel plot requires more than 2 studies for the selected comparison.</p>
   </div>
 </div>

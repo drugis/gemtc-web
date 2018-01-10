@@ -27,6 +27,7 @@ var requires = [
   'models/result/relativeEffectPlotsDirective',
   'models/result/pairwiseForestPlotsDirective',
   'models/result/nodeSplitDensityPlotsDirective',
+  'models/funnelPlot/funnelPlotService',
   'models/funnelPlot/funnelPlotDirective',
   'models/comparisonAdjustedFunnelPlot/comparisonAdjustedFunnelPlotDirective',
   'models/result/metaRegressionCovPlotsDirective',
@@ -60,6 +61,7 @@ define(requires.concat(['angular', 'angular-resource']), function(
   relativeEffectPlots,
   pairwiseForestPlots,
   nodeSplitDensityPlots,
+  FunnelPlotService,
   funnelPlot,
   comparisonAdjustedFunnelPlot,
   metaRegressionCovPlots,
@@ -93,6 +95,7 @@ define(requires.concat(['angular', 'angular-resource']), function(
     .factory('NodeSplitOverviewService', NodeSplitOverviewService)
     .factory('MetaRegressionService', MetaRegressionService)
     .factory('ResultsPlotService', ResultsPlotService)
+    .factory('FunnelPlotService', FunnelPlotService)
 
     //directives
     .directive('gemtcRankPlot', gemtcRankPlot)
