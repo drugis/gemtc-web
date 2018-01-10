@@ -58,9 +58,9 @@
     select "^1.1.2"
     tiny-emitter "^2.0.0"
 
-"@bower_components/d3@mbostock-bower/d3-bower#>=3.5.6":
+"@bower_components/d3@mbostock-bower/d3-bower#~3.5.x":
   version "0.0.0"
-  resolved "https://codeload.github.com/mbostock-bower/d3-bower/tar.gz/80f06b94ac5e42e664c9f12e2e7fb88f0761ab0f"
+  resolved "https://codeload.github.com/mbostock-bower/d3-bower/tar.gz/7a826d211d5067867debf9ce24a9987e0cb02b6e"
 
 "@bower_components/error-reporting@drugis/error-reporting#1.2.1":
   version "0.0.0"
