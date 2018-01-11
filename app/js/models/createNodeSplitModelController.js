@@ -15,7 +15,7 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.createNodeSplitModel = createNodeSplitModel;
 
     $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
+      $modalInstance.close();
     };
 
     function createNodeSplitModel(model) {
