@@ -14,7 +14,7 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.modelTypeLabel = 'network';
 
     $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
+      $modalInstance.close();
     };
 
     function createNodeSplitModel(model) {

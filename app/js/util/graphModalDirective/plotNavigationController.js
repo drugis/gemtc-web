@@ -19,7 +19,7 @@ define(['lodash'], function(_) {
     };
 
     $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
+      $modalInstance.close();
     };
 
   };
