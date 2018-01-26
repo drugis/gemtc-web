@@ -49,14 +49,13 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
           .color(d3.scale.category10().range())
           .xDomain([minX, maxX])
           .yDomain([maxY, minY]);
+        //Axis settings
         chart.yAxis.axisLabel('Standard error');
         chart.xAxis.axisLabel(xAxisLabel);
-        //Axis settings
         chart.xAxis.tickFormat(d3.format('.02f'));
-            chart.yAxis.tickFormat(function(d) {
-              return Math.abs(d);
-            });
-                    // chart.yAxis.tickFormat(d3.format('.02f'));
+        chart.yAxis.tickFormat(function(d) {
+          return Math.abs(d);
+        });
 
         root.append('rect')
           .attr('width', '100%')
