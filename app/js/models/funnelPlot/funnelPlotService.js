@@ -1,5 +1,5 @@
 'use strict';
-define(['d3', 'nvd3'], function(d3, nvd3) {
+define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
   var dependencies = [];
   var FunnelPlotService = function() {
 
@@ -8,8 +8,10 @@ define(['d3', 'nvd3'], function(d3, nvd3) {
       root = root.select('svg');
 
       var minY = 0;
-      var minX = midPoint - 1.96 * maxY;
-      var maxX = midPoint + 1.96 * maxY;
+      var triangleBottomLeft = midPoint - 1.96 * maxY;
+      var triangleBottomRight = midPoint + 1.96 * maxY;
+      var minX = _.min([triangleBottomLeft, _.min(_.map(data[0].values, 'x'))]);
+      var maxX = _.max([triangleBottomRight, _.max(_.map(data[0].values, 'x'))]);
 
       nvd3.addGraph(function() {
         function drawInterval() {
@@ -18,7 +20,7 @@ define(['d3', 'nvd3'], function(d3, nvd3) {
           graph.append('line')
             .style('stroke', 'black')
             .style('stroke-dasharray', '5,10,5')
-            .attr('x1', chart.xScale()(minX))
+            .attr('x1', chart.xScale()(triangleBottomLeft))
             .attr('y1', chart.yScale()(maxY))
             .attr('x2', chart.xScale()(midPoint))
             .attr('y2', chart.yScale()(0));
@@ -28,7 +30,7 @@ define(['d3', 'nvd3'], function(d3, nvd3) {
             .style('stroke-dasharray', '5,10,5')
             .attr('x1', chart.xScale()(midPoint))
             .attr('y1', chart.yScale()(0))
-            .attr('x2', chart.xScale()(maxX))
+            .attr('x2', chart.xScale()(triangleBottomRight))
             .attr('y2', chart.yScale()(maxY));
 
           graph.append('line')
