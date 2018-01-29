@@ -1,11 +1,11 @@
-<div class="grid-container">
-  <div class="grid-x" ng-if="results && model.modelType.type === 'node-split'">
-    <div class="cell small-8">
-      <p>
-        <strong>Density plot </strong>
-        <inline-help help-key="density-plot"></inline-help>
-      </p>
-      <paged-png-plot file-name="'densityPlot'" pages="results.nodeSplitDensityPlot"></paged-png-plot>
-    </div>
+<div class="grid-x" ng-if="results && model.modelType.type === 'node-split'">
+  <div class="cell small-8">
+    <p>
+      <strong>Density plot </strong>
+      <inline-help help-key="density-plot"></inline-help>
+    </p>
+  </div>
+  <div class="cell">
+    <paged-png-plot file-name="'densityPlot'" pages="results.nodeSplitDensityPlot"></paged-png-plot>
   </div>
 </div>

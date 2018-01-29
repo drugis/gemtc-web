@@ -10,8 +10,6 @@
           ng-model="selectedBaseline"></select>
       </label>
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell large-6 small-8">
       <label ng-show="relativeEffectPlots.length > 1">
         Covariate level
@@ -19,9 +17,7 @@
           ng-model="relativeEffectPlot"></select>
       </label>
     </div>
-  </div>
-  <div class="grid-x">
-    <div class="cell large-12 center">
+    <div class="cell">
       <paged-svg-plot file-name="'relativeEffect'" pages="relativeEffectPlot.plots[selectedBaseline.id]"></paged-svg-plot>
     </div>
   </div>

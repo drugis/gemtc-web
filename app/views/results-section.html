@@ -18,8 +18,8 @@
 </div>
 
 <div class="grid-x" ng-if="result && model.modelType.type === 'node-split'">
-  <div class="column">
-    <table>
+  <div class="cell large-6 medium-8">
+    <table id="node-split-results-table">
       <caption>Node splitting results</caption>
       <thead>
         <tr>
@@ -64,6 +64,11 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="cell large-6 medium-4">
+    <button class="button small info clipboard-button" data-clipboard-target="#node-split-results-table">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
   </div>
 </div>
 
