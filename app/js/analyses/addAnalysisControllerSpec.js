@@ -69,8 +69,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       beforeEach(function() {
         scope.cancel();
       });
-      it('should dismiss the modal', function() {
-        expect(modalInstance.dismiss).toHaveBeenCalled();
+      it('should close the modal', function() {
+        expect(modalInstance.close).toHaveBeenCalled();
       });
     });
 

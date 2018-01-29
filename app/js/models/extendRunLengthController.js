@@ -20,7 +20,7 @@ define([], function() {
     }
 
     $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
+      $modalInstance.close();
     };
 
     function extendRunLength(model) {
