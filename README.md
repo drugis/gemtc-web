@@ -15,13 +15,9 @@ Compile the scss to css using compass
 
     compass compile
 
-Use bower to install the front-end dependencies
+Use yarn to install the dependencies
 
-    bower install
-
-Use npm to install the back-end dependencies
-
-    npm install
+    yarn
 
 Use psql to create the db to store data
 

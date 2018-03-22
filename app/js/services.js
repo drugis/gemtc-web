@@ -9,6 +9,7 @@ var requires = [
   'gemtc-web/analyses/analysisService',
   'gemtc-web/services/diagnosticsService',
   'gemtc-web/models/nodeSplitOverviewService',
+  'gemtc-web/models/funnelPlot/funnelPlotService',
   'gemtc-web/models/metaRegressionService'
 ];
 define(requires.concat(['angular']), function(
@@ -21,6 +22,7 @@ define(requires.concat(['angular']), function(
   AnalysisService,
   DiagnosticsService,
   NodeSplitOverviewService,
+  FunnelPlotService,
   MetaRegressionService,
   angular) {
   return angular.module('gemtc.services', [])
@@ -29,10 +31,10 @@ define(requires.concat(['angular']), function(
     .factory('ModelService', ModelService)
     .factory('RefineModelService', RefineModelService)
     .factory('ResultsPlotService', ResultsPlotService)
-
     .factory('NetworkPlotService', NetworkPlotService)
     .factory('AnalysisService', AnalysisService)
     .factory('DiagnosticsService', DiagnosticsService)
     .factory('NodeSplitOverviewService', NodeSplitOverviewService)
+    .factory('FunnelPlotService', FunnelPlotService)
     .factory('MetaRegressionService', MetaRegressionService);
 });
