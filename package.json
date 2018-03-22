@@ -31,6 +31,7 @@
     "@bower_components/angular-touch": "angular/bower-angular-touch#>=1.6.6",
     "@bower_components/angular-ui-router": "angular-ui/angular-ui-router-bower#>=1.0.5",
     "@bower_components/bowser": "ded/bowser#0.7.3",
+    "@bower_components/core-js": "zloirock/core-js#^2.5.3",
     "@bower_components/clipboard": "zenorocha/clipboard.js#^1.6.0",
     "@bower_components/d3": "mbostock-bower/d3-bower#~3.5.x",
     "@bower_components/error-reporting": "drugis/error-reporting#1.2.1",
