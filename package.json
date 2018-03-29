@@ -25,7 +25,7 @@
     "@bower_components/angular-foundation": "drugis/angular-foundation-6#master",
     "@bower_components/angular-foundation-6": "drugis/angular-foundation-6#master",
     "@bower_components/angular-mocks": "angular/bower-angular-mocks#~1.6",
-    "@bower_components/angular-patavi-client": "drugis/angular-patavi-client#2.0.2",
+    "@bower_components/angular-patavi-client": "drugis/angular-patavi-client#2.0.4",
     "@bower_components/angular-resource": "angular/bower-angular-resource#>=1.6.0",
     "@bower_components/angular-sanitize": "angular/bower-angular-sanitize#>=1.6.0",
     "@bower_components/angular-touch": "angular/bower-angular-touch#>=1.6.6",
