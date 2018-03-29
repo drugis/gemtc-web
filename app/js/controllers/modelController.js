@@ -53,7 +53,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     $scope.modelFitViewTemplate = gemtcRootPath + 'views/model-fit-section.html';
     $scope.metaRegressionTemplate = gemtcRootPath + 'views/meta-regression-section.html';
     $scope.stateParams = $stateParams;
-    var clipboard = new Clipboard('.clipboard-button');
+    new Clipboard('.clipboard-button');
     $scope.selectedBaseline = undefined;
 
     // pass information to parent for use in breadcrumbs
