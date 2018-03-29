@@ -37,12 +37,13 @@ try {
   httpsOptions.ca = fs.readFileSync(process.env.PATAVI_CA);
 } catch (e) {
   logger.warn('could not read patavi certivicate authority at: ' + process.env.PATAVI_CA);
-  httpsOptions.ca = 'empty-ca';
 }
 
 function getJson(url, callback) {
   var opts = urlModule.parse(url);
-  opts.ca = httpsOptions.ca;
+  if (httpsOptions.ca) {
+    opts.ca = httpsOptions.ca;
+  }
   https.get(opts, function(res) {
     res.setEncoding('utf8');
     var body = '';
