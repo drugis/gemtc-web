@@ -28,8 +28,6 @@ define(['lodash'], function(_) {
     $scope.selections = {};
     $scope.isInValidBaseline = isInValidBaseline;
 
-    var localAlternatives;
-
     $scope.summaryMeasureOptions = [{
       label: 'none',
       id: 'none'
@@ -44,6 +42,7 @@ define(['lodash'], function(_) {
       id: 'survivalAtTime'
     }];
 
+    var localAlternatives;
     if (!interventionInclusions) { // in gemtc there's no inclusions
       localAlternatives = alternatives;
     } else {
@@ -54,7 +53,7 @@ define(['lodash'], function(_) {
       });
     }
 
-    $scope.baselineDistribution = {
+    var baselineDistribution = {
       selectedAlternative: localAlternatives[0]
     };
 
@@ -63,27 +62,28 @@ define(['lodash'], function(_) {
         setting.link === outcomeWithAnalysis.selectedModel.link;
     });
 
-    $scope.baselineDistribution.scale = settings.absoluteScale;
-    $scope.baselineDistribution.link = settings.link;
+    baselineDistribution.scale = settings.absoluteScale;
+    baselineDistribution.link = settings.link;
     
     $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives,
-      $scope.baselineDistribution.scale, $scope.baselineDistribution.link);
+      settings.absoluteScale, settings.link);
 
     $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
       return _.find(armList, function(arm) {
         return arm.sampleSize === undefined;
       });
     });
-    var baselineDistribution = settings.getBaselineDistribution($scope.isMissingSampleSize);
-    if (baselineDistribution !== AnalysisService.NO_BASELINE_ALLOWED) {
-      $scope.baselineDistribution.type = baselineDistribution.type;
-      $scope.distributionName = baselineDistribution.scaleName;
+    var baselineDistributionType = settings.getBaselineDistribution($scope.isMissingSampleSize);
+    if (baselineDistributionType !== AnalysisService.NO_BASELINE_ALLOWED) {
+      baselineDistribution.type = baselineDistributionType.type;
+      $scope.distributionName = baselineDistributionType.scaleName;
     }
     
-    $scope.scaleLabel = _.includes(['log odds', 'hazard ratio'], $scope.baselineDistribution.scale) ?
-      'probability' : $scope.baselineDistribution.scale;
-    $scope.isSurvival = $scope.baselineDistribution.type === 'dsurv';
+    $scope.scaleLabel = _.includes(['log odds', 'hazard ratio'], baselineDistribution.scale) ?
+      'probability' : baselineDistribution.scale;
+    $scope.isSurvival = baselineDistribution.type === 'dsurv';
     $scope.selections.armIdx = 0;
+    $scope.baselineDistribution = baselineDistribution;
     armSelectionChanged();
     $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
       return $scope.arms[alternative.id].length;
@@ -127,6 +127,7 @@ define(['lodash'], function(_) {
         return;
       }
       $scope.baselineDistribution = newBaselineDistribution;
+      $scope.isInValidBaseline = isInValidBaseline($scope.baselineDistribution);
     }
 
 
