@@ -43,6 +43,7 @@
     "@bower_components/modernizr": "Modernizr/Modernizr#~2.8.0",
     "@bower_components/moment": "moment/moment#~2.10.0",
     "@bower_components/nvd3": "novus/nvd3#~1.8.5",
+    "@bower_components/page-title-service": "chinook25/page-title-service#master",
     "@bower_components/papaparse": "mholt/PapaParse#~4.1.1",
     "@bower_components/requirejs": "jrburke/requirejs-bower#~2.1.15",
     "@bower_components/requirejs-domready": "requirejs/domReady#~2.0.1",

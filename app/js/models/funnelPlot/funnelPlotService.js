@@ -42,8 +42,6 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
             .attr('y2', chart.yScale()(maxY));
         }
 
-
-
         var chart = nvd3.models.scatterChart()
           .showLegend(showLegend)
           .color(d3.scale.category10().range())

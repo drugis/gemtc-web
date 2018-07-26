@@ -1,0 +1,7 @@
+{
+  "analyses": "AnalysesController",
+  "createModel": "CreateModelController",
+  "model": "ModelController",
+  "networkMetaAnalysis": "NetworkGraphController",
+  "refineModel": "CreateModelController"
+}

@@ -1,7 +1,7 @@
 'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
   describe('the analysesController', function() {
-    var scope, analysisResource , modal;
+    var scope, analysisResourceMock, modal, pageTitleServiceMock;
 
     beforeEach(module('gemtc.analyses'));
 
@@ -11,14 +11,15 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       var analysesMock = ['analysisMock'];
 
       modal = jasmine.createSpyObj('modal', ['open']);
-
-      analysisResource = jasmine.createSpyObj('AnalysisResource', ['query']);
-      analysisResource.query.and.returnValue(analysesMock);
+      analysisResourceMock = jasmine.createSpyObj('AnalysisResource', ['query']);
+      analysisResourceMock.query.and.returnValue(analysesMock);
+      pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['setPageTitle']);
 
       $controller('AnalysesController', {
         $scope: scope,
         $modal: modal,
-        AnalysisResource: analysisResource
+        AnalysisResource: analysisResourceMock,
+        PageTitleService: pageTitleServiceMock
       });
     }));
 
@@ -28,7 +29,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
 
       it('should load the analyes', function() {
-        expect(analysisResource.query).toHaveBeenCalled();
+        expect(analysisResourceMock.query).toHaveBeenCalled();
       });
 
       it('should place createAnalysisDialog on the scope', function() {
@@ -37,7 +38,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     });
 
     describe('when createAnalysisDialog isCalled', function() {
-      beforeEach(function(){
+      beforeEach(function() {
         scope.createAnalysisDialog();
       });
       it('should open the dialog', function() {

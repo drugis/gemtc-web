@@ -1,32 +1,55 @@
 'use strict';
 define(['lodash', 'clipboard'], function(_, Clipboard) {
-  var dependencies = ['$scope', '$q', '$http', '$modal', '$state', '$stateParams', '$window', 'gemtcRootPath', 'ModelResource', 'ModelBaselineResource',
-    'FunnelPlotResource', 
-    'PataviService',
-    'RelativeEffectsTableService', 
-    'PataviTaskIdResource', 
-    'ProblemResource', 
-    'AnalysisResource', 
-    'ModelService',
-    'DiagnosticsService', 
-    'AnalysisService', 
-    'DevianceStatisticsService', 
+  var dependencies = [
+    '$scope',
+    '$q',
+    '$http',
+    '$modal',
+    '$state',
+    '$stateParams',
+    '$window',
+    'AnalysisResource',
+    'AnalysisService',
+    'DevianceStatisticsService',
+    'DiagnosticsService',
+    'FunnelPlotResource',
     'MetaRegressionService',
-    'ResultsPlotService'
+    'ModelBaselineResource',
+    'ModelResource',
+    'ModelService',
+    'PageTitleService',
+    'PataviService',
+    'PataviTaskIdResource',
+    'ProblemResource',
+    'RelativeEffectsTableService',
+    'ResultsPlotService',
+    'gemtcRootPath'
   ];
-  var ModelController = function($scope, $q, $http, $modal, $state, $stateParams, $window, gemtcRootPath, ModelResource, ModelBaselineResource,
-    FunnelPlotResource, 
-    PataviService,
-    RelativeEffectsTableService, 
-    PataviTaskIdResource, 
-    ProblemResource, 
-    AnalysisResource, 
-    ModelService,
-    DiagnosticsService, 
-    AnalysisService, 
-    DevianceStatisticsService, 
+  var ModelController = function(
+    $scope,
+    $q,
+    $http,
+    $modal,
+    $state,
+    $stateParams,
+    $window,
+    AnalysisResource,
+    AnalysisService,
+    DevianceStatisticsService,
+    DiagnosticsService,
+    FunnelPlotResource,
     MetaRegressionService,
-    ResultsPlotService) {
+    ModelBaselineResource,
+    ModelResource,
+    ModelService,
+    PageTitleService,
+    PataviService,
+    PataviTaskIdResource,
+    ProblemResource,
+    RelativeEffectsTableService,
+    ResultsPlotService,
+    gemtcRootPath
+  ) {
     // functions
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;
@@ -55,6 +78,15 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     $scope.stateParams = $stateParams;
     new Clipboard('.clipboard-button');
     $scope.selectedBaseline = undefined;
+
+    $scope.problemPromise = ProblemResource.get({
+      analysisId: $stateParams.analysisId,
+      projectId: $stateParams.projectId
+    }).$promise;
+
+    $scope.modelPromise.then(function(model) {
+      PageTitleService.setPageTitle('ModelController', model.title);
+    });
 
     // pass information to parent for use in breadcrumbs
     $scope.$parent.model = $scope.model;
@@ -146,11 +178,6 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
         }
       });
     }
-
-    $scope.problemPromise = ProblemResource.get({
-      analysisId: $stateParams.analysisId,
-      projectId: $stateParams.projectId
-    }).$promise;
 
     function prefixPlots(result, taskUri) {
       var resultPlotPrefix = taskUri + '/results/';

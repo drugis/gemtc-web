@@ -17,6 +17,7 @@ define(
     'mmfoundation',
     'models/models',
     'ngSanitize',
+    'page-title-service',
     'patavi/patavi',
     'services',
     'require',
@@ -25,10 +26,8 @@ define(
   function(angular) {
 
     var dependencies = [
-      'ui.router',
-      'ngTouch',
-      'ngSanitize',
-      'mm.foundation',
+      'errorReporting',
+      'export-directive',
       'gemtc.controllers',
       'gemtc.constants',
       'gemtc.services',
@@ -36,16 +35,23 @@ define(
       'gemtc.models',
       'gemtc.util',
       'gemtc.patavi',
-      'patavi',
       'help-directive',
-      'errorReporting',
-      'export-directive'
+      'mm.foundation',
+      'ngSanitize',
+      'ngTouch',
+      'page-title-service',
+      'patavi',
+      'ui.router'
     ];
 
     var app = angular.module('gemtc', dependencies);
 
-    app.run(['$rootScope', '$window', '$http', '$location', '$anchorScroll', 'HelpPopupService',
-      function($rootScope, $window, $http, $location, $anchorScroll, HelpPopupService) {
+    app.run([
+      '$rootScope', '$window', '$http', '$location', '$anchorScroll',
+      'HelpPopupService', 'PageTitleService', function(
+        $rootScope, $window, $http, $location, $anchorScroll,
+        HelpPopupService, PageTitleService
+      ) {
         $rootScope.$safeApply = function($scope, fn) {
           var phase = $scope.$root.$$phase;
           if (phase === '$apply' || phase === '$digest') {
@@ -56,6 +62,7 @@ define(
         };
 
         HelpPopupService.loadLexicon($http.get('lexicon.json'));
+        PageTitleService.loadLexicon($http.get('gemtc-page-titles.json'));
       }
     ]);
 

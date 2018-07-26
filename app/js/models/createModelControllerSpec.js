@@ -1,9 +1,9 @@
 'use strict';
 define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
-  describe('the create model controller', function() {
+  describe('the CreateModelController', function() {
     var scope, q,
       stateParamsMock = {},
-      stateMock,
+      stateMock = jasmine.createSpyObj('$state', ['current']),
       problemDefer,
       pairwiseOptionsMock = ['pairwise 1'],
       leaveOneOutOptionsMock = [],
@@ -12,8 +12,13 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       modelSaveDefer,
       problemMock,
       modelSaveResultMock,
-      modelServiceMock = jasmine.createSpyObj('ModelService', ['cleanModel',
-        'createModelBatch', 'isVariableBinary', 'getBinaryCovariateNames', 'isProblemWithCovariates', 'getCovariateBounds'
+      modelServiceMock = jasmine.createSpyObj('ModelService', [
+        'cleanModel',
+        'createModelBatch',
+        'isVariableBinary',
+        'getBinaryCovariateNames',
+        'isProblemWithCovariates',
+        'getCovariateBounds'
       ]),
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', [
@@ -23,7 +28,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         'createLikelihoodLinkOptions',
         'estimateRunLength'
       ]),
-      problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get']);
+      problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get']),
+      pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['setPageTitle']);
 
     beforeEach(module('gemtc.models'));
 
@@ -69,7 +75,8 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
         ModelService: modelServiceMock,
         ModelResource: modelResourceMock,
         AnalysisService: analysisServiceMock,
-        ProblemResource: problemResourceMock
+        ProblemResource: problemResourceMock,
+        PageTitleService: pageTitleServiceMock
       });
     }));
 
