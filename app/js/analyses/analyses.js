@@ -1,19 +1,30 @@
 'use strict';
-var requires = [
-  'analyses/analysesController',
-  'analyses/analysisController',
-  'analyses/addAnalysisController',
-  'analyses/networkGraphController',
-  'analyses/evidenceTableController',
-  'analyses/relativeEffectTableController',
-  'analyses/analysisResource',
-  'analyses/problemResource',
-  'analyses/analysisService',
-  'analyses/networkPlotService',
-  'analyses/evidenceTableService',
-  'analyses/networkPlotDirective'
-];
-define(requires.concat(['angular', 'angular-resource']), function(
+// var requires = [
+//   './analysesController',
+//   'analyses/analysisController',
+//   'analyses/addAnalysisController',
+//   'analyses/networkGraphController',
+//   'analyses/evidenceTableController',
+//   'analyses/relativeEffectTableController',
+//   'analyses/analysisResource',
+//   'analyses/problemResource',
+//   'analyses/analysisService',
+//   'analyses/networkPlotService',
+//   'analyses/evidenceTableService',
+//   'analyses/networkPlotDirective'
+// ];
+define(['./analysesController',
+'./analysisController',
+'./addAnalysisController',
+'./networkGraphController',
+'./evidenceTableController',
+'./relativeEffectTableController',
+'./analysisResource',
+'./problemResource',
+'./analysisService',
+'./networkPlotService',
+'./evidenceTableService',
+'./networkPlotDirective', 'angular', 'angular-resource'], function(
   AnalysesController,
   AnalysisController,
   AddAnalysisController,

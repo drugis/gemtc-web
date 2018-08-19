@@ -70,9 +70,9 @@ logger.info('Start Gemtc stand-alone app');
 module.exports = app
   .use(session(sessionOpts))
 
-.use(csrf({
-  value: loginUtils.csrfValue
-}))
+  .use(csrf({
+    value: loginUtils.csrfValue
+  }))
   .use(bodyparser.json())
   .use(loginUtils.setXSRFTokenMiddleware)
   .all('*', loginUtils.securityMiddleware)
@@ -80,8 +80,12 @@ module.exports = app
   .use('/patavi', mcdaPataviTaskRouter)
   .use('/analyses', analysisRouter)
   .use('/analyses/:analysisId/models', modelRouter)
-  .use(express.static('app'))
-  .use(express.static('manual'))
+  .get('/lexicon.json', function(req, res) {
+    res.sendFile(__dirname + '/app/lexicon.json');
+  })
+  .use(express.static('dist'))
+  .use(express.static('fonts'))
+  .use(express.static('../manual'))
   .use(everyauth.middleware())
   .use(errorHandler)
   .listen(3001);

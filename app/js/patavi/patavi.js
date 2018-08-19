@@ -1,8 +1,5 @@
 'use strict';
-var requires = [
-  'patavi/pataviTaskIdResource'
-];
-define(requires.concat(['angular', 'angular-resource']), function(
+define(['./pataviTaskIdResource', 'angular', 'angular-resource'], function(
   PataviTaskIdResource,
   angular
 ) {

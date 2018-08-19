@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function(angular) {
+define(['angular', 'jQuery'], function(angular, $) {
   var dependencies = ['$q', '$stateParams', '$injector', '$window', 'NetworkPlotService',
    'AnalysisResource'];
   var NetworkPlotDirective = function($q, $stateParams, $injector, $window, NetworkPlotService,

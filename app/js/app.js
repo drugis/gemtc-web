@@ -1,26 +1,24 @@
 'use strict';
 define(
   ['angular',
-    'analyses/analyses',
+    './analyses/analyses',
     'angular-patavi-client',
     'angular-touch',
     'angular-ui-router',
-    'angularanimate',
-    'constants',
-    'controllers',
+    'angular-animate',
+    './constants',
+    './controllers',
     'core-js',
     'error-reporting',
     'export-directive',
     'help-popup',
     'jQuery',
-    'lodash',
-    'mmfoundation',
-    'models/models',
-    'ngSanitize',
-    'patavi/patavi',
-    'services',
-    'require',
-    'util/util'
+    'angular-foundation-6',
+    './models/models',
+    'angular-sanitize',
+    './patavi/patavi',
+    './services',
+    './util/util'
   ],
   function(angular) {
 
@@ -75,35 +73,35 @@ define(
         $stateProvider
           .state('analyses', {
             url: '/analyses',
-            templateUrl: '/js/analyses/analyses.html',
+            templateUrl: 'gemtc-web/analyses/analyses.html',
             controller: 'AnalysesController'
           })
           .state('analysis-container', {
             abstract: true,
-            templateUrl: '/js/analyses/abstract-analysis.html',
+            templateUrl: 'gemtc-web/analyses/abstract-analysis.html',
           })
           .state('networkMetaAnalysis', {
             parent: 'analysis-container',
             url: '/analyses/:analysisId',
             views: {
               'analysis': {
-                templateUrl: '/js/analyses/analysis.html',
+                templateUrl: 'gemtc-web/analyses/analysis.html',
                 controller: 'AnalysisController'
               },
               'models': {
-                templateUrl: '/js/models/models.html',
+                templateUrl: 'gemtc-web/models/models.html',
                 controller: 'ModelsController'
               },
               'networkGraph': {
-                templateUrl: '/js/analyses/networkGraph.html',
+                templateUrl: 'gemtc-web/analyses/networkGraph.html',
                 controller: 'NetworkGraphController'
               },
               'evidenceTable': {
-                templateUrl: '/js/analyses/evidenceTable.html',
+                templateUrl: 'gemtc-web/analyses/evidenceTable.html',
                 controller: 'EvidenceTableController'
               },
               'relativeEffectTable': {
-                templateUrl: '/js/analyses/relativeEffectTable.html',
+                templateUrl: 'gemtc-web/analyses/relativeEffectTable.html',
                 controller: 'RelativeEffectTableController'
               }
             }

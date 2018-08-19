@@ -1,18 +1,16 @@
 'use strict';
-var requires = [
-  'gemtc-web/services/relativeEffectsTableService',
-  'gemtc-web/models/devianceStatisticsService',
-  'gemtc-web/models/modelService',
-  'gemtc-web/models/refineModelService',
-  'gemtc-web/models/result/resultsPlotService',
-  'gemtc-web/analyses/networkPlotService',
-  'gemtc-web/analyses/analysisService',
-  'gemtc-web/services/diagnosticsService',
-  'gemtc-web/models/nodeSplitOverviewService',
-  'gemtc-web/models/funnelPlot/funnelPlotService',
-  'gemtc-web/models/metaRegressionService'
-];
-define(requires.concat(['angular']), function(
+
+define(['gemtc-web/services/relativeEffectsTableService',
+'gemtc-web/models/devianceStatisticsService',
+'gemtc-web/models/modelService',
+'gemtc-web/models/refineModelService',
+'gemtc-web/models/result/resultsPlotService',
+'gemtc-web/analyses/networkPlotService',
+'gemtc-web/analyses/analysisService',
+'gemtc-web/services/diagnosticsService',
+'gemtc-web/models/nodeSplitOverviewService',
+'gemtc-web/models/funnelPlot/funnelPlotService',
+'gemtc-web/models/metaRegressionService', 'angular'], function(
   RelativeEffectsTableService,
   DevianceStatisticsService,
   ModelService,
