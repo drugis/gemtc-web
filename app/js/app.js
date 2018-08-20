@@ -1,27 +1,28 @@
 'use strict';
 define(
   ['angular',
-    './analyses/analyses',
-    'angular-patavi-client',
-    'angular-touch',
-    'angular-ui-router',
-    'angular-animate',
-    './constants',
-    './controllers',
-    'core-js',
-    'error-reporting',
-    'export-directive',
-    'help-popup',
-    'jQuery',
-    'angular-foundation-6',
-    './models/models',
-    'angular-sanitize',
-    './patavi/patavi',
-    './services',
-    './util/util'
-  ],
-  function(angular) {
-
+  './analyses/analyses',
+  'angular-patavi-client',
+  'angular-touch',
+  'angular-ui-router',
+  'angular-animate',
+  './constants',
+  './controllers',
+  'core-js',
+  'error-reporting',
+  'export-directive',
+  'help-popup',
+  'jquery',
+  'angular-foundation-6',
+  './models/models',
+  'angular-sanitize',
+  './patavi/patavi',
+  './services',
+  './util/util'
+],
+function(angular) {
+  
+  //@require "../views/*.html"
     var dependencies = [
       'ui.router',
       'ngTouch',
@@ -42,8 +43,15 @@ define(
 
     var app = angular.module('gemtc', dependencies);
 
-    app.run(['$rootScope', '$window', '$http', '$location', '$anchorScroll', 'HelpPopupService',
-      function($rootScope, $window, $http, $location, $anchorScroll, HelpPopupService) {
+    app.run(['$rootScope', '$http', '$templateCache', 'HelpPopupService',
+      function($rootScope, $http, $templateCache, HelpPopupService) {
+
+        $templateCache.put('model-settings-section.html', require('../views/model-settings-section.html'));
+        $templateCache.put('convergence-diagnostics-section.html', require('../views/convergence-diagnostics-section.html'));
+        $templateCache.put('meta-regression-section.html', require('../views/meta-regression-section.html'));
+        $templateCache.put('results-section.html', require('../views/results-section.html'));
+        $templateCache.put('model-fit-section.html', require('../views/model-fit-section.html'));
+
         $rootScope.$safeApply = function($scope, fn) {
           var phase = $scope.$root.$$phase;
           if (phase === '$apply' || phase === '$digest') {

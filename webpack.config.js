@@ -1,10 +1,8 @@
 'use strict';
-// const fs = require('fs');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
-// var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 let basePath = path.join(__dirname, '/');
 
 var isTest = false;
@@ -62,11 +60,12 @@ let config = {
     alias: {
       'gemtc-web': basePath + '/app/js',
       'app': basePath + '/app/js/app',
+      'jQuery': 'jquery',
       'angular-patavi-client': 'angular-patavi-client/patavi',
       'error-reporting': 'error-reporting/errorReportingDirective',
       'export-directive': 'export-directive/export-directive',
       'help-popup': 'help-popup/help-directive',
-      'template': 'angular-foundation-6/src' // fixme: use $templatecache properly
+      'template': 'angular-foundation-6/src' // FIXME: use $templatecache properly
     },
     modules: [
       // Files path which will be referenced while bundling
@@ -79,7 +78,6 @@ let config = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'app/index.html',
-      append: 'body',
       chunks: ['main']
     }),
     new HtmlWebpackPlugin({
@@ -87,14 +85,7 @@ let config = {
       template: 'app/signin.html',
       chunks: ['signin']
     }),
-    new CleanWebpackPlugin(['dist']),
-    new ManifestPlugin()
-    // new MiniCssExtractPlugin({
-    //   // Options similar to the same options in webpackOptions.output
-    //   // both options are optional
-    //   filename: "[name].css",
-    //   chunkFilename: "[id].css"
-    // })
+    new CleanWebpackPlugin(['dist'])   
   ]
 };
 

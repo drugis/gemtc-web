@@ -9,7 +9,7 @@ define([], function() {
         problemPromise: '='
       },
       restrict: 'E',
-      templateUrl: gemtcRootPath + 'js/models/result/nodeSplitDensityPlots.html',
+      templateUrl: 'gemtc-web/models/result/nodeSplitDensityPlots.html',
       link: function(scope) {
 
         $q.all([scope.modelPromise, scope.resultsPromise, scope.problemPromise])

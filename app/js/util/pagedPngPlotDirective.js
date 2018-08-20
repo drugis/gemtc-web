@@ -9,7 +9,7 @@ define([], function() {
       },
       restrict: 'E',
       // using template because loading teplateUrl irritating in submodule
-      templateUrl: gemtcRootPath + 'js/util/pagedPngPlotDirective.html',
+      templateUrl: 'gemtc-web/util/pagedPngPlotDirective.html',
       link: function(scope) {
         scope.selectNextPage = selectNextPage;
         scope.selectPreviousPage = selectPreviousPage;

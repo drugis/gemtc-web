@@ -17,7 +17,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
         problemPromise: '=',
         resultsPromise: '='
       },
-      templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
+      templateUrl: 'gemtc-web/models/funnelPlot/funnelPlot.html',
       link: function(scope, element) {
         $q.all([scope.resultsPromise, scope.problemPromise]).then(function(promiseResults) {
           var results = promiseResults[0];

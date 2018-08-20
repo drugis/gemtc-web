@@ -26,6 +26,10 @@
   version "3.2.1"
   resolved "https://codeload.github.com/jquery/jquery-dist/tar.gz/77d2a51d0520d2ee44173afdf4e40a9201f5964e"
 
+"@bower_components/lodash@lodash/lodash#~4.2.0":
+  version "4.2.1"
+  resolved "https://codeload.github.com/lodash/lodash/tar.gz/1cd9dc49a93d2cfe9927db1a92d2cf7c839bf263"
+
 "@uirouter/core@5.0.21":
   version "5.0.21"
   resolved "https://registry.yarnpkg.com/@uirouter/core/-/core-5.0.21.tgz#b6c4c311e9416a1e8ce76b072e042a60224d1b3a"
@@ -1923,6 +1927,7 @@ export-directive@drugis/export-directive#1.0.2:
     "@bower_components/clipboard" zenorocha/clipboard.js#^1.6.0
     "@bower_components/d3" mbostock-bower/d3-bower#~3.5.6
     "@bower_components/jquery" jquery/jquery-dist#~3.2.1
+    "@bower_components/lodash" lodash/lodash#~4.2.0
 
 exports-loader@^0.7.0:
   version "0.7.0"
