@@ -4,7 +4,10 @@ const webpackConfig = require("./webpack.dev");
 
 delete webpackConfig.entry;
 webpackConfig.plugins = [];
-
+webpackConfig.optimization = {
+    splitChunks: false,
+    runtimeChunk: false
+  };
 module.exports = function(config) {
   config.set({
 
@@ -35,15 +38,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'app/js/test-main.js',
-      // { pattern: 'app/js/*.js', included: false },
+      'app/js/test-main.js'
     ],
-
-    // list of files to exclude
-    // exclude: [
-    //   'app/js/main.js',
-    //   'app/js/bower_components/**/*Spec.js'
-    // ],
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'

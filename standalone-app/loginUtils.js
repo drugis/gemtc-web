@@ -56,6 +56,7 @@ module.exports = {
         request.url.startsWith('/img') ||
         request.url === '/signin.html' ||
         request.url === '/signin.bundle.js' ||
+        request.url === '/vendor.bundle.js' ||
         request.url === '/main.bundle.js' ||
         request.url === '/manual.html' ||
         request.url === '/manual/shared-toc.html' ||

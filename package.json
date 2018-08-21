@@ -4,8 +4,11 @@
   "description": "gemtc",
   "main": "gemtc.js",
   "scripts": {
-    "start": "npm run gemtc",
-    "test": "mocha"
+    "start": "node gemtc",
+    "test": "mocha && karma",
+    "build-dev": "webpack --config webpack.dev.js",
+    "build-prod": "webpack --config webpack.prod.js",
+    "dev": "webpack --config webpack.dev.js watch"
   },
   "repository": {
     "type": "git",
@@ -72,6 +75,7 @@
     "katex": "~0.6.0",
     "lodash": "~4.2.0",
     "mini-css-extract-plugin": "^0.4.1",
+    "mocha": "^5.2.0",
     "modernizr": "~3.6.0",
     "moment": "~2.10.0",
     "nvd3": "~1.8.5",

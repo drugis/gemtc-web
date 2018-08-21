@@ -217,8 +217,8 @@ define(['angular', 'angular-mocks', 'gemtc-web/models/models'], function(angular
         var matchedComparisonNoResults = scope.comparisons[0];
         var unmatchedComparison = scope.comparisons[1];
         var matchedComparisonWithResult = scope.comparisons[2];
-        expect(matchedComparisonNoResults.from).toBe(optionsMock[0].from);
-        expect(matchedComparisonNoResults.to).toBe(optionsMock[0].to);
+        expect(matchedComparisonNoResults.from.id).toEqual(optionsMock[0].from.id);
+        expect(matchedComparisonNoResults.to.id).toEqual(optionsMock[0].to.id);
         expect(matchedComparisonNoResults.hasModel).toBeTruthy();
         expect(unmatchedComparison.hasModel).toBeFalsy();
         expect(matchedComparisonWithResult.hasModel).toBeTruthy();
@@ -240,7 +240,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/models/models'], function(angular
 
     describe('when the scope.model resolves with a nodesplit model that does not get selected from the models', function() {
       beforeEach(function() {
-        var modelMock2 = {
+        var modelMock = {
           id: 5,
           modelType: {
             type: 'node-split'
@@ -256,7 +256,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/models/models'], function(angular
           $promise: resultDefer.promise
         };
 
-        modelDefer.resolve(modelMock2);
+        modelDefer.resolve(modelMock);
         analysisDefer.resolve(analysisMock);
         resultDefer.resolve(resultMock);
         scope.$apply();
