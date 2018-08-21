@@ -1,7 +1,7 @@
 'use strict';
 define(['moment', 'lodash'], function(moment, _) {
-  var dependencies = ['$q', 'gemtcRootPath', 'AnalysisService', 'ModelService'];
-  var RunLengthDirective = function($q, gemtcRootPath, AnalysisService, ModelService) {
+  var dependencies = ['$q', 'AnalysisService', 'ModelService'];
+  var RunLengthDirective = function($q, AnalysisService, ModelService) {
     return {
       restrict: 'E',
       templateUrl: 'gemtc-web/models/runLength/runLength.html',

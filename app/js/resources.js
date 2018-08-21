@@ -1,12 +1,10 @@
 'use strict';
-var requires = [
-  'gemtc-web/resources/modelResource',
-  'gemtc-web/resources/modelBaselineResource',
-  'gemtc-web/resources/funnelPlotResource',
-  'gemtc-web/resources/problemResource',
-  'gemtc-web/resources/pataviTaskIdResource'
-];
-define(requires.concat(['angular', 'angular-resource']), function(
+
+define([ './resources/modelResource',
+'./resources/modelBaselineResource',
+'./resources/funnelPlotResource',
+'./resources/problemResource',
+'./resources/pataviTaskIdResource', 'angular', 'angular-resource'], function(
   ModelResource,
   ModelBaselineResource,
   FunnelPlotResource,

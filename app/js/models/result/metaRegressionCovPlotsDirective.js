@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$q', 'gemtcRootPath', 'MetaRegressionService', 'ResultsPlotService'];
-  var metaRegressionCovPlotsDirective = function($q, gemtcRootPath, MetaRegressionService, ResultsPlotService) {
+  var dependencies = ['$q', 'MetaRegressionService'];
+  var metaRegressionCovPlotsDirective = function($q, MetaRegressionService) {
     return {
       scope: {
         modelPromise: '=',

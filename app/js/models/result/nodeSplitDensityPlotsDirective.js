@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = ['gemtcRootPath', '$q', 'ResultsPlotService'];
-  var nodeSplitDensityPlotsDirective = function(gemtcRootPath, $q, ResultsPlotService) {
+  var dependencies = ['$q', 'ResultsPlotService'];
+  var nodeSplitDensityPlotsDirective = function($q, ResultsPlotService) {
     return {
       scope: {
         modelPromise: '=',

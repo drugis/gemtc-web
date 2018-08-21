@@ -1,30 +1,18 @@
 'use strict';
-// var requires = [
-//   './analysesController',
-//   'analyses/analysisController',
-//   'analyses/addAnalysisController',
-//   'analyses/networkGraphController',
-//   'analyses/evidenceTableController',
-//   'analyses/relativeEffectTableController',
-//   'analyses/analysisResource',
-//   'analyses/problemResource',
-//   'analyses/analysisService',
-//   'analyses/networkPlotService',
-//   'analyses/evidenceTableService',
-//   'analyses/networkPlotDirective'
-// ];
-define(['./analysesController',
-'./analysisController',
-'./addAnalysisController',
-'./networkGraphController',
-'./evidenceTableController',
-'./relativeEffectTableController',
-'./analysisResource',
-'./problemResource',
-'./analysisService',
-'./networkPlotService',
-'./evidenceTableService',
-'./networkPlotDirective', 'angular', 'angular-resource'], function(
+define([
+  './analysesController',
+  './analysisController',
+  './addAnalysisController',
+  './networkGraphController',
+  './evidenceTableController',
+  './relativeEffectTableController',
+  './analysisResource',
+  './problemResource',
+  './analysisService',
+  './networkPlotService',
+  './evidenceTableService',
+  './networkPlotDirective', 'angular', 'angular-resource'
+], function(
   AnalysesController,
   AnalysisController,
   AddAnalysisController,
@@ -39,25 +27,25 @@ define(['./analysesController',
   networkPlot,
   angular
 ) {
-  var dependencies = ['ngResource', 'gemtc.models'];
-  return angular.module('gemtc.analyses', dependencies)
-    // controllers
-    .controller('AnalysesController', AnalysesController)
-    .controller('AnalysisController', AnalysisController)
-    .controller('AddAnalysisController', AddAnalysisController)
-    .controller('NetworkGraphController', NetworkGraphController)
-    .controller('EvidenceTableController', EvidenceTableController)
-    .controller('RelativeEffectTableController', RelativeEffectTableController)
+    var dependencies = ['ngResource', 'gemtc.models'];
+    return angular.module('gemtc.analyses', dependencies)
+      // controllers
+      .controller('AnalysesController', AnalysesController)
+      .controller('AnalysisController', AnalysisController)
+      .controller('AddAnalysisController', AddAnalysisController)
+      .controller('NetworkGraphController', NetworkGraphController)
+      .controller('EvidenceTableController', EvidenceTableController)
+      .controller('RelativeEffectTableController', RelativeEffectTableController)
 
-    // resources
-    .factory('AnalysisResource', AnalysisResource)
-    .factory('ProblemResource', ProblemResource)
+      // resources
+      .factory('AnalysisResource', AnalysisResource)
+      .factory('ProblemResource', ProblemResource)
 
-    //services
-    .factory('AnalysisService', AnalysisService)
-    .factory('NetworkPlotService', NetworkPlotService)
-    .factory('EvidenceTableService', EvidenceTableService)
+      //services
+      .factory('AnalysisService', AnalysisService)
+      .factory('NetworkPlotService', NetworkPlotService)
+      .factory('EvidenceTableService', EvidenceTableService)
 
-    .directive('networkPlot', networkPlot)
-  ;
-});
+      .directive('networkPlot', networkPlot)
+      ;
+  });

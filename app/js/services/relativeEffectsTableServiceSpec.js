@@ -1,8 +1,8 @@
 'use strict';
-define(['angular', 'angular-mocks', 'services'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/services'], function(angular) {
   describe('the relative effecs table service', function() {
     beforeEach(function() {
-      module('gemtc.services');
+      angular.mock.module('gemtc.services');
     });
 
     it('should create a relative effects table', inject(function(RelativeEffectsTableService) {

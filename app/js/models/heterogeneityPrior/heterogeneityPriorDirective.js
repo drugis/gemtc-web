@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = ['gemtcRootPath'];
-  var HeterogeneityPriorDirective = function(gemtcRootPath) {
+  var dependencies = [];
+  var HeterogeneityPriorDirective = function() {
     return {
       restrict: 'E',
       templateUrl: 'gemtc-web/models/heterogeneityPrior/heterogeneityPrior.html',

@@ -1,10 +1,10 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = ['$scope', '$q', '$stateParams', '$state', '$modal', 'gemtcRootPath',
-    'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService', 'PataviService'
+  var dependencies = ['$scope', '$q', '$stateParams', '$state', '$modal',
+    'models', 'problem', 'AnalysisService', 'NodeSplitOverviewService', 'PataviService'
   ];
-  var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, $modal, gemtcRootPath,
-    models, problem, AnalysisService, ModelResource, NodeSplitOverviewService, PataviService) {
+  var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, $modal,
+    models, problem, AnalysisService, NodeSplitOverviewService, PataviService) {
 
     $scope.goToModel = goToModel;
     $scope.openCreateNodeSplitDialog = openCreateNodeSplitDialog;
@@ -12,12 +12,14 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.networkModelResultsDefer = $q.defer();
     $scope.baseModelNotShown = false;
 
+
     $scope.modelPromise.then(function(model) {
-      $scope.model = model;
-      var networkModel;
-      $scope.analysis.$promise.then(buildComparisonRows).then(function() {
+      function foo() {
         $scope.baseModelNotShown = model.modelType.type === 'node-split' && !_.some($scope.comparisons, ['modelId', model.id]);
-      });
+      }
+        $scope.model = model;
+      var networkModel;
+      $scope.analysis.$promise.then(buildComparisonRows).then(foo);
       if (model.modelType.type === 'node-split') {
         networkModel = findNetworkModelForModel(model, models);
         if (networkModel) {
@@ -44,7 +46,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function buildComparisonRows() {
       $scope.comparisons = _.map(AnalysisService.createNodeSplitOptions(problem), function(comparison) {
-        var row = comparison;
+        var row = angular.copy(comparison);
         row.colSpan = 6;
         row.label = comparison.label;
         row.from = comparison.from;

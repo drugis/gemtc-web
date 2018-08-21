@@ -8,8 +8,8 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
     );
   }
 
-  var dependencies = ['$q', 'gemtcRootPath', 'FunnelPlotService'];
-  var FunnelPlot = function($q, gemtcRootPath, FunnelPlotService) {
+  var dependencies = ['$q', 'FunnelPlotService'];
+  var FunnelPlot = function($q, FunnelPlotService) {
     return {
       restrict: 'E',
       scope: {

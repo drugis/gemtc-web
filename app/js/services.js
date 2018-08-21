@@ -1,16 +1,16 @@
 'use strict';
 
-define(['gemtc-web/services/relativeEffectsTableService',
-'gemtc-web/models/devianceStatisticsService',
-'gemtc-web/models/modelService',
-'gemtc-web/models/refineModelService',
-'gemtc-web/models/result/resultsPlotService',
-'gemtc-web/analyses/networkPlotService',
-'gemtc-web/analyses/analysisService',
-'gemtc-web/services/diagnosticsService',
-'gemtc-web/models/nodeSplitOverviewService',
-'gemtc-web/models/funnelPlot/funnelPlotService',
-'gemtc-web/models/metaRegressionService', 'angular'], function(
+define(['./services/relativeEffectsTableService',
+'./models/devianceStatisticsService',
+'./models/modelService',
+'./models/refineModelService',
+'./models/result/resultsPlotService',
+'./analyses/networkPlotService',
+'./analyses/analysisService',
+'./services/diagnosticsService',
+'./models/nodeSplitOverviewService',
+'./models/funnelPlot/funnelPlotService',
+'./models/metaRegressionService', 'angular'], function(
   RelativeEffectsTableService,
   DevianceStatisticsService,
   ModelService,
@@ -23,7 +23,7 @@ define(['gemtc-web/services/relativeEffectsTableService',
   FunnelPlotService,
   MetaRegressionService,
   angular) {
-  return angular.module('gemtc.services', [])
+  return angular.module('gemtc.services', ['gemtc.resources'])
     .factory('RelativeEffectsTableService', RelativeEffectsTableService)
     .factory('DevianceStatisticsService', DevianceStatisticsService)
     .factory('ModelService', ModelService)

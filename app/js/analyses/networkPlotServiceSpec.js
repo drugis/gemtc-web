@@ -1,10 +1,10 @@
 'use strict';
-define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(angular) {
   describe('The networkplot service', function() {
 
     var networkPlotService;
 
-    beforeEach(module('gemtc.analyses'));
+    beforeEach(angular.mock.module('gemtc.analyses'));
 
     beforeEach(inject(function(NetworkPlotService) {
       networkPlotService = NetworkPlotService;

@@ -1,14 +1,5 @@
-define(['angular', 'app'], function (angular, app) {
+define(['angular', 'app'], function () {
   'use strict';
   require('css/gemtc-drugis.css');
-  require('font-awesome/css/font-awesome.min.css');
-  // if (document.readyState === 'interactive' || document.readyState === 'complete') {
-  //     angular.bootstrap(document.documentElement, [app.name]);
-  // } else {
-  //     document.onreadystatechange = function () {
-  //         if (document.readyState === 'interactive') {
-  //             angular.bootstrap(document.documentElement, [app.name]);
-  //         }
-  //     };
-  // } 
+  require('font-awesome/css/font-awesome.min.css'); 
 });

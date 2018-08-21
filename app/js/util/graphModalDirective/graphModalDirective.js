@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$modal', 'gemtcRootPath'];
-  var GraphModalDirective = function($modal, gemtcRootPath) {
+  var dependencies = ['$modal'];
+  var GraphModalDirective = function($modal) {
     return {
       scope: {
         diagnosticsMap: '=',

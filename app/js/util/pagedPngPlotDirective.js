@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = ['gemtcRootPath'];
-  var PagedPngPlotDirective = function(gemtcRootPath) {
+  var dependencies = [];
+  var PagedPngPlotDirective = function() {
     return {
       scope: {
         fileName: '=',

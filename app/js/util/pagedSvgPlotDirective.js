@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = ['gemtcRootPath'];
-  var PagedSvgDirective = function(gemtcRootPath) {
+  var dependencies = [];
+  var PagedSvgDirective = function() {
     return {
       scope: {
         pages: '=',

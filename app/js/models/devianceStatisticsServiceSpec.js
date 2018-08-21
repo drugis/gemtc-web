@@ -1,7 +1,7 @@
 'use strict';
-define(['angular', 'angular-mocks', 'services'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/services'], function(angular) {
   describe('the deviance statistics service', function() {
-    beforeEach(module('gemtc.models'));
+    beforeEach(angular.mock.module('gemtc.models'));
 
     var devianceStatisticsService;
     beforeEach(inject(function(DevianceStatisticsService) {

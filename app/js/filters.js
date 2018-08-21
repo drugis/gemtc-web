@@ -1,5 +1,5 @@
 'use strict';
-var requires = ['gemtc-web/models/distributionToStringFilter'];
+var requires = ['./models/distributionToStringFilter'];
 define(requires.concat(['angular']),function (
 	distributionToStringFilter,
 	 angular

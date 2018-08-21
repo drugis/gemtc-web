@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['gemtcRootPath', '$q'];
-  var pairwiseForestPlotsDirective = function(gemtcRootPath, $q) {
+  var dependencies = ['$q'];
+  var pairwiseForestPlotsDirective = function($q) {
     return {
       scope: {
         modelPromise: '=',

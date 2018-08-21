@@ -17,6 +17,7 @@ define(
   './models/models',
   'angular-sanitize',
   './patavi/patavi',
+  './resources',
   './services',
   './util/util'
 ],
@@ -30,6 +31,7 @@ function(angular) {
       'mm.foundation',
       'gemtc.controllers',
       'gemtc.constants',
+      'gemtc.resources',
       'gemtc.services',
       'gemtc.analyses',
       'gemtc.models',
