@@ -32,14 +32,12 @@ module.exports = {
       logger.debug('loginUtils.loginCheckMiddleware; you\'re signed in, request = ' + request.url);
       next();
     }
-    else if (request.method === 'GET' &&  request.url === '/' ) {
+    else if (request.method === 'GET' && request.url === '/') {
       logger.debug('loginUtils.loginCheckMiddleware request to "/", redirect to sign in page ');
       response.redirect('/signin.html');
     }
     else if (request.method === 'GET' && // if not then you can get static content or go sign in
-      (request.url.startsWith('/css') ||
-        request.url.startsWith('/views') ||
-        request.url.startsWith('/img') ||
+      (
         request.url === '/signin.html' ||
         request.url === '/signin.bundle.js' ||
         request.url === '/vendor.bundle.js' ||

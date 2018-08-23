@@ -16,8 +16,8 @@ describe('analyses handlers', function() {
   describe('queryAnalyses', function() {
     it('should query the analyses repository', function(done) {
       var request = {
-        session: {
-          userId: 'userId'
+        user: {
+          id: 'userId'
         }
       },
       response = {};
