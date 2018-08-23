@@ -122,7 +122,7 @@ function createModel(request, response, next) {
   logger.debug('create model.');
   logger.debug('request.params.analysisId' + request.params.analysisId);
   var analysisId = Number.parseInt(request.params.analysisId);
-  var userId = request.session.userId;
+  var userId = request.user.id;
 
   async.waterfall([
 
@@ -179,7 +179,7 @@ function extendRunLength(request, response, next) {
   logger.debug('analysisId ' + request.params.analysisId);
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = request.session.userId;
+  var userId = request.user.id;
 
   var modelCache;
   var newModel = request.body;
@@ -214,7 +214,7 @@ function addFunnelPlot(request, response, next) {
   logger.debug('add funnel plot');
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = request.session.userId;
+  var userId = request.user.id;
 
   async.waterfall([
     function(callback) {
@@ -284,7 +284,7 @@ function setBaseline(request, response, next) {
   logger.debug('set model baseline');
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = request.session.userId;
+  var userId = request.user.id;
   var baseline = request.body;
   async.waterfall([
     function(callback) {
@@ -312,7 +312,7 @@ function setAttributes(request, response, next) {
   logger.debug('set model attributes');
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = Number.parseInt(request.session.userId);
+  var userId = Number.parseInt(request.user.id);
   var isArchived = request.body.archived;
   var modelToSet;
   var archivedOn = isArchived ? new Date() : null;

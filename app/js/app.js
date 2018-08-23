@@ -5,6 +5,7 @@ define(
   'angular-patavi-client',
   'angular-touch',
   'angular-ui-router',
+  'angular-cookies',
   'angular-animate',
   './constants',
   './controllers',
@@ -22,11 +23,10 @@ define(
   './util/util'
 ],
 function(angular) {
-  
-  //@require "../views/*.html"
     var dependencies = [
       'ui.router',
       'ngTouch',
+      'ngCookies',
       'ngSanitize',
       'mm.foundation',
       'gemtc.controllers',

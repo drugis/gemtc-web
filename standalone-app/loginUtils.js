@@ -25,24 +25,10 @@ module.exports = {
     next();
   },
 
-  emailHashMiddleware: function(request, response, next) {
-    logger.debug('loginUtils.emailHashMiddleware; request.headers.host = ' + (request.headers ? request.headers.host : 'unknown host'));
-    if (!request.session.auth) {
-      response.status = httpStatus.FORBIDDEN;
-    } else {
-      var md5Hash = crypto.createHash('md5').update(request.session.auth.google.user.email).digest('hex');
-      response.json({
-        name: request.session.auth.google.user.name,
-        md5Hash: md5Hash
-      });
-    }
-    next();
-  },
-
   securityMiddleware: function(request, response, next) {
     logger.debug('loginUtils.securityMiddleware; request.headers.host = ' + (request.headers ? request.headers.host : 'unknown host'));
 
-    if (request.session.auth && request.session.auth.loggedIn) { // if loggedin your good
+    if (request.isAuthenticated()) { // if loggedin your good
       logger.debug('loginUtils.loginCheckMiddleware; you\'re signed in, request = ' + request.url);
       next();
     }

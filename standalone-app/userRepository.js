@@ -1,7 +1,7 @@
 'use strict';
 var
   dbUtil = require('./dbUtil'),
-  db = require('./db')(dbUtil.gemtcDBUrl),
+  db = require('./db')(dbUtil.connectionConfig),
   logger = require('./logger');
 
 var findUserByGoogleIdQuery = '' +
@@ -12,7 +12,7 @@ var findUserByGoogleIdQuery = '' +
   ' ON ' +
   '   UserConnection.userid = Account.id ' +
   ' WHERE ' +
-  '   googleUserId=$1';
+  '   providerUserId=$1';
 
 var createAccountQuery = '' +
   ' INSERT INTO Account (email, name, firstName, lastName)' +

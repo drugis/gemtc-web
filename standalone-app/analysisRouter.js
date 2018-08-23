@@ -1,6 +1,5 @@
 var express = require('express');
 var analysisHandlers = require('./analysisHandlers');
-var modelRouter = require('./modelRouter');
 
 module.exports = express.Router()
   .get('/', analysisHandlers.queryAnalyses)

@@ -44,7 +44,7 @@ describe('modelRouter', function() {
       .use(bodyParser.json())
       .use(session(sessionOpts))
       .use(function(req, res, next) {
-        req.session.userId = userId;
+        req.user.id = userId;
         next();
       })
       .use('/analyses/:analysisId/models', modelRouter)

@@ -1,10 +1,8 @@
 'use strict';
 
-define(function (require) {
-  var angular = require('angular');
-  var dependencies = ['ngResource'];
+define(['angular', 'angular-resource'], function (angular) {
 
-  return angular.module('gemtc.util', dependencies)
+  return angular.module('gemtc.util', ['ngResource'])
 
     //resources
     .factory('UserResource', require('./userResource'))
