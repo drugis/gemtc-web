@@ -1,13 +1,13 @@
 'use strict';
 define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
-  var dependencies = ['gemtcRootPath', 'FunnelPlotService'];
-  var FunnelPlot = function(gemtcRootPath, FunnelPlotService) {
+  var dependencies = ['FunnelPlotService'];
+  var FunnelPlot = function(FunnelPlotService) {
     return {
       restrict: 'E',
       scope: {
         resultsPromise: '='
       },
-      templateUrl: gemtcRootPath + 'js/models/funnelPlot/funnelPlot.html',
+      templateUrl: 'gemtc-web/models/funnelPlot/funnelPlot.html',
       link: function(scope, element) {
 
         scope.resultsPromise.then(function(results) {

@@ -1,9 +1,9 @@
 'use strict';
-define(['angular', 'angular-mocks'], function() {
+define(['angular', 'angular-mocks'], function(angular) {
   describe('The distribution to string filter', function() {
     var distributionToStringFilter;
 
-    beforeEach(module('gemtc.models'));
+    beforeEach(angular.mock.module('gemtc.models'));
 
     beforeEach(inject(function($filter) {
       distributionToStringFilter = $filter('distributionToStringFilter');

@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'controllers'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) {
   describe('the modelController', function() {
     var scope,
       analysisResource,
@@ -38,7 +38,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       pataviTaskIdDeferred,
       pataviTaskIdResult;
 
-    beforeEach(module('gemtc.controllers'));
+    beforeEach(angular.mock.module('gemtc.controllers'));
 
     beforeEach(inject(function($rootScope, $controller, $q, $httpBackend) {
       scope = $rootScope.$new();
@@ -136,7 +136,6 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         AnalysisService: analysisServiceMock,
         ModelService: modelserviceMock,
         DevianceStatisticsService: devianceStatisticsServiceMock,
-        gemtcRootPath: '',
         MetaRegressionService: metaRegressionService
       });
     }));

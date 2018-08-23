@@ -3,12 +3,14 @@ var assert = require('assert'),
   proxyquire = require('proxyquire'),
   httpStatus = require('http-status-codes'),
   sinon = require('sinon'),
+  chai = require('chai'),
   session = require('express-session'),
   request = require('superagent'),
   express = require('express'),
   bodyParser = require('body-parser'),
   errorHandler = require('../standalone-app/errorHandler');
 
+  chai.should();
 var app = express();
 var BASE_PATH = 'http://localhost:3999/analyses/';
 var sessionOpts = {
@@ -42,7 +44,7 @@ describe('modelRouter', function() {
       .use(bodyParser.json())
       .use(session(sessionOpts))
       .use(function(req, res, next) {
-        req.session.userId = userId;
+        req.user.id = userId;
         next();
       })
       .use('/analyses/:analysisId/models', modelRouter)

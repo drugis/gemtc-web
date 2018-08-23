@@ -1,6 +1,6 @@
 'use strict';
-define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'],
- function(angular, angularMocks) {
+define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses', 'gemtc-web/models/models'],
+ function(angular) {
   describe('the extend runlength controller', function() {
     var scope,
       stateParamsMock,
@@ -16,9 +16,9 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'],
       successCallbackMock;
 
 
-    beforeEach(module('gemtc.models'));
+    beforeEach(angular.mock.module('gemtc.models'));
 
-    beforeEach(angularMocks.inject(function($rootScope, $controller) {
+    beforeEach(angular.mock.inject(function($rootScope, $controller) {
       scope = $rootScope;
       $controller('ExtendRunLengthController', {
         $scope: scope,

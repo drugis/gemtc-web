@@ -1,16 +1,18 @@
 'use strict';
-define(['angular', 'angular-mocks', 'services'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/services', 'gemtc-web/resources'], function(angular) {
   describe('the meta-regression service', function() {
 
     var metaRegressionService;
 
     beforeEach(function() {
-      module('gemtc.services');
+      angular.mock.module('gemtc.services');
     });
 
-    beforeEach(inject(function(MetaRegressionService) {
-      metaRegressionService = MetaRegressionService;
-    }));
+    beforeEach(function() {
+      angular.mock.inject(function(MetaRegressionService) {
+        metaRegressionService = MetaRegressionService;
+      });
+    });
 
     describe('buildCovariatePlotOptions', function() {
 

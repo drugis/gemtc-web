@@ -1,19 +1,19 @@
 'use strict';
 var requires = [
-  'gemtc-web/analyses/networkPlotDirective',
-  'gemtc-web/models/rankPlotDirective',
-  'gemtc-web/util/pagedSvgPlotDirective',
-  'gemtc-web/util/pagedPngPlotDirective',
-  'gemtc-web/models/runLength/runLengthDirective',
-  'gemtc-web/models/nodesplitForestPlot/nodesplitForestPlotDirective',
-  'gemtc-web/models/heterogeneityPrior/heterogeneityPriorDirective',
-  'gemtc-web/models/funnelPlot/funnelPlotDirective',
-  'gemtc-web/models/comparisonAdjustedFunnelPlot/comparisonAdjustedFunnelPlotDirective',
-  'gemtc-web/util/graphModalDirective/graphModalDirective',
-  'gemtc-web/models/result/relativeEffectPlotsDirective',
-  'gemtc-web/models/result/pairwiseForestPlotsDirective',
-  'gemtc-web/models/result/nodeSplitDensityPlotsDirective',
-  'gemtc-web/models/result/metaRegressionCovPlotsDirective'
+  './analyses/networkPlotDirective',
+  './models/rankPlotDirective',
+  './util/pagedSvgPlotDirective',
+  './util/pagedPngPlotDirective',
+  './models/runLength/runLengthDirective',
+  './models/nodesplitForestPlot/nodesplitForestPlotDirective',
+  './models/heterogeneityPrior/heterogeneityPriorDirective',
+  './models/funnelPlot/funnelPlotDirective',
+  './models/comparisonAdjustedFunnelPlot/comparisonAdjustedFunnelPlotDirective',
+  './util/graphModalDirective/graphModalDirective',
+  './models/result/relativeEffectPlotsDirective',
+  './models/result/pairwiseForestPlotsDirective',
+  './models/result/nodeSplitDensityPlotsDirective',
+  './models/result/metaRegressionCovPlotsDirective'
 ];
 define(requires.concat(['angular']), function(
   networkPlot,

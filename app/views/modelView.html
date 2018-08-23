@@ -15,15 +15,15 @@
     </div>
   </div>
 
-  <ng-include src="modelSettingsViewTemplate"></ng-include>
+  <ng-include src="'model-settings-section.html'"></ng-include>
 
-  <ng-include src="convergenceDiagnosticsViewTemplate"></ng-include>
+  <ng-include src="'convergence-diagnostics-section.html'"></ng-include>
 
-  <ng-include ng-show="model.modelType.type === 'regression'" src="metaRegressionTemplate"></ng-include>
+  <ng-include ng-if="model.modelType.type === 'regression'" src="'meta-regression-section.html'"></ng-include>
 
-  <ng-include src="resultsViewTemplate"></ng-include>
+  <ng-include src="'results-section.html'"></ng-include>
 
-  <ng-include src="modelFitViewTemplate"></ng-include>
+  <ng-include src="'model-fit-section.html'"></ng-include>
 
 
 </div ui-view>

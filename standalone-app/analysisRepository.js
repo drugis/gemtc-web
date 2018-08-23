@@ -1,7 +1,7 @@
 'use strict';
 var logger = require('./logger'),
   dbUtil = require('./dbUtil'),
-  db = require('./db')(dbUtil.gemtcDBUrl);
+  db = require('./db')(dbUtil.connectionConfig);
 
 function rowMapper(row) {
   row.primaryModel = row.primarymodel;

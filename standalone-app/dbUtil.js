@@ -2,7 +2,8 @@
 var logger = require('./logger');
 
 module.exports = {
-  gemtcDBUrl: buildGemtcDBUrl()
+  gemtcDBUrl: buildGemtcDBUrl(),
+  connectionConfig: buildGemtcDBConnectionConfig()
 };
 
 function buildGemtcDBUrl() {
@@ -13,6 +14,15 @@ function buildGemtcDBUrl() {
     env.GEMTC_DB_PASSWORD);
   logger.info('Gemtc db url: ' + url);
   return url;
+}
+
+function buildGemtcDBConnectionConfig() {
+  var env = process.env;
+  return {
+    user: env.GEMTC_DB_USERNAME,
+    database: env.GEMTC_DB,
+    password: env.GEMTC_DB_PASSWORD
+  };
 }
 
 function buildUrl(hostname, database, username, password) {

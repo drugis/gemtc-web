@@ -22,14 +22,14 @@ var httpsOptions = {
 try {
   httpsOptions.key = fs.readFileSync(process.env.PATAVI_CLIENT_KEY);
 } catch (e) {
-  logger.warn('could not read patavi client key at: ' + process.env.PATAVI_CLIENT_KEY);
+  logger.error('could not read patavi client key at: ' + process.env.PATAVI_CLIENT_KEY);
   httpsOptions.key = 'empty-key';
 }
 
 try {
   httpsOptions.cert = fs.readFileSync(process.env.PATAVI_CLIENT_CRT);
 } catch (e) {
-  logger.warn('could not read patavi client certivicate key at: ' + process.env.PATAVI_CLIENT_CRT);
+  logger.error('could not read patavi client certivicate key at: ' + process.env.PATAVI_CLIENT_CRT);
   httpsOptions.cert = 'empty-client-crt';
 }
 

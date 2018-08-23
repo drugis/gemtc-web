@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses', 'gemtc-web/models/models'], function(angular) {
   describe('the create model controller', function() {
     var scope, q,
       stateParamsMock = {},
@@ -25,7 +25,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], funct
       ]),
       problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get']);
 
-    beforeEach(module('gemtc.models'));
+    beforeEach(angular.mock.module('gemtc.models'));
 
     beforeEach(inject(function($rootScope, $controller, $q) {
       scope = $rootScope;

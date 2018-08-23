@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = ['gemtcRootPath'];
-  var PagedPngPlotDirective = function(gemtcRootPath) {
+  var dependencies = [];
+  var PagedPngPlotDirective = function() {
     return {
       scope: {
         fileName: '=',
@@ -9,7 +9,7 @@ define([], function() {
       },
       restrict: 'E',
       // using template because loading teplateUrl irritating in submodule
-      templateUrl: gemtcRootPath + 'js/util/pagedPngPlotDirective.html',
+      templateUrl: 'gemtc-web/util/pagedPngPlotDirective.html',
       link: function(scope) {
         scope.selectNextPage = selectNextPage;
         scope.selectPreviousPage = selectPreviousPage;

@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$q', 'gemtcRootPath', 'ModelService', 'ResultsPlotService'];
-  var relativeEffectPlotsDirective = function($q, gemtcRootPath, ModelService, ResultsPlotService) {
+  var dependencies = ['$q', 'ModelService', 'ResultsPlotService'];
+  var relativeEffectPlotsDirective = function($q, ModelService, ResultsPlotService) {
     return {
       scope: {
         modelPromise: '=',
@@ -9,7 +9,7 @@ define(['lodash'], function(_) {
         problemPromise: '='
       },
       restrict: 'E',
-      templateUrl: gemtcRootPath + 'js/models/result/relativeEffectPlots.html',
+      templateUrl: 'gemtc-web/models/result/relativeEffectPlots.html',
       link: function(scope) {
 
         function prefixPlots(plots) {

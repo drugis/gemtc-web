@@ -1,16 +1,18 @@
 'use strict';
-define(['angular', 'angular-mocks', 'services'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/services', 'gemtc-web/resources'], function(angular) {
   describe('the diagnostics service', function() {
 
     var diagnosticsService;
 
     beforeEach(function() {
-      module('gemtc.services');
+      angular.mock.module('gemtc.services');
     });
 
-    beforeEach(inject(function(DiagnosticsService) {
-      diagnosticsService = DiagnosticsService;
-    }));
+    beforeEach(function() {
+      angular.mock.inject(function(DiagnosticsService) {
+        diagnosticsService = DiagnosticsService;
+      });
+    });
 
     describe('buildDiagnosticMap', function() {
       it('should correctly label the parameters', function() {

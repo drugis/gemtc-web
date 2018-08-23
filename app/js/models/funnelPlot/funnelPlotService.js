@@ -1,5 +1,5 @@
 'use strict';
-define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
+define(['d3', 'nvd3', 'lodash', 'jquery'], function(d3, nvd3, _, $) {
   var dependencies = [];
   var FunnelPlotService = function() {
 

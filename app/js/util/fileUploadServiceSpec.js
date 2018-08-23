@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'util/util'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/util/util'], function(angular) {
   describe('the file upload service', function() {
 
     var fileUploadService;
@@ -11,7 +11,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       '"2","B",-2.4,3.4,173\n';
 
     beforeEach(function() {
-      module('gemtc.util', function($provide) {
+      angular.mock.module('gemtc.util', function($provide) {
         csvParseServiceStub = jasmine.createSpyObj('csvParseService', ['parse']);
         problemValidityServiceStub = jasmine.createSpyObj('problemValidityService', ['parse', 'getValidity']);
         $provide.value('CSVParseService', csvParseServiceStub);
@@ -19,9 +19,11 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       });
     });
 
-    beforeEach(inject(function(FileUploadService) {
-      fileUploadService = FileUploadService;
-    }));
+    beforeEach(function() {
+      angular.mock.inject(function(FileUploadService) {
+        fileUploadService = FileUploadService;
+      });
+    });
 
     describe('processFile', function() {
 

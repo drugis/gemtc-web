@@ -1,17 +1,16 @@
 'use strict';
-var requires = [
-  'gemtc-web/controllers/modelController',
-  'gemtc-web/models/createModelController',
-  'gemtc-web/models/modelsController',
-  'gemtc-web/models/extendRunLengthController',
-  'gemtc-web/models/nodeSplitOverviewController',
-  'gemtc-web/models/createNodeSplitModelController',
-  'gemtc-web/models/createNetworkModelController',
-  'gemtc-web/models/addComparisonFunnelPlotController',
-  'gemtc-web/util/graphModalDirective/plotNavigationController',
-  'gemtc-web/models/setBaselineDistributionController'
-];
-define(requires.concat(['angular']), function(
+
+define(['./controllers/modelController',
+'./models/createModelController',
+'./models/modelsController',
+'./models/extendRunLengthController',
+'./models/nodeSplitOverviewController',
+'./models/createNodeSplitModelController',
+'./models/createNetworkModelController',
+'./models/addComparisonFunnelPlotController',
+'./util/graphModalDirective/plotNavigationController',
+'./models/setBaselineDistributionController', 
+'angular'], function(
   ModelController,
   CreateModelController,
   ModelsController,

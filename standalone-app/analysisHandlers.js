@@ -5,7 +5,7 @@ var statusCodes = require('http-status-codes');
 
 function queryAnalyses(request, response, next) {
   logger.debug('query analyses');
-  analysisRepository.query(request.session.userId, function(error, result) {
+  analysisRepository.query(request.user.id, function(error, result) {
     if (error) {
       logger.error(error);
       response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
@@ -29,7 +29,7 @@ function getAnalysis(request, response, next) {
       response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
       response.end();
     } else {
-      if (isAnalysisOwner(analysis, request.session.userId)) {
+      if (isAnalysisOwner(analysis, request.user.id)) {
         response.json(analysis);
       } else {
         response.sendStatus(statusCodes.FORBIDDEN);
@@ -41,8 +41,8 @@ function getAnalysis(request, response, next) {
 
 function createAnalysis(request, response, next) {
   logger.debug('create analysis: ' + JSON.stringify(request.body));
-  logger.debug('request.session.userId: ' + request.session.userId);
-  analysisRepository.create(request.session.userId, request.body, function(error, newAnalysis) {
+  logger.debug('request.user.id: ' + request.user.id);
+  analysisRepository.create(request.user.id, request.body, function(error, newAnalysis) {
     if (error) {
       logger.error(error);
       response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);

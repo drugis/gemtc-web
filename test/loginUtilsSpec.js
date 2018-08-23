@@ -1,19 +1,17 @@
+'use strict';
 var loginUtils = require('../standalone-app/loginUtils.js');
-var assert = require('assert');
-var status = require('http-status-codes');
+var httpStatus = require('http-status-codes');
 var chai = require('chai'),
   spies = require('chai-spies');
 
 describe('loginUtils', function() {
 
   chai.use(spies);
-
-  var should = chai.should(),
-    expect = chai.expect;
+  var expect = chai.expect;
 
   describe('securityMiddleware', function() {
 
-    var request, response, session, next;
+    var request, response, next;
 
     beforeEach(function() {
       request = {
@@ -41,7 +39,6 @@ describe('loginUtils', function() {
       response = chai.spy.object(['sendStatus']);
       request.session = {};
       request.url = '/secure-me';
-      next;
 
       loginUtils.securityMiddleware(request, response, next);
       expect(response.sendStatus).to.have.been.called.with(403);
@@ -68,15 +65,6 @@ describe('loginUtils', function() {
     it('should call next when requesting a file from the /css path', function() {
       request.session = {};
       request.url = '/css/some/path/to/some/file.css';
-      request.method = 'GET';
-
-      loginUtils.securityMiddleware(request, response, next);
-      expect(next).to.have.been.called();
-    });
-
-    it('should call next when requesting a file from the /js path', function() {
-      request.session = {};
-      request.url = '/js/some/path/to/some/file.js';
       request.method = 'GET';
 
       loginUtils.securityMiddleware(request, response, next);
@@ -144,7 +132,7 @@ describe('loginUtils', function() {
 
       it('should return a 403 FORBIDDEN.', function() {
         loginUtils.emailHashMiddleware(request, response, next);
-        expect(response.status).to.equal(status.FORBIDDEN);
+        expect(response.status).to.equal(httpStatus.FORBIDDEN);
         expect(next).to.have.been.called();
       });
     });
@@ -153,7 +141,7 @@ describe('loginUtils', function() {
   describe('csrfValue', function() {
     describe('should extract the token from the request\'s body', function() {
       it('for the body._csrf', function() {
-        request = {
+        var request = {
           body: {
             _csrf: 'token'
           }
@@ -162,7 +150,7 @@ describe('loginUtils', function() {
         expect(token).to.equal(request.body._csrf);
       });
       it('for the query._csrf', function() {
-        request = {
+        var request = {
           query: {
             _csrf: 'token'
           }
@@ -171,7 +159,7 @@ describe('loginUtils', function() {
         expect(token).to.equal(request.query._csrf);
       });
       it('for the headers x-csrf-token', function() {
-        request = {
+        var request = {
           headers: {
             'x-csrf-token': 'token'
           }
@@ -180,7 +168,7 @@ describe('loginUtils', function() {
         expect(token).to.equal(request.headers['x-csrf-token']);
       });
       it('for the headers x-xsrf-token', function() {
-        request = {
+        var request = {
           headers: {
             'x-xsrf-token': 'token'
           }
@@ -194,13 +182,13 @@ describe('loginUtils', function() {
   describe('setXSRFTokenMiddleware', function() {
     it('should set a cookie with the session csrfSecret', function() {
       var token = 'token';
-      request = {
+      var request = {
         csrfToken: function() {
           return token;
         }
       };
-      response = chai.spy.object(['cookie']);
-      next = chai.spy();
+      var response = chai.spy.object(['cookie']);
+      var next = chai.spy();
 
       loginUtils.setXSRFTokenMiddleware(request, response, next);
       expect(response.cookie).to.have.been.called.with('XSRF-TOKEN', token);

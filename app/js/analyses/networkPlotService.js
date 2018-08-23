@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
+define(['angular', 'lodash', 'd3', 'jQuery'], function(angular, _, d3, $) {
   var dependencies = [];
 
   var NetworkPlotService = function() {

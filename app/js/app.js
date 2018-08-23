@@ -1,36 +1,37 @@
 'use strict';
 define(
   ['angular',
-    'analyses/analyses',
-    'angular-patavi-client',
-    'angular-touch',
-    'angular-ui-router',
-    'angularanimate',
-    'constants',
-    'controllers',
-    'core-js',
-    'error-reporting',
-    'export-directive',
-    'help-popup',
-    'jQuery',
-    'lodash',
-    'mmfoundation',
-    'models/models',
-    'ngSanitize',
-    'patavi/patavi',
-    'services',
-    'require',
-    'util/util'
-  ],
-  function(angular) {
-
+  './analyses/analyses',
+  'angular-patavi-client',
+  'angular-touch',
+  'angular-ui-router',
+  'angular-cookies',
+  'angular-animate',
+  './constants',
+  './controllers',
+  'core-js',
+  'error-reporting',
+  'export-directive',
+  'help-popup',
+  'jquery',
+  'angular-foundation-6',
+  './models/models',
+  'angular-sanitize',
+  './patavi/patavi',
+  './resources',
+  './services',
+  './util/util'
+],
+function(angular) {
     var dependencies = [
       'ui.router',
       'ngTouch',
+      'ngCookies',
       'ngSanitize',
       'mm.foundation',
       'gemtc.controllers',
       'gemtc.constants',
+      'gemtc.resources',
       'gemtc.services',
       'gemtc.analyses',
       'gemtc.models',
@@ -44,8 +45,15 @@ define(
 
     var app = angular.module('gemtc', dependencies);
 
-    app.run(['$rootScope', '$window', '$http', '$location', '$anchorScroll', 'HelpPopupService',
-      function($rootScope, $window, $http, $location, $anchorScroll, HelpPopupService) {
+    app.run(['$rootScope', '$http', '$templateCache', 'HelpPopupService',
+      function($rootScope, $http, $templateCache, HelpPopupService) {
+
+        $templateCache.put('model-settings-section.html', require('../views/model-settings-section.html'));
+        $templateCache.put('convergence-diagnostics-section.html', require('../views/convergence-diagnostics-section.html'));
+        $templateCache.put('meta-regression-section.html', require('../views/meta-regression-section.html'));
+        $templateCache.put('results-section.html', require('../views/results-section.html'));
+        $templateCache.put('model-fit-section.html', require('../views/model-fit-section.html'));
+
         $rootScope.$safeApply = function($scope, fn) {
           var phase = $scope.$root.$$phase;
           if (phase === '$apply' || phase === '$digest') {
@@ -75,35 +83,35 @@ define(
         $stateProvider
           .state('analyses', {
             url: '/analyses',
-            templateUrl: '/js/analyses/analyses.html',
+            templateUrl: 'gemtc-web/analyses/analyses.html',
             controller: 'AnalysesController'
           })
           .state('analysis-container', {
             abstract: true,
-            templateUrl: '/js/analyses/abstract-analysis.html',
+            templateUrl: 'gemtc-web/analyses/abstract-analysis.html',
           })
           .state('networkMetaAnalysis', {
             parent: 'analysis-container',
             url: '/analyses/:analysisId',
             views: {
               'analysis': {
-                templateUrl: '/js/analyses/analysis.html',
+                templateUrl: 'gemtc-web/analyses/analysis.html',
                 controller: 'AnalysisController'
               },
               'models': {
-                templateUrl: '/js/models/models.html',
+                templateUrl: 'gemtc-web/models/models.html',
                 controller: 'ModelsController'
               },
               'networkGraph': {
-                templateUrl: '/js/analyses/networkGraph.html',
+                templateUrl: 'gemtc-web/analyses/networkGraph.html',
                 controller: 'NetworkGraphController'
               },
               'evidenceTable': {
-                templateUrl: '/js/analyses/evidenceTable.html',
+                templateUrl: 'gemtc-web/analyses/evidenceTable.html',
                 controller: 'EvidenceTableController'
               },
               'relativeEffectTable': {
-                templateUrl: '/js/analyses/relativeEffectTable.html',
+                templateUrl: 'gemtc-web/analyses/relativeEffectTable.html',
                 controller: 'RelativeEffectTableController'
               }
             }
