@@ -3,6 +3,7 @@ var express = require('express'),
   session = require('express-session'),
   helmet = require('helmet'),
   bodyparser = require('body-parser'),
+  _ = require('lodash'),
   csurf = require('csurf'),
   dbUtil = require('./standalone-app/dbUtil'),
   db = require('./standalone-app/db')(dbUtil.connectionConfig),
@@ -68,14 +69,14 @@ module.exports = app
     req.logout();
     res.redirect('/');
   })
-  // .use(csurf({  // ?????
-  //   value: loginUtils.csrfValue
-  // }))
   .use(csurf())
   .use(bodyparser.json({ limit: '5mb' }))
   .use(loginUtils.setXSRFTokenMiddleware)
   .all('*', loginUtils.securityMiddleware)
   .use('/patavi', mcdaPataviTaskRouter)
+  .use('/user', function(req, res) {
+    res.json(_.omit(req.user, ['username', 'id']));
+  })
   .use('/analyses', analysisRouter)
   .use('/analyses/:analysisId/models', modelRouter)
   .get('/lexicon.json', function(req, res) {
