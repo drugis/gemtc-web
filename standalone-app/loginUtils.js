@@ -37,9 +37,10 @@ module.exports = {
       response.redirect('/signin.html');
     }
     else if (request.method === 'GET' && // if not then you can get static content or go sign in
-      (request.url.startsWith('/css') ||
-        request.url.startsWith('/views') ||
+      (
         request.url.startsWith('/img') ||
+        request.url.startsWith('/css') ||
+        request.url.startsWith('/fonts') ||
         request.url === '/signin.html' ||
         request.url === '/signin.bundle.js' ||
         request.url === '/vendor.bundle.js' ||

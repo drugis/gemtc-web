@@ -5,7 +5,15 @@
 
  let config = merge(common, {
    mode: 'development',
-   devtool: 'inline-source-map'
+   devtool: 'inline-source-map',
+   module: {
+    rules: [
+      {
+        test: /\.css$/,
+        loaders: ['style-loader', 'css-loader']
+      }
+    ]
+  }
   //  devServer: {
   //    contentBase: './dist'
   //  }

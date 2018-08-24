@@ -27,9 +27,6 @@ let config = {
       }],
       exclude: [/(.*)\/angular-foundation-6\/(.*)/] // uses $templatecache so dont replace 
     }, {
-      test: /\.css$/,
-      loaders: ['style-loader', 'css-loader']
-    }, {
       test: /\.json$/,
       loader: 'json-loader'
     }, {
