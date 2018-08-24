@@ -1,7 +1,5 @@
 'use strict';
-var crypto = require('crypto'),
-  httpStatus = require('http-status-codes'),
-  logger = require('./logger');
+var logger = require('./logger');
 
 // check if startsWith is not a language feature
 if (typeof String.prototype.startsWith !== 'function') {
@@ -38,12 +36,14 @@ module.exports = {
     }
     else if (request.method === 'GET' && // if not then you can get static content or go sign in
       (
+        request.url.startsWith('/img') ||
+        request.url.startsWith('/fonts') ||
         request.url === '/signin.html' ||
         request.url === '/signin.bundle.js' ||
         request.url === '/vendor.bundle.js' ||
         request.url === '/main.bundle.js' ||
+        request.url === '/manual.bundle.js' ||
         request.url === '/manual.html' ||
-        request.url === '/manual/shared-toc.html' ||
         request.url === '/manual/shared.html' ||
         request.url.startsWith('/auth/google')
       )) {

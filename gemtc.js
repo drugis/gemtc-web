@@ -81,8 +81,8 @@ module.exports = app
   .get('/lexicon.json', function(req, res) {
     res.sendFile(__dirname + '/app/lexicon.json');
   })
+  .use(express.static('public'))
   .use(express.static('dist'))
   .use(express.static('fonts'))
-  .use(express.static('../manual'))
   .use(errorHandler)
   .listen(3001);

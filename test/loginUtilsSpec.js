@@ -1,6 +1,5 @@
 'use strict';
 var loginUtils = require('../standalone-app/loginUtils.js');
-var httpStatus = require('http-status-codes');
 var chai = require('chai'),
   spies = require('chai-spies');
 

@@ -6,17 +6,6 @@
   <meta name="viewport" content="width=device-width" />
   <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
   <title>GeMTC user manual</title>
-  <link rel="stylesheet" type="text/css" href="js/bower_components/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="css/gemtc-drugis.css">
-  <script src="js/bower_components/foundation/js/vendor/modernizr.js"></script>
-  <script src="js/bower_components/bowser/bowser.min.js"></script>
-  <link rel="stylesheet" href="js/bower_components/KaTeX/dist/katex.min.css">
-  <script src="js/bower_components/KaTeX/dist/katex.min.js"></script>
-  <script src="js/bower_components/KaTeX/dist/contrib/auto-render.min.js"></script>
-  <script src="js/bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="js/bower_components/smooth-scroller/dist/smooth-scroller.bower.min.js"></script>
-  <script src="js/bower_components/toc/dist/toc.bower.min.js"></script>
-  <script src="js/bower_components/scrollup/dist/jquery.scrollUp.min.js"></script>
   <style type="text/css">
       #scrollUp {
       bottom: 20px;
@@ -26,11 +15,11 @@
       color: #fff;
     }
 
-    #gemtc-shared-toc ul {
+    #gemtc-shared-toc ol {
       list-style-type: none;
-      margin-top: -20px;
-      padding: 2rem 1rem;
       background-color: #f4f4f4;
+      margin-left: 0;
+      padding-left: 1em;
     }
 
     #gemtc-shared-toc li {
@@ -49,18 +38,9 @@
       color: #7056c6;
     }
 
-    #gemtc-shared-toc .toc-h2 {
+    #gemtc-shared-toc .node-name--H2 {
       text-transform: uppercase;
-      color: #008CBA;
       font-weight: bold;
-    }
-
-    #gemtc-shared-toc .toc-h3 a {
-      padding-left: 1.225rem;
-    }
-
-    #gemtc-shared-toc .toc-h4 a {
-      padding-left: 1.675rem;
     }
 
     .figure {
@@ -72,10 +52,8 @@
       padding: 5px;
       border: 1px solid gray;
     }
-
-    .figure .caption {
-
   </style>
+  
 </head>
 
 <body>
@@ -124,9 +102,9 @@
     <div class="grid-container">
       <div class="grid-x grid-margin-x">
         <div class="cell large-3">
-          <div id="gemtc-shared-toc"></div>
+          <div id="gemtc-shared-toc" class="toc" data-toc="h2, h3, h4"></div>
         </div>
-        <div class="cell large-8 medium-12 end">
+        <div class="js-toc-content cell large-8 medium-12 end">
 
           <h2>Introduction</h2>
 
@@ -279,22 +257,7 @@
     </div>
   </section>
   <script>
-    $("#gemtc-shared-content").load("manual/shared.html", function() {
-      renderMathInElement(document.body);
-      $("#gemtc-shared-toc").toc({
-        'selectors': 'h2,h3,h4'
-      });
-      $(function() {
-        $.scrollUp();
-      });
-      if (window.location.hash) {
-        setTimeout(function() { // wait for reflows to finish
-          $('html, body').animate({
-            scrollTop: $(window.location.hash).offset().top
-          }, 1000);
-        }, 1);
-      }
-    });
+
   </script>
 </body>
 

@@ -7,7 +7,8 @@ let basePath = path.join(__dirname, '/');
 let config = {
   entry: {
     'main': basePath + '/app/js/main.js',
-    'signin': basePath + 'app/js/signin.js'
+    'signin': basePath + '/app/js/signin.js',
+    'manual': basePath + '/app/js/manual.js'
   },
 
   output: {
@@ -88,21 +89,27 @@ let config = {
       chunks: ['signin', 'vendor'],
       inject: 'head'
     }),
-    new CleanWebpackPlugin(['dist'])   
+    new HtmlWebpackPlugin({
+      filename: 'manual.html',
+      template: 'app/manual.html',
+      chunks: ['manual', 'vendor'],
+      inject: 'head'
+    }),
+    new CleanWebpackPlugin(['dist'])
   ],
 
   optimization: {
     splitChunks: {
-     cacheGroups: {
-      vendor: {
-       test: /node_modules/,
-       chunks: 'initial',
-       name: 'vendor',
-       enforce: true
-      },
-     }
-    } 
-   }
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          chunks: 'initial',
+          name: 'vendor',
+          enforce: true
+        },
+      }
+    }
+  }
 };
 
 module.exports = config;

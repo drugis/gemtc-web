@@ -1,5 +1,6 @@
 *.log
 *.jar
+reports/
 test/integration/reports/
 app/js/bower_components
 karma-test-results.xml
@@ -7,5 +8,6 @@ karma-test-results.xml
 node_modules/
 target
 .idea
+.vscode
 
 dist/
