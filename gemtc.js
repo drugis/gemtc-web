@@ -84,6 +84,6 @@ module.exports = app
   })
   .use(express.static('public'))
   .use(express.static('dist'))
-  .use(express.static('fonts'))
+  .use('/css/fonts', express.static('./dist/fonts'))
   .use(errorHandler)
   .listen(3001);
