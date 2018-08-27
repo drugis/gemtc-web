@@ -1,23 +1,45 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = ['$scope', '$q', '$stateParams', '$state', '$modal', 'gemtcRootPath',
-    'models', 'problem', 'AnalysisService', 'ModelResource', 'NodeSplitOverviewService', 'PataviService'
+  var dependencies = [
+    '$scope',
+    '$q',
+    '$stateParams',
+    '$state',
+    '$modal',
+    'models',
+    'problem',
+    'AnalysisService',
+    'NodeSplitOverviewService',
+    'PataviService'
   ];
-  var NodeSplitOverviewController = function($scope, $q, $stateParams, $state, $modal, gemtcRootPath,
-    models, problem, AnalysisService, ModelResource, NodeSplitOverviewService, PataviService) {
+  var NodeSplitOverviewController = function(
+    $scope,
+    $q,
+    $stateParams,
+    $state,
+    $modal,
+    models,
+    problem,
+    AnalysisService,
+    NodeSplitOverviewService,
+    PataviService
+  ) {
 
+    // functions
     $scope.goToModel = goToModel;
     $scope.openCreateNodeSplitDialog = openCreateNodeSplitDialog;
     $scope.openCreateNetworkDialog = openCreateNetworkDialog;
     $scope.networkModelResultsDefer = $q.defer();
     $scope.baseModelNotShown = false;
 
+    // init
     $scope.modelPromise.then(function(model) {
+      function foo() {
+        $scope.baseModelNotShown = model.modelType.type === 'node-split' && !_.some($scope.comparisons, ['modelId', model.id]);
+      }
       $scope.model = model;
       var networkModel;
-      $scope.analysis.$promise.then(buildComparisonRows).then(function() {
-        $scope.baseModelNotShown = model.modelType.type === 'node-split' && !_.some($scope.comparisons, ['modelId', model.id]);
-      });
+      $scope.analysis.$promise.then(buildComparisonRows).then(foo);
       if (model.modelType.type === 'node-split') {
         networkModel = findNetworkModelForModel(model, models);
         if (networkModel) {
@@ -44,13 +66,10 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function buildComparisonRows() {
       $scope.comparisons = _.map(AnalysisService.createNodeSplitOptions(problem), function(comparison) {
-        var row = comparison;
+        var row = angular.copy(comparison);
         row.colSpan = 6;
-        row.label = comparison.label;
-        row.from = comparison.from;
-        row.to = comparison.to;
-        var model = findModelForComparison(comparison, models);
 
+        var model = findModelForComparison(comparison, models);
         if (model) {
           row.modelTitle = model.title;
           row.modelId = model.id;
@@ -119,7 +138,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function openCreateNetworkDialog() {
       $modal.open({
         windowClass: 'small',
-        templateUrl: gemtcRootPath + 'js/models/createModelFromBase.html',
+        templateUrl: 'gemtc-web/models/createModelFromBase.html',
         scope: $scope,
         controller: 'CreateNetworkModelController',
         resolve: {
@@ -144,7 +163,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function openCreateNodeSplitDialog(comparison) {
       $modal.open({
         windowClass: 'small',
-        templateUrl: gemtcRootPath + 'js/models/createModelFromBase.html',
+        templateUrl: 'gemtc-web/models/createModelFromBase.html',
         scope: $scope,
         controller: 'CreateNodeSplitModelController',
         resolve: {
@@ -168,7 +187,6 @@ define(['angular', 'lodash'], function(angular, _) {
         }
       });
     }
-
 
   };
 

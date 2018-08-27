@@ -7,9 +7,7 @@ define([], function() {
       templateUrl: 'js/util/navbarDirective.html',
       transclude: true,
       link: function(scope) {
-        scope.user = UserResource.get(function(userResult) {
-          scope.user.imageUrl = 'https://secure.gravatar.com/avatar/' + userResult.md5Hash + '?s=43&d=mm';
-        });
+        scope.user = UserResource.get();
       }
     };
   };

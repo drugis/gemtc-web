@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'util/util'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/util/util'], function(angular) {
   describe('the csv parse service', function() {
 
     var csvParseService;
@@ -37,7 +37,7 @@ define(['angular', 'angular-mocks', 'util/util'], function() {
       '2,B,-1.7,0.382640605,NA\n';
 
 
-    beforeEach(module('gemtc.util'));
+    beforeEach(angular.mock.module('gemtc.util'));
 
     beforeEach(inject(function(CSVParseService) {
       csvParseService = CSVParseService;

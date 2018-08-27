@@ -1,10 +1,10 @@
 'use strict';
-define(['angular', 'angular-mocks', 'util/util'], function() {
+define(['angular', 'angular-mocks', 'util/util'], function(angular) {
   describe('the problem validity service', function() {
 
     var problemValidityService;
 
-    beforeEach(module('gemtc.util'));
+    beforeEach(angular.mock.module('gemtc.util'));
 
     beforeEach(inject(function(ProblemValidityService) {
       problemValidityService = ProblemValidityService;

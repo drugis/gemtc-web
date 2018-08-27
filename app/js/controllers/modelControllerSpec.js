@@ -1,46 +1,44 @@
 'use strict';
-define(['angular', 'angular-mocks', 'controllers'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) {
   describe('the modelController', function() {
     var scope,
-      analysisDeferred,
-      analysisMock,
       analysisResource,
-      analysisServiceMock,
-      devianceStatisticsServiceMock,
-      diagnosticsService,
-      funnelPlotResourceMock,
-      metaRegressionService,
-      modelBaselineDefer,
-      modelBaselineMock,
-      modelBaselineResource,
-      modelDeferred,
-      modalMock,
-      modelMock,
       modelResource,
-      modelserviceMock,
-      pageTitleServiceMock,
-      pataviResult,
-      pataviResultDeferred,
-      pataviService,
-      pataviTaskIdDeferred,
-      pataviTaskIdMock = {
-        uri: 'https://something/1'
-      },
-      pataviTaskIdResource,
-      pataviTaskIdResult,
-      problemDeferred,
-      problemMock,
+      modelBaselineResource,
       problemResource,
-      stateParamsMock = {
+      pataviTaskIdResource,
+      funnelPlotResourceMock,
+      mockStateParams = {
         analysisId: 1,
         projectId: 11
       },
+      analysisDeferred,
+      mockAnalysis,
+      modelDeferred,
+      mockModel,
+      modelBaselineDefer,
+      mockModelBaseline,
+      problemDeferred,
+      mockProblem,
+      mockPataviTaskId = {
+        uri: 'https://something/1'
+      },
+      pataviResult,
+      pataviResultDeferred,
+      pataviService,
       resultsPlotsServiceMock,
       relativeEffectsTableService,
-      stateMock
-      ;
+      devianceStatisticsServiceMock,
+      diagnosticsService,
+      metaRegressionService,
+      modelserviceMock,
+      analysisServiceMock,
+      stateMock,
+      modalMock,
+      pataviTaskIdDeferred,
+      pataviTaskIdResult;
 
-    beforeEach(module('gemtc.controllers'));
+    beforeEach(angular.mock.module('gemtc.controllers'));
 
     beforeEach(inject(function($rootScope, $controller, $q, $httpBackend) {
       scope = $rootScope.$new();
@@ -52,15 +50,15 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         $promise: modelDeferred.promise
       };
       modelBaselineDefer = $q.defer();
-      modelBaselineMock = {
+      mockModelBaseline = {
         $promise: modelBaselineDefer.promise
       };
       analysisDeferred = $q.defer();
-      analysisMock = {
+      mockAnalysis = {
         $promise: analysisDeferred.promise
       };
       problemDeferred = $q.defer();
-      problemMock = {
+      mockProblem = {
         $promise: problemDeferred.promise,
         treatments: [1, 2, 3, 4]
       };
@@ -86,19 +84,28 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         },
         logScale: true
       };
-      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
       analysisResource = jasmine.createSpyObj('AnalysisResource', ['get']);
-      analysisResource.get.and.returnValue(analysisMock);
+      analysisResource.get.and.returnValue(mockAnalysis);
+      modelResource = jasmine.createSpyObj('ModelResource', ['get']);
+      modelResource.get.and.returnValue(mockModel);
+      modelBaselineResource = jasmine.createSpyObj('ModelBaselineResource', ['get']);
+      modelBaselineResource.get.and.returnValue(mockModelBaseline);
+      problemResource = jasmine.createSpyObj('ProblemResource', ['get']);
+      problemResource.get.and.returnValue(mockProblem);
+      pataviTaskIdResource = jasmine.createSpyObj('PataviTaskIdResource', ['get']);
+      pataviTaskIdResource.get.and.returnValue(pataviTaskIdResult);
+      resultsPlotsServiceMock = jasmine.createSpyObj('ResultsPlotService', ['prefixImageUris']);
+      funnelPlotResourceMock = jasmine.createSpyObj('FunnelPlotResource', ['query']);
+      pataviService = jasmine.createSpyObj('PataviService', ['listen']);
+      pataviService.listen.and.returnValue(pataviResult);
+      relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
       devianceStatisticsServiceMock = jasmine.createSpyObj('DevianceStatisticsService', ['buildAbsoluteTable', 'buildRelativeTable']);
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['buildDiagnosticMap', 'compareDiagnostics']);
-      funnelPlotResourceMock = jasmine.createSpyObj('FunnelPlotResource', ['query']);
+      analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
+      stateMock = jasmine.createSpyObj('$state', ['reload']);
+      modalMock = jasmine.createSpyObj('$modal', ['open']);
       metaRegressionService = jasmine.createSpyObj('MetaRegressionService', ['buildCovariatePlotOptions', 'getCovariateSummaries']);
       metaRegressionService.buildCovariatePlotOptions.and.returnValue([]);
-      modelBaselineResource = jasmine.createSpyObj('ModelBaselineResource', ['get']);
-      modelBaselineResource.get.and.returnValue(modelBaselineMock);
-      modalMock = jasmine.createSpyObj('$modal', ['open']);
-      modelResource = jasmine.createSpyObj('ModelResource', ['get']);
-      modelResource.get.and.returnValue(modelMock);
       modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary', 'filterCentering', 'findCentering',
         'addLevelandProcessData', 'selectLevel'
       ]);
@@ -108,40 +115,28 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
       });
       modelserviceMock.addLevelandProcessData.and.returnValue([]);
       modelserviceMock.selectLevel.and.returnValue({});
-      pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['setPageTitle']);
-      pataviService = jasmine.createSpyObj('PataviService', ['listen']);
-      pataviService.listen.and.returnValue(pataviResult);
-      pataviTaskIdResource = jasmine.createSpyObj('PataviTaskIdResource', ['get']);
-      pataviTaskIdResource.get.and.returnValue(pataviTaskIdResult);
-      problemResource = jasmine.createSpyObj('ProblemResource', ['get']);
-      problemResource.get.and.returnValue(problemMock);
-      resultsPlotsServiceMock = jasmine.createSpyObj('ResultsPlotService', ['prefixImageUris']);
-      relativeEffectsTableService = jasmine.createSpyObj('RelativeEffectsTableService', ['buildTable']);
-      stateMock = jasmine.createSpyObj('$state', ['reload']);
 
-      $httpBackend.when('GET', pataviTaskIdMock.uri).respond('foo');
+      $httpBackend.when('GET', mockPataviTaskId.uri).respond('foo');
 
       $controller('ModelController', {
         $scope: scope,
-        $stateParams: stateParamsMock,
+        $stateParams: mockStateParams,
         $modal: modalMock,
         $state: stateMock,
-        AnalysisResource: analysisResource,
-        AnalysisService: analysisServiceMock,
-        DevianceStatisticsService: devianceStatisticsServiceMock,
-        DiagnosticsService: diagnosticsService,
-        FunnelPlotResource: funnelPlotResourceMock,
-        MetaRegressionService: metaRegressionService,
-        ModelBaselineResource: modelBaselineResource,
         ModelResource: modelResource,
-        ModelService: modelserviceMock,
+        ModelBaselineResource: modelBaselineResource,
+        FunnelPlotResource: funnelPlotResourceMock,
+        ProblemResource: problemResource,
         PataviService: pataviService,
         PataviTaskIdResource: pataviTaskIdResource,
-        ProblemResource: problemResource,
-        RelativeEffectsTableService: relativeEffectsTableService,
         ResultsPlotService: resultsPlotsServiceMock,
-        PageTitleService: pageTitleServiceMock,
-        gemtcRootPath: ''
+        RelativeEffectsTableService: relativeEffectsTableService,
+        AnalysisResource: analysisResource,
+        DiagnosticsService: diagnosticsService,
+        AnalysisService: analysisServiceMock,
+        ModelService: modelserviceMock,
+        DevianceStatisticsService: devianceStatisticsServiceMock,
+        MetaRegressionService: metaRegressionService
       });
     }));
 
@@ -150,6 +145,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         expect(modelResource.get).toHaveBeenCalledWith(stateParamsMock);
       });
     });
+
     describe('when a non-nodesplit model is loaded', function() {
       beforeEach(function() {
         scope.model.modelType = {
@@ -157,9 +153,8 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         };
         scope.model.regressor = {
           variable: {}
-
         };
-        modelDeferred.resolve(modelMock);
+        modelDeferred.resolve(mockModel);
         scope.$apply();
       });
 
@@ -180,18 +175,21 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         describe('when the patavi results are ready', function() {
 
           beforeEach(function() {
-            var diagnostics = [
-              { key: 'd.3.45' },
-              { key: 'd.2.12' },
-              { key: 'sd.d' },
-              { key: 'd.3.88' },
-              { key: 'd.3.29' }
-            ];
-            beforeEach(function() {
-              pataviResultDeferred.resolve(pataviResult);
-              diagnosticsService.buildDiagnosticMap.and.returnValue(diagnostics);
-              scope.$apply();
-            });
+            var diagnostics = [{
+              key: 'd.3.45'
+            }, {
+              key: 'd.2.12'
+            }, {
+              key: 'sd.d'
+            }, {
+              key: 'd.3.88'
+            }, {
+              key: 'd.3.29'
+            }];
+            pataviResultDeferred.resolve(pataviResult);
+            diagnosticsService.buildDiagnosticMap.and.returnValue(diagnostics);
+            scope.$apply();
+          });
 
             it('should retrieve the problem', function() {
               expect(problemResource.get).toHaveBeenCalledWith(stateParamsMock);
@@ -220,7 +218,7 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
             });
 
             it('should use the first treatment as the selectedBaseline', function() {
-              expect(scope.selectedBaseline).toEqual(problemMock.treatments[0]);
+              expect(scope.selectedBaseline).toEqual(mockProblem.treatments[0]);
             });
           });
         });
@@ -232,10 +230,10 @@ define(['angular', 'angular-mocks', 'controllers'], function() {
         scope.model.modelType = {
           type: 'node-split'
         };
-        modelDeferred.resolve(modelMock);
-        pataviTaskIdDeferred.resolve(pataviTaskIdMock);
+        modelDeferred.resolve(mockModel);
+        pataviTaskIdDeferred.resolve(mockPataviTaskId);
         pataviResultDeferred.resolve(pataviResult);
-        problemDeferred.resolve(problemMock);
+        problemDeferred.resolve(mockProblem);
         scope.$apply();
       });
 

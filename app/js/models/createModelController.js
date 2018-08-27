@@ -1,29 +1,10 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = [
-    '$scope',
-    '$q',
-    '$stateParams',
-    '$state',
-    'AnalysisService',
-    'ModelResource',
-    'ModelService',
-    'PageTitleService',
-    'ProblemResource',
-    'isGemtcStandAlone'
+  var dependencies = ['$scope', '$q', '$stateParams', '$state', 'isGemtcStandAlone',
+    'ModelResource', 'ModelService', 'AnalysisService', 'ProblemResource'
   ];
-  var CreateModelController = function(
-    $scope,
-    $q,
-    $stateParams,
-    $state,
-    AnalysisService,
-    ModelResource,
-    ModelService,
-    PageTitleService,
-    ProblemResource,
-    isGemtcStandAlone
-  ) {
+  var CreateModelController = function($scope, $q, $stateParams, $state, isGemtcStandAlone,
+    ModelResource, ModelService, AnalysisService, ProblemResource) {
     // functions
     $scope.createModel = createModel;
     $scope.isAddButtonDisabled = isAddButtonDisabled;
@@ -45,9 +26,6 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.resetLeaveOneOut = resetLeaveOneOut;
 
     // init
-    var pageTitle = $state.current.name === 'createModel' ? 'Create model' : 'Refine model';
-    PageTitleService.setPageTitle('CreateModelController', pageTitle);
-
     $scope.isGemtcStandAlone = isGemtcStandAlone;
     $scope.model = {
       linearModel: 'random',
@@ -98,9 +76,9 @@ define(['angular', 'lodash'], function(angular, _) {
       }
       $scope.binaryCovariateNames = ModelService.getBinaryCovariateNames(problem);
       $scope.isProblemWithCovariates = ModelService.isProblemWithCovariates(problem);
-      var likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
-      if (!isGemtcStandAlone) {
-        $scope.likelihoodLinkOptions = _.reject(likelihoodLinkOptions, function(option) {
+       var likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
+      if(!isGemtcStandAlone){
+        $scope.likelihoodLinkOptions = _.reject(likelihoodLinkOptions, function(option){
           return option.link === 'smd' && option.likelihood === 'normal';
         });
       } else {
@@ -338,7 +316,7 @@ define(['angular', 'lodash'], function(angular, _) {
       if (model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split') {
         var modelsToCreate = ModelService.createModelBatch(model, $scope.comparisonOptions, $scope.nodeSplitOptions);
         var creationPromises = _.map(modelsToCreate, function(modelToCreate) {
-          return createAndPostModel(modelToCreate, function() { });
+          return createAndPostModel(modelToCreate, function() {});
         });
         $q.all(creationPromises).then(function() {
           $state.go('networkMetaAnalysis', $stateParams);
@@ -346,7 +324,7 @@ define(['angular', 'lodash'], function(angular, _) {
       } else if (model.leaveOneOut.subType === 'all-leave-one-out') {
         var leaveOneOutModels = ModelService.createLeaveOneOutBatch(model, $scope.leaveOneOutOptions);
         var leaveOneOutPromises = _.map(leaveOneOutModels, function(modelToCreate) {
-          return createAndPostModel(modelToCreate, function() { });
+          return createAndPostModel(modelToCreate, function() {});
         });
         $q.all(leaveOneOutPromises).then(function() {
           $state.go('networkMetaAnalysis', $stateParams);

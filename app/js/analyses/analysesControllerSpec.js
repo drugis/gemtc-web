@@ -1,9 +1,9 @@
 'use strict';
-define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(angular) {
   describe('the analysesController', function() {
-    var scope, analysisResourceMock, modal, pageTitleServiceMock;
+    var scope, analysisResource , modal;
 
-    beforeEach(module('gemtc.analyses'));
+    beforeEach(angular.mock.module('gemtc.analyses'));
 
     beforeEach(inject(function($rootScope, $controller) {
       scope = $rootScope;
@@ -11,15 +11,14 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       var analysesMock = ['analysisMock'];
 
       modal = jasmine.createSpyObj('modal', ['open']);
-      analysisResourceMock = jasmine.createSpyObj('AnalysisResource', ['query']);
-      analysisResourceMock.query.and.returnValue(analysesMock);
-      pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['setPageTitle']);
+
+      analysisResource = jasmine.createSpyObj('AnalysisResource', ['query']);
+      analysisResource.query.and.returnValue(analysesMock);
 
       $controller('AnalysesController', {
         $scope: scope,
         $modal: modal,
-        AnalysisResource: analysisResourceMock,
-        PageTitleService: pageTitleServiceMock
+        AnalysisResource: analysisResource
       });
     }));
 
@@ -29,7 +28,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
       });
 
       it('should load the analyes', function() {
-        expect(analysisResourceMock.query).toHaveBeenCalled();
+        expect(analysisResource.query).toHaveBeenCalled();
       });
 
       it('should place createAnalysisDialog on the scope', function() {
@@ -38,7 +37,7 @@ define(['angular', 'angular-mocks', 'analyses/analyses'], function() {
     });
 
     describe('when createAnalysisDialog isCalled', function() {
-      beforeEach(function() {
+      beforeEach(function(){
         scope.createAnalysisDialog();
       });
       it('should open the dialog', function() {

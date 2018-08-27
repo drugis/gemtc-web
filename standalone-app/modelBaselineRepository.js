@@ -1,7 +1,7 @@
 'use strict';
 var logger = require('./logger'),
   dbUtil = require('./dbUtil'),
-  db = require('./db')(dbUtil.gemtcDBUrl);
+  db = require('./db')(dbUtil.connectionConfig);
 
 module.exports = {
   set: setBaseline,
@@ -29,4 +29,3 @@ function getBaseline(modelId, callback) {
       }
     });
 }
-

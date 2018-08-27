@@ -1,7 +1,6 @@
 'use strict';
-define(['angular', 'angular-mocks', 'services'], function() {
-  describe('the model service', function() {
-
+define(['angular', 'angular-mocks', 'gemtc-web/services'], function(angular) {
+  describe('the refined model service', function() {
     var
       q,
       rootScope,
@@ -15,7 +14,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
       modelServiceMock = jasmine.createSpyObj('ModelService', ['toFrontEnd']);
 
     beforeEach(function() {
-      module('gemtc.models', function($provide) {
+      angular.mock.module('gemtc.services', function($provide) {
         $provide.value('ModelResource', modelResourceMock);
         $provide.value('ModelService', modelServiceMock);
       });

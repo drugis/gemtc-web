@@ -383,6 +383,7 @@ gemtc <- function(params) {
     }
 
     # create network
+    print(is.vector(studies))
     network <- mtc.network(data.ab=data.ab, data.re=data.re, treatments=treatments, studies=studies)
 
     # pair-wise analysis: filter network

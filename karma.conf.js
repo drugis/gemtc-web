@@ -1,50 +1,56 @@
 'use strict';
-// Karma configuration
-// Generated on Sun Jan 12 2014 11:41:44 GMT+0100 (CET)
+
+const webpackConfig = require("./webpack.dev");
+
+delete webpackConfig.entry;
+webpackConfig.plugins = [];
+webpackConfig.optimization = {
+    splitChunks: false,
+    runtimeChunk: false
+  };
 module.exports = function(config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
-    basePath: '',
+    basePath: '.',
 
     // plugins to load
-    plugins : [
+    plugins: [
       'karma-chrome-launcher',
       'karma-firefox-launcher',
-      'karma-phantomjs-launcher',
       'karma-junit-reporter',
       'karma-jasmine',
-      'karma-requirejs',
-      'karma-coverage'
+      'karma-coverage',
+      'karma-webpack'
     ],
+    preprocessors: {
+      // add webpack as preprocessor
+      'app/js/test-main.js' : ['webpack']
+    },
+
+    webpack: webpackConfig,
+
+    beforeMiddleware: ['webpackBlocker'],
 
     // frameworks to use
-    frameworks: ['jasmine', 'requirejs'],
+    frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
     files: [
-      './node_modules/phantomjs-polyfill-find/find-polyfill.js',
-      'app/js/test-main.js',
-      {pattern: 'app/js/**/*.js', included: false}
-    ],
-
-    // list of files to exclude
-    exclude: [
-      'app/js/main.js',
-      'app/js/bower_components/**/*Spec.js'
+      'app/js/test-main.js'
     ],
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
     reporters: ['progress', 'junit', 'coverage'],
-    junitReporter :{
+    junitReporter: {
       outputFile: 'karma-test-results.xml'
     },
 
     coverageReporter: {
-      type : 'cobertura',
-      dir : 'target/site/cobertura/',
-      file : 'karma-coverage-result.xml'
+      type: 'cobertura',
+      dir: 'target/site/cobertura/',
+      file: 'karma-coverage-result.xml'
     },
 
     // web server port
@@ -58,7 +64,7 @@ module.exports = function(config) {
     logLevel: config.LOG_ERROR,
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    // autoWatch: true,
 
     // Start these browsers, currently available:
     // - Chrome
@@ -68,13 +74,13 @@ module.exports = function(config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeHeadless'],
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 5000,
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
+    // singleRun: false
   });
 };

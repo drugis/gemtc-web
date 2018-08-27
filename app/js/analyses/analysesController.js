@@ -1,22 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = [
-    '$scope',
-    '$modal',
-    'AnalysisResource',
-    'PageTitleService'
-  ];
-  var ModelController = function(
-    $scope,
-    $modal,
-    AnalysisResource,
-    PageTitleService
-  ) {
-    // functions
-    $scope.createAnalysisDialog = createAnalysisDialog;
-
-    // init
-    PageTitleService.setPageTitle('AnalysesController', 'Analyses');
+  var dependencies = ['$scope', '$modal', 'AnalysisResource'];
+  var ModelController = function($scope, $modal, AnalysisResource) {
     $scope.analysesLoaded = false;
     loadAnalyses();
 
@@ -26,13 +11,13 @@ define([], function() {
       });
     }
 
-    function createAnalysisDialog() {
+    $scope.createAnalysisDialog = function() {
       $modal.open({
-        templateUrl: './js/analyses/addAnalysis.html',
+        templateUrl: 'gemtc-web/analyses/addAnalysis.html',
         scope: $scope,
         controller: 'AddAnalysisController'
       });
-    }
+    };
 
   };
   return dependencies.concat(ModelController);

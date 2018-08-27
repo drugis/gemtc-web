@@ -1,10 +1,10 @@
 'use strict';
-define(['angular', 'angular-mocks', 'services'], function(angular) {
+define(['angular', 'angular-mocks', 'gemtc-web/services'], function(angular) {
   describe('the result plots service', function() {
 
     var resultsPlotsService;
     beforeEach(function() {
-      module('gemtc.services');
+      angular.mock.module('gemtc.services');
     });
     beforeEach(inject(function(ResultsPlotService) {
       resultsPlotsService = ResultsPlotService;

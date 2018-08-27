@@ -1,7 +1,7 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$q', 'gemtcRootPath', 'MetaRegressionService', 'ResultsPlotService'];
-  var metaRegressionCovPlotsDirective = function($q, gemtcRootPath, MetaRegressionService, ResultsPlotService) {
+  var dependencies = ['$q', 'MetaRegressionService'];
+  var metaRegressionCovPlotsDirective = function($q, MetaRegressionService) {
     return {
       scope: {
         modelPromise: '=',
@@ -9,7 +9,7 @@ define([], function() {
         problemPromise: '='
       },
       restrict: 'E',
-      templateUrl: gemtcRootPath + 'js/models/result/metaRegressionCovPlots.html',
+      templateUrl: 'gemtc-web/models/result/metaRegressionCovPlots.html',
       link: function(scope) {
 
         $q.all([scope.modelPromise, scope.resultsPromise, scope.problemPromise])

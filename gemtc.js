@@ -1,11 +1,14 @@
 'use strict';
 var express = require('express'),
   session = require('express-session'),
+  helmet = require('helmet'),
   bodyparser = require('body-parser'),
-  csrf = require('csurf'),
-  everyauth = require('everyauth'),
+  _ = require('lodash'),
+  csurf = require('csurf'),
+  dbUtil = require('./standalone-app/dbUtil'),
+  db = require('./standalone-app/db')(dbUtil.connectionConfig),
   loginUtils = require('./standalone-app/loginUtils'),
-  userRepository = require('./standalone-app/userRepository'),
+  userManagement = require('./standalone-app/userManagement')(db),
   analysisRouter = require('./standalone-app/analysisRouter'),
   modelRouter = require('./standalone-app/modelRouter'),
   mcdaPataviTaskRouter = require('./standalone-app/mcdaPataviTaskRouter'),
@@ -14,74 +17,73 @@ var express = require('express'),
 
 
 var sessionOpts = {
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true
+  store: new (require('connect-pg-simple')(session))({
+    conString: dbUtil.gemtcDBUrl,
+  }),
+  secret: process.env.GEMTC_COOKIE_SECRET,
+  resave: true,
+  proxy: process.env.GEMTC_USE_PROXY,
+  rolling: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 60 * 60 * 1000, // 1 hour
+    secure: false
+  }
 };
 
-
-everyauth.everymodule.findUserById(function(userId, callback) {
-  logger.debug("gemtc.findUserById");
-  callback(null);
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
+passport.use(
+  new GoogleStrategy({
+    clientID: process.env.GEMTC_GOOGLE_KEY,
+    clientSecret: process.env.GEMTC_GOOGLE_SECRET,
+    callbackURL: process.env.GEMTC_HOST + "/auth/google/callback"
+  },
+    userManagement.findOrCreateUser
+  ));
+passport.serializeUser(function(user, cb) {
+  cb(null, user);
 });
-
-everyauth.google
-  .myHostname(process.env.GEMTC_HOST)
-  .authQueryParam({
-    approval_prompt: 'auto'
-  })
-  .appId(process.env.GEMTC_GOOGLE_KEY)
-  .appSecret(process.env.GEMTC_GOOGLE_SECRET)
-  .scope('https://www.googleapis.com/auth/userinfo.profile email')
-  .handleAuthCallbackError(function() {
-    logger.debug('gemtc.handleAuthCallbackError');
-    //todo redirect to error page
-  })
-  .redirectPath('/')
-  .findOrCreateUser(function(session, accessToken, accessTokenExtra, googleUserMetadata) {
-
-    logger.debug("gemtc.findOrCreateUser");
-    var promise = this.Promise();
-    userRepository.findUserByGoogleId(googleUserMetadata.id, function(error, result) {
-      var user = result;
-      if (!user) {
-        userRepository.createUserAndConnection(accessToken, accessTokenExtra, googleUserMetadata, function(error, result) {
-          user = {
-            id: result,
-            username: googleUserMetadata.name,
-            firstName: googleUserMetadata.given_name,
-            lastName: googleUserMetadata.family_name
-          };
-          session.userId = user.id;
-          promise.fulfill(user);
-        });
-      } else {
-        session.userId = user.id;
-        promise.fulfill(user);
-      }
-    });
-    return promise;
-  });
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj);
+});
 
 var app = express();
 
 logger.info('Start Gemtc stand-alone app');
 
 module.exports = app
+  .use(helmet())
   .use(session(sessionOpts))
-
-.use(csrf({
-  value: loginUtils.csrfValue
-}))
-  .use(bodyparser.json())
+  .get('/signin', function(req, res) {
+    res.sendFile(__dirname + '/dist/signin.html');
+  })
+  .use(passport.initialize())
+  .use(passport.session())
+  .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
+  .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
+    function(req, res) {
+      res.redirect('/');
+    })
+  .get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+  })
+  .use(csurf())
+  .use(bodyparser.json({ limit: '5mb' }))
   .use(loginUtils.setXSRFTokenMiddleware)
   .all('*', loginUtils.securityMiddleware)
-  .get('/user', loginUtils.emailHashMiddleware)
   .use('/patavi', mcdaPataviTaskRouter)
+  .use('/user', function(req, res) {
+    res.json(_.omit(req.user, ['username', 'id']));
+  })
   .use('/analyses', analysisRouter)
   .use('/analyses/:analysisId/models', modelRouter)
-  .use(express.static('app'))
-  .use(express.static('manual'))
-  .use(everyauth.middleware())
+  .get('/lexicon.json', function(req, res) {
+    res.sendFile(__dirname + '/app/lexicon.json');
+  })
+  .use(express.static('public'))
+  .use(express.static('dist'))
+  .use('/css/fonts', express.static('./dist/fonts'))
   .use(errorHandler)
   .listen(3001);

@@ -1,11 +1,11 @@
 'use strict';
-define(['angular', 'angular-mocks', 'analyses/analyses', 'models/models'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses', 'gemtc-web/models/models'], function(angular) {
   describe('the add analysisController', function() {
     var scope, analysisResource, modalInstance,
       saveDefer, mockSaveResult,
       problemValidityService, csvParseService, fileUploadService;
 
-    beforeEach(module('gemtc.analyses'));
+    beforeEach(angular.mock.module('gemtc.analyses'));
 
     beforeEach(inject(function($rootScope, $controller, $q) {
       scope = $rootScope;

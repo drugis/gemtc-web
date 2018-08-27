@@ -1,55 +1,34 @@
 'use strict';
-define(['lodash', 'clipboard'], function(_, Clipboard) {
-  var dependencies = [
-    '$scope',
-    '$q',
-    '$http',
-    '$modal',
-    '$state',
-    '$stateParams',
-    '$window',
-    'AnalysisResource',
-    'AnalysisService',
-    'DevianceStatisticsService',
-    'DiagnosticsService',
-    'FunnelPlotResource',
-    'MetaRegressionService',
-    'ModelBaselineResource',
-    'ModelResource',
-    'ModelService',
-    'PageTitleService',
+define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
+  var dependencies = ['$scope', '$q', '$http', '$modal', '$state', '$stateParams', 
+    '$window', 'ModelResource', 'ModelBaselineResource',
+    'FunnelPlotResource', 
     'PataviService',
-    'PataviTaskIdResource',
-    'ProblemResource',
-    'RelativeEffectsTableService',
-    'ResultsPlotService',
-    'gemtcRootPath'
+    'RelativeEffectsTableService', 
+    'PataviTaskIdResource', 
+    'ProblemResource', 
+    'AnalysisResource', 
+    'ModelService',
+    'DiagnosticsService', 
+    'AnalysisService', 
+    'DevianceStatisticsService', 
+    'MetaRegressionService',
+    'ResultsPlotService'
   ];
-  var ModelController = function(
-    $scope,
-    $q,
-    $http,
-    $modal,
-    $state,
-    $stateParams,
-    $window,
-    AnalysisResource,
-    AnalysisService,
-    DevianceStatisticsService,
-    DiagnosticsService,
-    FunnelPlotResource,
-    MetaRegressionService,
-    ModelBaselineResource,
-    ModelResource,
-    ModelService,
-    PageTitleService,
+  var ModelController = function($scope, $q, $http, $modal, $state, $stateParams, 
+    $window, ModelResource, ModelBaselineResource,
+    FunnelPlotResource, 
     PataviService,
-    PataviTaskIdResource,
-    ProblemResource,
-    RelativeEffectsTableService,
-    ResultsPlotService,
-    gemtcRootPath
-  ) {
+    RelativeEffectsTableService, 
+    PataviTaskIdResource, 
+    ProblemResource, 
+    AnalysisResource, 
+    ModelService,
+    DiagnosticsService, 
+    AnalysisService, 
+    DevianceStatisticsService, 
+    MetaRegressionService,
+    ResultsPlotService) {
     // functions
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;
@@ -70,23 +49,9 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     $scope.model = ModelResource.get($stateParams);
     $scope.modelPromise = modelDefer.promise;
     $scope.comparisonAdjustedFunnelPlots = FunnelPlotResource.query($stateParams);
-    $scope.resultsViewTemplate = gemtcRootPath + 'views/results-section.html';
-    $scope.modelSettingsViewTemplate = gemtcRootPath + 'views/model-settings-section.html';
-    $scope.convergenceDiagnosticsViewTemplate = gemtcRootPath + 'views/convergence-diagnostics-section.html';
-    $scope.modelFitViewTemplate = gemtcRootPath + 'views/model-fit-section.html';
-    $scope.metaRegressionTemplate = gemtcRootPath + 'views/meta-regression-section.html';
     $scope.stateParams = $stateParams;
     new Clipboard('.clipboard-button');
     $scope.selectedBaseline = undefined;
-
-    $scope.problemPromise = ProblemResource.get({
-      analysisId: $stateParams.analysisId,
-      projectId: $stateParams.projectId
-    }).$promise;
-
-    $scope.modelPromise.then(function(model) {
-      PageTitleService.setPageTitle('ModelController', model.title);
-    });
 
     // pass information to parent for use in breadcrumbs
     $scope.$parent.model = $scope.model;
@@ -135,7 +100,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     function openRunLengthDialog() {
       $modal.open({
         windowClass: 'small',
-        templateUrl: gemtcRootPath + 'js/models/extendRunLength.html',
+        templateUrl: 'gemtc-web/models/extendRunLength.html',
         scope: $scope,
         controller: 'ExtendRunLengthController',
         resolve: {
@@ -160,7 +125,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     function openComparisonAdjustedModal() {
       $modal.open({
         windowClass: 'small',
-        templateUrl: gemtcRootPath + 'js/models/addComparisonFunnelPlot.html',
+        templateUrl: 'gemtc-web/models/addComparisonFunnelPlot.html',
         scope: $scope,
         controller: 'AddComparisonFunnelPlotController',
         resolve: {
@@ -178,6 +143,11 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
         }
       });
     }
+
+    $scope.problemPromise = ProblemResource.get({
+      analysisId: $stateParams.analysisId,
+      projectId: $stateParams.projectId
+    }).$promise;
 
     function prefixPlots(result, taskUri) {
       var resultPlotPrefix = taskUri + '/results/';
@@ -248,7 +218,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
 
     function openBaselineDistributionModal() {
       $modal.open({
-        templateUrl: gemtcRootPath + 'js/models/setBaselineDistribution.html',
+        templateUrl: 'gemtc-web/models/setBaselineDistribution.html',
         controller: 'SetBaselineDistributionController',
         windowClass: 'small',
         resolve: {

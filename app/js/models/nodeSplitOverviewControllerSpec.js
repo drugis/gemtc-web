@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'models/models'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/models/models'], function(angular) {
   describe('the nodesplit overview controller', function() {
     var scope,
       q,
@@ -65,26 +65,25 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         }
       }],
       modelDefer,
-      modelMock = {
-        id: 2
-      },
       analysisDefer,
       analysisMock = {},
       problemMock,
       stateMock = jasmine.createSpyObj('$state', ['go']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['createNodeSplitOptions']),
-      modelResourceMock = jasmine.createSpyObj('ModelResource', ['get']),
       pataviServiceMock = jasmine.createSpyObj('PataviService', ['listen']),
       nodesplitOverviewServiceMock = jasmine.createSpyObj('NodesplitOverviewService', ['buildConsistencyEstimates', 'buildDirectEffectEstimates', 'buildIndirectEffectEstimates']);
 
-    beforeEach(module('gemtc.models'));
+    beforeEach(angular.mock.module('gemtc.models'));
 
     beforeEach(inject(function($rootScope, $controller, $q) {
       scope = $rootScope;
       q = $q;
 
       modelDefer = q.defer();
-      modelMock.$promise = modelDefer.promise;
+      var modelMock = {
+        id: 2,
+        $promise: modelDefer.promise
+      };
       scope.modelPromise = modelDefer.promise;
 
       analysisDefer = q.defer();
@@ -95,7 +94,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
 
       modalMock.open.calls.reset();
 
-      pataviServiceMock.listen.and.returnValue({then:function(){}});
+      pataviServiceMock.listen.and.returnValue({ then: function() { } });
 
       $controller('NodeSplitOverviewController', {
         $scope: scope,
@@ -103,11 +102,9 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         $state: stateMock,
         $stateParams: stateParamsMock,
         $modal: modalMock,
-        gemtcRootPath: '/',
         models: modelsMock,
         problem: problemMock,
         AnalysisService: analysisServiceMock,
-        ModelResource: modelResourceMock,
         NodeSplitOverviewService: nodesplitOverviewServiceMock,
         PataviService: pataviServiceMock
       });
@@ -145,8 +142,11 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
 
     describe('when the scope.model resolves with a network model', function() {
       beforeEach(function() {
-        modelMock.modelType = {
-          type: 'network'
+        var modelMock = {
+          id: 2,
+          modelType: {
+            type: 'network'
+          }
         };
         modelDefer.resolve(modelMock);
         scope.$apply();
@@ -159,34 +159,37 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
 
     describe('when the scope.model resolves with a nodesplit model', function() {
       var optionsMock = [{
-          label: 'comparison 1',
-          from: {
-            id: 1
-          },
-          to: {
-            id: 2
-          }
-        }, {
-          label: 'comparison 2',
-          from: 'from 2',
-          to: 'to 2'
-        }, {
-          label: 'comparison 1',
-          from: {
-            id: 2
-          },
-          to: {
-            id: 3
-          }
-        }],
+        label: 'comparison 1',
+        from: {
+          id: 1
+        },
+        to: {
+          id: 2
+        }
+      }, {
+        label: 'comparison 2',
+        from: 'from 2',
+        to: 'to 2'
+      }, {
+        label: 'comparison 1',
+        from: {
+          id: 2
+        },
+        to: {
+          id: 3
+        }
+      }],
         directEffects = {},
         indirectEffects = {};
 
       beforeEach(function() {
-        modelMock.modelType = {
-          type: 'node-split'
+        var modelMock = {
+          id: 2,
+          modelType: {
+            type: 'node-split'
+          },
+          likelihood: 'binom'
         };
-        modelMock.likelihood = 'binom';
 
         analysisMock.problem = {
           entries: []
@@ -204,7 +207,7 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
 
         scope.$apply();
       });
-      afterEach(function(){
+      afterEach(function() {
         analysisServiceMock.createNodeSplitOptions.calls.reset();
         pataviServiceMock.listen.calls.reset();
       });
@@ -214,8 +217,8 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
         var matchedComparisonNoResults = scope.comparisons[0];
         var unmatchedComparison = scope.comparisons[1];
         var matchedComparisonWithResult = scope.comparisons[2];
-        expect(matchedComparisonNoResults.from).toBe(optionsMock[0].from);
-        expect(matchedComparisonNoResults.to).toBe(optionsMock[0].to);
+        expect(matchedComparisonNoResults.from.id).toEqual(optionsMock[0].from.id);
+        expect(matchedComparisonNoResults.to.id).toEqual(optionsMock[0].to.id);
         expect(matchedComparisonNoResults.hasModel).toBeTruthy();
         expect(unmatchedComparison.hasModel).toBeFalsy();
         expect(matchedComparisonWithResult.hasModel).toBeTruthy();
@@ -237,11 +240,13 @@ define(['angular', 'angular-mocks', 'models/models'], function() {
 
     describe('when the scope.model resolves with a nodesplit model that does not get selected from the models', function() {
       beforeEach(function() {
-        modelMock.modelType = {
-          type: 'node-split',
+        var modelMock = {
+          id: 5,
+          modelType: {
+            type: 'node-split'
+          },
+          likelihood: 'binom'
         };
-        modelMock.likelihood = 'binom';
-        modelMock.id = 5;
 
         analysisMock.problem = {
           entries: []

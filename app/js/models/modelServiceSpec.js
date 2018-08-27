@@ -1,7 +1,7 @@
 'use strict';
-define(['angular', 'angular-mocks', 'services'], function() {
+define(['angular', 'angular-mocks', 'gemtc-web/services'], function(angular) {
   describe('the model service', function() {
-    beforeEach(module('gemtc.models'));
+    beforeEach(angular.mock.module('gemtc.models'));
 
     var modelService;
 
@@ -396,7 +396,7 @@ define(['angular', 'angular-mocks', 'services'], function() {
           to: {
             name: 'sertra'
           }
-        }
+        };
         var comparisonOptions = [option1, option2];
         var expectedResult = [{
           title: 'pairwise base (parox - fluox)',

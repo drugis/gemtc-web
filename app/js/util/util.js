@@ -1,30 +1,28 @@
 'use strict';
 
-define(function (require) {
-  var angular = require('angular');
-  var dependencies = ['ngResource'];
+define(['angular', 'angular-resource'], function (angular) {
 
-  return angular.module('gemtc.util', dependencies)
+  return angular.module('gemtc.util', ['ngResource'])
 
     //resources
-    .factory('UserResource', require('util/userResource'))
+    .factory('UserResource', require('./userResource'))
 
     // directive
-    .directive('navbarDirective', require('util/navbarDirective'))
-    .directive('fileReader', require('util/fileReaderDirective'))
-    .directive('pagedSvgPlot', require('util/pagedSvgPlotDirective'))
-    .directive('pagedPngPlot', require('util/pagedPngPlotDirective'))
-    .directive('graphModal', require('util/graphModalDirective/graphModalDirective'))
+    .directive('navbarDirective', require('./navbarDirective'))
+    .directive('fileReader', require('./fileReaderDirective'))
+    .directive('pagedSvgPlot', require('./pagedSvgPlotDirective'))
+    .directive('pagedPngPlot', require('./pagedPngPlotDirective'))
+    .directive('graphModal', require('./graphModalDirective/graphModalDirective'))
 
     // controllers
-    .controller('PlotNavigationController', require('util/graphModalDirective/plotNavigationController'))
+    .controller('PlotNavigationController', require('./graphModalDirective/plotNavigationController'))
 
     // interceptors
-    .factory('sessionExpiredInterceptor', require('util/sessionExpiredInterceptor'))
+    .factory('sessionExpiredInterceptor', require('./sessionExpiredInterceptor'))
 
     // services
-    .factory('ProblemValidityService', require('util/problemValidityService'))
-    .factory('CSVParseService', require('util/csvParseService'))
-    .factory('FileUploadService', require('util/fileUploadService'))
+    .factory('ProblemValidityService', require('./problemValidityService'))
+    .factory('CSVParseService', require('./csvParseService'))
+    .factory('FileUploadService', require('./fileUploadService'))
     ;
 });

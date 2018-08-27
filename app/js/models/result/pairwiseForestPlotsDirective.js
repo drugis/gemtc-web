@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['gemtcRootPath', '$q'];
-  var pairwiseForestPlotsDirective = function(gemtcRootPath, $q) {
+  var dependencies = ['$q'];
+  var pairwiseForestPlotsDirective = function($q) {
     return {
       scope: {
         modelPromise: '=',
@@ -9,7 +9,7 @@ define(['lodash'], function(_) {
         problemPromise: '='
       },
       restrict: 'E',
-      templateUrl: gemtcRootPath + 'js/models/result/pairwiseForestPlots.html',
+      templateUrl: 'gemtc-web/models/result/pairwiseForestPlots.html',
       link: function(scope) {
 
         $q.all([scope.modelPromise, scope.resultsPromise, scope.problemPromise])

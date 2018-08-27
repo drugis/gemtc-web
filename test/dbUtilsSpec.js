@@ -15,6 +15,14 @@ describe('dbUtil', function() {
         '/' +
         process.env.GEMTC_DB);
     });
+    it('should build the connection config based on the environment variables', function() {
+      expect(dbUtil.connectionConfig).to.deep.equal({
+        host: process.env.DB_HOST,
+        user: process.env.GEMTC_DB_USERNAME,
+        database: process.env.GEMTC_DB,
+        password: process.env.GEMTC_DB_PASSWORD
+      });
+    });
 
   });
 });
