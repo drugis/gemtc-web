@@ -77,34 +77,28 @@ let config = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'app/index.html',
-      chunks: ['main', 'vendor'],
-      inject: 'head'
+      inject: 'head',
+      chunks: ['main']
     }),
     new HtmlWebpackPlugin({
       filename: 'signin.html',
       template: 'app/signin.html',
-      chunks: ['signin', 'vendor'],
-      inject: 'head'
+      inject: 'head',
+      chunks: ['signin']
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',
       template: 'app/manual.html',
-      chunks: ['manual', 'vendor'],
-      inject: 'head'
+      inject: 'head',
+      chunks: ['manual']
     }),
     new CleanWebpackPlugin(['dist'])
   ],
 
   optimization: {
     splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /node_modules/,
-          chunks: 'initial',
-          name: 'vendor',
-          enforce: true
-        },
-      }
+      chunks: 'all',
+      name: false
     }
   }
 };

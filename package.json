@@ -64,7 +64,7 @@
     "font-awesome": "~4.3.0",
     "foundation-sites": "~6",
     "help-popup": "github:danielreid/help-popup#unbower",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^4.0.0-alpha",
     "imports-loader": "^0.8.0",
     "jasmine-core": "~3.2.1",
     "jquery": "~3.2.1",
