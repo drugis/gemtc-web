@@ -1,7 +1,5 @@
 'use strict';
-var crypto = require('crypto'),
-  httpStatus = require('http-status-codes'),
-  logger = require('./logger');
+var logger = require('./logger');
 
 // check if startsWith is not a language feature
 if (typeof String.prototype.startsWith !== 'function') {
@@ -32,7 +30,7 @@ module.exports = {
       logger.debug('loginUtils.loginCheckMiddleware; you\'re signed in, request = ' + request.url);
       next();
     }
-    else if (request.method === 'GET' &&  request.url === '/' ) {
+    else if (request.method === 'GET' && request.url === '/') {
       logger.debug('loginUtils.loginCheckMiddleware request to "/", redirect to sign in page ');
       response.redirect('/signin.html');
     }
@@ -45,8 +43,8 @@ module.exports = {
         request.url === '/signin.bundle.js' ||
         request.url === '/vendor.bundle.js' ||
         request.url === '/main.bundle.js' ||
+        request.url === '/manual.bundle.js' ||
         request.url === '/manual.html' ||
-        request.url === '/manual/shared-toc.html' ||
         request.url === '/manual/shared.html' ||
         request.url.startsWith('/auth/google')
       )) {

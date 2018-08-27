@@ -10,7 +10,7 @@ var assert = require('assert'),
   bodyParser = require('body-parser'),
   errorHandler = require('../standalone-app/errorHandler');
 
-  chai.should();
+chai.should();
 var app = express();
 var BASE_PATH = 'http://localhost:3999/analyses/';
 var sessionOpts = {
@@ -28,10 +28,10 @@ var modelRepository = {},
   modelBaselineRepository = {};
 
 var modelRouter = proxyquire('../standalone-app/modelRouter', {
+  './analysisRepository': analysisRepository,
   './modelRepository': modelRepository,
   './modelService': modelService,
   './pataviTaskRepository': pataviTaskRepository,
-  './analysisRepository': analysisRepository,
   './funnelPlotRepository': funnelPlotRepository,
   './modelBaselineRepository': modelBaselineRepository
 });
@@ -44,7 +44,9 @@ describe('modelRouter', function() {
       .use(bodyParser.json())
       .use(session(sessionOpts))
       .use(function(req, res, next) {
-        req.user.id = userId;
+        req.user = {
+          id : userId
+        };
         next();
       })
       .use('/analyses/:analysisId/models', modelRouter)
@@ -546,10 +548,10 @@ describe('modelRouter', function() {
       request
         .put(BASE_PATH + '1/models/' + modelId + '/baseline')
         .send(baseline)
-        .end(function(err,res){
+        .end(function(err, res) {
           assert(!err);
           res.should.have.property('status', httpStatus.OK);
-          done();          
+          done();
         });
     });
   });

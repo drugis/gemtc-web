@@ -68,7 +68,7 @@ describe('the model baseline repository', function() {
       var expectedQuery = 'insert into modelBaseline values($1, $2) ON CONFLICT(modelId) DO UPDATE SET baseline=$2',
         expectedValues = [modelId, baseline];
 
-      modelBaselineRepository.set(modelId, baseline, function(err, res) {
+      modelBaselineRepository.set(modelId, baseline, function() {
         sinon.assert.calledWith(query, expectedQuery, expectedValues);
         done();
       });

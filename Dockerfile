@@ -15,8 +15,6 @@ RUN apt-get install -y nodejs
 RUN npm install -g yarn
 RUN npm install -g forever
 
-RUN apt-get install -y git # needed by angular-foundation
-
 RUN useradd --create-home --home /var/lib/gemtc gemtc
 
 COPY . /var/lib/gemtc
@@ -26,7 +24,8 @@ USER gemtc
 WORKDIR /var/lib/gemtc
 ENV HOME /var/lib/gemtc
 
-RUN yarn --production
+RUN yarn
+RUN npm run build-prod
 
 EXPOSE 3001
 

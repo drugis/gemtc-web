@@ -19,6 +19,7 @@ function buildGemtcDBUrl() {
 function buildGemtcDBConnectionConfig() {
   var env = process.env;
   return {
+    host: env.DB_HOST,
     user: env.GEMTC_DB_USERNAME,
     database: env.GEMTC_DB,
     password: env.GEMTC_DB_PASSWORD

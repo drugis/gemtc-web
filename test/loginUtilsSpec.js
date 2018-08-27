@@ -1,6 +1,5 @@
 'use strict';
 var loginUtils = require('../standalone-app/loginUtils.js');
-var httpStatus = require('http-status-codes');
 var chai = require('chai'),
   spies = require('chai-spies');
 
@@ -17,17 +16,14 @@ describe('loginUtils', function() {
       request = {
         session: {}
       };
-      next = chai.spy(); 
+      next = chai.spy();
       response = {};
       response.redirect = chai.spy();
     });
 
     it('should call next when logged in', function() {
-
-      request.session = {
-        auth: {
-          loggedIn: true
-        }
+      request.isAuthenticated = function() {
+        return true;
       };
       request.url = '/secure-me';
 
@@ -37,7 +33,9 @@ describe('loginUtils', function() {
 
     it('should redirect to signin if no user signed in on a secure url', function() {
       response = chai.spy.object(['sendStatus']);
-      request.session = {};
+      request.isAuthenticated = function() {
+        return false;
+      };
       request.url = '/secure-me';
 
       loginUtils.securityMiddleware(request, response, next);
@@ -45,7 +43,9 @@ describe('loginUtils', function() {
     });
 
     it('should call next when requesting the signin page', function() {
-      request.session = {};
+      request.isAuthenticated = function() {
+        return false;
+      };
       request.url = '/signin.html';
       request.method = 'GET';
 
@@ -54,7 +54,9 @@ describe('loginUtils', function() {
     });
 
     it('should call next when requesting the google auth', function() {
-      request.session = {};
+      request.isAuthenticated = function() {
+        return false;
+      };
       request.url = '/auth/google/some stuff ';
       request.method = 'GET';
 
@@ -62,79 +64,15 @@ describe('loginUtils', function() {
       expect(next).to.have.been.called();
     });
 
-    it('should call next when requesting a file from the /css path', function() {
-      request.session = {};
-      request.url = '/css/some/path/to/some/file.css';
-      request.method = 'GET';
-
-      loginUtils.securityMiddleware(request, response, next);
-      expect(next).to.have.been.called();
-    });
-
-    it('should call next when requesting a file from the /img path', function() {
-      request.session = {};
-      request.url = '/img/favi.ico';
-      request.method = 'GET';
-
-      loginUtils.securityMiddleware(request, response, next);
-      expect(next).to.have.been.called();
-    });
-
-    it('should redirect to signin when requesting the / path', function() {
-      request.session = {};
+    it('should redirect to signin when requesting the / path and not logged in', function() {
+      request.isAuthenticated = function() {
+        return false;
+      };
       request.url = '/';
       request.method = 'GET';
 
       loginUtils.securityMiddleware(request, response, next);
       expect(response.redirect).to.have.been.called();
-    });
-  });
-
-  describe('emailHashMiddleware', function() {
-
-    describe('if the user is logged in', function() {
-
-      var next = chai.spy();
-      var request = {
-        session: {
-          auth: {
-            google: {
-              user: {
-                name: 'John Doe',
-                email: 'john@doe.com'
-              }
-            }
-          }
-        }
-      };
-      var response = chai.spy.object(['json']);
-
-      it('should place on the response an object with the md5 hashed email' +
-        'of the google-logged-in user and call next',
-        function() {
-          loginUtils.emailHashMiddleware(request, response, next);
-          expect(next).to.have.been.called();
-          expect(response.json).to.have.been.called.with({
-            name: request.session.auth.google.user.name,
-            md5Hash: '6a6c19fea4a3676970167ce51f39e6ee'
-          });
-        });
-    });
-
-    describe('if the user is not logged in', function() {
-
-      var response = chai.spy.object(['json']);
-      var request = {
-        session: {}
-      };
-      var next = chai.spy();
-
-
-      it('should return a 403 FORBIDDEN.', function() {
-        loginUtils.emailHashMiddleware(request, response, next);
-        expect(response.status).to.equal(httpStatus.FORBIDDEN);
-        expect(next).to.have.been.called();
-      });
     });
   });
 
