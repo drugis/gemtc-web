@@ -19,6 +19,7 @@ module.exports = function(config) {
       'karma-chrome-launcher',
       'karma-firefox-launcher',
       'karma-junit-reporter',
+      'karma-jasmine',
       'karma-webpack'
     ],
     preprocessors: {
@@ -40,18 +41,12 @@ module.exports = function(config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress', 'junit', 'coverage'],
+    reporters: ['progress', 'junit'],
     junitReporter: {
       outputFile: 'karma-test-results.xml'
     },
 
-    coverageReporter: {
-      type: 'cobertura',
-      dir: 'target/site/cobertura/',
-      file: 'karma-coverage-result.xml'
-    },
-
-    // web server port
+     // web server port
     port: 9876,
 
     // enable / disable colors in the output (reporters and logs)

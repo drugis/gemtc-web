@@ -34,7 +34,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
       modelserviceMock,
       analysisServiceMock,
       stateMock,
-      modelMock,
+      modalMock,
       pataviTaskIdDeferred,
       pataviTaskIdResult;
 
@@ -46,7 +46,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
         outcome: 'outcome'
       };
       modelDeferred = $q.defer();
-      modelMock = {
+      mockModel = {
         $promise: modelDeferred.promise
       };
       modelBaselineDefer = $q.defer();
@@ -103,7 +103,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['buildDiagnosticMap', 'compareDiagnostics']);
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
       stateMock = jasmine.createSpyObj('$state', ['reload']);
-      modelMock = jasmine.createSpyObj('$modal', ['open']);
+      modalMock = jasmine.createSpyObj('$modal', ['open']);
       metaRegressionService = jasmine.createSpyObj('MetaRegressionService', ['buildCovariatePlotOptions', 'getCovariateSummaries']);
       metaRegressionService.buildCovariatePlotOptions.and.returnValue([]);
       modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary', 'filterCentering', 'findCentering',
@@ -121,7 +121,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
       $controller('ModelController', {
         $scope: scope,
         $stateParams: mockStateParams,
-        $modal: modelMock,
+        $modal: modalMock,
         $state: stateMock,
         ModelResource: modelResource,
         ModelBaselineResource: modelBaselineResource,
@@ -142,7 +142,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
 
     describe('when first initialised', function() {
       it('should attempt to load the model', function() {
-        expect(modelResource.get).toHaveBeenCalledWith(stateParamsMock);
+        expect(modelResource.get).toHaveBeenCalledWith(mockStateParams);
       });
     });
 
@@ -159,12 +159,12 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
       });
 
       it('should retrieve the associated patavi task id', function() {
-        expect(pataviTaskIdResource.get).toHaveBeenCalledWith(stateParamsMock);
+        expect(pataviTaskIdResource.get).toHaveBeenCalledWith(mockStateParams);
       });
 
       describe('when the patavi task id is available', function() {
         beforeEach(function() {
-          pataviTaskIdDeferred.resolve(pataviTaskIdMock);
+          pataviTaskIdDeferred.resolve(mockPataviTaskId);
           scope.$apply();
         });
 
@@ -192,33 +192,35 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
           });
 
           it('should retrieve the problem', function() {
-            expect(problemResource.get).toHaveBeenCalledWith(stateParamsMock);
+            expect(problemResource.get).toHaveBeenCalledWith(mockStateParams);
           });
 
           describe('when the problem is loaded', function() {
-            problemDeferred.resolve(problemMock);
-            scope.$apply();
-          });
+            beforeEach(function(){
+              problemDeferred.resolve(mockProblem);
+              scope.$apply();
+            });
 
-          it('the diagnostics should be placed on the scope and sorted', function() {
-            expect(scope.diagnostics).toBeDefined();
-            expect(diagnosticsService.compareDiagnostics).toHaveBeenCalled();
-          });
+            it('the diagnostics should be placed on the scope and sorted', function() {
+              expect(scope.diagnostics).toBeDefined();
+              expect(diagnosticsService.compareDiagnostics).toHaveBeenCalled();
+            });
 
-          it('the modelService should process input & add levels for both relative effects and rank probabilities', function() {
-            expect(modelserviceMock.addLevelandProcessData).toHaveBeenCalled();
-            expect(modelserviceMock.addLevelandProcessData.calls.count()).toBe(2);
-          });
-          it('the modelService should retrieve the rankProbabilitiesByLevel, the relativeEffectsTables and their default', function() {
-            expect(modelserviceMock.selectLevel).toHaveBeenCalled();
-            expect(modelserviceMock.selectLevel.calls.count()).toBe(2);
-          });
-          it('the gelman diagnostics should be labelled', function() {
-            expect(diagnosticsService.buildDiagnosticMap).toHaveBeenCalled();
-          });
+            it('the modelService should process input & add levels for both relative effects and rank probabilities', function() {
+              expect(modelserviceMock.addLevelandProcessData).toHaveBeenCalled();
+              expect(modelserviceMock.addLevelandProcessData.calls.count()).toBe(2);
+            });
+            it('the modelService should retrieve the rankProbabilitiesByLevel, the relativeEffectsTables and their default', function() {
+              expect(modelserviceMock.selectLevel).toHaveBeenCalled();
+              expect(modelserviceMock.selectLevel.calls.count()).toBe(2);
+            });
+            it('the gelman diagnostics should be labelled', function() {
+              expect(diagnosticsService.buildDiagnosticMap).toHaveBeenCalled();
+            });
 
-          it('should use the first treatment as the selectedBaseline', function() {
-            expect(scope.selectedBaseline).toEqual(mockProblem.treatments[0]);
+            it('should use the first treatment as the selectedBaseline', function() {
+              expect(scope.selectedBaseline).toEqual(mockProblem.treatments[0]);
+            });
           });
         });
       });
