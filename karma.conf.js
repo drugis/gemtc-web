@@ -5,9 +5,9 @@ const webpackConfig = require("./webpack.dev");
 delete webpackConfig.entry;
 webpackConfig.plugins = [];
 webpackConfig.optimization = {
-    splitChunks: false,
-    runtimeChunk: false
-  };
+  splitChunks: false,
+  runtimeChunk: false
+};
 module.exports = function(config) {
   config.set({
 
@@ -25,7 +25,7 @@ module.exports = function(config) {
     ],
     preprocessors: {
       // add webpack as preprocessor
-      'app/js/test-main.js' : ['webpack']
+      'app/js/test-main.js': ['webpack']
     },
 
     webpack: webpackConfig,

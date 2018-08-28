@@ -13,7 +13,7 @@ define(
   function($, bowser, katex, renderMathInElement, scrollToTop) {
     window.bowser = bowser; 
     window.sharedHtml = require('../manual/shared.html');
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('gemtc-shared-content').innerHTML = window.sharedHtml;
       window.katex = katex;
 

@@ -37,7 +37,7 @@ passport.use(
   new GoogleStrategy({
     clientID: process.env.GEMTC_GOOGLE_KEY,
     clientSecret: process.env.GEMTC_GOOGLE_SECRET,
-    callbackURL: process.env.GEMTC_HOST + "/auth/google/callback"
+    callbackURL: process.env.GEMTC_HOST + '/auth/google/callback'
   },
     userManagement.findOrCreateUser
   ));

@@ -34,7 +34,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
       modelserviceMock,
       analysisServiceMock,
       stateMock,
-      modalMock,
+      modelMock,
       pataviTaskIdDeferred,
       pataviTaskIdResult;
 
@@ -103,7 +103,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
       diagnosticsService = jasmine.createSpyObj('DiagnosticsService', ['buildDiagnosticMap', 'compareDiagnostics']);
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', ['getScaleName', 'createNodeSplitOptions']);
       stateMock = jasmine.createSpyObj('$state', ['reload']);
-      modalMock = jasmine.createSpyObj('$modal', ['open']);
+      modelMock = jasmine.createSpyObj('$modal', ['open']);
       metaRegressionService = jasmine.createSpyObj('MetaRegressionService', ['buildCovariatePlotOptions', 'getCovariateSummaries']);
       metaRegressionService.buildCovariatePlotOptions.and.returnValue([]);
       modelserviceMock = jasmine.createSpyObj('ModelService', ['isVariableBinary', 'filterCentering', 'findCentering',
@@ -121,7 +121,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
       $controller('ModelController', {
         $scope: scope,
         $stateParams: mockStateParams,
-        $modal: modalMock,
+        $modal: modelMock,
         $state: stateMock,
         ModelResource: modelResource,
         ModelBaselineResource: modelBaselineResource,
@@ -191,35 +191,34 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
             scope.$apply();
           });
 
-            it('should retrieve the problem', function() {
-              expect(problemResource.get).toHaveBeenCalledWith(stateParamsMock);
-            });
+          it('should retrieve the problem', function() {
+            expect(problemResource.get).toHaveBeenCalledWith(stateParamsMock);
+          });
 
-            describe('when the problem is loaded', function() {
-              problemDeferred.resolve(problemMock);
-              scope.$apply();
-            });
+          describe('when the problem is loaded', function() {
+            problemDeferred.resolve(problemMock);
+            scope.$apply();
+          });
 
-            it('the diagnostics should be placed on the scope and sorted', function() {
-              expect(scope.diagnostics).toBeDefined();
-              expect(diagnosticsService.compareDiagnostics).toHaveBeenCalled();
-            });
+          it('the diagnostics should be placed on the scope and sorted', function() {
+            expect(scope.diagnostics).toBeDefined();
+            expect(diagnosticsService.compareDiagnostics).toHaveBeenCalled();
+          });
 
-            it('the modelService should process input & add levels for both relative effects and rank probabilities', function() {
-              expect(modelserviceMock.addLevelandProcessData).toHaveBeenCalled();
-              expect(modelserviceMock.addLevelandProcessData.calls.count()).toBe(2);
-            });
-            it('the modelService should retrieve the rankProbabilitiesByLevel, the relativeEffectsTables and their default', function() {
-              expect(modelserviceMock.selectLevel).toHaveBeenCalled();
-              expect(modelserviceMock.selectLevel.calls.count()).toBe(2);
-            });
-            it('the gelman diagnostics should be labelled', function() {
-              expect(diagnosticsService.buildDiagnosticMap).toHaveBeenCalled();
-            });
+          it('the modelService should process input & add levels for both relative effects and rank probabilities', function() {
+            expect(modelserviceMock.addLevelandProcessData).toHaveBeenCalled();
+            expect(modelserviceMock.addLevelandProcessData.calls.count()).toBe(2);
+          });
+          it('the modelService should retrieve the rankProbabilitiesByLevel, the relativeEffectsTables and their default', function() {
+            expect(modelserviceMock.selectLevel).toHaveBeenCalled();
+            expect(modelserviceMock.selectLevel.calls.count()).toBe(2);
+          });
+          it('the gelman diagnostics should be labelled', function() {
+            expect(diagnosticsService.buildDiagnosticMap).toHaveBeenCalled();
+          });
 
-            it('should use the first treatment as the selectedBaseline', function() {
-              expect(scope.selectedBaseline).toEqual(mockProblem.treatments[0]);
-            });
+          it('should use the first treatment as the selectedBaseline', function() {
+            expect(scope.selectedBaseline).toEqual(mockProblem.treatments[0]);
           });
         });
       });
@@ -241,6 +240,5 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
         expect(relativeEffectsTableService.buildTable).not.toHaveBeenCalled();
       });
     });
-
   });
 });
