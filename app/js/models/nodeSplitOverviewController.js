@@ -138,7 +138,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function openCreateNetworkDialog() {
       $modal.open({
         windowClass: 'small',
-        templateUrl: 'gemtc-web/models/createModelFromBase.html',
+        templateUrl: './createModelFromBase.html',
         scope: $scope,
         controller: 'CreateNetworkModelController',
         resolve: {
@@ -163,7 +163,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function openCreateNodeSplitDialog(comparison) {
       $modal.open({
         windowClass: 'small',
-        templateUrl: 'gemtc-web/models/createModelFromBase.html',
+        templateUrl: './createModelFromBase.html',
         scope: $scope,
         controller: 'CreateNodeSplitModelController',
         resolve: {

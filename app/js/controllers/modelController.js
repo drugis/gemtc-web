@@ -100,7 +100,7 @@ define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
     function openRunLengthDialog() {
       $modal.open({
         windowClass: 'small',
-        templateUrl: 'gemtc-web/models/extendRunLength.html',
+        templateUrl: '../models/extendRunLength.html',
         scope: $scope,
         controller: 'ExtendRunLengthController',
         resolve: {
@@ -125,7 +125,7 @@ define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
     function openComparisonAdjustedModal() {
       $modal.open({
         windowClass: 'small',
-        templateUrl: 'gemtc-web/models/addComparisonFunnelPlot.html',
+        templateUrl: '../models/addComparisonFunnelPlot.html',
         scope: $scope,
         controller: 'AddComparisonFunnelPlotController',
         resolve: {
@@ -218,7 +218,7 @@ define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
 
     function openBaselineDistributionModal() {
       $modal.open({
-        templateUrl: 'gemtc-web/models/setBaselineDistribution.html',
+        templateUrl: '../models/setBaselineDistribution.html',
         controller: 'SetBaselineDistributionController',
         windowClass: 'small',
         resolve: {

@@ -9,7 +9,7 @@ define(['lodash'], function(_) {
         problemPromise: '='
       },
       restrict: 'E',
-      templateUrl: 'gemtc-web/models/result/relativeEffectPlots.html',
+      templateUrl: './relativeEffectPlots.html',
       link: function(scope) {
 
         function prefixPlots(plots) {

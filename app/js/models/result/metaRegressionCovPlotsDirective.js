@@ -9,7 +9,7 @@ define([], function() {
         problemPromise: '='
       },
       restrict: 'E',
-      templateUrl: 'gemtc-web/models/result/metaRegressionCovPlots.html',
+      templateUrl: './metaRegressionCovPlots.html',
       link: function(scope) {
 
         $q.all([scope.modelPromise, scope.resultsPromise, scope.problemPromise])

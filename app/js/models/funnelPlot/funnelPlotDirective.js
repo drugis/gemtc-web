@@ -7,7 +7,7 @@ define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
       scope: {
         resultsPromise: '='
       },
-      templateUrl: 'gemtc-web/models/funnelPlot/funnelPlot.html',
+      templateUrl: './funnelPlot.html',
       link: function(scope, element) {
 
         scope.resultsPromise.then(function(results) {
