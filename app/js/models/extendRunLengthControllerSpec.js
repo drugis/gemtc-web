@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses', 'gemtc-web/models/models'],
+define(['angular', 'angular-mocks', '../analyses/analyses', './models'],
  function(angular) {
   describe('the extend runlength controller', function() {
     var scope,

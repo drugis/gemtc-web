@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'gemtc-web/models/models'], function(angular) {
+define(['angular', 'angular-mocks', './models'], function(angular) {
   describe('the nodesplit overview controller', function() {
     var scope,
       q,

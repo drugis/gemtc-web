@@ -9,12 +9,12 @@ define([], function() {
       },
       restrict: 'E',
       // using template because loading teplateUrl irritating in submodule
-      templateUrl: 'gemtc-web/util/graphModalDirective/graphModalDirective.html',
+      templateUrl: './graphModalDirective.html',
       link: function(scope) {
 
         scope.openModal = function() {
           $modal.open({
-            templateUrl: 'gemtc-web/util/graphModalDirective/plotNavigation.html',
+            templateUrl: './plotNavigation.html',
             scope: scope,
             windowClass: 'small',
             controller: 'PlotNavigationController'

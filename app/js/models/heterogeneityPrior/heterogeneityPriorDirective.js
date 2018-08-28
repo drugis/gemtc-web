@@ -4,7 +4,7 @@ define([], function() {
   var HeterogeneityPriorDirective = function() {
     return {
       restrict: 'E',
-      templateUrl: 'gemtc-web/models/heterogeneityPrior/heterogeneityPrior.html',
+      templateUrl: './heterogeneityPrior.html',
       scope: {
         prior: '='
       },

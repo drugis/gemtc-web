@@ -1,5 +1,7 @@
 'use strict';
 var requires = [
+];
+define([
   './analyses/networkPlotDirective',
   './models/rankPlotDirective',
   './util/pagedSvgPlotDirective',
@@ -13,9 +15,9 @@ var requires = [
   './models/result/relativeEffectPlotsDirective',
   './models/result/pairwiseForestPlotsDirective',
   './models/result/nodeSplitDensityPlotsDirective',
-  './models/result/metaRegressionCovPlotsDirective'
-];
-define(requires.concat(['angular']), function(
+  './models/result/metaRegressionCovPlotsDirective',
+  'angular'
+], function(
   networkPlot,
   gemtcRankPlot,
   pagedSvgPlot,
@@ -32,19 +34,20 @@ define(requires.concat(['angular']), function(
   metaRegressionCovPlots,
   angular
 ) {
-  return angular.module('gemtc.directives', [])
-    .directive('networkPlot', networkPlot)
-    .directive('gemtcRankPlot', gemtcRankPlot)
-    .directive('pagedSvgPlot', pagedSvgPlot)
-    .directive('pagedPngPlot', pagedPngPlot)
-    .directive('runLength', runLength)
-    .directive('nodesplitForestPlot', nodesplitForestPlot)
-    .directive('heterogeneityPrior', heterogeneityPrior)
-    .directive('funnelPlot', funnelPlot)
-    .directive('comparisonAdjustedFunnelPlot', comparisonAdjustedFunnelPlot)
-    .directive('graphModal', graphModal)
-    .directive('relativeEffectPlots', relativeEffectPlots)
-    .directive('pairwiseForestPlots', pairwiseForestPlots)
-    .directive('nodeSplitDensityPlots', nodeSplitDensityPlots)
-    .directive('metaRegressionCovPlots', metaRegressionCovPlots);
-});
+    return angular.module('gemtc.directives', [])
+      .directive('networkPlot', networkPlot)
+      .directive('gemtcRankPlot', gemtcRankPlot)
+      .directive('pagedSvgPlot', pagedSvgPlot)
+      .directive('pagedPngPlot', pagedPngPlot)
+      .directive('runLength', runLength)
+      .directive('nodesplitForestPlot', nodesplitForestPlot)
+      .directive('heterogeneityPrior', heterogeneityPrior)
+      .directive('funnelPlot', funnelPlot)
+      .directive('comparisonAdjustedFunnelPlot', comparisonAdjustedFunnelPlot)
+      .directive('graphModal', graphModal)
+      .directive('relativeEffectPlots', relativeEffectPlots)
+      .directive('pairwiseForestPlots', pairwiseForestPlots)
+      .directive('nodeSplitDensityPlots', nodeSplitDensityPlots)
+      .directive('metaRegressionCovPlots', metaRegressionCovPlots);
+  }
+);

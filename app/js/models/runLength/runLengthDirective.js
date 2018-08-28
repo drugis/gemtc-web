@@ -4,7 +4,7 @@ define(['moment', 'lodash'], function(moment, _) {
   var RunLengthDirective = function($q, AnalysisService, ModelService) {
     return {
       restrict: 'E',
-      templateUrl: 'gemtc-web/models/runLength/runLength.html',
+      templateUrl: './runLength.html',
       scope: {
         problem: '=',
         model: '=',

@@ -83,35 +83,35 @@ function(angular) {
         $stateProvider
           .state('analyses', {
             url: '/analyses',
-            templateUrl: 'gemtc-web/analyses/analyses.html',
+            templateUrl: './analyses/analyses.html',
             controller: 'AnalysesController'
           })
           .state('analysis-container', {
             abstract: true,
-            templateUrl: 'gemtc-web/analyses/abstract-analysis.html',
+            templateUrl: './analyses/abstract-analysis.html',
           })
           .state('networkMetaAnalysis', {
             parent: 'analysis-container',
             url: '/analyses/:analysisId',
             views: {
               'analysis': {
-                templateUrl: 'gemtc-web/analyses/analysis.html',
+                templateUrl: './analyses/analysis.html',
                 controller: 'AnalysisController'
               },
               'models': {
-                templateUrl: 'gemtc-web/models/models.html',
+                templateUrl: './models/models.html',
                 controller: 'ModelsController'
               },
               'networkGraph': {
-                templateUrl: 'gemtc-web/analyses/networkGraph.html',
+                templateUrl: './analyses/networkGraph.html',
                 controller: 'NetworkGraphController'
               },
               'evidenceTable': {
-                templateUrl: 'gemtc-web/analyses/evidenceTable.html',
+                templateUrl: './analyses/evidenceTable.html',
                 controller: 'EvidenceTableController'
               },
               'relativeEffectTable': {
-                templateUrl: 'gemtc-web/analyses/relativeEffectTable.html',
+                templateUrl: './analyses/relativeEffectTable.html',
                 controller: 'RelativeEffectTableController'
               }
             }

@@ -9,7 +9,7 @@ define(['lodash'], function(_) {
         problemPromise: '='
       },
       restrict: 'E',
-      templateUrl: 'gemtc-web/models/result/pairwiseForestPlots.html',
+      templateUrl: './pairwiseForestPlots.html',
       link: function(scope) {
 
         $q.all([scope.modelPromise, scope.resultsPromise, scope.problemPromise])
