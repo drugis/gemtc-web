@@ -65,7 +65,7 @@
     "help-popup": "github:danielreid/help-popup#unbower",
     "html-webpack-plugin": "^4.0.0-alpha",
     "imports-loader": "^0.8.0",
-    "jasmine-core": "~2.99.0",
+    "jasmine-core": "~3.2.1",
     "jquery": "~3.2.1",
     "json-loader": "^0.5.7",
     "karma": "3.0.0",
