@@ -51,6 +51,10 @@ Setup environment variables
 (note: this google key/secret combination expects the server to run at localhost:3001)
 (note: replace the path with the location of your SSL client key and certificate)
 
+Build the application
+
+    npm run build-prod
+
 Running the patavi worker
 -------------------------
 
@@ -74,7 +78,7 @@ Run the worker:
 Running for the stand-alone version
 -----------------------------------
 
-    node gemtc
+    node gemtc 
 
 now visit the app at http://localhost:3001
 
