@@ -45,23 +45,14 @@ function(angular) {
 
     var app = angular.module('gemtc', dependencies);
 
-    app.run(['$rootScope', '$http', '$templateCache', 'HelpPopupService',
-      function($rootScope, $http, $templateCache, HelpPopupService) {
+    app.run(['$http', '$templateCache', 'HelpPopupService',
+      function($http, $templateCache, HelpPopupService) {
 
         $templateCache.put('model-settings-section.html', require('../views/model-settings-section.html'));
         $templateCache.put('convergence-diagnostics-section.html', require('../views/convergence-diagnostics-section.html'));
         $templateCache.put('meta-regression-section.html', require('../views/meta-regression-section.html'));
         $templateCache.put('results-section.html', require('../views/results-section.html'));
         $templateCache.put('model-fit-section.html', require('../views/model-fit-section.html'));
-
-        $rootScope.$safeApply = function($scope, fn) {
-          var phase = $scope.$root.$$phase;
-          if (phase === '$apply' || phase === '$digest') {
-            this.$eval(fn);
-          } else {
-            this.$apply(fn);
-          }
-        };
 
         HelpPopupService.loadLexicon($http.get('lexicon.json'));
       }
