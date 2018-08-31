@@ -1,8 +1,8 @@
 'use strict';
-define(['angular', 'lodash', 'd3', 'jQuery'], function(angular, _, d3, $) {
-  var dependencies = [];
+define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
+  var dependencies = ['$'];
 
-  var NetworkPlotService = function() {
+  var NetworkPlotService = function($) {
 
     var LABEL_MARGIN = 5;
 

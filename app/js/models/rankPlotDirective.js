@@ -1,8 +1,8 @@
 'use strict';
-define(['angular', 'lodash', 'jQuery', 'd3', 'nvd3'], function(angular, _, $, d3, nv) {
-  var dependencies = [];
+define(['angular', 'lodash', 'd3', 'nvd3'], function(angular, _,  d3, nv) {
+  var dependencies = ['$'];
   var clearListener;
-  var RankPlotDirective = function() {
+  var RankPlotDirective = function($) {
     return {
       restrict: 'E',
       scope: {
