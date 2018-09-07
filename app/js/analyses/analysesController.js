@@ -13,7 +13,7 @@ define([], function() {
 
     $scope.createAnalysisDialog = function() {
       $modal.open({
-        templateUrl: 'gemtc-web/analyses/addAnalysis.html',
+        templateUrl: 'gemtc-web/js/analyses/addAnalysis.html',
         scope: $scope,
         controller: 'AddAnalysisController'
       });

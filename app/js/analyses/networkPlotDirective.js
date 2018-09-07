@@ -1,8 +1,8 @@
 'use strict';
 define(['angular'], function(angular) {
-  var dependencies = ['$', '$q', '$stateParams', '$injector', '$window', 'NetworkPlotService',
+  var dependencies = ['$q', '$stateParams', '$injector', '$window', 'NetworkPlotService',
    'AnalysisResource'];
-  var NetworkPlotDirective = function($, $q, $stateParams, $injector, $window, NetworkPlotService,
+  var NetworkPlotDirective = function($q, $stateParams, $injector, $window, NetworkPlotService,
    AnalysisResource) {
     return {
       scope: {
@@ -13,20 +13,19 @@ define(['angular'], function(angular) {
       restrict: 'E',
       template: '<div class="network-graph"><svg></svg></div>',
       link: function(scope, element) {
-
         /**
          * Directive can be supplied with a id pointing to a element on the page that determines the graphs with and height.
          * If no id is supplied, the directives parent element is used for sizing
          **/
         var sizingElement;
         if (scope.sizingElementId) {
-          sizingElement = $('#' + scope.sizingElementId);
+          sizingElement = angular.element('#' + scope.sizingElementId);
         } else {
           sizingElement = element.parent();
         }
 
-        var width = sizingElement.width();
-        var height = sizingElement.height();
+        var width = sizingElement[0].clientWidth;
+        var height = sizingElement[0].clientHeight;
 
 
         if (scope.analysisId !== undefined) { // we're in ADDIS not gemtc
@@ -59,7 +58,8 @@ define(['angular'], function(angular) {
         }, true);
 
         angular.element($window).bind('resize', function() {
-          NetworkPlotService.drawNetwork(scope.network.network, element, sizingElement.width(), sizingElement.height());
+          if(!scope.network) { return; }
+          NetworkPlotService.drawNetwork(scope.network.network, element, sizingElement[0].clientWidth, sizingElement[0].clientHeight);
         });
 
       }

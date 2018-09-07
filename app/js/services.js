@@ -10,7 +10,8 @@ define(['./services/relativeEffectsTableService',
 './services/diagnosticsService',
 './models/nodeSplitOverviewService',
 './models/funnelPlot/funnelPlotService',
-'./models/metaRegressionService', 'angular'], function(
+'./models/metaRegressionService', 'angular',
+'./resources'], function(
   RelativeEffectsTableService,
   DevianceStatisticsService,
   ModelService,

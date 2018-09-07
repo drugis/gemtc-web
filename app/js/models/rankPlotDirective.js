@@ -1,8 +1,8 @@
 'use strict';
 define(['angular', 'lodash', 'd3', 'nvd3'], function(angular, _,  d3, nv) {
-  var dependencies = ['$'];
+  var dependencies = [];
   var clearListener;
-  var RankPlotDirective = function($) {
+  var RankPlotDirective = function() {
     return {
       restrict: 'E',
       scope: {
@@ -20,8 +20,8 @@ define(['angular', 'lodash', 'd3', 'nvd3'], function(angular, _,  d3, nv) {
         }
 
         var getParentDimension = function(element) {
-          var width = parsePx($(element[0].parentNode).css('width'));
-          var height = parsePx($(element[0].parentNode).css('height'));
+          var width = parsePx(element.parent().css('width'));
+          var height = parsePx(element.parent().css('height'));
 
           return {
             width: width,
@@ -55,7 +55,7 @@ define(['angular', 'lodash', 'd3', 'nvd3'], function(angular, _,  d3, nv) {
           if (!newVal) {
             return;
           }
-          var node = d3.select($(element).get(0));
+          var node = d3.select(element[0]);
 
           node.selectAll("svg > *").remove();
 
