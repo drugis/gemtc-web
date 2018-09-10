@@ -26,7 +26,7 @@ define([], function() {
 
     function createAnalysisDialog() {
       $modal.open({
-        templateUrl: 'gemtc-web/js/analyses/addAnalysis.html',
+        templateUrl: './addAnalysis.html',
         scope: $scope,
         controller: 'AddAnalysisController'
       });
