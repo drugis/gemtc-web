@@ -1,8 +1,8 @@
 'use strict';
 define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
-  var dependencies = ['$'];
+  var dependencies = [];
 
-  var NetworkPlotService = function($) {
+  var NetworkPlotService = function() {
 
     var LABEL_MARGIN = 5;
 
@@ -33,7 +33,7 @@ define(['angular', 'lodash', 'd3'], function(angular, _, d3) {
       var radius = originY - margin;
       var circleMaxSize = 30;
       var circleMinSize = 5;
-      var node = d3.select($(element).get(0));
+      var node = d3.select(element[0]);
       node.selectAll('g').remove();
       node.selectAll('line').remove();
       var svg = node.select('svg')
