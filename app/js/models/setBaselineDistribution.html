@@ -33,7 +33,7 @@
       </div>
       <div class="cell large-6 medium-6">
         <label>standard deviation
-          <input type="number" step="0.001" ng-model="baselineDistribution.sigma">
+          <input type="number" step="0.001" ng-model-options="{ allowInvalid: true }" ng-model="baselineDistribution.sigma">
         </label>
       </div>
     </div>
@@ -47,7 +47,7 @@
       </div>
       <div class="cell large-6 medium-6">
         <label>beta
-          <input type="number" step="0.001" ng-model="baselineDistribution.beta">
+          <input type="number" step="0.001" ng-model-options="{ allowInvalid: true }" ng-model="baselineDistribution.beta">
         </label>
       </div>
     </div>
@@ -56,12 +56,12 @@
     <div class="grid-x grid-margin-x" ng-if="baselineDistribution.type === 'dt'">
       <div class="cell large-4 medium-6">
         <label>μ
-          <input type="number" step="0.001" ng-model="baselineDistribution.mu">
+          <input type="number" step="0.001" ng-model-options="{ allowInvalid: true }" ng-model="baselineDistribution.mu">
         </label>
       </div>
       <div class="cell large-4 medium-6">
         <label>σ
-          <input type="number" step="0.001" ng-model="baselineDistribution.stdErr">
+          <input type="number" step="0.001" ng-model-options="{ allowInvalid: true }" ng-model="baselineDistribution.stdErr">
         </label>
       </div>
       <div class="cell large-4 medium-6">
@@ -80,7 +80,7 @@
       </div>
       <div class="cell large-4 medium-6">
         <label>beta
-          <input type="number" step="0.001" ng-model="baselineDistribution.beta">
+          <input type="number" step="0.001" ng-model-options="{ allowInvalid: true }" ng-model="baselineDistribution.beta">
         </label>
       </div>
       <div class="cell large-4 medium-6">
@@ -90,7 +90,7 @@
       </div>
       <div class="cell large-4 medium-6" ng-show="baselineDistribution.summaryMeasure === 'survivalAtTime'">
         <label>Survival at time
-          <input type="number" step="0.001" ng-model="baselineDistribution.time">
+          <input type="number" step="0.001" ng-model-options="{ allowInvalid: true }" ng-model="baselineDistribution.time">
         </label>
       </div>
     </div>
