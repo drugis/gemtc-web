@@ -2,10 +2,6 @@
 # yarn lockfile v1
 
 
-"@bower_components/angular@angular/bower-angular#~1.x.x":
-  version "1.7.3"
-  resolved "https://codeload.github.com/angular/bower-angular/tar.gz/dbf96678470a684d972c44adce8a4b5c45351e4a"
-
 "@types/tapable@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.2.tgz#e13182e1b69871a422d7863e11a4a6f5b814a4bd"
@@ -232,7 +228,7 @@ angular-mocks@~1.6.6:
   version "2.0.4"
   resolved "https://codeload.github.com/drugis/angular-patavi-client/tar.gz/daa648c6f398aa7866a479cd980f59c98deadbb3"
   dependencies:
-    "@bower_components/angular" angular/bower-angular#~1.x.x
+    angular "~1.6.6"
 
 angular-resource@~1.6.6:
   version "1.6.10"
@@ -261,6 +257,10 @@ angular1-templateurl-loader@^1.0.0:
 angular@~1.6.6:
   version "1.6.10"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.6.10.tgz#eed3080a34d29d0f681ff119b18ce294e3f74826"
+
+angular@~1.7.2:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.4.tgz#c1bf4884c2d470c06907737a1bf0835a9f646f31"
 
 ansi-escapes@^3.0.0:
   version "3.1.0"
@@ -840,14 +840,6 @@ cli-cursor@^2.1.0:
 cli-width@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/cli-width/-/cli-width-2.2.0.tgz#ff19ede8a9a5e579324147b0c11f0fbcbabed639"
-
-clipboard@~1.6.0:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/clipboard/-/clipboard-1.6.1.tgz#65c5b654812466b0faab82dc6ba0f1d2f8e4be53"
-  dependencies:
-    good-listener "^1.2.0"
-    select "^1.1.2"
-    tiny-emitter "^1.0.0"
 
 clipboard@~2.0.1:
   version "2.0.1"
@@ -1848,9 +1840,10 @@ export-directive@drugis/export-directive#unbower:
   resolved "https://codeload.github.com/drugis/export-directive/tar.gz/a152327b5f4dcedddf7b90093794ac03ae9e5a3f"
   dependencies:
     angular "~1.6.6"
-    clipboard "~1.6.0"
+    clipboard "~2.0.1"
     d3 "~3.5.6"
-    jquery "~3.2.1"
+    jquery "~3.3.1"
+    lodash "^4.17.10"
 
 express-session@^1.15.6:
   version "1.15.6"
@@ -2215,7 +2208,7 @@ global-modules-path@^2.1.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/global-modules-path/-/global-modules-path-2.3.0.tgz#b0e2bac6beac39745f7db5c59d26a36a0b94f7dc"
 
-good-listener@^1.2.0, good-listener@^1.2.2:
+good-listener@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/good-listener/-/good-listener-1.2.2.tgz#d53b30cdf9313dffb7dc9a0d477096aa6d145c50"
   dependencies:
@@ -2353,9 +2346,9 @@ helmet@^3.13.0:
     referrer-policy "1.1.0"
     x-xss-protection "1.1.0"
 
-"help-popup@github:danielreid/help-popup#unbower":
+help-popup@drugis/help-popup#unbower:
   version "0.4.0"
-  resolved "https://codeload.github.com/danielreid/help-popup/tar.gz/e9b6e536a4cf8434aad2f92597a7d611989342d5"
+  resolved "https://codeload.github.com/drugis/help-popup/tar.gz/7f73ebfc73ea6df0be8d2d0aca4c41aa93062ecc"
   dependencies:
     angular "~1.6.6"
     angular-animate "~1.6.0"
@@ -2843,7 +2836,7 @@ jasmine-core@~3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.2.1.tgz#8e4ff5b861603ee83343f2b49eee6a0ffe9650ce"
 
-jquery@>=3.0.0:
+jquery@>=3.0.0, jquery@~3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
 
@@ -3748,6 +3741,12 @@ p-try@^2.0.0:
 packet-reader@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/packet-reader/-/packet-reader-0.3.1.tgz#cd62e60af8d7fea8a705ec4ff990871c46871f27"
+
+page-title-service@drugis/page-title-service#1.0.3:
+  version "1.0.2"
+  resolved "https://codeload.github.com/drugis/page-title-service/tar.gz/bda6602f02635524806574c01a815667fff8ea80"
+  dependencies:
+    angular "~1.7.2"
 
 pako@~1.0.5:
   version "1.0.6"
@@ -5173,10 +5172,6 @@ timers-browserify@^2.0.4:
 timsort@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
-
-tiny-emitter@^1.0.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-1.2.0.tgz#6dc845052cb08ebefc1874723b58f24a648c3b6f"
 
 tiny-emitter@^2.0.0:
   version "2.0.2"

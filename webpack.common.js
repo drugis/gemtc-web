@@ -28,9 +28,6 @@ let config = {
       }],
       exclude: [/(.*)\/angular-foundation-6\/(.*)/] // uses $templatecache so dont replace 
     }, {
-      test: /\.json$/,
-      loader: 'json-loader'
-    }, {
       test: /\.html$/,
       loader: 'raw-loader'
     }, {
@@ -70,7 +67,7 @@ let config = {
       'node_modules',
       basePath + '/app'
     ],
-    extensions: ['.css', 'html', '.js'] // File types
+    extensions: ['.css', 'html', '.js', '.json'] // File types
   },
 
   plugins: [

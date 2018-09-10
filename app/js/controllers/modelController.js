@@ -1,34 +1,53 @@
 'use strict';
 define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
-  var dependencies = ['$scope', '$q', '$http', '$modal', '$state', '$stateParams', 
-    '$window', 'ModelResource', 'ModelBaselineResource',
-    'FunnelPlotResource', 
-    'PataviService',
-    'RelativeEffectsTableService', 
-    'PataviTaskIdResource', 
-    'ProblemResource', 
-    'AnalysisResource', 
-    'ModelService',
-    'DiagnosticsService', 
-    'AnalysisService', 
-    'DevianceStatisticsService', 
+  var dependencies = [
+    '$scope',
+    '$q',
+    '$http',
+    '$modal',
+    '$state',
+    '$stateParams',
+    '$window',
+    'AnalysisResource',
+    'AnalysisService',
+    'DevianceStatisticsService',
+    'DiagnosticsService',
+    'FunnelPlotResource',
     'MetaRegressionService',
+    'ModelResource',
+    'ModelService',
+    'ModelBaselineResource',
+    'PageTitleService',
+    'PataviService',
+    'PataviTaskIdResource',
+    'ProblemResource',
+    'RelativeEffectsTableService',
     'ResultsPlotService'
   ];
-  var ModelController = function($scope, $q, $http, $modal, $state, $stateParams, 
-    $window, ModelResource, ModelBaselineResource,
-    FunnelPlotResource, 
-    PataviService,
-    RelativeEffectsTableService, 
-    PataviTaskIdResource, 
-    ProblemResource, 
-    AnalysisResource, 
-    ModelService,
-    DiagnosticsService, 
-    AnalysisService, 
-    DevianceStatisticsService, 
+  var ModelController = function(
+    $scope,
+    $q,
+    $http,
+    $modal,
+    $state,
+    $stateParams,
+    $window,
+    AnalysisResource,
+    AnalysisService,
+    DevianceStatisticsService,
+    DiagnosticsService,
+    FunnelPlotResource,
     MetaRegressionService,
-    ResultsPlotService) {
+    ModelResource,
+    ModelService,
+    ModelBaselineResource,
+    PageTitleService,
+    PataviService,
+    PataviTaskIdResource,
+    ProblemResource,
+    RelativeEffectsTableService,
+    ResultsPlotService
+  ) {
     // functions
     $scope.openRunLengthDialog = openRunLengthDialog;
     $scope.openComparisonAdjustedModal = openComparisonAdjustedModal;
@@ -77,6 +96,15 @@ define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
           }
         });
 
+    $scope.problemPromise = ProblemResource.get({
+      analysisId: $stateParams.analysisId,
+      projectId: $stateParams.projectId
+    }).$promise;
+
+    $scope.modelPromise.then(function(model) {
+      PageTitleService.setPageTitle('ModelController', model.title);
+    });
+    
     function goToRefineModel() {
       $state.go('refineModel', $stateParams);
     }
@@ -143,11 +171,6 @@ define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
         }
       });
     }
-
-    $scope.problemPromise = ProblemResource.get({
-      analysisId: $stateParams.analysisId,
-      projectId: $stateParams.projectId
-    }).$promise;
 
     function prefixPlots(result, taskUri) {
       var resultPlotPrefix = taskUri + '/results/';

@@ -1,34 +1,33 @@
 'use strict';
 define(
-  ['angular',
-  './analyses/analyses',
-  'angular-patavi-client',
-  'angular-touch',
-  'angular-ui-router',
-  'angular-cookies',
-  'angular-animate',
-  './constants',
-  './controllers',
-  'core-js',
-  'error-reporting',
-  'export-directive',
-  'help-popup',
-  'jquery',
-  'angular-foundation-6',
-  './models/models',
-  'angular-sanitize',
-  './patavi/patavi',
-  './resources',
-  './services',
-  './util/util'
-],
-function(angular) {
+  [
+    'angular',
+    './analyses/analyses',
+    'angular-patavi-client',
+    'angular-animate',
+    'angular-cookies',
+    'angular-foundation-6',
+    'angular-sanitize',
+    'angular-touch',
+    'angular-ui-router',
+    './constants',
+    './controllers',
+    'core-js',
+    'error-reporting',
+    'export-directive',
+    'help-popup',
+    'jquery',
+    './models/models',
+    'page-title-service',
+    './patavi/patavi',
+    './resources',
+    './services',
+    './util/util'
+  ],
+  function(angular) {
     var dependencies = [
-      'ui.router',
-      'ngTouch',
-      'ngCookies',
-      'ngSanitize',
-      'mm.foundation',
+      'errorReporting',
+      'export-directive',
       'gemtc.controllers',
       'gemtc.constants',
       'gemtc.resources',
@@ -37,17 +36,31 @@ function(angular) {
       'gemtc.models',
       'gemtc.util',
       'gemtc.patavi',
-      'patavi',
       'help-directive',
-      'errorReporting',
-      'export-directive'
+      'mm.foundation',
+      'ngCookies',
+      'ngSanitize',
+      'ngTouch',
+      'page-title-service',
+      'patavi',
+      'ui.router'
     ];
 
     var app = angular.module('gemtc', dependencies);
 
-    app.run(['$http', '$templateCache', 'HelpPopupService',
-      function($http, $templateCache, HelpPopupService) {
-
+    app.run([
+      '$http',
+      '$q',
+      '$templateCache',
+      'HelpPopupService',
+      'PageTitleService',
+      function(
+        $http,
+        $q,
+        $templateCache,
+        HelpPopupService,
+        PageTitleService
+      ) {
         $templateCache.put('model-settings-section.html', require('../views/model-settings-section.html'));
         $templateCache.put('convergence-diagnostics-section.html', require('../views/convergence-diagnostics-section.html'));
         $templateCache.put('meta-regression-section.html', require('../views/meta-regression-section.html'));
@@ -55,6 +68,7 @@ function(angular) {
         $templateCache.put('model-fit-section.html', require('../views/model-fit-section.html'));
 
         HelpPopupService.loadLexicon($http.get('lexicon.json'));
+        PageTitleService.loadLexicon($q.resolve(require('../gemtc-page-titles.json')));
       }
     ]);
 
