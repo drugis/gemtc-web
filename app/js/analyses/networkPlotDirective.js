@@ -19,7 +19,7 @@ define(['angular'], function(angular) {
          **/
         var sizingElement;
         if (scope.sizingElementId) {
-          sizingElement = angular.element('#' + scope.sizingElementId);
+          sizingElement = angular.element(document.querySelector('#' + scope.sizingElementId));
         } else {
           sizingElement = element.parent();
         }
@@ -53,7 +53,7 @@ define(['angular'], function(angular) {
                 });
             });
         }
-        scope.$watch('network.network', function(newValue, oldValue) {
+        scope.$watch('network.network', function(newValue) {
           NetworkPlotService.drawNetwork(newValue, element, width, height);
         }, true);
 
