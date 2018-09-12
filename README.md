@@ -6,6 +6,7 @@ User interface for evidence synthesis based on the gemtc R package and Patavi. F
 Setup for the stand-alone version
 ---------------------------------
 
+Optional
 Init and update the scss from the drugis main project
 
     git submodule init
@@ -55,24 +56,17 @@ Build the application
 
     npm run build-prod
 
-Running the patavi worker
--------------------------
+Running the patavi workers
+--------------------------
 
-As a prerequisite, build the patavi worker images from the patavi repository.
+The gemtc application needs two R workers: the gemtc one for running models, and an MCDA worker for calculating absolute effects.
 
-First, build the R base dependencies for the gemtc worker:
+Build the patavi worker image from the [patavi repository](https://github.com/drugis/patavi), tagging it `patavi/worker-amqp`.
 
-in the `R/r-base` directory
+Since the gemtc R package hosted by CRAN is somewhat behind, also download the [latest built version](https://drugis.org/files/gemtc_0.8-3.tar.gz) and place it in the `R/r-base` directory.
 
-    docker build --tag gemtc/r-base-amqp .
+Then, run the `run-worker.sh` script from the project root.
 
-Then, build the worker itself, in the `R` directory:
-
-    docker build --tag patavi/worker-amqp-gemtc .
-
-Run the worker:
-
-    docker run -d --link <rabbitmq-container-name>:rabbit --name amqp-gemtc patavi/worker-amqp-gemtc
 
 
 Running for the stand-alone version
