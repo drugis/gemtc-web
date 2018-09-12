@@ -3,11 +3,11 @@ require 'compass/import-once/activate'
 
 # Set this to the root of your project when deployed:
 http_path = "/"
-css_dir = "app/css"
+css_dir = "public/css"
 sass_dir = "sass"
 images_dir = "public/img"
 javascripts_dir = "app/js"
-http_images_path = "app/drugis-css/img"
+http_images_path = "public/img"
 
 add_import_path "app/drugis-css"
 add_import_path "node_modules/foundation-sites/scss"

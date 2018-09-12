@@ -7,7 +7,7 @@ define(
     'katex/dist/contrib/auto-render.min.js',
     'vanilla-back-to-top',
     'font-awesome/css/font-awesome.min.css',
-    'css/gemtc-drugis.css',
+    '../../public/css/gemtc-drugis.css',
     'katex/dist/katex.min.css'
   ],
   function($, bowser, katex, renderMathInElement, scrollToTop) {
