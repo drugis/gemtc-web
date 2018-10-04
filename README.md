@@ -15,7 +15,9 @@ The web frontend talks to a NodeJS backend, which performs user and data managem
 Prerequisites for running gemtc-web
 -----------------------------------
 
-- A PostgreSQL instance with an initialised database. You can create one in a docker container by running the `setup-db.sh` script. Make sure to change the passwords from the default. If you already have a postgresql database you can use, the database can be intialised as follows:
+- A PostgreSQL instance with an initialised database. You can create one in a docker container by running the `setup-db.sh` script. Make sure to change the passwords from the default. 
+
+If you already have a postgresql database you can use, it can be initialised as follows (change passwords as desired):
 
     CREATE USER gemtc WITH PASSWORD 'develop';
     CREATE DATABASE gemtc ENCODING 'utf-8' OWNER gemtc;
@@ -40,25 +42,25 @@ To run the application as a docker container, you can execute the `run-gemtc.sh`
 
 Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
 
-Setup for the stand-alone version
----------------------------------
+Development
+-----------
 
-Optional
-Init and update the scss from the drugis main project
+If you wish to run the application locally for development, follow these steps:
+
+- (Optional) Initialise and update the scss from the drugis main project
 
     git submodule init
     git submodule update
 
-Compile the scss to css using compass
+- Compile the scss to css using compass
 
     compass compile
 
-Use yarn to install the dependencies
+- Use yarn to install the dependencies
 
     yarn
 
-
-Setup environment variables
+- Setup environment variables
 
     export GEMTC_GOOGLE_KEY=100331616436-dgi00c0mjg8tbc06psuhluf9a2lo6c3i.apps.googleusercontent.com
     export GEMTC_GOOGLE_SECRET=9ROcvzLDuRbITbqj-m-W5C0I
@@ -80,49 +82,21 @@ Build the application
 
     npm run build-prod
 
-Running the patavi workers
---------------------------
+Run the application
 
-The gemtc application needs two R workers: the gemtc one for running models, and an MCDA worker for calculating absolute effects.
-
-Build the patavi worker image from the [patavi repository](https://github.com/drugis/patavi), tagging it `patavi/worker-amqp`.
-
-Since the gemtc R package hosted by CRAN is somewhat behind, also download the [latest built version](https://drugis.org/files/gemtc_0.8-3.tar.gz) and place it in the `R/r-base` directory.
-
-Then, run the `run-worker.sh` script from the project root.
-
-
-
-Running for the stand-alone version
------------------------------------
-
-    node gemtc 
+    npm start
 
 now visit the app at http://localhost:3001
-
-
-Running a forever service that will restart on crashes
-------------------------------------------------------
-
-    sudo npm install -g forever
-    forever gemtc.js
-
 
 Running tests
 -------------
 The Angular app is tested by karma:
 
-    karma start karna-conf.js
+    npx karma start
 
 The node backend is tested by mocha:
 
-To install mocha globally:
-
-    npm install -g mocha
-
-To run nodebackend unit tests:
-
-    mocha
+    npx mocha
 
 To run nightwatch integration tests:
 
