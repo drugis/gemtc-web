@@ -1837,9 +1837,9 @@ expect-ct@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/expect-ct/-/expect-ct-0.1.1.tgz#de84476a2dbcb85000d5903737e9bc8a5ba7b897"
 
-export-directive@drugis/export-directive#1.2.0:
-  version "1.2.0"
-  resolved "https://codeload.github.com/drugis/export-directive/tar.gz/bfe2355e66d8d57ef85baa1d61c2508865df0e57"
+export-directive@drugis/export-directive#1.2.1:
+  version "1.2.1"
+  resolved "https://codeload.github.com/drugis/export-directive/tar.gz/bd48ce18ae150a5346a5c457ee2210dbb281d382"
   dependencies:
     angular "~1.6.6"
     clipboard "~2.0.1"
