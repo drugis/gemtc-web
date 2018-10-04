@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
+define(['lodash', 'clipboard'], function(_, Clipboard) {
   var dependencies = [
     '$scope',
     '$q',
@@ -22,7 +22,8 @@ define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
     'PataviTaskIdResource',
     'ProblemResource',
     'RelativeEffectsTableService',
-    'ResultsPlotService'
+    'ResultsPlotService',
+    'isNumeric'
   ];
   var ModelController = function(
     $scope,
@@ -46,7 +47,8 @@ define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
     PataviTaskIdResource,
     ProblemResource,
     RelativeEffectsTableService,
-    ResultsPlotService
+    ResultsPlotService,
+    isNumeric
   ) {
     // functions
     $scope.openRunLengthDialog = openRunLengthDialog;
@@ -91,7 +93,7 @@ define(['lodash', 'clipboard', 'jquery'], function(_, Clipboard, $) {
           });
         },
         function(update) {
-          if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData.progress)) {
+          if (update && update.eventType === 'progress' && update.eventData && isNumeric(update.eventData.progress)) {
             $scope.progress.percentage = update.eventData.progress;
           }
         });

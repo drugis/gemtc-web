@@ -1,10 +1,10 @@
 'use strict';
-define(['d3', 'nvd3', 'lodash', 'jquery'], function(d3, nvd3, _, $) {
+define(['d3', 'nvd3', 'lodash'], function(d3, nvd3, _) {
   var dependencies = [];
   var FunnelPlotService = function() {
 
     function render(element, data, midPoint, maxY, showLegend, xAxisLabel) {
-      var root = d3.select($(element).get(0));
+      var root = d3.select(element[0]);
       root = root.select('svg');
 
       var minY = 0;

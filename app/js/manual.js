@@ -1,7 +1,7 @@
 'use strict';
 define(
   [
-    'jQuery',
+    'jquery',
     'bowser',
     'katex/dist/katex.min', 
     'katex/dist/contrib/auto-render.min.js',

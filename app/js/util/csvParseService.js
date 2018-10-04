@@ -1,6 +1,6 @@
 'use strict';
 define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
-  var dependencies = [];
+  var dependencies = ['isNumeric'];
 
   var STUDY_TREATMENT = [
     'study',
@@ -21,10 +21,6 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
     're.diff.se',
     're.base.se'
   ];
-
-  function isNumeric(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-  }
 
   /**
    Service to transform csv files to ADDIS problems.
@@ -57,7 +53,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       }]
     }
   **/
-  var CSVParseService = function() {
+  var CSVParseService = function(isNumeric) {
 
     /**
      * Takes a string in csv format
