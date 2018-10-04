@@ -8,7 +8,7 @@ Architecture
 
 The Gemtc-web system consists of several components:
 
-![alt text](https://github.com/drugis/gemtc-web/raw/master/public/img/architecture.png "Overview of the gemtc-web architecture")
+![Overview of the gemtc-web architecture](public/img/gemtc-standalone-architecture.png)
 
 The web frontend talks to a NodeJS backend, which performs user and data management, and queues R tasks in patavi. Data are stored in a PostgreSQL database, and patavi model results are also cached there. Patavi R tasks expose a websocket URL to the frontend, which listens there for progress updates and results. Running gemtc model tasks requires at least one patagi gemtc worker.
 
