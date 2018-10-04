@@ -1,7 +1,44 @@
 gemtc-web
 =========
 
-User interface for evidence synthesis based on the gemtc R package and Patavi. For more information on all components of the drugis project, please refer to the OVERALL-README.md in the root folder of the ADDIS-CORE project.
+User interface for evidence synthesis based on the [gemtc R package](https://github.com/gertvv/gemtc) and [Patavi](https://github.com/drugis/patavi). For more information on all components of the [ADDIS project](https://github.com/drugis/addis-core), please refer to the [overall readme](https://github.com/drugis/addis-core/blob/master/OVERALL-README.md).
+
+Architecture
+------------
+
+The Gemtc-web system consists of several components:
+
+![alt text](https://github.com/drugis/gemtc-web/raw/master/public/img/architecture.png "Overview of the gemtc-web architecture")
+
+The web frontend talks to a NodeJS backend, which performs user and data management, and queues R tasks in patavi. Data are stored in a PostgreSQL database, and patavi model results are also cached there. Patavi R tasks expose a websocket URL to the frontend, which listens there for progress updates and results. Running gemtc model tasks requires at least one patagi gemtc worker.
+
+Prerequisites for running gemtc-web
+-----------------------------------
+
+- A PostgreSQL instance with an initialised database. You can create one in a docker container by running the `setup-db.sh` script. Make sure to change the passwords from the default. If you already have a postgresql database you can use, the database can be intialised as follows:
+
+    CREATE USER gemtc WITH PASSWORD 'develop';
+    CREATE DATABASE gemtc ENCODING 'utf-8' OWNER gemtc;
+
+Create a .pgpass in the user home to store the database password
+the file should contain a line with the following format hostname:port:database:username:password
+
+    localhost:5432:gemtc:gemtc:develop
+
+Create the schema (shell script)
+
+    for i in changesets/create-database-changeset-*.sql; do psql -h localhost -U gemtc -d gemtc -f $i; done
+
+- A patavi-server instance along with a rabbitMQ service. see the [patavi repository](https://github.com/drugis/patavi) for installation and running instructions.
+
+- At least one gemtc patavi worker, started by executing the `run-worker.sh` script.
+
+Running the application
+-----------------------
+
+To run the application as a docker container, you can execute the `run-gemtc.sh` script. Note that you should probably change the default settings in the script (e.g. check whether the link arguments match the names of your containers). The script also assumes that the sql database and patavi server and worker are already set up and running. The run script runs the `addis/gemtc` image, which will be pulled from docker hub by default. You can build a new local image by executing the `build-docker.sh` script. This would be required for example if you wish to change the default SSL keys. The default image comes with SSL keys which assume `localhost` or `localdocker` CNs, and which are signed by our [private certificate authority](https://drugis.org/files/ca-crt.pem).
+
+Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
 
 Setup for the stand-alone version
 ---------------------------------
@@ -20,19 +57,6 @@ Use yarn to install the dependencies
 
     yarn
 
-Use psql to create the db to store data
-
-    CREATE USER gemtc WITH PASSWORD 'develop';
-    CREATE DATABASE gemtc ENCODING 'utf-8' OWNER gemtc;
-
-Create a .pgpass in the user home to store the database password
-the file should contain a line with the following format hostname:port:database:username:password
-
-    localhost:5432:gemtc:gemtc:develop
-
-Create the schema (shell script)
-
-    for i in changesets/create-database-changeset-*.sql; do psql -h localhost -U gemtc -d gemtc -f $i; done
 
 Setup environment variables
 

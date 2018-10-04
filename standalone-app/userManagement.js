@@ -12,8 +12,8 @@ module.exports = function(db) {
           }
           if (result.rows.length === 0) {
             client.query(
-              'INSERT INTO Account (username, firstName, lastName) VALUES ($1, $2, $3) RETURNING id ',
-              [googleUser.id, googleUser.name.givenName, googleUser.name.familyName],
+              'INSERT INTO Account (username, name, firstName, lastName) VALUES ($1, $2, $3, $4) RETURNING id ',
+              [googleUser.id, googleUser.name.givenName + ' ' + googleUser.name.familyName, googleUser.name.givenName, googleUser.name.familyName],
               function(error, result) {
                 if (error) {
                   return callback(error);

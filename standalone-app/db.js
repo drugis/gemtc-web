@@ -2,13 +2,13 @@
 var pg = require('pg');
 var async = require('async');
 var logger = require('./logger');
-
+var _ = require('lodash');
 var pool;
 
 module.exports = function(connectionInfo) {
   pool = !pool ? new pg.Pool(connectionInfo) : pool;
 
-  logger.debug('db pool: ' + JSON.stringify(connectionInfo, null, 2));
+  logger.debug('db pool: ' + JSON.stringify(_.omit(connectionInfo, ['password']), null, 2));
 
   function startTransaction(client, done, callback) {
     logger.debug('START TRANSACTION');
