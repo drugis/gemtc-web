@@ -1,6 +1,6 @@
 'use strict';
 
-define(['angular', 'angular-resource'], function (angular) {
+define(['angular', 'angular-resource'], function(angular) {
 
   return angular.module('gemtc.util', ['ngResource'])
 
@@ -24,5 +24,11 @@ define(['angular', 'angular-resource'], function (angular) {
     .factory('ProblemValidityService', require('./problemValidityService'))
     .factory('CSVParseService', require('./csvParseService'))
     .factory('FileUploadService', require('./fileUploadService'))
-    ;
+
+    //standalone util
+    .factory('isNumeric', function() {
+      return function(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+      };
+    });
 });

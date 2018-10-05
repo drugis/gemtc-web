@@ -10,7 +10,9 @@ define(['./controllers/modelController',
 './models/addComparisonFunnelPlotController',
 './util/graphModalDirective/plotNavigationController',
 './models/setBaselineDistributionController', 
-'angular'], function(
+'angular',
+'./util/util'
+], function(
   ModelController,
   CreateModelController,
   ModelsController,
@@ -22,7 +24,7 @@ define(['./controllers/modelController',
   PlotNavigationController,
   SetBaselineDistributionController,
   angular) {
-  return angular.module('gemtc.controllers', [])
+  return angular.module('gemtc.controllers', ['gemtc.util'])
     .controller('ModelController', ModelController)
     .controller('CreateModelController', CreateModelController)
     .controller('ModelsController', ModelsController)
