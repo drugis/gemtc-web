@@ -62,6 +62,7 @@ If you wish to run the application locally for development, follow these steps:
 
 - Setup environment variables
 
+```
     export GEMTC_GOOGLE_KEY=100331616436-dgi00c0mjg8tbc06psuhluf9a2lo6c3i.apps.googleusercontent.com
     export GEMTC_GOOGLE_SECRET=9ROcvzLDuRbITbqj-m-W5C0I
     export DB_HOST=<pc-name>.spice.drugis.org
@@ -74,6 +75,7 @@ If you wish to run the application locally for development, follow these steps:
     export PATAVI_CLIENT_KEY=path-to/app-env-key.pem
     export PATAVI_CLIENT_CRT=path-to/app-env-crt.pem
     export PATAVI_CA=path-to/provider-name.crt
+```
 
 (note: this google key/secret combination expects the server to run at localhost:3001)
 (note: replace the path with the location of your SSL client key and certificate)
