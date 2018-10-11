@@ -8,8 +8,6 @@ var pool;
 module.exports = function(connectionInfo) {
   pool = !pool ? new pg.Pool(connectionInfo) : pool;
 
-  logger.debug('db pool: ' + JSON.stringify(_.omit(connectionInfo, ['password']), null, 2));
-
   function startTransaction(client, done, callback) {
     logger.debug('START TRANSACTION');
     client.query('START TRANSACTION', function(err) {

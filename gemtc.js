@@ -1,4 +1,9 @@
 'use strict';
+var appEnvironmentSettings = {
+  googleKey: process.env.GEMTC_GOOGLE_KEY,
+  googleSecret: process.env.GEMTC_GOOGLE_SECRET,
+  host: process.env.GEMTC_HOST
+};
 var express = require('express'),
   session = require('express-session'),
   helmet = require('helmet'),
@@ -8,15 +13,17 @@ var express = require('express'),
   dbUtil = require('./standalone-app/dbUtil'),
   db = require('./standalone-app/db')(dbUtil.connectionConfig),
   loginUtils = require('./standalone-app/loginUtils'),
-  userManagement = require('./standalone-app/userManagement')(db),
+  signin = require('signin')(db, appEnvironmentSettings),
   analysisRouter = require('./standalone-app/analysisRouter'),
   modelRouter = require('./standalone-app/modelRouter'),
   mcdaPataviTaskRouter = require('./standalone-app/mcdaPataviTaskRouter'),
   errorHandler = require('./standalone-app/errorHandler'),
   logger = require('./standalone-app/logger');
 
+var authenticationMethod = process.env.GEMTC_AUTHENTICATION_METHOD;
+console.log('Authentication method: ' + authenticationMethod);
 
-var sessionOpts = {
+var sessionOptions = {
   store: new (require('connect-pg-simple')(session))({
     conString: dbUtil.gemtcDBUrl,
   }),
@@ -31,59 +38,54 @@ var sessionOpts = {
   }
 };
 
-var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
-passport.use(
-  new GoogleStrategy({
-    clientID: process.env.GEMTC_GOOGLE_KEY,
-    clientSecret: process.env.GEMTC_GOOGLE_SECRET,
-    callbackURL: process.env.GEMTC_HOST + '/auth/google/callback'
-  },
-    userManagement.findOrCreateUser
-  ));
-passport.serializeUser(function(user, cb) {
-  cb(null, user);
-});
-passport.deserializeUser(function(obj, cb) {
-  cb(null, obj);
-});
-
 var app = express();
-
 logger.info('Start Gemtc stand-alone app');
 
-module.exports = app
-  .use(helmet())
-  .use(session(sessionOpts))
-  .get('/signin', function(req, res) {
-    res.sendFile(__dirname + '/dist/signin.html');
-  })
-  .use(passport.initialize())
-  .use(passport.session())
-  .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
-  .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
-    function(req, res) {
-      res.redirect('/');
-    })
-  .get('/logout', function(req, res) {
-    req.logout();
+app.use(helmet());
+app.use(session(sessionOptions));
+app.use(bodyparser.json({ limit: '5mb' }));
+
+switch (authenticationMethod) {
+  case 'LOCAL':
+    signin.useLocalLogin(app);
+    break;
+  default:
+    authenticationMethod = 'GOOGLE';
+    signin.useGoogleLogin(app);
+}
+
+app.get('/logout', function(req, res) {
+  req.session.destroy(function(err){
     res.redirect('/');
-  })
-  .use(csurf())
-  .use(bodyparser.json({ limit: '5mb' }))
-  .use(loginUtils.setXSRFTokenMiddleware)
-  .all('*', loginUtils.securityMiddleware)
-  .use('/patavi', mcdaPataviTaskRouter)
-  .use('/user', function(req, res) {
-    res.json(_.omit(req.user, ['username', 'id']));
-  })
-  .use('/analyses', analysisRouter)
-  .use('/analyses/:analysisId/models', modelRouter)
-  .get('/lexicon.json', function(req, res) {
-    res.sendFile(__dirname + '/app/lexicon.json');
-  })
-  .use(express.static('public'))
-  .use(express.static('dist'))
-  .use('/css/fonts', express.static('./dist/fonts'))
-  .use(errorHandler)
-  .listen(3001);
+  });
+});
+
+app.use(csurf());
+app.get('/', function(req, res, next) {
+  if (req.isAuthenticated()) {
+    res.sendFile(__dirname + '/dist/index.html');
+  } else {
+    res.sendFile(__dirname + '/dist/signin.html');
+  }
+});
+app.use(loginUtils.setXSRFTokenMiddleware);
+app.all('*', loginUtils.securityMiddleware);
+app.use('/patavi', mcdaPataviTaskRouter);
+app.use('/user', function(req, res) {
+  res.json(_.omit(req.user, ['username', 'id', 'password']));
+});
+app.use('/analyses', analysisRouter);
+app.use('/analyses/:analysisId/models', modelRouter);
+app.get('/lexicon.json', function(req, res) {
+  res.sendFile(__dirname + '/app/lexicon.json');
+});
+app.use(express.static('public'));
+app.use(express.static('dist'));
+app.use('/css/fonts', express.static('./dist/fonts'));
+app.use(function(error, req, res, next) {
+  if (error && error.type === signin.SIGNIN_ERROR) {
+    res.send(401, 'login failed');
+  }
+});
+app.use(errorHandler);
+app.listen(3001);
