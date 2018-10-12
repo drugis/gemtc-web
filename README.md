@@ -42,6 +42,10 @@ To run the application as a docker container, you can execute the `run-gemtc.sh`
 
 Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
 
+The `build-docker.sh` script also provides the possibility to specify the signin method for the application. The current options are using Google OAuth 2.0 and local login (username and password). You can specify this by adding the adding the command line arugment `GOOGLE` or `LOCAL`. If no argument, or something else is provided, the script will default to the Google OAuth 2.0 method. 
+When running the `LOCAL` login method, you can add users by using the `add-user.sh` script. This script assumes the command line tool `bcrypt-cli` to be installed. If needed, it can be intalled with `npm install bcrypt-cli -g`.
+If you specified a login method, you should also provide the same command line argument to the `run-gemtc.sh` script. 
+
 Development
 -----------
 
@@ -70,6 +74,7 @@ If you wish to run the application locally for development, follow these steps:
     export GEMTC_DB_USERNAME=gemtc
     export GEMTC_DB_PASSWORD=develop
     export GEMTC_HOST=http://localhost:3001
+    export GEMTC_AUTHENTICATION_METHOD=GOOGLE
     export PATAVI_HOST=localhost
     export PATAVI_PORT=3000
     export PATAVI_CLIENT_KEY=path-to/app-env-key.pem

@@ -25,7 +25,8 @@ WORKDIR /var/lib/gemtc
 ENV HOME /var/lib/gemtc
 
 RUN yarn
-RUN npm run build-prod
+ARG WEBPACK_COMMAND
+RUN npm run $WEBPACK_COMMAND
 
 EXPOSE 3001
 
