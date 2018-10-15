@@ -1,6 +1,6 @@
 ATHENTICATION_METHOD="$1"
 docker run -d \
- --link postgres:postgres \
+ --link postgres \
  --link patavi-server:localdocker \
  -p 3001:3001 \
  --name gemtc \

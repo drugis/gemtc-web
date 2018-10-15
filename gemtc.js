@@ -21,7 +21,6 @@ var express = require('express'),
   logger = require('./standalone-app/logger');
 
 var authenticationMethod = process.env.GEMTC_AUTHENTICATION_METHOD;
-console.log('Authentication method: ' + authenticationMethod);
 
 var sessionOptions = {
   store: new (require('connect-pg-simple')(session))({
@@ -53,6 +52,7 @@ switch (authenticationMethod) {
     authenticationMethod = 'GOOGLE';
     signin.useGoogleLogin(app);
 }
+console.log('Authentication method: ' + authenticationMethod);
 
 app.get('/logout', function(req, res) {
   req.session.destroy(function(err){
