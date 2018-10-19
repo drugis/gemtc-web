@@ -35,10 +35,17 @@ Create the schema (shell script)
 
 - At least one gemtc patavi worker, started by executing the `run-worker.sh` script.
 
+Building the application as a docker container
+----------------------------------------------
+
+You can build a new local image by executing the `build-docker.sh` script. This would be required for example if you wish to change the default SSL keys. Note that this script assumes that your keys are present in an `ssl` subdirectory of the main gemtc directory. Also note that, if your patavi server presents a certificate that is not trusted by default, there should be a CA certificate for the signing certificate authority of your patavi container in this directory. The default patavi server image presents a certificate signed by the Drugis [self-signed certificate authority](https://drugis.org/files/ca-crt.pem)
+
 Running the application
 -----------------------
 
-To run the application as a docker container, you can execute the `run-gemtc.sh` script. Note that you should probably change the default settings in the script (e.g. check whether the link arguments match the names of your containers). The script also assumes that the sql database and patavi server and worker are already set up and running. The run script runs the `addis/gemtc` image, which will be pulled from docker hub by default. You can build a new local image by executing the `build-docker.sh` script. This would be required for example if you wish to change the default SSL keys. The default image comes with SSL keys which assume `localhost` or `localdocker` CNs, and which are signed by our [private certificate authority](https://drugis.org/files/ca-crt.pem).
+To run the application as a docker container, you can execute the `run-gemtc.sh` script. 
+
+Note that you should probably change the default settings in the script (e.g. check whether the link arguments match the names of your containers, and the names of the certificate files match those in your `ssl` directory if you built your own image). The script also assumes that the sql database and patavi server and worker are already set up and running. The run script runs the `addis/gemtc` image, which will be pulled from docker hub by default. The default image comes with SSL keys which assume `localhost` or `localdocker` CNs, and which are signed by our [self-signed certificate authority](https://drugis.org/files/ca-crt.pem).
 
 Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
 
