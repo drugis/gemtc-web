@@ -1,5 +1,6 @@
+ATHENTICATION_METHOD="$1"
 docker run -d \
- --link postgres:postgres \
+ --link postgres \
  --link patavi-server:localdocker \
  -p 3001:3001 \
  --name gemtc \
@@ -11,6 +12,7 @@ docker run -d \
  -e GEMTC_HOST=http://localhost:3001 \
  -e GEMTC_DB_USERNAME=gemtc \
  -e GEMTC_DB_PASSWORD=develop \
+ -e GEMTC_AUTHENTICATION_METHOD=$ATHENTICATION_METHOD \
  -e PATAVI_CLIENT_CRT=ssl/crt.pem \
  -e PATAVI_CLIENT_KEY=ssl/key.pem \
  -e PATAVI_CA=ssl/ca-crt.pem \

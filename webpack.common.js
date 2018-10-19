@@ -3,6 +3,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 let basePath = path.join(__dirname, '/');
+let fs = require('fs');
 
 let config = {
   entry: {
@@ -74,9 +75,10 @@ let config = {
     }),
     new HtmlWebpackPlugin({
       filename: 'signin.html',
-      template: 'app/signin.html',
+      template: 'app/signin.ejs',
       inject: 'head',
-      chunks: ['signin']
+      chunks: ['signin'],
+      signin: fs.readFileSync(require.resolve('signin/googleSignin.html')) 
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',

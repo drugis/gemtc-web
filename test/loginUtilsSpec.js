@@ -63,17 +63,6 @@ describe('loginUtils', function() {
       loginUtils.securityMiddleware(request, response, next);
       expect(next).to.have.been.called();
     });
-
-    it('should redirect to signin when requesting the / path and not logged in', function() {
-      request.isAuthenticated = function() {
-        return false;
-      };
-      request.url = '/';
-      request.method = 'GET';
-
-      loginUtils.securityMiddleware(request, response, next);
-      expect(response.redirect).to.have.been.called();
-    });
   });
 
   describe('csrfValue', function() {

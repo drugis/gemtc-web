@@ -49,6 +49,10 @@ Note that you should probably change the default settings in the script (e.g. ch
 
 Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
 
+The `build-docker.sh` script also provides the possibility to specify the signin method for the application. The current options are using Google OAuth 2.0 and local login (username and password). You can specify this by adding the adding the command line arugment `GOOGLE` or `LOCAL`. If no argument, or something else is provided, the script will default to the Google OAuth 2.0 method. 
+When running the `LOCAL` login method, you can add users by using the `add-user.sh` script. This script assumes the command line tool `bcrypt-cli` to be installed. If needed, it can be intalled with `npm install bcrypt-cli -g`.
+If you specified a login method, you should also provide the same command line argument to the `run-gemtc.sh` script. 
+
 Development
 -----------
 
@@ -69,6 +73,7 @@ If you wish to run the application locally for development, follow these steps:
 
 - Setup environment variables
 
+```
     export GEMTC_GOOGLE_KEY=100331616436-dgi00c0mjg8tbc06psuhluf9a2lo6c3i.apps.googleusercontent.com
     export GEMTC_GOOGLE_SECRET=9ROcvzLDuRbITbqj-m-W5C0I
     export DB_HOST=<pc-name>.spice.drugis.org
@@ -76,11 +81,13 @@ If you wish to run the application locally for development, follow these steps:
     export GEMTC_DB_USERNAME=gemtc
     export GEMTC_DB_PASSWORD=develop
     export GEMTC_HOST=http://localhost:3001
+    export GEMTC_AUTHENTICATION_METHOD=GOOGLE
     export PATAVI_HOST=localhost
     export PATAVI_PORT=3000
     export PATAVI_CLIENT_KEY=path-to/app-env-key.pem
     export PATAVI_CLIENT_CRT=path-to/app-env-crt.pem
     export PATAVI_CA=path-to/provider-name.crt
+```
 
 (note: this google key/secret combination expects the server to run at localhost:3001)
 (note: replace the path with the location of your SSL client key and certificate)

@@ -10,7 +10,7 @@ RUN apt-get upgrade -y
 # Install nodejs
 RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install -y nodejs
+RUN apt-get install -y nodejs git
 
 RUN npm install -g yarn
 RUN npm install -g forever
@@ -25,7 +25,8 @@ WORKDIR /var/lib/gemtc
 ENV HOME /var/lib/gemtc
 
 RUN yarn
-RUN npm run build-prod
+ARG WEBPACK_COMMAND
+RUN npm run $WEBPACK_COMMAND
 
 EXPOSE 3001
 

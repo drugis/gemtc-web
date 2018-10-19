@@ -4,7 +4,7 @@ define([], function() {
   var NavbarDirective = function(UserResource) {
     return {
       restrict: 'E',
-      templateUrl: 'js/util/navbarDirective.html',
+      templateUrl: './navbarDirective.html',
       transclude: true,
       link: function(scope) {
         scope.user = UserResource.get();

@@ -13,13 +13,16 @@
 <body>
   <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
     Your browser,
-    <span id="browserVersion1"></span>, is <b>out of date</b>. It has known <b>security flaws</b> and will <b>not run this web application correctly</b>.
+    <span id="browserVersion1"></span>, is <b>out of date</b>. It has known <b>security flaws</b> and will <b>not run
+      this web application correctly</b>.
     <br>
-    <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a>    before continuing.
+    <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a> before
+    continuing.
   </div>
   <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserUnknown">
     Your browser is unknown to us. This web application may or may not work correctly
-    using it. Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a>    before continuing.
+    using it. Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download
+      a well-known browser</a> before continuing.
   </div>
   <script type="text/javascript">
     if (bowser.c || (bowser.msie && bowser.version <= 8)) {
@@ -43,9 +46,9 @@
       <ul class="dropdown menu" data-dropdown-menu>
         <li>
           <a class="manual" href="/manual.html" target="_blank">
-              <i class="fa fa-book"></i>
-              Manual
-            </a>
+            <i class="fa fa-book"></i>
+            Manual
+          </a>
         </li>
       </ul>
     </div>
@@ -69,21 +72,15 @@
         <div class="cell large-offset-2 large-8 medium-12">
           <p><a href="https://gemtc.drugis.org">gemtc.drugis.org</a> enables you to
             perform Bayesian evidence synthesis. You can upload your own dataset
-            and perform the various analyses supported by the <a href="https://drugis.org/software/r-packages/gemtc">GeMTC R package</a>.
-            GeMTC is also a key component of the <a href="https://addis.drugis.org">ADDIS 2</a>            decision support system for health care policy. If you already have a
+            and perform the various analyses supported by the <a href="https://drugis.org/software/r-packages/gemtc">GeMTC
+              R package</a>.
+            GeMTC is also a key component of the <a href="https://addis.drugis.org">ADDIS 2</a> decision support system
+            for health care policy. If you already have a
             dataset ready for analysis, and only want to perform evidence synthesis,
             you can use this stand-alone version instead of the full ADDIS 2 software.
-            gemtc.drugis.org is currently in early development.</p>
-          <form id="SignInForm" action="auth/google" method="GET">
-            <input type="hidden" name="scope" value="profile email" />
-            <div>
-              <button class="button large" type="submit" tabindex="1" href=>Sign In with Google</button>
-            </div>
-          </form>
-
-          <p>The information we retrieve from Google is only used to ensure that you
-            continue to have access to the projects you create.</p>
+          </p>
         </div>
+        <%= htmlWebpackPlugin.options.signin %>
       </div>
     </div>
   </section>

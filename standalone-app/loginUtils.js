@@ -1,13 +1,6 @@
 'use strict';
 var logger = require('./logger');
 
-// // check if startsWith is not a language feature
-// if (typeof String.prototype.startsWith !== 'function') {
-//   String.prototype.startsWith = function(str) {
-//     return this.indexOf(str) === 0;
-//   };
-// }
-
 module.exports = {
   csrfValue: function(req) {
     logger.debug('loginUtils.csrfValue');
@@ -29,24 +22,17 @@ module.exports = {
     if (request.isAuthenticated()) { // if loggedin your good
       logger.debug('loginUtils.loginCheckMiddleware; you\'re signed in, request = ' + request.url);
       next();
-    }
-    else if (request.method === 'GET' && request.url === '/') {
-      logger.debug('loginUtils.loginCheckMiddleware request to "/", redirect to sign in page ');
-      response.redirect('/signin.html');
-    }
-    else if (request.method === 'GET' && // if not then you can get static content or go sign in
-      (
-        request.url.startsWith('/img') ||
-        request.url.startsWith('/css') ||
-        request.url.startsWith('/fonts') ||
-        request.url.endsWith('.html') ||
-        request.url.endsWith('.js') ||
-        request.url.startsWith('/auth/google')
-      )) {
+    } else if (request.method === 'GET' && ( // if not then you can get static content or go sign in
+      request.url.startsWith('/img') ||
+      request.url.startsWith('/css') ||
+      request.url.startsWith('/fonts') ||
+      request.url.endsWith('.html') ||
+      request.url.endsWith('.js') ||
+      request.url.startsWith('/auth/google')
+    )) {
       logger.debug('loginUtils.loginCheckMiddleware you request does not require login, request =  ' + request.url);
       next();
-    }
-    else { // otherwhise you have to signin first
+    } else { // otherwhise you have to signin first
       logger.debug('loginUtils.loginCheckMiddleware you need to signin first, request =  ' + request.url);
       response.sendStatus(403);
     }
