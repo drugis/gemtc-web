@@ -43,15 +43,23 @@ You can build a new local image by executing the `build-docker.sh` script. This 
 Running the application
 -----------------------
 
-To run the application as a docker container, you can execute the `run-gemtc.sh` script. 
+To run the application as a docker container, you can execute the `run-gemtc.sh` script.
 
 Note that you should probably change the default settings in the script (e.g. check whether the link arguments match the names of your containers, and the names of the certificate files match those in your `ssl` directory if you built your own image). The script also assumes that the sql database and patavi server and worker are already set up and running. The run script runs the `addis/gemtc` image, which will be pulled from docker hub by default. The default image comes with SSL keys which assume `localhost` or `localdocker` CNs, and which are signed by our [self-signed certificate authority](https://drugis.org/files/ca-crt.pem).
 
 Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
 
-The `build-docker.sh` script also provides the possibility to specify the signin method for the application. The current options are using Google OAuth 2.0 and local login (username and password). You can specify this by adding the adding the command line arugment `GOOGLE` or `LOCAL`. If no argument, or something else is provided, the script will default to the Google OAuth 2.0 method. 
-When running the `LOCAL` login method, you can add users by using the `add-user.sh` script. This script assumes the command line tool `bcrypt-cli` to be installed. If needed, it can be intalled with `npm install bcrypt-cli -g`.
-If you specified a login method, you should also provide the same command line argument to the `run-gemtc.sh` script. 
+The `build-docker.sh` script also lets you specify the signin method via command line arugment. The current options are Google OAuth 2.0 (`GOOGLE`) and username/password (`LOCAL`). The default signin method is Google OAuth 2.0.
+
+You can add users for the `LOCAL` signin method by using the `add-user.sh` script. This script relies on external utilities which must be installed by running `yarn` first, one time.
+
+If you built the container with a specific login method arugment, you should run the `run-gemtc-docker.sh` script with the same one.
+
+e.g.:
+```
+./build-docker.sh LOCAL
+./run-gemtc-docker.sh LOCAL
+```
 
 Development
 -----------
