@@ -26,7 +26,7 @@ ENV HOME /var/lib/gemtc
 
 RUN yarn
 ARG WEBPACK_COMMAND
-RUN npm run $WEBPACK_COMMAND
+RUN if [ "$WEBPACK_COMMAND" != ""  ] ; then npm run $WEBPACK_COMMAND ; else npm run build-prod ; fi
 
 EXPOSE 3001
 
