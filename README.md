@@ -45,7 +45,13 @@ You can build a new local image by executing the `build-docker.sh` script. This 
 
 The `build-docker.sh` script also lets you specify the signin method via command line arugment. The current options are Google OAuth 2.0 (`GOOGLE`) and username/password (`LOCAL`). The default signin method is Google OAuth 2.0.
 
-You can add users for the `LOCAL` signin method by using the `add-user.sh` script. Note: this script relies on external utilities which must be installed by running `yarn` first, one time.
+For local signin, there are several further dependencies (assuming a version of NodeJS of 8.x or higher) to generate the users and passwords:
+
+    sudo npm -g install yarn
+    sudo npm -g install npx
+    yarn
+
+After installing these dependencies, you can add users for the `LOCAL` signin method by using the `add-user.sh` script.
 
 Running the container
 -----------------------

@@ -15,5 +15,5 @@ echo Generating hash
 HASH=$(npx bcrypt-cli $PASSWORD 14)
 
 echo Adding user to database
-docker run -i -v `pwd`:`pwd` -w `pwd` --rm --link postgres:postgres postgres psql -h postgres -U gemtc \
+docker run -i --rm --link postgres:postgres postgres psql -h postgres -U gemtc \
  -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('$USERNAME', '$FIRSTNAME', '$LASTNAME', '$HASH')"
