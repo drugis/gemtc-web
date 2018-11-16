@@ -1,5 +1,5 @@
 export EMAIL_ADDRESS=osmosisch@gmail.com
-export HOST_NAME=pataviserver.westeurope.cloudapp.azure.com
+export HOST_NAME=gemtc.westeurope.cloudapp.azure.com
 
 # Uncomment if you're missing any of this software
 # #install certbot
@@ -73,10 +73,12 @@ sudo service nginx restart
 docker run --name postgres -e POSTGRES_PASSWORD=develop -d postgres
 sleep 3 # wait for db to spin up
 
+#rabbit
+docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
 #gemtc
 git clone https://github.com/drugis/gemtc-web
 cd gemtc-web
-git checkout feature/azure
 ./setup-db.sh
 
 docker run -d \
@@ -93,23 +95,23 @@ docker run -d \
  -e GEMTC_DB_PASSWORD=develop \
  -e PATAVI_CLIENT_CRT=ssl/crt.pem \
  -e PATAVI_CLIENT_KEY=ssl/key.pem \
- -e PATAVI_CA=ssl/ca-crt.pem \
  -e PATAVI_HOST=$HOST_NAME \
   addis/gemtc
 
-cd
+./run-worker.sh
 
-#rabbit
-docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+cd
 
 #patavi server
 git clone https://github.com/drugis/patavi
-cd patavi/server/docker
+cd patavi/server
+./setup-db.sh
+cd docker
 mkdir ssl
 cd ssl
 curl https://drugis.org/files/ca-crt.pem > ca-crt.pem
 sudo cp /etc/letsencrypt/live/$HOST_NAME/privkey.pem server-key.pem
-sudo cp /etc/letsencrypt/live/$HOST_NAME/cert.pem server-crt.pem
+sudo cp /etc/letsencrypt/live/$HOST_NAME/fullchain.pem server-crt.pem
 sudo chmod u+rx *
 cd ..
 docker build --tag addis/patavi-server .

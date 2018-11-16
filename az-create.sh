@@ -1,3 +1,6 @@
+ 
+ az group create --location westeurope --name addis-resources
+
  az vm create \
    -n gemtc \
    -g addis-resources \
