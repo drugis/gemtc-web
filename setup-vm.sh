@@ -127,3 +127,11 @@ docker run -d --name patavi-server \
   -e PATAVI_DB_USER=patavi \
   -e PATAVI_DB_PASSWORD=develop \
   addis/patavi-server
+
+cd
+
+#mcda worker
+git clone https://github.com/drugis/mcda-elicitation-web
+cd mcda-elicitation-web
+
+./run-worker.sh
