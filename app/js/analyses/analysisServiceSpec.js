@@ -1020,28 +1020,25 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
         };
         var likelihoodLinkOptions = analysisService.createLikelihoodLinkOptions(problem);
         expect(likelihoodLinkOptions.length).toBe(6);
-
-        expect(likelihoodLinkOptions[0].likelihood).toBe('normal');
-        expect(likelihoodLinkOptions[0].link).toBe('identity');
-        expect(likelihoodLinkOptions[0].scale).toBe('mean difference');
-        expect(likelihoodLinkOptions[0].label).toBe('normal/identity (mean difference)');
-        expect(likelihoodLinkOptions[0].compatibility).toBe('incompatible');
-
-        expect(likelihoodLinkOptions[1].label).toBe('binom/logit (odds ratio)');
+        
+        expect(likelihoodLinkOptions[0].label).toBe('binom/logit (odds ratio)');
+        expect(likelihoodLinkOptions[0].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[1].label).toBe('binom/log (risk ratio)');
         expect(likelihoodLinkOptions[1].compatibility).toBe('compatible');
-        expect(likelihoodLinkOptions[2].label).toBe('binom/log (risk ratio)');
+        expect(likelihoodLinkOptions[2].label).toBe('binom/cloglog (hazard ratio)');
         expect(likelihoodLinkOptions[2].compatibility).toBe('compatible');
-        expect(likelihoodLinkOptions[3].label).toBe('binom/cloglog (hazard ratio)');
-        expect(likelihoodLinkOptions[3].compatibility).toBe('compatible');
+        expect(likelihoodLinkOptions[3].likelihood).toBe('normal');
+        expect(likelihoodLinkOptions[3].link).toBe('identity');
+        expect(likelihoodLinkOptions[3].scale).toBe('mean difference');
+        expect(likelihoodLinkOptions[3].label).toBe('normal/identity (mean difference)');
+        expect(likelihoodLinkOptions[3].compatibility).toBe('incompatible');
         expect(likelihoodLinkOptions[4].label).toBe('poisson/log (hazard ratio)');
         expect(likelihoodLinkOptions[4].compatibility).toBe('incompatible');
         expect(likelihoodLinkOptions[5].label).toBe('normal/smd (mean difference)');
         expect(likelihoodLinkOptions[5].compatibility).toBe('incompatible');
       });
 
-
       it('should create 6 options for continuous studies, having a title, likelihood and compatibility', function() {
-
         var problem = {
           'entries': [{
             'study': 'Rudolph and Feiger, 1999',

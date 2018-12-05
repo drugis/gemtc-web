@@ -1,9 +1,7 @@
 'use strict';
 define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(angular) {
   describe('The evidence service', function() {
-
     var evidenceTableService;
-
 
     beforeEach(angular.mock.module('gemtc.analyses'));
 

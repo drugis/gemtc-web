@@ -1,5 +1,11 @@
 'use strict';
-define(['angular', 'angular-mocks', '../analyses/analyses', './models'], function(angular) {
+define([
+  'angular',
+  'angular-mocks',
+  '../analyses/analyses',
+  './models',
+  '../createModel/createModel'
+], function(angular) {
   describe('the create model controller', function() {
     var scope, q,
       stateParamsMock = {},
@@ -30,8 +36,14 @@ define(['angular', 'angular-mocks', '../analyses/analyses', './models'], functio
       ]),
       problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get']),
       pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['setPageTitle']);
-
+    var createModelControllerMock = jasmine.createSpyObj('CreateModelController', [
+      'createLikelihoodLink',
+      'createPairWiseComparison',
+      'heterogeneityParamsChange',
+      'getFirstStudy'
+    ]);
     beforeEach(angular.mock.module('gemtc.models'));
+    beforeEach(angular.mock.module('gemtc.createModel'));
 
     beforeEach(inject(function($rootScope, $controller, $q) {
       scope = $rootScope;
@@ -71,12 +83,12 @@ define(['angular', 'angular-mocks', '../analyses/analyses', './models'], functio
         $q: q,
         $stateParams: stateParamsMock,
         $state: stateMock,
-        isGemtcStandAlone: true,
         ModelService: modelServiceMock,
         ModelResource: modelResourceMock,
         AnalysisService: analysisServiceMock,
         ProblemResource: problemResourceMock,
-        PageTitleService: pageTitleServiceMock
+        PageTitleService: pageTitleServiceMock,
+        CreateModelController: createModelControllerMock
       });
     }));
 
@@ -107,10 +119,10 @@ define(['angular', 'angular-mocks', '../analyses/analyses', './models'], functio
       beforeEach(function() {
         likelihoodLinkOptionsMock = [{
           name: 'option 1',
-          compatibility: 'incompatible'
+          compatibility: 'compatible'
         }, {
           name: 'option 2',
-          compatibility: 'compatible'
+          compatibility: 'incompatible'
         }];
         analysisServiceMock.createLikelihoodLinkOptions.and.returnValue(likelihoodLinkOptionsMock);
         problemDefer.resolve(problemMock);
@@ -124,9 +136,9 @@ define(['angular', 'angular-mocks', '../analyses/analyses', './models'], functio
       });
       it('should retrieve likelihood link options and place them on the scope, and set the model ll/link function to be the first compatible one', function() {
         expect(analysisServiceMock.createLikelihoodLinkOptions).toHaveBeenCalledWith(problemMock);
-        expect(scope.likelihoodLinkOptions[0]).toEqual(likelihoodLinkOptionsMock[1]);
-        expect(scope.likelihoodLinkOptions[1]).toEqual(likelihoodLinkOptionsMock[0]);
-        expect(scope.model.likelihoodLink).toEqual(likelihoodLinkOptionsMock[1]);
+        expect(scope.likelihoodLinkOptions[0]).toEqual(likelihoodLinkOptionsMock[0]);
+        expect(scope.likelihoodLinkOptions[1]).toEqual(likelihoodLinkOptionsMock[1]);
+        expect(scope.model.likelihoodLink).toEqual(likelihoodLinkOptionsMock[0]);
       });
       it('should place covariate options on the scope', function() {
         expect(scope.covariateOptions).toEqual(['COVARIATE_1', 'COVARIATE_2']);

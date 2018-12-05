@@ -20,13 +20,11 @@
         <label class="form-item-header">Fixed/random effect(s)
           <inline-help help-key="effects-type"></inline-help>
           <div class="stacked-radio">
-            <input type="radio" value="random" ng-model="model.linearModel" ng-change="effectsTypeChange()"
-              id="random-effect-radio">
+            <input type="radio" value="random" ng-model="model.linearModel" ng-change="effectsTypeChange()" id="random-effect-radio">
             <label for="random-effect-radio">Random effects</label>
           </div>
           <div class="stacked-radio">
-            <input type="radio" value="fixed" ng-model="model.linearModel" ng-change="effectsTypeChange()"
-              id="fixed-effect-radio">
+            <input type="radio" value="fixed" ng-model="model.linearModel" ng-change="effectsTypeChange()" id="fixed-effect-radio">
             <label for="fixed-effect-radio">Fixed effect</label>
           </div>
         </label>
@@ -63,9 +61,8 @@
               <input id="pairwise-specific-type-radio" type="radio" value="specific-pairwise" ng-model="model.modelType.subType"
                 ng-change="pairwiseSubTypeChange()">
               <label for="pairwise-specific-type-radio">Specific pair</label>
-              <select class="large-6" ng-options="comparison.label for comparison in comparisonOptions"
-                ng-model="model.pairwiseComparison" ng-change="resetLeaveOneOut()"
-                id="comparison-select" ng-disabled="model.modelType.subType !== 'specific-pairwise'"></select>
+              <select class="large-6" ng-options="comparison.label for comparison in comparisonOptions" ng-model="model.pairwiseComparison"
+                ng-change="resetLeaveOneOut()" id="comparison-select" ng-disabled="model.modelType.subType !== 'specific-pairwise'"></select>
             </span>
           </div>
         </div>
@@ -86,8 +83,7 @@
           </div>
           <div class="stacked-radio">
             <span>
-              <input type="radio" value="specific-node-split" ng-model="model.modelType.subType"
-                id="node-split-specific-type-radio">
+              <input type="radio" value="specific-node-split" ng-model="model.modelType.subType" id="node-split-specific-type-radio">
               <label for="node-split-specific-type-radio">Specific model</label>
               <select class="large-6" ng-options="nodeSplitOption.label for nodeSplitOption in nodeSplitOptions"
                 ng-model="model.nodeSplitComparison" id="node-split-select" ng-disabled="model.modelType.subType !== 'specific-node-split'"></select>
@@ -104,12 +100,13 @@
         <div class="indent-one" ng-show="model.modelType.mainType == 'regression'">
           <label for="covariate-select">Select covariate
             <inline-help help-key="covariate"></inline-help>
-            <select id="covariate-select" ng-options="covariate for covariate in covariateOptions"
-              ng-model="model.covariateOption" ng-change="covariateChange()"></select>
+            <select id="covariate-select" ng-options="covariate for covariate in covariateOptions" ng-model="model.covariateOption"
+              ng-change="covariateChange()"></select>
           </label>
-          <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">This covariate has missing values.</div>
-          <div ng-show="variableIsBinary && model.modelType.mainType === 'regression'" style="margin-bottom: 2rem;">Variable is binary (i.e. levels are 0 and 1).
-            <inline-help help-key="levels"></inline-help>
+          <div class="alert" style="margin-bottom: 2rem;" ng-show="selectedCovariateValueHasNullValues">
+            This covariate has missing values.</div>
+          <div ng-show="variableIsBinary && model.modelType.mainType === 'regression'" style="margin-bottom: 2rem;">
+            Variable is binary (i.e. levels are 0 and 1). <inline-help help-key="levels"></inline-help>
           </div>
 
           <div ng-hide="selectedCovariateValueHasNullValues || (variableIsBinary && model.modelType.mainType === 'regression')">
@@ -131,17 +128,19 @@
                 <div class="small-9 cell">
                   <label for="covariate-level">
                     <input id="covariate-level" type="number" ng-model="newLevel" ng-keypress="addLevelOnEnter($event, newLevel)"
-                      ng-model-options="{ debounce: 300 }" ng-change="checkCovariateBounds(newLevel)"
-                      ng-disabled="selectedCovariateValueHasNullValues || model.modelType.mainType !== 'regression'">
+                      ng-model-options="{ debounce: 300 }" ng-change="checkCovariateBounds(newLevel)" ng-disabled="selectedCovariateValueHasNullValues || model.modelType.mainType !== 'regression'">
                   </label>
                 </div>
                 <div class="small-3 cell">
                   <button ng-disabled="newLevel === unedefined || newLevel === null || levelAlreadyPresent(newLevel) || isCovariateLevelOutOfBounds(newLevel)"
                     type="button" ng-click="addLevel(newLevel)" class="button postfix">Add level</button>
                 </div>
-                <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">Level already present.</div>
-                <div ng-show="newLevel !== unedefined && isCovariateLevelOutOfBounds(newLevel)" class="alert"
-                  style="margin-bottom: 2rem;">Level is outside the observed range.</div>
+                <div ng-show="levelAlreadyPresent(newLevel)" class="alert" style="margin-bottom: 2rem;">
+                  Level already present.
+                </div>
+                <div ng-show="newLevel !== unedefined && isCovariateLevelOutOfBounds(newLevel)" class="alert" style="margin-bottom: 2rem;">
+                  Level is outside the observed range.
+                </div>
               </div>
             </label>
           </div>
@@ -182,18 +181,17 @@
                 id="adjustment-factor-select"></select>
             </label>
             <label>Value to inflate variance for</label>
-            <input id="inflation-value-radio-0" type="radio" ng-model="model.sensitivity.inflationValue"
-              ng-checked="true" value="0">
+            <input id="inflation-value-radio-0" type="radio" ng-model="model.sensitivity.inflationValue" ng-checked="true"
+              value="0">
             <label for="inflation-value-radio-0">0</label>
-            <input id="inflation-value-radio-1" type="radio" ng-model="model.sensitivity.inflationValue"
-              value="1">
+            <input id="inflation-value-radio-1" type="radio" ng-model="model.sensitivity.inflationValue" value="1">
             <label for="inflation-value-radio-1">1</label>
             <label for="weighting-factor-input">Weighting factor
-              <input type="number" min="0" max="1" step="0.0000001" ng-model="model.sensitivity.weightingFactor"
-                id="weighting-factor-input">
+              <input type="number" min="0" max="1" step="0.0000001" ng-model="model.sensitivity.weightingFactor" id="weighting-factor-input">
             </label>
             <div>
-              <label ng-hide="model.sensitivity.weightingFactor !== undefined" class="alert">Must be number between zero and one
+              <label ng-hide="model.sensitivity.weightingFactor !== undefined" class="alert">
+                Must be number between zero and one
               </label>
             </div>
           </div>
@@ -210,27 +208,21 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>
-                    0
-                  </td>
+                  <td> 0 </td>
                   <td>
                     {{model.sensitivity.inflationValue == 0 ? model.sensitivity.weightingFactor : 1}}
                   </td>
                   <td>
-                    {{model.sensitivity.inflationValue == 0 ? 1 / model.sensitivity.weightingFactor :
-                    1}}
+                    {{model.sensitivity.inflationValue == 0 ? 1 / model.sensitivity.weightingFactor : 1}}
                   </td>
                 </tr>
                 <tr>
-                  <td>
-                    1
-                  </td>
+                  <td> 1 </td>
                   <td>
                     {{model.sensitivity.inflationValue == 1 ? model.sensitivity.weightingFactor : 1}}
                   </td>
                   <td>
-                    {{model.sensitivity.inflationValue == 1 ? 1 / model.sensitivity.weightingFactor :
-                    1}}
+                    {{model.sensitivity.inflationValue == 1 ? 1 / model.sensitivity.weightingFactor : 1}}
                   </td>
                 </tr>
               </tbody>
@@ -239,10 +231,11 @@
         </div>
         <div class="grid-x">
           <div class="cell medium-5 small-12">
-            <input id="leave-one-out-checkbox" type="checkbox" ng-model="model.leaveOneOut.isSelected"
-              ng-change="changeIsLeaveOneOut(model.leaveOneOut.isSelected)" ng-disabled="!isAllowedLeaveOneOut()">
+            <input id="leave-one-out-checkbox" type="checkbox" ng-model="model.leaveOneOut.isSelected" ng-change="changeIsLeaveOneOut(model.leaveOneOut.isSelected)"
+              ng-disabled="!isAllowedLeaveOneOut()">
             <label for="leave-one-out-checkbox">Leave one out (omit single study)
-              <em ng-show="!isAllowedLeaveOneOut()">(Not possible: wrong model type, or network disconnected if any study
+              <em ng-show="!isAllowedLeaveOneOut()">(Not possible: wrong model type, or network disconnected if any
+                study
                 left out)</em>
             </label>
           </div>
@@ -251,18 +244,16 @@
           <div class="cell large-5 medium-5 small-12 large-offset-1 medium-offset-1">
             <label for="leave-one-out-select">Select study to leave out</label>
             <div class="stacked-radio">
-              <input type="radio" value="all-leave-one-out" ng-model="model.leaveOneOut.subType"
-                id="all-leave-one-out-model-type-radio">
-              <label for="all-leave-one-out-model-type-radio">All leave one out models ({{leaveOneOutOptions.length}} will be created)</label>
+              <input type="radio" value="all-leave-one-out" ng-model="model.leaveOneOut.subType" id="all-leave-one-out-model-type-radio">
+              <label for="all-leave-one-out-model-type-radio">
+                All leave one out models ({{leaveOneOutOptions.length}} will be created)</label>
             </div>
             <div class="stacked-radio">
               <span>
-                <input type="radio" value="specific-leave-one-out" ng-model="model.leaveOneOut.subType"
-                  id="leave-one-out-specific-type-radio">
+                <input type="radio" value="specific-leave-one-out" ng-model="model.leaveOneOut.subType" id="leave-one-out-specific-type-radio">
                 <label for="leave-one-out-specific-type-radio">Specific study</label>
                 <select class="large-6" ng-options="study for study in leaveOneOutOptions | orderBy:'toString()'"
-                  ng-model="model.leaveOneOut.omittedStudy" id="leave-one-out-select"
-                  ng-disabled="model.leaveOneOut.subType !== 'specific-leave-one-out'"></select>
+                  ng-model="model.leaveOneOut.omittedStudy" id="leave-one-out-select" ng-disabled="model.leaveOneOut.subType !== 'specific-leave-one-out'"></select>
               </span>
             </div>
           </div>
@@ -277,22 +268,18 @@
           <inline-help help-key="likelihood-link"></inline-help>
         </label>
         <label>Select a likelihood/link type
-          <select ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions"
-            ng-model="model.likelihoodLink" id="likelihood-link-select"></select>
+          <select ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions" ng-model="model.likelihoodLink"
+            id="likelihood-link-select"></select>
         </label>
       </div>
     </div>
 
     <div class="grid-x ">
       <div class="cell large-8 medium-10 small-12">
-        <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel
-          }}.
+        <label ng-show="model.likelihoodLink.compatibility === 'incompatible'" style="margin-bottom:1rem; color:red">
+          The dataset does not contain all the required columns: {{ model.likelihoodLink.missingColumnsLabel}}.
         </label>
-        <label ng-show="model.likelihoodLink.scale === 'risk ratio' && !isGemtcStandAlone"
-          style="margin-bottom:1rem; color:red">
-          This option cannot be used in benefit risk analyses.
-        </label>
-        <label ng-show="model.likelihoodLink.compatibility !== 'incompatible' || (model.likelihoodLink.scale === 'risk ratio' && !isGemtcStandAlone)"
+        <label ng-show="model.likelihoodLink.compatibility !== 'incompatible'"
           style="margin-bottom:2.25rem">
         </label>
         <!-- spacer -->
@@ -302,21 +289,24 @@
 
     <div class="grid-x section">
       <div class="large-6 medium-8 small-12 cell">
-        <label class="form-item-header">Outcome scale
-          <inline-help help-key="outcome-scale"></inline-help>
+        <label class="form-item-header">
+          Outcome scale <inline-help help-key="outcome-scale"></inline-help>
         </label>
         <div class="stacked-radio">
           <input type="radio" value="heuristically" ng-model="model.outcomeScale.type" id="heuristically-model-outcom-scale-type-radio"
             ng-change="outcomeScaleTypeChange()">
-          <label for="heuristically-model-outcom-scale-type-radio">Determine heuristically</label>
+          <label for="heuristically-model-outcom-scale-type-radio">
+            Determine heuristically
+          </label>
         </div>
         <div class="stacked-radio">
           <input type="radio" value="fixed" ng-model="model.outcomeScale.type" id="fixed-model-outcom-scale-type-radio"
             ng-change="outcomeScaleTypeChange()">
-          <label for="fixed-model-outcom-scale-type-radio">Fixed value</label>
-          <input type="number" ng-model="model.outcomeScale.value" id="fixed-outcome-scale-input"
-            ng-disabled="model.outcomeScale.type !== 'fixed'" ng-change="fixedOutcomeScaleValueChage()"
-            style="display: inline; width:18%;">
+          <label for="fixed-model-outcom-scale-type-radio">
+            Fixed value
+          </label>
+          <input type="number" ng-model="model.outcomeScale.value" id="fixed-outcome-scale-input" ng-disabled="model.outcomeScale.type !== 'fixed'"
+            ng-change="fixedOutcomeScaleValueChage()" style="display: inline; width:18%;">
         </div>
       </div>
     </div>
@@ -324,10 +314,14 @@
     <div class="grid-x">
       <div class="cell large-8 medium-10 small-12" style="padding-left: 1.2rem;">
         <div ng-show="model.outcomeScale.value !== null && model.outcomeScale.value <= 0 ">
-          <label class="alert">Outcome scale value can not be zero or lower.</label>
+          <label class="alert">
+            Outcome scale value can not be zero or lower.
+          </label>
         </div>
         <div ng-show="model.outcomeScale.type === 'fixed' && !isNumber(model.outcomeScale.value) ">
-          <label class="alert">Outcome scale value is not a valid number.</label>
+          <label class="alert">
+            Outcome scale value is not a valid number.
+          </label>
         </div>
         <label style="margin-bottom:1rem;">
           <strong>Relative effect priors:</strong> N(0, (15 &#8901;
@@ -343,8 +337,8 @@
 
       <div class="grid-x section">
         <div class="large-6 medium-8 small-12 cell">
-          <label class="form-item-header">Heterogeneity prior
-            <inline-help help-key="heterogeneity-prior-distribution"></inline-help>
+          <label class="form-item-header">
+            Heterogeneity prior <inline-help help-key="heterogeneity-prior-distribution"></inline-help>
           </label>
         </div>
       </div>
@@ -361,8 +355,8 @@
 
       <div class="grid-x">
         <div class="cell large-6 stacked-radio">
-          <input type="radio" value="standard-deviation" ng-model="model.heterogeneityPrior.type"
-            id="heterogeneity-prior-standard-deviation-radio" ng-change="heterogeneityPriorTypechange()">
+          <input type="radio" value="standard-deviation" ng-model="model.heterogeneityPrior.type" id="heterogeneity-prior-standard-deviation-radio"
+            ng-change="heterogeneityPriorTypechange()">
           <label for="heterogeneity-prior-standard-deviation-radio">Uniform for standard deviation</label>
           <div ng-show="model.heterogeneityPrior.type === 'standard-deviation'">
             <div class="grid-x">
@@ -381,7 +375,8 @@
             </div>
             <div class="grid-x">
               <div class="cell large-offset-1 medium-offset-1 large-11">
-                <label class="alert" ng-show="model.heterogeneityPrior.values.lower < 0 || model.heterogeneityPrior.values.upper < 0">Values may not be below 0</label>
+                <label class="alert" ng-show="model.heterogeneityPrior.values.lower < 0 || model.heterogeneityPrior.values.upper < 0">Values
+                  may not be below 0</label>
               </div>
             </div>
           </div>
@@ -409,7 +404,8 @@
           </div>
           <div class="grid-x">
             <div class="cell large-offset-1 medium-offset-1 large-11">
-              <label class="alert" ng-show="model.heterogeneityPrior.values.stdDev < 0">Standard deviation may not be below 0</label>
+              <label class="alert" ng-show="model.heterogeneityPrior.values.stdDev < 0">Standard deviation may not be
+                below 0</label>
             </div>
           </div>
         </div>
@@ -438,7 +434,9 @@
 
           <div class="grid-x">
             <div class="cell large-offset-1 medium-offset-1 large-11">
-              <label class="alert" ng-show="model.heterogeneityPrior.values.rate < 0 || model.heterogeneityPrior.values.shape < 0">Values may not be below 0</label>
+              <label class="alert" ng-show="model.heterogeneityPrior.values.rate < 0 || model.heterogeneityPrior.values.shape < 0">
+                Values may not be below 0
+              </label>
             </div>
           </div>
 
@@ -449,9 +447,8 @@
     </div>
     <!-- end heterogeneity prior section -->
 
-    <data-run-length problem="problem" model="model" burn-in-iterations="model.burnInIterations"
-      inference-iterations="model.inferenceIterations" thinning-factor="model.thinningFactor"
-      is-valid-run-length="isValidRunLength"></data-run-length>
+    <data-run-length problem="problem" model="model" burn-in-iterations="model.burnInIterations" inference-iterations="model.inferenceIterations"
+      thinning-factor="model.thinningFactor" is-valid-run-length="isValidRunLength"></data-run-length>
 
     <div class="grid-x">
       <div class="large-9 cell">

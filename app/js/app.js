@@ -10,6 +10,7 @@ define(
     'angular-sanitize',
     'angular-touch',
     'angular-ui-router',
+    './createModel/createModel',
     './constants',
     './controllers',
     'core-js',
@@ -28,14 +29,15 @@ define(
     var dependencies = [
       'errorReporting',
       'export-directive',
+      'gemtc.createModel',
+      'gemtc.analyses',
       'gemtc.controllers',
       'gemtc.constants',
+      'gemtc.models',
+      'gemtc.patavi',
       'gemtc.resources',
       'gemtc.services',
-      'gemtc.analyses',
-      'gemtc.models',
       'gemtc.util',
-      'gemtc.patavi',
       'help-directive',
       'mm.foundation',
       'ngCookies',
@@ -71,8 +73,6 @@ define(
         PageTitleService.loadLexicon($q.resolve(require('../gemtc-page-titles.json')));
       }
     ]);
-
-    app.constant('isGemtcStandAlone', true);
 
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide',
       function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {

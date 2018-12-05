@@ -17,9 +17,9 @@ define(['angular', 'lodash'], function(angular, _) {
           type: 'dnorm',
           scaleName: 'Normal'
         } : {
-          type: 'dt',
-          scaleName: 'Student\'s t'
-        };
+            type: 'dt',
+            scaleName: 'Student\'s t'
+          };
       },
       columns: [
         ["mean", "std.err"],
@@ -331,8 +331,8 @@ define(['angular', 'lodash'], function(angular, _) {
 
       // if there is a cycle -> indirect path
       if (path.length > 1 && _.find(reachableNodes, function(node) {
-          return node.name === startNode.name;
-        })) {
+        return node.name === startNode.name;
+      })) {
         return true;
       }
 
@@ -402,19 +402,23 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function createLikelihoodLinkOptions(problem) {
-      return _.map(LIKELIHOOD_LINK_SETTINGS, function(setting) {
-        var isIncompatible;
-        if (hasRelativeEffectData(problem) && problem.relativeEffectData.scale) {
-          isIncompatible = setting.analysisScale !== problem.relativeEffectData.scale || isSettingIncompatible(setting, problem);
-        } else {
-          isIncompatible = isSettingIncompatible(setting, problem);
-        }
+      return _(LIKELIHOOD_LINK_SETTINGS).map(_.partial(createLinkSetting, problem))
+        .sortBy(['compatibility', 'compatible'])
+        .value();
+    }
 
-        var option = _.pick(setting, ['likelihood', 'link', 'scale', 'missingColumnsLabel', 'analysisScale']);
-        option.label = option.likelihood + '/' + option.link + ' (' + option.scale + ')';
-        option.compatibility = isIncompatible ? 'incompatible' : 'compatible';
-        return option;
-      });
+    function createLinkSetting(problem, setting) {
+      var isIncompatible;
+      if (hasRelativeEffectData(problem) && problem.relativeEffectData.scale) {
+        isIncompatible = setting.analysisScale !== problem.relativeEffectData.scale || isSettingIncompatible(setting, problem);
+      } else {
+        isIncompatible = isSettingIncompatible(setting, problem);
+      }
+
+      var option = _.pick(setting, ['likelihood', 'link', 'scale', 'missingColumnsLabel', 'analysisScale']);
+      option.label = option.likelihood + '/' + option.link + ' (' + option.scale + ')';
+      option.compatibility = isIncompatible ? 'incompatible' : 'compatible';
+      return option;
     }
 
     function getScaleName(model) {
@@ -423,6 +427,7 @@ define(['angular', 'lodash'], function(angular, _) {
           setting.link === model.link;
       }).scale;
     }
+
     return {
       isNetworkDisconnected: isNetworkDisconnected,
       transformProblemToNetwork: transformProblemToNetwork,

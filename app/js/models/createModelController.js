@@ -10,7 +10,7 @@ define(['angular', 'lodash'], function(angular, _) {
     'ModelService',
     'PageTitleService',
     'ProblemResource',
-    'isGemtcStandAlone'
+    'CreateModelService'
   ];
   var CreateModelController = function(
     $scope,
@@ -22,7 +22,7 @@ define(['angular', 'lodash'], function(angular, _) {
     ModelService,
     PageTitleService,
     ProblemResource,
-    isGemtcStandAlone
+    CreateModelService
   ) {
     // functions
     $scope.createModel = createModel;
@@ -48,7 +48,6 @@ define(['angular', 'lodash'], function(angular, _) {
     var pageTitle = $state.current.name === 'createModel' ? 'Create model' : 'Refine model';
     PageTitleService.setPageTitle('CreateModelController', pageTitle);
 
-    $scope.isGemtcStandAlone = isGemtcStandAlone;
     $scope.model = {
       linearModel: 'random',
       modelType: {
@@ -69,79 +68,39 @@ define(['angular', 'lodash'], function(angular, _) {
 
     $scope.isTaskTooLong = false;
     $scope.isValidHeterogeneityPrior = true;
-    $scope.problem = ProblemResource.get($stateParams);
     $scope.selectedCovariateValueHasNullValues = false;
     $scope.covariateBounds = {
       min: undefined,
       max: undefined
     };
 
+    $scope.problem = ProblemResource.get($stateParams);
     $scope.problem.$promise.then(function(problem) {
       $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
-      if (!$scope.model.pairwiseComparison && $scope.comparisonOptions.length > 0) {
-        $scope.model.pairwiseComparison = $scope.comparisonOptions[0];
-      } else {
-        $scope.model.pairwiseComparison = _.find($scope.comparisonOptions, function(option) {
-          return option.from.id === $scope.model.pairwiseComparison.from.id &&
-            option.to.id === $scope.model.pairwiseComparison.to.id;
-        });
-      }
-
       $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
-      if (!$scope.model.nodeSplitComparison && $scope.nodeSplitOptions.length > 0) {
-        $scope.model.nodeSplitComparison = $scope.nodeSplitOptions[0];
-      } else {
-        $scope.model.nodeSplitComparison = _.find($scope.nodeSplitOptions, function(option) {
-          return option.from.id === $scope.model.nodeSplitComparison.from.id &&
-            option.to.id === $scope.model.nodeSplitComparison.to.id;
-        });
-      }
       $scope.binaryCovariateNames = ModelService.getBinaryCovariateNames(problem);
       $scope.isProblemWithCovariates = ModelService.isProblemWithCovariates(problem);
-      var likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
-      if (!isGemtcStandAlone) {
-        $scope.likelihoodLinkOptions = _.reject(likelihoodLinkOptions, function(option) {
-          return option.link === 'smd' && option.likelihood === 'normal';
-        });
-      } else {
-        $scope.likelihoodLinkOptions = likelihoodLinkOptions;
-      }
+      $scope.likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
+      $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions(problem, $scope.model.modelType.mainType);
 
-      var compatible = $scope.likelihoodLinkOptions.filter(function(option) {
-        return option.compatibility === "compatible";
-      });
-      var incompatible = $scope.likelihoodLinkOptions.filter(function(option) {
-        return option.compatibility === "incompatible";
-      });
-      $scope.likelihoodLinkOptions = compatible.concat(incompatible);
+      $scope.model.pairwiseComparison = CreateModelService.createPairWiseComparison(
+        $scope.model.pairwiseComparison, $scope.nodeSplitOptions);
+      $scope.model.nodeSplitComparison = CreateModelService.createNodeSplitComparison(
+        $scope.model.nodeSplitComparison, $scope.nodeSplitOptions);
+      $scope.model.likelihoodLink = CreateModelService.createLikelihoodLink(
+        $scope.model.likelihoodLink, $scope.likelihoodLinkOptions);
 
-      if (!$scope.model.likelihoodLink) {
-        $scope.model.likelihoodLink = compatible[0];
-      } else {
-        $scope.model.likelihoodLink = _.find($scope.likelihoodLinkOptions, function(option) {
-          return option.link === $scope.model.likelihoodLink.link &&
-            option.likelihood === $scope.model.likelihoodLink.likelihood;
-        });
-      }
-
-      if (problem.studyLevelCovariates) {
-        $scope.covariateOptions = buildCovariateOptions(problem);
-        if (!$scope.model.covariateOption) {
-          $scope.model.covariateOption = $scope.covariateOptions[0];
-        }
-        if (!$scope.model.metaRegressionControl) {
-          $scope.model.metaRegressionControl = problem.treatments[0];
-        } else {
-          $scope.model.metaRegressionControl = _.find(problem.treatments, function(treatment) {
-            return treatment.id === $scope.model.metaRegressionControl.id;
-          });
-        }
-      }
-
-      $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem, $scope.model.modelType.mainType);
+      setCovariateOptions(problem);
 
       return problem;
     });
+
+    function setCovariateOptions(problem) {
+      if (problem.studyLevelCovariates) {
+        $scope.covariateOptions = CreateModelService.buildCovariateOptions(problem);
+        $scope.model = CreateModelService.getModelWithCovariates($scope.model, problem, $scope.covariateOptions);
+      }
+    }
 
     function effectsTypeChange() {
       if ($scope.model.linearModel === 'fixed') {
@@ -162,16 +121,6 @@ define(['angular', 'lodash'], function(angular, _) {
       }
 
       $scope.covariateBounds = ModelService.getCovariateBounds($scope.model.covariateOption, $scope.problem);
-    }
-
-    function buildCovariateOptions(problem) {
-      var firstStudy;
-      if (problem.entries.length) {
-        firstStudy = problem.entries[0].study;
-      } else {
-        firstStudy = _.keys(problem.relativeEffectData.data)[0];
-      }
-      return _.keys(problem.studyLevelCovariates[firstStudy]);
     }
 
     function modelTypeChange() {
@@ -225,7 +174,7 @@ define(['angular', 'lodash'], function(angular, _) {
       if ($scope.model.outcomeScale.type === 'heuristically') {
         $scope.model.outcomeScale.value = undefined;
       } else {
-        $scope.model.outcomeScale.value = 5; // magic number: w to the power of 0 devided by 15
+        $scope.model.outcomeScale.value = 5; // magic number: w to the power of 0 divided by 15
       }
     }
 
@@ -235,18 +184,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function heterogeneityParamsChange() {
-      var values = $scope.model.heterogeneityPrior.values;
-      if ($scope.model.heterogeneityPrior.type === 'automatic') {
-        $scope.isValidHeterogeneityPrior = true;
-      } else if (values === undefined) {
-        $scope.isValidHeterogeneityPrior = false;
-      } else if ($scope.model.heterogeneityPrior.type === 'standard-deviation') {
-        $scope.isValidHeterogeneityPrior = (values.lower >= 0 && values.upper >= 0);
-      } else if ($scope.model.heterogeneityPrior.type === 'variance') {
-        $scope.isValidHeterogeneityPrior = (values.stdDev >= 0);
-      } else if ($scope.model.heterogeneityPrior.type === 'precision') {
-        $scope.isValidHeterogeneityPrior = (values.rate >= 0 && values.shape >= 0);
-      }
+      $scope.isValidHeterogeneityPrior = CreateModelService.heterogeneityParamsChange($scope.model.heterogeneityPrior);
     }
 
     function changeIsWeighted() {

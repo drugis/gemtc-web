@@ -31,7 +31,10 @@ define([
   './funnelPlot/funnelPlotDirective',
   './comparisonAdjustedFunnelPlot/comparisonAdjustedFunnelPlotDirective',
   './result/metaRegressionCovPlotsDirective',
-  './distributionToStringFilter', 'angular', 'angular-resource'], function(
+  './distributionToStringFilter',
+  'angular',
+  'angular-resource'
+], function(
   ModelsController,
   CreateModelController,
   ExtendRunLengthController,
@@ -66,47 +69,47 @@ define([
   distributionToStringFilter,
   angular
 ) {
-  var dependencies = ['ngResource'];
-  return angular.module('gemtc.models', dependencies)
-    // controllers
-    .controller('ModelsController', ModelsController)
-    .controller('CreateModelController', CreateModelController)
-    .controller('ExtendRunLengthController', ExtendRunLengthController)
-    .controller('NodeSplitOverviewController', NodeSplitOverviewController)
-    .controller('CreateNodeSplitModelController', CreateNodeSplitModelController)
-    .controller('CreateNetworkModelController', CreateNetworkModelController)
-    .controller('AddComparisonFunnelPlotController', AddComparisonFunnelPlotController)
-    .controller('SetBaselineDistributionController', SetBaselineDistributionController)
+    var dependencies = ['ngResource'];
+    return angular.module('gemtc.models', dependencies)
+      // controllers
+      .controller('ModelsController', ModelsController)
+      .controller('CreateModelController', CreateModelController)
+      .controller('ExtendRunLengthController', ExtendRunLengthController)
+      .controller('NodeSplitOverviewController', NodeSplitOverviewController)
+      .controller('CreateNodeSplitModelController', CreateNodeSplitModelController)
+      .controller('CreateNetworkModelController', CreateNetworkModelController)
+      .controller('AddComparisonFunnelPlotController', AddComparisonFunnelPlotController)
+      .controller('SetBaselineDistributionController', SetBaselineDistributionController)
 
-    // resources
-    .factory('ModelResource', ModelResource)
-    .factory('ModelBaselineResource', ModelBaselineResource)
-    .factory('ProblemResource', ProblemResource)
-    .factory('AnalysisResource', AnalysisResource)
-    .factory('FunnelPlotResource', FunnelPlotResource)
+      // resources
+      .factory('ModelResource', ModelResource)
+      .factory('ModelBaselineResource', ModelBaselineResource)
+      .factory('ProblemResource', ProblemResource)
+      .factory('AnalysisResource', AnalysisResource)
+      .factory('FunnelPlotResource', FunnelPlotResource)
 
-    //services
-    .factory('ModelService', ModelService)
-    .factory('RefineModelService', RefineModelService)
-    .factory('AnalysisService', AnalysisService)
-    .factory('DevianceStatisticsService', DevianceStatisticsService)
-    .factory('NodeSplitOverviewService', NodeSplitOverviewService)
-    .factory('MetaRegressionService', MetaRegressionService)
-    .factory('ResultsPlotService', ResultsPlotService)
-    .factory('FunnelPlotService', FunnelPlotService)
+      //services
+      .factory('ModelService', ModelService)
+      .factory('RefineModelService', RefineModelService)
+      .factory('AnalysisService', AnalysisService)
+      .factory('DevianceStatisticsService', DevianceStatisticsService)
+      .factory('NodeSplitOverviewService', NodeSplitOverviewService)
+      .factory('MetaRegressionService', MetaRegressionService)
+      .factory('ResultsPlotService', ResultsPlotService)
+      .factory('FunnelPlotService', FunnelPlotService)
 
-    //directives
-    .directive('gemtcRankPlot', gemtcRankPlot)
-    .directive('runLength', runLength)
-    .directive('nodesplitForestPlot', nodesplitForestPlot)
-    .directive('heterogeneityPrior', heterogeneityPrior)
-    .directive('relativeEffectPlots', relativeEffectPlots)
-    .directive('pairwiseForestPlots', pairwiseForestPlots)
-    .directive('nodeSplitDensityPlots', nodeSplitDensityPlots)
-    .directive('funnelPlot', funnelPlot)
-    .directive('comparisonAdjustedFunnelPlot', comparisonAdjustedFunnelPlot)
-    .directive('metaRegressionCovPlots', metaRegressionCovPlots)
+      //directives
+      .directive('gemtcRankPlot', gemtcRankPlot)
+      .directive('runLength', runLength)
+      .directive('nodesplitForestPlot', nodesplitForestPlot)
+      .directive('heterogeneityPrior', heterogeneityPrior)
+      .directive('relativeEffectPlots', relativeEffectPlots)
+      .directive('pairwiseForestPlots', pairwiseForestPlots)
+      .directive('nodeSplitDensityPlots', nodeSplitDensityPlots)
+      .directive('funnelPlot', funnelPlot)
+      .directive('comparisonAdjustedFunnelPlot', comparisonAdjustedFunnelPlot)
+      .directive('metaRegressionCovPlots', metaRegressionCovPlots)
 
-    //filters
-    .filter('distributionToStringFilter', distributionToStringFilter);
-});
+      //filters
+      .filter('distributionToStringFilter', distributionToStringFilter);
+  });
