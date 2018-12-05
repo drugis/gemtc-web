@@ -24,11 +24,5 @@ define(['angular', 'angular-resource'], function(angular) {
     .factory('ProblemValidityService', require('./problemValidityService'))
     .factory('CSVParseService', require('./csvParseService'))
     .factory('FileUploadService', require('./fileUploadService'))
-
-    //standalone util
-    .factory('isNumeric', function() {
-      return function(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-      };
-    });
+    ;
 });

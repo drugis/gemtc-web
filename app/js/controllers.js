@@ -10,8 +10,7 @@ define(['./controllers/modelController',
 './models/addComparisonFunnelPlotController',
 './util/graphModalDirective/plotNavigationController',
 './models/setBaselineDistributionController', 
-'angular',
-'./util/util'
+'angular'
 ], function(
   ModelController,
   CreateModelController,
@@ -24,7 +23,7 @@ define(['./controllers/modelController',
   PlotNavigationController,
   SetBaselineDistributionController,
   angular) {
-  return angular.module('gemtc.controllers', ['gemtc.util'])
+  return angular.module('gemtc.controllers', [])
     .controller('ModelController', ModelController)
     .controller('CreateModelController', CreateModelController)
     .controller('ModelsController', ModelsController)
@@ -35,6 +34,12 @@ define(['./controllers/modelController',
     .controller('AddComparisonFunnelPlotController', AddComparisonFunnelPlotController)
     .controller('PlotNavigationController', PlotNavigationController)
     .controller('SetBaselineDistributionController', SetBaselineDistributionController)
-
-  ;
+    
+    .factory('isNumeric', function() {
+      return function(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+      };
+    })
+    ;
+  
 });
