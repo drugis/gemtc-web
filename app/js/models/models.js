@@ -1,7 +1,6 @@
 'use strict';
 define([
   './modelsController',
-  './createModelController',
   './extendRunLengthController',
   './nodeSplitOverviewController',
   './createNodeSplitModelController',
@@ -36,7 +35,6 @@ define([
   'angular-resource'
 ], function(
   ModelsController,
-  CreateModelController,
   ExtendRunLengthController,
   NodeSplitOverviewController,
   CreateNodeSplitModelController,
@@ -73,7 +71,6 @@ define([
     return angular.module('gemtc.models', dependencies)
       // controllers
       .controller('ModelsController', ModelsController)
-      .controller('CreateModelController', CreateModelController)
       .controller('ExtendRunLengthController', ExtendRunLengthController)
       .controller('NodeSplitOverviewController', NodeSplitOverviewController)
       .controller('CreateNodeSplitModelController', CreateNodeSplitModelController)

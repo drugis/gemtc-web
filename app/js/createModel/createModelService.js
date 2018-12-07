@@ -1,8 +1,10 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = [];
+  var dependencies = [
+    'AnalysisService'
+  ];
 
-  var CreateModelService = function() {
+  var CreateModelService = function(AnalysisService) {
 
     function createNodeSplitComparison(nodeSplitComparison, options) {
       if (!nodeSplitComparison && options.length > 0) {
@@ -72,7 +74,7 @@ define(['angular', 'lodash'], function(angular, _) {
         return _.keys(problem.relativeEffectData.data)[0];
       }
     }
-    
+
     function getModelWithCovariates(model, problem, covariateOptions) {
       var newModel = angular.copy(model);
       if (!model.covariateOption) {
@@ -88,13 +90,51 @@ define(['angular', 'lodash'], function(angular, _) {
       return newModel;
     }
 
+
+    function createLeaveOneOutOptions(problem) {
+      var studyTitles = _.map(_.uniqBy(problem.entries, 'study'), 'study');
+
+      return _.filter(studyTitles, function(studyTitle) {
+        var entriesWithoutCurrentStudy = _.filter(problem.entries, function(entry) {
+          return entry.study !== studyTitle;
+        });
+        var problemWithoutStudy = {
+          entries: entriesWithoutCurrentStudy,
+          treatments: problem.treatments
+        };
+        var network = AnalysisService.transformProblemToNetwork(problemWithoutStudy);
+
+        return !AnalysisService.isNetworkDisconnected(network);
+      });
+    }
+
+
+    function createPairwiseOptions(problem) {
+      var network = AnalysisService.transformProblemToNetwork(problem);
+      var edgesWithMoreThanOneStudy = _.filter(network.edges, function(edge) {
+        return edge.studies.length > 1;
+      });
+      return addComparisonLabels(edgesWithMoreThanOneStudy);
+    }
+
+    function addComparisonLabels(edges) {
+      return _.map(edges, function(edge) {
+        return _.merge({}, edge, {
+          label: edge.from.name + ' - ' + edge.to.name
+        });
+      });
+    }
+
     return {
       createNodeSplitComparison: createNodeSplitComparison,
       createPairWiseComparison: createPairWiseComparison,
       heterogeneityParamsChange: heterogeneityParamsChange,
       createLikelihoodLink: createLikelihoodLink,
       buildCovariateOptions: buildCovariateOptions,
-      getModelWithCovariates: getModelWithCovariates
+      getModelWithCovariates: getModelWithCovariates,
+      createPairwiseOptions: createPairwiseOptions,
+      createLeaveOneOutOptions: createLeaveOneOutOptions,
+
     };
 
   };

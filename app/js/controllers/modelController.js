@@ -22,8 +22,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     'PataviTaskIdResource',
     'ProblemResource',
     'RelativeEffectsTableService',
-    'ResultsPlotService',
-    'isNumeric'
+    'ResultsPlotService'
   ];
   var ModelController = function(
     $scope,
@@ -47,8 +46,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     PataviTaskIdResource,
     ProblemResource,
     RelativeEffectsTableService,
-    ResultsPlotService,
-    isNumeric
+    ResultsPlotService
   ) {
     // functions
     $scope.openRunLengthDialog = openRunLengthDialog;
@@ -106,6 +104,10 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     $scope.modelPromise.then(function(model) {
       PageTitleService.setPageTitle('ModelController', model.title);
     });
+    
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
     
     function goToRefineModel() {
       $state.go('refineModel', $stateParams);
@@ -224,7 +226,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
         } // end not nodesplit
 
         $scope.absoluteDevianceStatisticsTable = DevianceStatisticsService.buildAbsoluteTable(result.devianceStatistics, problem);
-        $scope.relativeDevianceStatisticsTable = DevianceStatisticsService.buildRelativeTable(result.devianceStatistics);
+        $scope.relativeDevianceStatisticsTable = DevianceStatisticsService.buildRelativeTable(result.devianceStatistics, problem);
         if ($scope.model.regressor) {
           $scope.controlTreatment = _.find($scope.problem.treatments, function(treatment) {
             return treatment.id === Number($scope.model.regressor.control);

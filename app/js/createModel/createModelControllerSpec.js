@@ -3,10 +3,10 @@ define([
   'angular',
   'angular-mocks',
   '../analyses/analyses',
-  './models',
-  '../createModel/createModel'
+  '../models/models',
+  './createModel'
 ], function(angular) {
-  describe('the create model controller', function() {
+  describe('the CreateModelController', function() {
     var scope, q,
       stateParamsMock = {},
       stateMock = jasmine.createSpyObj('$state', ['current']),
@@ -28,20 +28,24 @@ define([
       ]),
       modelResourceMock = jasmine.createSpyObj('ModelResource', ['save']),
       analysisServiceMock = jasmine.createSpyObj('AnalysisService', [
-        'createPairwiseOptions',
-        'createLeaveOneOutOptions',
         'createNodeSplitOptions',
         'createLikelihoodLinkOptions',
         'estimateRunLength'
       ]),
       problemResourceMock = jasmine.createSpyObj('ProblemResource', ['get']),
       pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['setPageTitle']);
-    var createModelControllerMock = jasmine.createSpyObj('CreateModelController', [
+    var createModelServiceMock = jasmine.createSpyObj('CreateModelController', [
       'createLikelihoodLink',
       'createPairWiseComparison',
+      'createPairwiseOptions',
+      'createNodeSplitComparison',
+      'createLeaveOneOutOptions',
       'heterogeneityParamsChange',
-      'getFirstStudy'
+      'getFirstStudy',
+      'buildCovariateOptions',
+      'getModelWithCovariates'
     ]);
+
     beforeEach(angular.mock.module('gemtc.models'));
     beforeEach(angular.mock.module('gemtc.createModel'));
 
@@ -72,8 +76,9 @@ define([
       };
 
       problemResourceMock.get.and.returnValue(problemMock);
-      analysisServiceMock.createLeaveOneOutOptions.and.returnValue(leaveOneOutOptionsMock);
-      analysisServiceMock.createPairwiseOptions.and.returnValue(pairwiseOptionsMock);
+      createModelServiceMock.createLeaveOneOutOptions.and.returnValue(leaveOneOutOptionsMock);
+      createModelServiceMock.createPairwiseOptions.and.returnValue(pairwiseOptionsMock);
+      createModelServiceMock.buildCovariateOptions.and.returnValue(['COVARIATE_1', 'COVARIATE_2']);
       analysisServiceMock.createNodeSplitOptions.and.returnValue(nodeSplitOptionsMock);
 
       modelResourceMock.save.and.returnValue(modelSaveResultMock);
@@ -88,7 +93,7 @@ define([
         AnalysisService: analysisServiceMock,
         ProblemResource: problemResourceMock,
         PageTitleService: pageTitleServiceMock,
-        CreateModelController: createModelControllerMock
+        CreateModelService: createModelServiceMock
       });
     }));
 
@@ -125,21 +130,27 @@ define([
           compatibility: 'incompatible'
         }];
         analysisServiceMock.createLikelihoodLinkOptions.and.returnValue(likelihoodLinkOptionsMock);
+        createModelServiceMock.createLikelihoodLink.and.returnValue(likelihoodLinkOptionsMock[0]);
+        createModelServiceMock.getModelWithCovariates.and.returnValue(scope.model);
         problemDefer.resolve(problemMock);
         scope.$apply();
       });
+
       it('should retrieve pairwise options', function() {
-        expect(analysisServiceMock.createPairwiseOptions).toHaveBeenCalledWith(problemMock);
+        expect(createModelServiceMock.createPairwiseOptions).toHaveBeenCalledWith(problemMock);
       });
+
       it('should retrieve nodesplitting options', function() {
         expect(analysisServiceMock.createNodeSplitOptions).toHaveBeenCalledWith(problemMock);
       });
+
       it('should retrieve likelihood link options and place them on the scope, and set the model ll/link function to be the first compatible one', function() {
         expect(analysisServiceMock.createLikelihoodLinkOptions).toHaveBeenCalledWith(problemMock);
         expect(scope.likelihoodLinkOptions[0]).toEqual(likelihoodLinkOptionsMock[0]);
         expect(scope.likelihoodLinkOptions[1]).toEqual(likelihoodLinkOptionsMock[1]);
         expect(scope.model.likelihoodLink).toEqual(likelihoodLinkOptionsMock[0]);
       });
+
       it('should place covariate options on the scope', function() {
         expect(scope.covariateOptions).toEqual(['COVARIATE_1', 'COVARIATE_2']);
       });
@@ -147,7 +158,6 @@ define([
     });
 
     describe('createModel', function() {
-
       describe('when creating a random network model', function() {
         var model = {
           linearModel: 'random',
@@ -179,6 +189,7 @@ define([
         it('should save the model', function() {
           expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, cleanedModel, jasmine.any(Function));
         });
+
         it('should set isAddingModel to true', function() {
           expect(scope.isAddingModel).toBe(true);
         });
@@ -226,6 +237,7 @@ define([
         it('should save the cleanedModel model', function() {
           expect(modelResourceMock.save).toHaveBeenCalledWith(stateParamsMock, cleanedModel, jasmine.any(Function));
         });
+
         it('should set isAddingModel to true', function() {
           expect(scope.isAddingModel).toBe(true);
         });
@@ -283,11 +295,9 @@ define([
           expect(modelServiceMock.createModelBatch).toHaveBeenCalledWith(model, scope.comparisonOptions, scope.nodeSplitOptions);
         });
       });
-
     });
 
     describe('isAddButtonDisabled', function() {
-
       it('should return true if the estimateRunLength is greater than 300', function() {
         var model = {
           title: 'title',
@@ -417,9 +427,6 @@ define([
 
         expect(scope.isAddButtonDisabled(model, problem)).toBe(true);
       });
-
     });
-
-
   });
 });

@@ -102,45 +102,51 @@ define(['angular', 'lodash'], function(angular, _) {
       missingColumnsLabel: "'mean', 'std.dev', and 'sampleSize'"
     }];
 
-    function problemToStudyMap(problemArg) {
-      var problem = angular.copy(problemArg);
-      var treatmentsMap = _.keyBy(problem.treatments, 'id');
-      var studyMap = _.reduce(problem.entries, function(studies, entry) {
+    function problemToStudyMap(problem) {
+      var treatments = _.keyBy(problem.treatments, 'id');
+      var studyMap = getEntriesPerStudy(problem, treatments);
+
+      if (problem.relativeEffectData) {
+        studyMap = getRelativeEntriesPerStudy(problem, treatments, studyMap);
+      }
+      return studyMap;
+    }
+
+    function getRelativeEntriesPerStudy(problem, treatments, studyMap) {
+      return _.reduce(problem.relativeEffectData.data, function(studies, entry, studyName) {
+        var studyEntry = {
+          arms: {}
+        };
+        var referenceArmName = entry.baseArm ? treatments[entry.baseArm.treatment].name : treatments[entry.referenceArm.treatment].name;
+        studyEntry.arms[referenceArmName] = _.omit(entry.baseArm, 'treatment');
+
+        _.forEach(entry.otherArms, function(arm) {
+          var armName = treatments[arm.treatment].name;
+          studyEntry.arms[armName] = _.omit(arm, 'treatment');
+        });
+
+        studies[studyName] = studyEntry;
+        return studies;
+      }, studyMap);
+    }
+
+    function getEntriesPerStudy(problem, treatments) {
+      return _.reduce(problem.entries, function(studies, entry) {
         if (!studies[entry.study]) {
           studies[entry.study] = {
             arms: {}
           };
         }
-        studies[entry.study].arms[treatmentsMap[entry.treatment].name] = _.omit(entry, 'study', 'treatment');
-
+        studies[entry.study].arms[treatments[entry.treatment].name] = _.omit(entry, 'study', 'treatment');
         return studies;
       }, {});
-
-      if (problem.relativeEffectData) {
-        studyMap = _.reduce(problem.relativeEffectData.data, function(studies, study, studyName) {
-          var studyEntry = {
-            arms: {}
-          };
-          var baseArmName = treatmentsMap[study.baseArm.treatment].name;
-          studyEntry.arms[baseArmName] = _.omit(study.baseArm, 'treatment');
-
-          _.forEach(study.otherArms, function(arm) {
-            var armName = treatmentsMap[arm.treatment].name;
-            studyEntry.arms[armName] = _.omit(arm, 'treatment');
-          });
-
-          studies[studyName] = studyEntry;
-          return studies;
-        }, studyMap);
-      }
-      return studyMap;
     }
 
     function generateEdges(interventions) {
       var edges = [];
-      _.each(interventions, function(rowIntervention, index) {
+      _.forEach(interventions, function(rowIntervention, index) {
         var rest = interventions.slice(index + 1, interventions.length);
-        _.each(rest, function(colIntervention) {
+        _.forEach(rest, function(colIntervention) {
           edges.push({
             from: rowIntervention,
             to: colIntervention
@@ -162,23 +168,8 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function transformProblemToNetwork(problem) {
-
       var network = {};
-
-      function treatmentToIntervention(treatment) {
-        var intervention = {};
-        intervention.name = treatment.name;
-        intervention.id = treatment.id;
-        intervention.sampleSize = 0;
-        if (!problem.relativeEffectData || !problem.relativeEffectData.data) {
-          intervention.sampleSize = _.reduce(problem.entries, function(totalSampleSize, entry) {
-            return entry.treatment === treatment.id ? totalSampleSize + entry.sampleSize : totalSampleSize;
-          }, intervention.sampleSize);
-        }
-        return intervention;
-      }
-
-      network.interventions = _.map(problem.treatments, treatmentToIntervention);
+      network.interventions = _.map(problem.treatments, _.partial(treatmentToIntervention, problem));
 
       network.edges = generateEdges(network.interventions);
       var studyMap = problemToStudyMap(problem);
@@ -189,6 +180,19 @@ define(['angular', 'lodash'], function(angular, _) {
       return network;
     }
 
+    function treatmentToIntervention(problem, treatment) {
+      var intervention = {};
+      intervention.name = treatment.name;
+      intervention.id = treatment.id;
+      intervention.sampleSize = 0;
+      if (!problem.relativeEffectData || !problem.relativeEffectData.data) {
+        intervention.sampleSize = _.reduce(problem.entries, function(totalSampleSize, entry) {
+          return entry.treatment === treatment.id ? totalSampleSize + entry.sampleSize : totalSampleSize;
+        }, intervention.sampleSize);
+      }
+      return intervention;
+    }
+
     function addComparisonLabels(edges) {
       return _.map(edges, function(edge) {
         return _.extend(edge, {
@@ -196,15 +200,6 @@ define(['angular', 'lodash'], function(angular, _) {
         });
       });
     }
-
-    function createPairwiseOptions(problem) {
-      var network = transformProblemToNetwork(problem);
-      var edgesWithMoreThanOneStudy = _.filter(network.edges, function(edge) {
-        return edge.studies.length > 1;
-      });
-      return addComparisonLabels(edgesWithMoreThanOneStudy);
-    }
-
 
     function isNetworkDisconnected(network) {
       var toVisit = [network.interventions[0]];
@@ -243,22 +238,6 @@ define(['angular', 'lodash'], function(angular, _) {
       return !areNodeSetsEqual(network.interventions, visited);
     }
 
-    function createLeaveOneOutOptions(problem) {
-      var studyTitles = _.map(_.uniqBy(problem.entries, 'study'), 'study');
-
-      return _.filter(studyTitles, function(studyTitle) {
-        var entriesWithoutStudy = _.filter(problem.entries, function(entry) {
-          return entry.study !== studyTitle;
-        });
-        var problemWithoutStudy = {
-          entries: entriesWithoutStudy,
-          treatments: problem.treatments
-        };
-        var network = transformProblemToNetwork(problemWithoutStudy);
-
-        return !isNetworkDisconnected(network);
-      });
-    }
 
     function countRandomEffects(entries) {
       // sum of number of arms minus number of studies
@@ -390,7 +369,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function hasRelativeEffectData(problem) {
-      return problem.relativeEffectData && problem.relativeEffectData.data;
+      return problem.relativeEffectData && problem.relativeEffectData.data && problem.relativeEffectData.data !== {};
     }
 
     function isSettingIncompatible(setting, problem) {
@@ -432,8 +411,6 @@ define(['angular', 'lodash'], function(angular, _) {
       isNetworkDisconnected: isNetworkDisconnected,
       transformProblemToNetwork: transformProblemToNetwork,
       problemToStudyMap: problemToStudyMap,
-      createPairwiseOptions: createPairwiseOptions,
-      createLeaveOneOutOptions: createLeaveOneOutOptions,
       generateEdges: generateEdges,
       estimateRunLength: estimateRunLength,
       createNodeSplitOptions: createNodeSplitOptions,

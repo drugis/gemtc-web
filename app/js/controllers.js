@@ -1,7 +1,6 @@
 'use strict';
 
 define(['./controllers/modelController',
-'./models/createModelController',
 './models/modelsController',
 './models/extendRunLengthController',
 './models/nodeSplitOverviewController',
@@ -13,7 +12,6 @@ define(['./controllers/modelController',
 'angular'
 ], function(
   ModelController,
-  CreateModelController,
   ModelsController,
   ExtendRunLengthController,
   NodeSplitOverviewController,
@@ -25,7 +23,6 @@ define(['./controllers/modelController',
   angular) {
   return angular.module('gemtc.controllers', [])
     .controller('ModelController', ModelController)
-    .controller('CreateModelController', CreateModelController)
     .controller('ModelsController', ModelsController)
     .controller('ExtendRunLengthController', ExtendRunLengthController)
     .controller('NodeSplitOverviewController', NodeSplitOverviewController)
@@ -34,12 +31,4 @@ define(['./controllers/modelController',
     .controller('AddComparisonFunnelPlotController', AddComparisonFunnelPlotController)
     .controller('PlotNavigationController', PlotNavigationController)
     .controller('SetBaselineDistributionController', SetBaselineDistributionController)
-    
-    .factory('isNumeric', function() {
-      return function(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-      };
-    })
-    ;
-  
 });

@@ -1,7 +1,15 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$stateParams', 'AnalysisService', 'EvidenceTableService'];
-  var EvidenceTableController = function($scope, $stateParams, AnalysisService, EvidenceTableService) {
+  var dependencies = [
+    '$scope',
+    'AnalysisService',
+    'EvidenceTableService'
+  ];
+  var EvidenceTableController = function(
+    $scope,
+    AnalysisService,
+    EvidenceTableService
+  ) {
 
     function matcherFactory(arg) {
       return function(row) {

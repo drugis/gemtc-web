@@ -21,7 +21,7 @@ define(
     './models/models',
     'page-title-service',
     './patavi/patavi',
-    './resources',
+    // './resources',
     './services',
     './util/util'
   ],
@@ -35,7 +35,7 @@ define(
       'gemtc.constants',
       'gemtc.models',
       'gemtc.patavi',
-      'gemtc.resources',
+      // 'gemtc.resources',
       'gemtc.services',
       'gemtc.util',
       'help-directive',
@@ -74,8 +74,17 @@ define(
       }
     ]);
 
-    app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide',
-      function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
+    app.config([
+      '$stateProvider',
+      '$urlRouterProvider',
+      '$httpProvider',
+      '$provide',
+      function(
+        $stateProvider,
+        $urlRouterProvider,
+        $httpProvider,
+        $provide
+      ) {
 
         $provide.decorator('$uiViewScroll', function() {
           return function(uiViewElement) {
@@ -115,9 +124,9 @@ define(
                 templateUrl: './analyses/evidenceTable.html',
                 controller: 'EvidenceTableController'
               },
-              'relativeEffectTable': {
-                templateUrl: './analyses/relativeEffectTable.html',
-                controller: 'RelativeEffectTableController'
+              'relativeEvidenceTable': {
+                templateUrl: './analyses/relativeEvidenceTable.html',
+                controller: 'RelativeEvidenceTableController'
               }
             }
           })

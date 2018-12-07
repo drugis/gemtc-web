@@ -268,7 +268,8 @@
           <inline-help help-key="likelihood-link"></inline-help>
         </label>
         <label>Select a likelihood/link type
-          <select ng-options="option.label group by option.compatibility for option in likelihoodLinkOptions" ng-model="model.likelihoodLink"
+          <select ng-options="option as option.label group by option.compatibility for option in likelihoodLinkOptions track by option.label" 
+            ng-model="model.likelihoodLink"
             id="likelihood-link-select"></select>
         </label>
       </div>

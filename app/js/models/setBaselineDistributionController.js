@@ -53,18 +53,18 @@ define(['lodash'], function(_) {
       });
     }
 
-    var baselineDistribution = {
-      selectedAlternative: localAlternatives[0]
-    };
-
+    
     var settings = _.find(AnalysisService.LIKELIHOOD_LINK_SETTINGS, function(setting) {
       return setting.likelihood === outcomeWithAnalysis.selectedModel.likelihood &&
-        setting.link === outcomeWithAnalysis.selectedModel.link;
+      setting.link === outcomeWithAnalysis.selectedModel.link;
     });
-
-    baselineDistribution.scale = settings.absoluteScale;
-    baselineDistribution.link = settings.link;
     
+    var baselineDistribution = {
+      selectedAlternative: localAlternatives[0],
+      scale: settings.absoluteScale, 
+      link: settings.link
+    };
+
     $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives,
       settings.absoluteScale, settings.link);
 
@@ -78,7 +78,7 @@ define(['lodash'], function(_) {
       baselineDistribution.type = baselineDistributionType.type;
       $scope.distributionName = baselineDistributionType.scaleName;
     }
-    
+
     $scope.scaleLabel = _.includes(['log odds', 'hazard ratio'], baselineDistribution.scale) ?
       'probability' : baselineDistribution.scale;
     $scope.isSurvival = baselineDistribution.type === 'dsurv';
@@ -101,35 +101,40 @@ define(['lodash'], function(_) {
         scale: $scope.baselineDistribution.scale,
         name: selectedArm.alternativeName
       };
-      if ($scope.baselineDistribution.type === 'dbeta-logit') {
-        newBaselineDistribution.alpha = selectedArm.responders + 1;
-        newBaselineDistribution.beta = selectedArm.sampleSize - selectedArm.responders + 1;
-        newBaselineDistribution.type = 'dbeta-logit';
-      } else if ($scope.baselineDistribution.type === 'dnorm') {
-        newBaselineDistribution.mu = selectedArm.mu;
-        newBaselineDistribution.sigma = $scope.isMissingSampleSize ? selectedArm.stdErr : selectedArm.sigma;
-        newBaselineDistribution.type = 'dnorm';
-      } else if ($scope.baselineDistribution.type === 'dt') {
-        newBaselineDistribution.mu = selectedArm.mu;
-        newBaselineDistribution.stdErr = selectedArm.stdErr;
-        newBaselineDistribution.dof = selectedArm.sampleSize - 1;
-        newBaselineDistribution.type = 'dt';
-      } else if ($scope.baselineDistribution.type === 'dsurv') {
-        newBaselineDistribution.alpha = selectedArm.responders + 0.001;
-        newBaselineDistribution.beta = selectedArm.exposure + 0.001;
-        newBaselineDistribution.type = 'dsurv';
-        newBaselineDistribution.summaryMeasure = 'none';
-      } else if ($scope.baselineDistribution.type === 'dbeta-cloglog') {
-        newBaselineDistribution.alpha = selectedArm.responders + 1;
-        newBaselineDistribution.beta = selectedArm.sampleSize - selectedArm.responders + 1;
-        newBaselineDistribution.type = 'dbeta-cloglog';
-      } else {
-        return;
+      switch ($scope.baselineDistribution.type) {
+        case 'dbeta-logit':
+          newBaselineDistribution.alpha = selectedArm.responders + 1;
+          newBaselineDistribution.beta = selectedArm.sampleSize - selectedArm.responders + 1;
+          newBaselineDistribution.type = 'dbeta-logit';
+          break;
+        case 'dnorm':
+          newBaselineDistribution.mu = selectedArm.mu;
+          newBaselineDistribution.sigma = $scope.isMissingSampleSize ? selectedArm.stdErr : selectedArm.sigma;
+          newBaselineDistribution.type = 'dnorm';
+          break;
+        case 'dt':
+          newBaselineDistribution.mu = selectedArm.mu;
+          newBaselineDistribution.stdErr = selectedArm.stdErr;
+          newBaselineDistribution.dof = selectedArm.sampleSize - 1;
+          newBaselineDistribution.type = 'dt';
+          break;
+        case 'dsurv':
+          newBaselineDistribution.alpha = selectedArm.responders + 0.001;
+          newBaselineDistribution.beta = selectedArm.exposure + 0.001;
+          newBaselineDistribution.type = 'dsurv';
+          newBaselineDistribution.summaryMeasure = 'none';
+          break;
+        case 'dbeta-cloglog':
+          newBaselineDistribution.alpha = selectedArm.responders + 1;
+          newBaselineDistribution.beta = selectedArm.sampleSize - selectedArm.responders + 1;
+          newBaselineDistribution.type = 'dbeta-cloglog';
+          break;
+        default:
+          return;
       }
       $scope.baselineDistribution = newBaselineDistribution;
       $scope.isInValidBaseline = isInValidBaseline($scope.baselineDistribution);
     }
-
 
     function alternativeSelectionChanged() {
       $scope.selections.armIdx = 0;

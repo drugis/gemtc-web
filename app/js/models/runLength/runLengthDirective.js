@@ -1,7 +1,17 @@
 'use strict';
 define(['moment', 'lodash'], function(moment, _) {
-  var dependencies = ['$q', 'AnalysisService', 'ModelService'];
-  var RunLengthDirective = function($q, AnalysisService, ModelService) {
+  var dependencies = [
+    '$q',
+    'AnalysisService',
+    'ModelService',
+    'CreateModelService'
+  ];
+  var RunLengthDirective = function(
+    $q,
+    AnalysisService,
+    ModelService,
+    CreateModelService
+  ) {
     return {
       restrict: 'E',
       templateUrl: './runLength.html',
@@ -44,7 +54,7 @@ define(['moment', 'lodash'], function(moment, _) {
           if ((model.modelType.mainType === 'pairwise' && model.modelType.subType === 'all-pairwise') ||
             (model.modelType.mainType === 'node-split' && model.modelType.subType === 'all-node-split')
           ) {
-            var comparisonOptions = AnalysisService.createPairwiseOptions(problem);
+            var comparisonOptions = CreateModelService.createPairwiseOptions(problem);
             var nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
             var modelBatch = ModelService.createModelBatch(model, comparisonOptions, nodeSplitOptions);
             $scope.estimatedRunLength = _.max(_.map(modelBatch, function(model) {

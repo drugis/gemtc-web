@@ -2,8 +2,13 @@
 define(['angular', 'angular-mocks', './createModel'], function(angular) {
   describe('The createModelService', function() {
     var createModelService;
-
-    beforeEach(angular.mock.module('gemtc.createModel'));
+    var analysisService = jasmine.createSpyObj('AnalysisService', [
+      'transformProblemToNetwork',
+      'isNetworkDisconnected'
+    ]);
+    beforeEach(angular.mock.module('gemtc.createModel', function($provide) {
+      $provide.value('AnalysisService', analysisService);
+    }));
 
     beforeEach(inject(function(CreateModelService) {
       createModelService = CreateModelService;
@@ -290,5 +295,96 @@ define(['angular', 'angular-mocks', './createModel'], function(angular) {
         expect(result).toEqual(expectedResult);
       });
     });
+
+    describe('createLeaveOneOutOptions', function() {
+      var result;
+      var problem = {
+        entries: [{
+          study: 'Study1',
+          treatment: 1,
+          responders: 58,
+          sampleSize: 100
+        }, {
+          study: 'Study1',
+          treatment: 2,
+          responders: 53,
+          sampleSize: 103
+        }, {
+          study: 'Study2',
+          treatment: 1,
+          responders: 54,
+          sampleSize: 99
+        }, {
+          study: 'Study2',
+          treatment: 2,
+          responders: 90,
+          sampleSize: 109
+        }, {
+          study: 'Study3',
+          treatment: 2,
+          responders: 54,
+          sampleSize: 99
+        }]
+      };
+      beforeEach(function() {
+        result = createModelService.createLeaveOneOutOptions(problem);
+        analysisService.isNetworkDisconnected.and.returnValues(true);
+      });
+
+      it('should create the options for leave one out sensitivity analysis from the problem', function() {
+        var expectedResult = ['Study1', 'Study2', 'Study3'];
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('createPairwiseOptions', function() {
+      var network = {
+        edges: [{
+          from: { name: 'name1' },
+          to: { name: 'name2' },
+          studies: [
+            { id: 1 }, { id: 2 }
+          ]
+        }, {
+          from: { name: 'name3' },
+          to: { name: 'name4' },
+          studies: [
+            { id: 3 }, { id: 4 }
+          ]
+        }, {
+          from: { name: 'name5' },
+          to: { name: 'name6' },
+          studies: [
+            { id: 5 }
+          ]
+        }]
+      };
+
+      beforeEach(function() {
+        analysisService.transformProblemToNetwork.and.returnValue(network);
+      });
+
+      it('should create the options for pairwise comparisons from the problem', function() {
+        var problem = { id: 1 };
+        var result = createModelService.createPairwiseOptions(problem);
+        var expectedResult = [{
+          label: 'name1 - name2',
+          from: { name: 'name1' },
+          to: { name: 'name2' },
+          studies: [
+            { id: 1 }, { id: 2 }
+          ]
+        }, {
+          label: 'name3 - name4',
+          from: { name: 'name3' },
+          to: { name: 'name4' },
+          studies: [
+            { id: 3 }, { id: 4 }
+          ]
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
   });
 });

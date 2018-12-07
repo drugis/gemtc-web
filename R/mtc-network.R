@@ -4,28 +4,18 @@ mtc.network <- function (data.ab = data, treatments = NULL, description = "Netwo
     if (is.null(data.ab) && is.null(data.re)) {
         stop("Either `data.ab' or `data.re' (or both) must be specified")
     }
-    print('Bro')
     if (!is.null(data.ab)) {
         if (!is.data.frame(data.ab)) {
-    print('Bro')
             data.ab <- do.call(rbind, lapply(data.ab, as.data.frame))
         }
-    print('Bro remove one arm')
         data.ab <- remove.onearm(data.ab, warn = TRUE)
-    print('Brolidate')
         mtc.validate.data.ab(data.ab)
     }
-    print('Bronull')
-    print(data.re)
     if (!is.null(data.re)) {
-    print('Bro')
         if (!is.data.frame(data.re)) {
-    print('Bro')
             data.re <- do.call(rbind, lapply(data.re, as.data.frame))
         }
-    print('Bro')
         data.re <- remove.onearm(data.re, warn = TRUE)
-    print('Bro')
         mtc.validate.data.re(data.re)
     }
     if (is.null(treatments)) {

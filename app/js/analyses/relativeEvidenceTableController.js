@@ -1,7 +1,13 @@
 'use strict';
 define([], function() {
-  var dependencies = ['$scope', '$stateParams', 'AnalysisService', 'EvidenceTableService'];
-  var RelativeEffectTableController = function($scope, $stateParams, AnalysisService, EvidenceTableService) {
+  var dependencies = [
+    '$scope',
+    'EvidenceTableService'
+  ];
+  var RelativeEvidenceTableController = function(
+    $scope,
+    EvidenceTableService
+  ) {
 
     $scope.analysis.$promise.then(function(analysis) {
       $scope.scale = analysis.problem.relativeEffectData.scale;
@@ -9,5 +15,5 @@ define([], function() {
     });
 
   };
-  return dependencies.concat(RelativeEffectTableController);
+  return dependencies.concat(RelativeEvidenceTableController);
 });

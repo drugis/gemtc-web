@@ -65,7 +65,7 @@ define(['angular', 'lodash'], function(angular, _) {
       treatmentInteraction: 'shared',
       leaveOneOut: {}
     };
-
+        
     $scope.isTaskTooLong = false;
     $scope.isValidHeterogeneityPrior = true;
     $scope.selectedCovariateValueHasNullValues = false;
@@ -76,12 +76,12 @@ define(['angular', 'lodash'], function(angular, _) {
 
     $scope.problem = ProblemResource.get($stateParams);
     $scope.problem.$promise.then(function(problem) {
-      $scope.comparisonOptions = AnalysisService.createPairwiseOptions(problem);
+      $scope.comparisonOptions = CreateModelService.createPairwiseOptions(problem);
       $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
       $scope.binaryCovariateNames = ModelService.getBinaryCovariateNames(problem);
       $scope.isProblemWithCovariates = ModelService.isProblemWithCovariates(problem);
       $scope.likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
-      $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions(problem, $scope.model.modelType.mainType);
+      $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions(problem, $scope.model.modelType.mainType);
 
       $scope.model.pairwiseComparison = CreateModelService.createPairWiseComparison(
         $scope.model.pairwiseComparison, $scope.nodeSplitOptions);
@@ -128,7 +128,7 @@ define(['angular', 'lodash'], function(angular, _) {
 
       if (mainType === 'network') {
         $scope.model.modelType.subType = '';
-        $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem);
+        $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions($scope.problem);
         $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
       }
       if (mainType === 'pairwise') {
@@ -138,7 +138,7 @@ define(['angular', 'lodash'], function(angular, _) {
         $scope.model.modelType.subType = 'all-node-split';
       }
       if (mainType === 'regression') {
-        $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem);
+        $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions($scope.problem);
         $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
         $scope.model.modelType.subType = '';
         covariateChange();
@@ -155,7 +155,7 @@ define(['angular', 'lodash'], function(angular, _) {
       $scope.model.leaveOneOut = {};
 
       if (isValidModelTypeForLeaveOneOut()) {
-        $scope.leaveOneOutOptions = AnalysisService.createLeaveOneOutOptions($scope.problem);
+        $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions($scope.problem);
 
         if ($scope.model.modelType.mainType === 'pairwise' && $scope.model.modelType.subType === 'specific-pairwise') {
           $scope.leaveOneOutOptions = _.filter($scope.leaveOneOutOptions, function(option) {
@@ -254,7 +254,6 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function isAddButtonDisabled(model, problem) {
       $scope.selectedCovariateValueHasNullValues = model.modelType.mainType === 'regression' && variableHasNAValues(model.covariateOption, problem);
-
       return !model ||
         !model.title ||
         !!$scope.isAddingModel ||

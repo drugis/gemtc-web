@@ -1,7 +1,19 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = ['$scope', '$state', '$stateParams', 'AnalysisResource', 'ModelResource'];
-  var ModelsController = function($scope, $state, $stateParams, AnalysisResource, ModelResource) {
+  var dependencies = [
+    '$scope',
+    '$state',
+    '$stateParams',
+    'AnalysisResource',
+    'ModelResource'
+  ];
+  var ModelsController = function(
+    $scope,
+    $state,
+    $stateParams,
+    AnalysisResource,
+    ModelResource
+  ) {
     $scope.modelsLoaded = false;
     $scope.archivedFilter = archivedFilter;
     $scope.analysisId = $stateParams.analysisId;

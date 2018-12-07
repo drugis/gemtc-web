@@ -13,7 +13,7 @@ define([
   './models/funnelPlot/funnelPlotService',
   './models/metaRegressionService',
   'angular',
-  './resources'
+  // './resources'
 ], function(
   RelativeEffectsTableService,
   DevianceStatisticsService,
@@ -27,7 +27,7 @@ define([
   FunnelPlotService,
   MetaRegressionService,
   angular) {
-    return angular.module('gemtc.services', ['gemtc.resources'])
+    return angular.module('gemtc.services', [])
       .factory('RelativeEffectsTableService', RelativeEffectsTableService)
       .factory('DevianceStatisticsService', DevianceStatisticsService)
       .factory('ModelService', ModelService)

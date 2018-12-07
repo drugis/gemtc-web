@@ -13,34 +13,34 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
     describe('problemToStudyMap', function() {
       describe('for an absolute problem', function() {
         var problem = {
-          'entries': [{
-            'study': 'Study1',
-            'treatment': 1,
-            'responders': 58,
-            'sampleSize': 100
+          entries: [{
+            study: 'Study1',
+            treatment: 1,
+            responders: 58,
+            sampleSize: 100
           }, {
-            'study': 'Study1',
-            'treatment': 2,
-            'responders': 53,
-            'sampleSize': 103
+            study: 'Study1',
+            treatment: 2,
+            responders: 53,
+            sampleSize: 103
           }, {
-            'study': 'Study2',
-            'treatment': 1,
-            'responders': 58,
-            'sampleSize': 100
+            study: 'Study2',
+            treatment: 1,
+            responders: 58,
+            sampleSize: 100
           }, {
-            'study': 'Study2',
-            'treatment': 2,
-            'responders': 53,
-            'sampleSize': 103
+            study: 'Study2',
+            treatment: 2,
+            responders: 53,
+            sampleSize: 103
           }],
           relativeEffectData: {},
-          'treatments': [{
-            'id': 1,
-            'name': 'Treatment1'
+          treatments: [{
+            id: 1,
+            name: 'Treatment1'
           }, {
-            'id': 2,
-            'name': 'Treatment2'
+            id: 2,
+            name: 'Treatment2'
           }]
         };
 
@@ -48,24 +48,24 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
           'Study1': {
             arms: {
               'Treatment1': {
-                'responders': 58,
-                'sampleSize': 100
+                responders: 58,
+                sampleSize: 100
               },
               'Treatment2': {
-                'responders': 53,
-                'sampleSize': 103
+                responders: 53,
+                sampleSize: 103
               }
             }
           },
           'Study2': {
             arms: {
               'Treatment1': {
-                'responders': 58,
-                'sampleSize': 100
+                responders: 58,
+                sampleSize: 100
               },
               'Treatment2': {
-                'responders': 53,
-                'sampleSize': 103
+                responders: 53,
+                sampleSize: 103
               }
             }
           }
@@ -86,26 +86,26 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
       });
       describe('for an mixed absolute/relative problem', function() {
         var problem = {
-          'entries': [{
-            'study': 'Study1',
-            'treatment': 1,
-            'responders': 58,
-            'sampleSize': 100
+          entries: [{
+            study: 'Study1',
+            treatment: 1,
+            responders: 58,
+            sampleSize: 100
           }, {
-            'study': 'Study1',
-            'treatment': 2,
-            'responders': 53,
-            'sampleSize': 103
+            study: 'Study1',
+            treatment: 2,
+            responders: 53,
+            sampleSize: 103
           }, {
-            'study': 'Study2',
-            'treatment': 1,
-            'responders': 58,
-            'sampleSize': 100
+            study: 'Study2',
+            treatment: 1,
+            responders: 58,
+            sampleSize: 100
           }, {
-            'study': 'Study2',
-            'treatment': 2,
-            'responders': 53,
-            'sampleSize': 103
+            study: 'Study2',
+            treatment: 2,
+            responders: 53,
+            sampleSize: 103
           }],
           relativeEffectData: {
             scale: 'log odds ratio',
@@ -134,12 +134,12 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
               }
             }
           },
-          'treatments': [{
-            'id': 1,
-            'name': 'Treatment1'
+          treatments: [{
+            id: 1,
+            name: 'Treatment1'
           }, {
-            'id': 2,
-            'name': 'Treatment2'
+            id: 2,
+            name: 'Treatment2'
           }]
         };
 
@@ -147,24 +147,24 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
           'Study1': {
             arms: {
               'Treatment1': {
-                'responders': 58,
-                'sampleSize': 100
+                responders: 58,
+                sampleSize: 100
               },
               'Treatment2': {
-                'responders': 53,
-                'sampleSize': 103
+                responders: 53,
+                sampleSize: 103
               }
             }
           },
           'Study2': {
             arms: {
               'Treatment1': {
-                'responders': 58,
-                'sampleSize': 100
+                responders: 58,
+                sampleSize: 100
               },
               'Treatment2': {
-                'responders': 53,
-                'sampleSize': 103
+                responders: 53,
+                sampleSize: 103
               }
             }
           },
@@ -207,7 +207,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
       });
       describe('for an relative-only problem', function() {
         var problem = {
-          'entries': [],
+          entries: [],
           relativeEffectData: {
             scale: 'log odds ratio',
             data: {
@@ -235,12 +235,12 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
               }
             }
           },
-          'treatments': [{
-            'id': 1,
-            'name': 'Treatment1'
+          treatments: [{
+            id: 1,
+            name: 'Treatment1'
           }, {
-            'id': 2,
-            'name': 'Treatment2'
+            id: 2,
+            name: 'Treatment2'
           }]
         };
 
@@ -289,46 +289,46 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
 
         var network;
         var problem = {
-          'entries': [{
-            'study': 'Study1',
-            'treatment': 1,
-            'responders': 58,
-            'sampleSize': 100
+          entries: [{
+            study: 'Study1',
+            treatment: 1,
+            responders: 58,
+            sampleSize: 100
           }, {
-            'study': 'Study1',
-            'treatment': 2,
-            'responders': 53,
-            'sampleSize': 103
+            study: 'Study1',
+            treatment: 2,
+            responders: 53,
+            sampleSize: 103
           }, {
-            'study': 'Study2',
-            'treatment': 1,
-            'responders': 54,
-            'sampleSize': 99
+            study: 'Study2',
+            treatment: 1,
+            responders: 54,
+            sampleSize: 99
           }, {
-            'study': 'Study2',
-            'treatment': 3,
-            'responders': 90,
-            'sampleSize': 109
+            study: 'Study2',
+            treatment: 3,
+            responders: 90,
+            sampleSize: 109
           }, {
-            'study': 'Study3',
-            'treatment': 2,
-            'responders': 54,
-            'sampleSize': 99
+            study: 'Study3',
+            treatment: 2,
+            responders: 54,
+            sampleSize: 99
           }, {
-            'study': 'Study3',
-            'treatment': 3,
-            'responders': 90,
-            'sampleSize': 109
+            study: 'Study3',
+            treatment: 3,
+            responders: 90,
+            sampleSize: 109
           }],
-          'treatments': [{
-            'id': 1,
-            'name': 'Treatment1'
+          treatments: [{
+            id: 1,
+            name: 'Treatment1'
           }, {
-            'id': 2,
-            'name': 'Treatment2'
+            id: 2,
+            name: 'Treatment2'
           }, {
-            'id': 3,
-            'name': 'Treatment3'
+            id: 3,
+            name: 'Treatment3'
           }]
         };
 
@@ -357,25 +357,25 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
         var network;
         var problem = {
           entries: [{
-            'study': 'Study1',
-            'treatment': 1,
-            'responders': 58,
-            'sampleSize': 100
+            study: 'Study1',
+            treatment: 1,
+            responders: 58,
+            sampleSize: 100
           }, {
-            'study': 'Study1',
-            'treatment': 2,
-            'responders': 53,
-            'sampleSize': 103
+            study: 'Study1',
+            treatment: 2,
+            responders: 53,
+            sampleSize: 103
           }, {
-            'study': 'Study2',
-            'treatment': 1,
-            'responders': 54,
-            'sampleSize': 99
+            study: 'Study2',
+            treatment: 1,
+            responders: 54,
+            sampleSize: 99
           }, {
-            'study': 'Study2',
-            'treatment': 3,
-            'responders': 90,
-            'sampleSize': 109
+            study: 'Study2',
+            treatment: 3,
+            responders: 90,
+            sampleSize: 109
           }],
           relativeEffectData: {
             scale: 'log odds ratio',
@@ -394,14 +394,14 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
             }
           },
           treatments: [{
-            'id': 1,
-            'name': 'Treatment1'
+            id: 1,
+            name: 'Treatment1'
           }, {
-            'id': 2,
-            'name': 'Treatment2'
+            id: 2,
+            name: 'Treatment2'
           }, {
-            'id': 3,
-            'name': 'Treatment3'
+            id: 3,
+            name: 'Treatment3'
           }]
         };
 
@@ -426,64 +426,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
       });
     });
 
-    describe('createPairwiseOptions', function() {
-      var options;
-      var mockProblem = {
-        'entries': [{
-          'study': 'Study1',
-          'treatment': 1,
-          'responders': 58,
-          'sampleSize': 100
-        }, {
-          'study': 'Study1',
-          'treatment': 2,
-          'responders': 53,
-          'sampleSize': 103
-        }, {
-          'study': 'Study2',
-          'treatment': 1,
-          'responders': 54,
-          'sampleSize': 99
-        }, {
-          'study': 'Study2',
-          'treatment': 2,
-          'responders': 90,
-          'sampleSize': 109
-        }, {
-          'study': 'Study3',
-          'treatment': 2,
-          'responders': 54,
-          'sampleSize': 99
-        }, {
-          'study': 'Study3',
-          'treatment': 3,
-          'responders': 90,
-          'sampleSize': 109
-        }],
-        'treatments': [{
-          'id': 1,
-          'name': 'Treatment1'
-        }, {
-          'id': 2,
-          'name': 'Treatment2'
-        }, {
-          'id': 3,
-          'name': 'Treatment3'
-        }]
-      };
-
-      beforeEach(function() {
-        options = analysisService.createPairwiseOptions(mockProblem);
-      });
-
-      it('should create the options for pairwise comparisons from the problem', function() {
-        expect(options.length).toBe(1);
-        expect(options[0].label).toEqual('Treatment1 - Treatment2');
-      });
-    });
-
     describe('isNetworkDisconnected', function() {
-
       it('should return true if the network is connected', function() {
         var network = {
           interventions: [{
@@ -549,60 +492,6 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
           }]
         };
         expect(analysisService.isNetworkDisconnected(network)).toBeTruthy();
-      });
-    });
-
-    describe('createLeaveOneOutOptions', function() {
-      var options;
-      var mockProblem = {
-        'entries': [{
-          'study': 'Study1',
-          'treatment': 1,
-          'responders': 58,
-          'sampleSize': 100
-        }, {
-          'study': 'Study1',
-          'treatment': 2,
-          'responders': 53,
-          'sampleSize': 103
-        }, {
-          'study': 'Study2',
-          'treatment': 1,
-          'responders': 54,
-          'sampleSize': 99
-        }, {
-          'study': 'Study2',
-          'treatment': 2,
-          'responders': 90,
-          'sampleSize': 109
-        }, {
-          'study': 'Study3',
-          'treatment': 2,
-          'responders': 54,
-          'sampleSize': 99
-        }, {
-          'study': 'Study3',
-          'treatment': 3,
-          'responders': 90,
-          'sampleSize': 109
-        }],
-        'treatments': [{
-          'id': 1,
-          'name': 'Treatment1'
-        }, {
-          'id': 2,
-          'name': 'Treatment2'
-        }, {
-          'id': 3,
-          'name': 'Treatment3'
-        }]
-      };
-      beforeEach(function() {
-        options = analysisService.createLeaveOneOutOptions(mockProblem);
-      });
-
-      it('should create the options for leave one out sensitivity analysis from the problem', function() {
-        expect(options.length).toBe(2);
       });
     });
 
@@ -1003,24 +892,23 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
     });
 
     describe('createLikelihoodLinkOptions', function() {
-
       it('should create 6 options for dichotomous studies, having a title, likelihood and compatibility', function() {
         var problem = {
-          'entries': [{
-            'study': 'Rudolph and Feiger, 1999',
-            'treatment': 4,
-            'sampleSize': 100,
-            'responders': 58
+          entries: [{
+            study: 'Rudolph and Feiger, 1999',
+            treatment: 4,
+            sampleSize: 100,
+            responders: 58
           }, {
-            'study': 'Rudolph and Feiger, 1999',
-            'treatment': 2,
-            'sampleSize': 103,
-            'responders': 53
+            study: 'Rudolph and Feiger, 1999',
+            treatment: 2,
+            sampleSize: 103,
+            responders: 53
           }]
         };
         var likelihoodLinkOptions = analysisService.createLikelihoodLinkOptions(problem);
         expect(likelihoodLinkOptions.length).toBe(6);
-        
+
         expect(likelihoodLinkOptions[0].label).toBe('binom/logit (odds ratio)');
         expect(likelihoodLinkOptions[0].compatibility).toBe('compatible');
         expect(likelihoodLinkOptions[1].label).toBe('binom/log (risk ratio)');
@@ -1040,9 +928,9 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
 
       it('should create 6 options for continuous studies, having a title, likelihood and compatibility', function() {
         var problem = {
-          'entries': [{
-            'study': 'Rudolph and Feiger, 1999',
-            'treatment': 4,
+          entries: [{
+            study: 'Rudolph and Feiger, 1999',
+            treatment: 4,
             'mean': 100,
             'std.err': 58
           }]
@@ -1060,7 +948,6 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
       });
 
       it('should allow everything for zero entries (ie. most likely a relative effects problem)', function() {
-
         var problem = {
           entries: []
         };
@@ -1077,11 +964,11 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
 
       it('should only allow options that fit the selected scale in the case of mixed absolute/relative data', function() {
         var problem = {
-          'entries': [{
-            'study': 'Rudolph and Feiger, 1999',
-            'treatment': 2,
-            'sampleSize': 103,
-            'responders': 53
+          entries: [{
+            study: 'Rudolph and Feiger, 1999',
+            treatment: 2,
+            sampleSize: 103,
+            responders: 53
           }],
           relativeEffectData: {
             scale: 'mean difference',
@@ -1101,7 +988,6 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
     });
 
     describe('getScaleName', function() {
-
       it('should return the appropriate scale', function() {
         var model = {
           likelihood: 'binom',
@@ -1110,6 +996,28 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
         var scale = analysisService.getScaleName(model);
         expect(scale).toEqual('risk ratio');
 
+      });
+    });
+
+    describe('generateEdges', () => {
+      it('should generate the edges', () => {
+        var interventions = [{ id: 1 }, { id: 2 }, { id: 3 }];
+        var result = analysisService.generateEdges(interventions);
+        var expectedResult = [
+          {
+            from: { id: 1 },
+            to: { id: 2 }
+          },
+          {
+            from: { id: 1 },
+            to: { id: 3 }
+          },
+          {
+            from: { id: 2 },
+            to: { id: 3 }
+          }
+        ];
+        expect(result).toEqual(expectedResult);
       });
     });
   });

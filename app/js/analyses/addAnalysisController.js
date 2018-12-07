@@ -1,10 +1,21 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$http', '$scope', '$location', 'AnalysisResource', 'ModelResource',
-    '$modalInstance', 'FileUploadService', 'AnalysisService'
+  var dependencies = [
+    '$scope',
+    '$location',
+    'AnalysisResource',
+    '$modalInstance',
+    'FileUploadService',
+    'AnalysisService'
   ];
-  var AddAnalysisController = function($http, $scope, $location, AnalysisResource, ModelResource,
-    $modalInstance, FileUploadService, AnalysisService) {
+  var AddAnalysisController = function(
+    $scope,
+    $location,
+    AnalysisResource,
+    $modalInstance,
+    FileUploadService,
+    AnalysisService
+  ) {
 
     $scope.analysis = {
       outcome: {

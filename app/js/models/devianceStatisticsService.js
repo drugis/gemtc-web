@@ -7,9 +7,9 @@ define(['lodash'], function(_) {
       var table = [];
       var treatmentMap = _.keyBy(problem.treatments, 'id');
 
-      _.each(devianceStatistics.perArmDeviance, function(deviance, study) {
+      _.forEach(devianceStatistics.perArmDeviance, function(deviance, study) {
         var firstStudyRow = true;
-        _.each(deviance, function(devianceEntry, treatmentId) {
+        _.forEach(deviance, function(devianceEntry, treatmentId) {
           var row = {
             studyName: study,
             armName: treatmentMap[treatmentId].name,
@@ -17,7 +17,7 @@ define(['lodash'], function(_) {
             leverage: devianceStatistics.perArmLeverage[study][treatmentId]
           };
           if (firstStudyRow) {
-            row.rowSpan = Object.keys(deviance).length;
+            row.rowSpan = _.size(deviance);
           }
           table.push(row);
           firstStudyRow = false;
@@ -27,16 +27,27 @@ define(['lodash'], function(_) {
       return table;
     }
 
-    function buildRelativeTable(devianceStatistics) {
-      return _.map(devianceStatistics.relativeDeviance, function(value, key) {
+    function buildRelativeTable(devianceStatistics, problem) {
+      return _.map(devianceStatistics.relativeDeviance, function(value, id) {
         return {
-          studyName: key,
+          studyName: getStudyName(id, problem),
           deviance: value,
-          leverage: devianceStatistics.relativeLeverage[key]
+          leverage: devianceStatistics.relativeLeverage[id]
         };
       });
     }
 
+    function getStudyName(id, problem) {
+      if (problem.relativeEffectData.data[id] &&
+        problem.relativeEffectData.data[id].otherArms &&
+        problem.relativeEffectData.data[id].otherArms[0]
+      ) {
+        return problem.relativeEffectData.data[id].otherArms[0].study;
+      }
+      else {
+        return id;
+      }
+    }
     return {
       buildAbsoluteTable: buildAbsoluteTable,
       buildRelativeTable: buildRelativeTable

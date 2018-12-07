@@ -181,20 +181,43 @@ define(['angular', 'angular-mocks', 'gemtc-web/services'], function(angular) {
       });
     });
     describe('buildRelativeTable function', function() {
-      it('should create one row per study', function() {
+      it('should create one row per study and look up their study names', function() {
 
         var testStatistics = {
           relativeDeviance: {
-            'jansen und fransen': 4,
-            'pietchen und fritzchen': 5,
-            'valkenhoeffe und schtroehmberg': 6
+            study1: 4,
+            study2: 5,
+            study3: 6
           },
           relativeLeverage: {
-            'jansen und fransen': 7,
-            'pietchen und fritzchen': 8,
-            'valkenhoeffe und schtroehmberg': 9
+            study1: 7,
+            study2: 8,
+            study3: 9
           }
         };
+
+        var problem = {
+          relativeEffectData: {
+            data: {
+              study1: {
+                otherArms: [{
+                  study: 'jansen und fransen'
+                }]
+              },
+              study2: {
+                otherArms: [{
+                  study: 'pietchen und fritzchen'
+                }]
+              },
+              study3: {
+                otherArms: [{
+                  study: 'valkenhoeffe und schtroehmberg'
+                }]
+              }
+            }
+          }
+        };
+
         var expectedTable = [{
           studyName: 'jansen und fransen',
           deviance: 4,
@@ -208,8 +231,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/services'], function(angular) {
           deviance: 6,
           leverage: 9
         }];
-
-        var result = devianceStatisticsService.buildRelativeTable(testStatistics);
+        var result = devianceStatisticsService.buildRelativeTable(testStatistics, problem);
         expect(result.length).toBe(3);
         expect(result).toEqual(expectedTable);
       });

@@ -1,6 +1,6 @@
 'use strict';
-define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
-  var dependencies = ['isNumeric'];
+define(['lodash', 'papaparse', 'angular'], function(_, papaparse) {
+  var dependencies = [];
 
   var STUDY_TREATMENT = [
     'study',
@@ -53,7 +53,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       }]
     }
   **/
-  var CSVParseService = function(isNumeric) {
+  var CSVParseService = function() {
 
     /**
      * Takes a string in csv format
@@ -122,6 +122,10 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
         message: isValid ? '' : 'Error: non-numeric data in data column',
         data: [].concat([header], normalisedRows)
       };
+    }
+
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
     /**
@@ -305,7 +309,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       }
 
       function addToRelativeEffectData(accum, entry) {
-        function isNullOrNa(val){
+        function isNullOrNa(val) {
           return val === 'NA' || val === null;
         }
         function isBaseEntry(entry) {
@@ -375,6 +379,7 @@ define(['angular', 'lodash', 'papaparse'], function(angular, _, papaparse) {
       };
 
       return parseResult;
+
     }
 
     return {

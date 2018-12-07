@@ -331,7 +331,8 @@ gemtc <- function(params) {
 
     # create relative effects
     relEffects <- params[['relativeEffectData']]
-    dataToRow <- function(data, study) {
+
+    dataToRow <- function(data, study) { #inner function
       dataAsList <- as.list(data)
       row <- data.frame(
         study=as.character(study),
@@ -345,6 +346,7 @@ gemtc <- function(params) {
       }
       row
     }
+    
     relEffectsData <- as.list(relEffects)[['data']]
     data.re <- data.frame(study=character(0), treatment=character(0), diff=numeric(0), std.err=numeric(0), stringsAsFactors=FALSE)
     for (study in names(relEffectsData)) {
