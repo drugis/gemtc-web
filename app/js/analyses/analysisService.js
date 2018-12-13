@@ -389,7 +389,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function hasRelativeEffectData(problem) {
-      return problem.relativeEffectData && problem.relativeEffectData.data && _.isEqual(problem.relativeEffectData.data, {});
+      return problem.relativeEffectData && problem.relativeEffectData.data && !_.isEqual(problem.relativeEffectData.data, {});
     }
 
     function isSettingIncompatible(setting, problem) {

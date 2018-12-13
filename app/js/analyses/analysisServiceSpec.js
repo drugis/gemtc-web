@@ -891,7 +891,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
       });
     });
 
-    describe('createLikelihoodLinkOptions', function() {
+    describe('createLike  lihoodLinkOptions', function() {
       it('should create 6 options for dichotomous studies, having a title, likelihood and compatibility', function() {
         var problem = {
           entries: [{
@@ -972,7 +972,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
           }],
           relativeEffectData: {
             scale: 'mean difference',
-            data: {}
+            data: {some:'data'}
           }
         };
 
