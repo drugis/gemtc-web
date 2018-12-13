@@ -368,18 +368,6 @@ define(['angular', 'lodash'], function(angular, _) {
       }));
     }
 
-    function hasRelativeEffectData(problem) {
-      return problem.relativeEffectData && problem.relativeEffectData.data && problem.relativeEffectData.data !== {};
-    }
-
-    function isSettingIncompatible(setting, problem) {
-      return _.find(problem.entries, function(entry) {
-        return _.every(setting.columns, function(columnNames) {
-          return _.intersection(_.keys(entry), columnNames).length !== columnNames.length;
-        });
-      });
-    }
-
     function createLikelihoodLinkOptions(problem) {
       return _(LIKELIHOOD_LINK_SETTINGS).map(_.partial(createLinkSetting, problem))
         .sortBy(['compatibility', 'compatible'])
@@ -398,6 +386,18 @@ define(['angular', 'lodash'], function(angular, _) {
       option.label = option.likelihood + '/' + option.link + ' (' + option.scale + ')';
       option.compatibility = isIncompatible ? 'incompatible' : 'compatible';
       return option;
+    }
+
+    function hasRelativeEffectData(problem) {
+      return problem.relativeEffectData && problem.relativeEffectData.data && _.isEqual(problem.relativeEffectData.data, {});
+    }
+
+    function isSettingIncompatible(setting, problem) {
+      return _.some(problem.entries, function(entry) {
+        return _.every(setting.columns, function(columnNames) {
+          return _.intersection(_.keys(entry), columnNames).length !== columnNames.length;
+        });
+      });
     }
 
     function getScaleName(model) {
