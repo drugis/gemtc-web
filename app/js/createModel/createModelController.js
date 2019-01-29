@@ -84,7 +84,7 @@ define(['angular', 'lodash'], function(angular, _) {
       $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions(problem, $scope.model.modelType.mainType);
 
       $scope.model.pairwiseComparison = CreateModelService.createPairWiseComparison(
-        $scope.model.pairwiseComparison, $scope.nodeSplitOptions);
+        $scope.model.pairwiseComparison, $scope.comparisonOptions);
       $scope.model.nodeSplitComparison = CreateModelService.createNodeSplitComparison(
         $scope.model.nodeSplitComparison, $scope.nodeSplitOptions);
       $scope.model.likelihoodLink = CreateModelService.createLikelihoodLink(

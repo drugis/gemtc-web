@@ -357,13 +357,10 @@ define(['angular', 'lodash'], function(angular, _) {
     // an indirect comparison means that there is a path from A to B that is not the edge A-B
     function createNodeSplitOptions(problem) {
       var network = transformProblemToNetwork(problem);
-
       network.edges = getNonEmptyEdges(network);
-
       return addComparisonLabels(_.filter(network.edges, function(edge) {
         var strippedNetwork = removeStudiesFromNetwork(edge.studies, network);
         strippedNetwork.edges = getNonEmptyEdges(strippedNetwork);
-
         return hasIndirectPath(edge.from, edge.to, strippedNetwork, [edge.from]);
       }));
     }

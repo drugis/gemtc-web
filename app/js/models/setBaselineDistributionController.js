@@ -1,6 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope',
+  var dependencies = [
+    '$scope',
     '$modalInstance',
     'AnalysisService',
     'outcomeWithAnalysis',
@@ -10,7 +11,8 @@ define(['lodash'], function(_) {
     'problem',
     'ModelService'
   ];
-  var SetBaselineDistributionController = function($scope,
+  var SetBaselineDistributionController = function(
+    $scope,
     $modalInstance,
     AnalysisService,
     outcomeWithAnalysis,
@@ -18,7 +20,8 @@ define(['lodash'], function(_) {
     setBaselineDistribution,
     alternatives,
     problem,
-    ModelService) {
+    ModelService
+  ) {
     // functions
     $scope.outcomeWithAnalysis = outcomeWithAnalysis;
     $scope.armSelectionChanged = armSelectionChanged;
@@ -53,15 +56,14 @@ define(['lodash'], function(_) {
       });
     }
 
-    
     var settings = _.find(AnalysisService.LIKELIHOOD_LINK_SETTINGS, function(setting) {
       return setting.likelihood === outcomeWithAnalysis.selectedModel.likelihood &&
-      setting.link === outcomeWithAnalysis.selectedModel.link;
+        setting.link === outcomeWithAnalysis.selectedModel.link;
     });
-    
+
     var baselineDistribution = {
       selectedAlternative: localAlternatives[0],
-      scale: settings.absoluteScale, 
+      scale: settings.absoluteScale,
       link: settings.link
     };
 
