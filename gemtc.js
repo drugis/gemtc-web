@@ -55,7 +55,7 @@ switch (authenticationMethod) {
 console.log('Authentication method: ' + authenticationMethod);
 
 app.get('/logout', function(req, res) {
-  req.session.destroy(function(err){
+  req.session.destroy(function(err) {
     res.redirect('/');
   });
 });
@@ -85,8 +85,8 @@ app.use('/css/fonts', express.static('./dist/fonts'));
 app.use(function(error, req, res, next) {
   if (error && error.type === signin.SIGNIN_ERROR) {
     res.send(401, 'login failed');
-  }else{
-    next();
+  } else {
+    next(error, req, res);
   }
 });
 app.use(errorHandler);
