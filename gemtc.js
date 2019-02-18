@@ -85,6 +85,8 @@ app.use('/css/fonts', express.static('./dist/fonts'));
 app.use(function(error, req, res, next) {
   if (error && error.type === signin.SIGNIN_ERROR) {
     res.send(401, 'login failed');
+  }else{
+    next();
   }
 });
 app.use(errorHandler);
