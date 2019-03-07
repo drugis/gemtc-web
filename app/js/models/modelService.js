@@ -189,9 +189,9 @@ define(['lodash'], function(_) {
 
         return accum;
       }, {
-        min: undefined,
-        max: undefined
-      });
+          min: undefined,
+          max: undefined
+        });
     }
 
     function getBinaryCovariateNames(problem) {

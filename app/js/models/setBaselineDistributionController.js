@@ -26,10 +26,10 @@ define(['lodash'], function(_) {
     $scope.outcomeWithAnalysis = outcomeWithAnalysis;
     $scope.armSelectionChanged = armSelectionChanged;
     $scope.alternativeSelectionChanged = alternativeSelectionChanged;
+    $scope.valueChanged = valueChanged;
 
     // init
     $scope.selections = {};
-    $scope.isInValidBaseline = isInValidBaseline;
 
     $scope.summaryMeasureOptions = [{
       label: 'none',
@@ -63,8 +63,7 @@ define(['lodash'], function(_) {
 
     var baselineDistribution = {
       selectedAlternative: localAlternatives[0],
-      scale: settings.absoluteScale,
-      link: settings.link
+      scale: settings.absoluteScale
     };
 
     $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives,
@@ -90,14 +89,16 @@ define(['lodash'], function(_) {
     $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
       return $scope.arms[alternative.id].length;
     });
-
-
-    function isInValidBaseline(baselineDistribution) {
-      return ModelService.isInValidBaseline(baselineDistribution);
-    }
-
+    $scope.hasInValidBaseline = true;
+    
     function armSelectionChanged() {
       var selectedArm = $scope.arms[$scope.baselineDistribution.selectedAlternative.id][$scope.selections.armIdx];
+      if (!selectedArm) {
+        return {
+          scale: $scope.baselineDistribution.scale,
+          type: $scope.baselineDistribution.type
+        };
+      }
       var newBaselineDistribution = {
         selectedAlternative: $scope.baselineDistribution.selectedAlternative,
         scale: $scope.baselineDistribution.scale,
@@ -135,9 +136,13 @@ define(['lodash'], function(_) {
           return;
       }
       $scope.baselineDistribution = newBaselineDistribution;
-      $scope.isInValidBaseline = isInValidBaseline($scope.baselineDistribution);
+      valueChanged();
     }
 
+    function valueChanged() {
+      $scope.hasInValidBaseline = ModelService.isInValidBaseline($scope.baselineDistribution);
+    }
+    
     function alternativeSelectionChanged() {
       $scope.selections.armIdx = 0;
       $scope.armSelectionChanged();
