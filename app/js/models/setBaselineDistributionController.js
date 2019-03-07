@@ -91,10 +91,6 @@ define(['lodash'], function(_) {
     });
     $scope.hasInValidBaseline = true;
     
-    function valueChanged() {
-      $scope.hasInValidBaseline = ModelService.isInValidBaseline($scope.baselineDistribution);
-    }
-
     function armSelectionChanged() {
       var selectedArm = $scope.arms[$scope.baselineDistribution.selectedAlternative.id][$scope.selections.armIdx];
       if (!selectedArm) {
@@ -140,9 +136,13 @@ define(['lodash'], function(_) {
           return;
       }
       $scope.baselineDistribution = newBaselineDistribution;
-      $scope.valueChanged = valueChanged($scope.baselineDistribution);
+      valueChanged();
     }
 
+    function valueChanged() {
+      $scope.hasInValidBaseline = ModelService.isInValidBaseline($scope.baselineDistribution);
+    }
+    
     function alternativeSelectionChanged() {
       $scope.selections.armIdx = 0;
       $scope.armSelectionChanged();
