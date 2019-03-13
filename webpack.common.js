@@ -69,22 +69,25 @@ let config = {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'app/index.html',
+      template: 'app/index.ejs',
       inject: 'head',
-      chunks: ['main']
+      chunks: ['main'],
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo.html'))
     }),
     new HtmlWebpackPlugin({
       filename: 'signin.html',
       template: 'app/signin.ejs',
       inject: 'head',
       chunks: ['signin'],
-      signin: fs.readFileSync(require.resolve('signin/googleSignin.html')) 
+      signin: fs.readFileSync(require.resolve('signin/googleSignin.html')),
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo.html')) 
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',
-      template: 'app/manual.html',
+      template: 'app/manual.ejs',
       inject: 'head',
-      chunks: ['manual']
+      chunks: ['manual'],
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo.html'))
     }),
     new CleanWebpackPlugin(['dist'])
   ],
