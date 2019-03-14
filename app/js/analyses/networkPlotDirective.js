@@ -48,7 +48,7 @@ define(['angular'], function(angular) {
                   interventions = NetworkMetaAnalysisService.addInclusionsToInterventions(interventions, analysis.interventionInclusions);
                   var includedInterventions = NetworkMetaAnalysisService.getIncludedInterventions(interventions);
                   var momentSelections = NetworkMetaAnalysisService.buildMomentSelections(trialverseData, analysis);
-                  var network = NetworkMetaAnalysisService.transformTrialDataToNetwork(trialverseData, includedInterventions, analysis, momentSelections);
+                  var network = NetworkMetaAnalysisService.transformStudiesToNetwork(trialverseData, includedInterventions, analysis, momentSelections);
                   NetworkPlotService.drawNetwork(network, element, width, height);
                 });
             });
