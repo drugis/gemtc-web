@@ -410,39 +410,55 @@ define(['lodash'], function(_) {
     }
 
     function isInValidBaseline(baselineDistribution) {
-      if (baselineDistribution.type === 'dbeta-logit' || baselineDistribution.type === 'dbeta-cloglog') {
-        return (baselineDistribution.alpha === undefined ||
-          baselineDistribution.alpha === null ||
-          baselineDistribution.alpha < 1 ||
-          baselineDistribution.beta === undefined ||
-          baselineDistribution.beta === null ||
-          baselineDistribution.beta < 1);
-      } else if (baselineDistribution.type === 'dnorm') {
-        return (baselineDistribution.mu === undefined ||
-          baselineDistribution.mu === null ||
-          baselineDistribution.sigma === undefined ||
-          baselineDistribution.sigma === null ||
-          baselineDistribution.sigma < 0);
-      } else if (baselineDistribution.type === 'dt') {
-        return (baselineDistribution.mu === undefined ||
-          baselineDistribution.mu === null ||
-          baselineDistribution.stdErr === undefined ||
-          baselineDistribution.stdErr === null ||
-          baselineDistribution.stdErr < 0);
-      } else if (baselineDistribution.type === 'dsurv') {
-        return (baselineDistribution.alpha === undefined ||
-          baselineDistribution.alpha === null ||
-          baselineDistribution.alpha <= 0 ||
-          baselineDistribution.beta === undefined ||
-          baselineDistribution.beta === null ||
-          baselineDistribution.beta <= 0 ||
-          baselineDistribution.summaryMeasure === undefined ||
-          (baselineDistribution.summaryMeasure === 'survivalAtTime' && baselineDistribution.time === undefined) ||
-          (baselineDistribution.summaryMeasure === 'survivalAtTime' && baselineDistribution.time === null) ||
-          (baselineDistribution.summaryMeasure === 'survivalAtTime' && baselineDistribution.time < 0));
+      switch (baselineDistribution.type) {
+        case 'dbeta-logit':
+          return checkDichotomous(baselineDistribution);
+        case 'dbeta-cloglog':
+          return checkDichotomous(baselineDistribution);
+        case 'dnorm':
+          return checkNormal(baselineDistribution);
+        case 'dt':
+          return checkStudentsT(baselineDistribution);
+        case 'dsurv':
+          return checkSurvival(baselineDistribution);
+        default:
+          return true; // unknown types are always invalid
       }
-      return true; // unknown types are always invalid
     }
+
+    function checkDichotomous(baselineDistribution) {
+      return (isNullOrUndefined(baselineDistribution.alpha) ||
+        baselineDistribution.alpha < 1 ||
+        isNullOrUndefined(baselineDistribution.beta) ||
+        baselineDistribution.beta < 1);
+    }
+
+    function checkNormal(baselineDistribution) {
+      return (isNullOrUndefined(baselineDistribution.mu) ||
+        isNullOrUndefined(baselineDistribution.sigma) ||
+        baselineDistribution.sigma < 0);
+    }
+
+    function checkStudentsT(baselineDistribution) {
+      return (isNullOrUndefined(baselineDistribution.mu) ||
+        isNullOrUndefined(baselineDistribution.stdErr) ||
+        baselineDistribution.stdErr < 0);
+    }
+
+    function checkSurvival(baselineDistribution) {
+      return (isNullOrUndefined(baselineDistribution.alpha) ||
+        baselineDistribution.alpha <= 0 ||
+        isNullOrUndefined(baselineDistribution.beta) ||
+        baselineDistribution.beta <= 0 ||
+        baselineDistribution.summaryMeasure === undefined ||
+        (baselineDistribution.summaryMeasure === 'survivalAtTime' && isNullOrUndefined(baselineDistribution.time)) ||
+        (baselineDistribution.summaryMeasure === 'survivalAtTime' && baselineDistribution.time < 0));
+    }
+
+    function isNullOrUndefined(value) {
+      return value === null || value === undefined;
+    }
+
     return {
       cleanModel: cleanModel,
       toFrontEnd: toFrontEnd,

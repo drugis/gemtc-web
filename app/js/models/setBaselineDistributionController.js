@@ -27,10 +27,12 @@ define(['lodash'], function(_) {
     $scope.armSelectionChanged = armSelectionChanged;
     $scope.alternativeSelectionChanged = alternativeSelectionChanged;
     $scope.valueChanged = valueChanged;
-
+    $scope.cancel = cancel;
+    
     // init
     $scope.selections = {};
-
+    $scope.hasInValidBaseline = true;
+    
     $scope.summaryMeasureOptions = [{
       label: 'none',
       id: 'none'
@@ -89,7 +91,6 @@ define(['lodash'], function(_) {
     $scope.filteredAlternatives = _.filter(localAlternatives, function(alternative) {
       return $scope.arms[alternative.id].length;
     });
-    $scope.hasInValidBaseline = true;
     
     function armSelectionChanged() {
       var selectedArm = $scope.arms[$scope.baselineDistribution.selectedAlternative.id][$scope.selections.armIdx];
@@ -157,9 +158,9 @@ define(['lodash'], function(_) {
       $modalInstance.close();
     };
 
-    $scope.cancel = function() {
+     function cancel() {
       $modalInstance.close('cancel');
-    };
+    }
   };
   return dependencies.concat(SetBaselineDistributionController);
 });
