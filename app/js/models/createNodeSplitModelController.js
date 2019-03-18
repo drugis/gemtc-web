@@ -1,8 +1,27 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'ModelResource', 'problem', 'baseModel', 'comparison', 'successCallback'];
-  var CreateNodeSplitModelController = function($scope, $modalInstance, $stateParams, ModelResource, problem, baseModel, comparison, successCallback) {
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
+    '$stateParams',
+    'ModelResource',
+    'baseModel',
+    'comparison',
+    'successCallback'];
+  var CreateNodeSplitModelController = function(
+    $scope,
+    $modalInstance,
+    $stateParams,
+    ModelResource,
+    baseModel,
+    comparison,
+    successCallback
+  ) {
+    // functions
+    $scope.createNodeSplitModel = createNodeSplitModel;
+    $scope.cancel = $modalInstance.close;
 
+    // init
     var modelCopy = angular.copy(baseModel);
     modelCopy.title = 'Nodesplit model (' + comparison.label + ')';
     delete modelCopy.id;
@@ -12,11 +31,6 @@ define(['angular', 'lodash'], function(angular, _) {
 
     $scope.model = modelCopy;
     $scope.isCreatingModel = false;
-    $scope.createNodeSplitModel = createNodeSplitModel;
-
-    $scope.cancel = function() {
-      $modalInstance.close();
-    };
 
     function createNodeSplitModel(model) {
       $scope.isCreatingModel = true;
@@ -30,7 +44,6 @@ define(['angular', 'lodash'], function(angular, _) {
         $modalInstance.close();
       });
     }
-
   };
   return dependencies.concat(CreateNodeSplitModelController);
 });
