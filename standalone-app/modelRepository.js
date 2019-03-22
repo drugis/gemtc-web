@@ -61,7 +61,7 @@ function findByAnalysis(analysisId, callback) {
     });
 }
 
-function createModel(ownerAccountId, analysisId, newModel, callback) {
+function createModel(analysisId, newModel, callback) {
 
   db.query(
     ' INSERT INTO model (' + columnString + ') ' +

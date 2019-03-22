@@ -23,12 +23,10 @@ var userId = 1;
 var modelRepository = {},
   modelService = {},
   pataviTaskRepository = {},
-  analysisRepository = {},
   funnelPlotRepository = {},
   modelBaselineRepository = {};
 
 var modelRouter = proxyquire('../standalone-app/modelRouter', {
-  './analysisRepository': analysisRepository,
   './modelRepository': modelRepository,
   './modelService': modelService,
   './pataviTaskRepository': pataviTaskRepository,
@@ -111,42 +109,14 @@ describe('modelRouter', function() {
         });
     });
   });
-  describe('POST request to / with owner that is not the session user', function() {
 
-    beforeEach(function() {
-      var analysis = {
-        owner: 399,
-      };
-      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
-    });
-    afterEach(function() {
-      analysisRepository.get.restore();
-    });
-
-    it('should return FORBIDDEN', function(done) {
-      var newModel = {};
-      request
-        .post(BASE_PATH + '1/models/')
-        .send(newModel)
-        .end(function(err, res) {
-          assert(err);
-          res.should.have.property('status', httpStatus.FORBIDDEN);
-          done();
-        });
-    });
-  });
   describe('POST request to / with owner that is the logged in user', function() {
     var createdId = 101;
 
     beforeEach(function() {
-      var analysis = {
-        owner: userId,
-      };
-      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
       sinon.stub(modelRepository, 'create').onCall(0).yields(null, createdId);
     });
     afterEach(function() {
-      analysisRepository.get.restore();
       modelRepository.create.restore();
     });
 
@@ -235,45 +205,18 @@ describe('modelRouter', function() {
         });
     });
   });
-  describe('POST request to /:modelId where the user is not the analysis owner', function() {
-    beforeEach(function() {
-      var analysis = {
-        owner: 399,
-      };
-      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
-    });
-    afterEach(function() {
-      analysisRepository.get.restore();
-    });
-    it('should return FORBIDDEN', function(done) {
-      var newModel = {};
-      request
-        .post(BASE_PATH + '1/models/1')
-        .send(newModel)
-        .end(function(err, res) {
-          assert(err);
-          res.should.have.property('status', httpStatus.FORBIDDEN);
-          done();
-        });
-    });
-  });
+
   describe('POST request to /:modelId with owner that is the logged in user', function() {
     var model = {
       analysisId: 1,
       id: 2
     };
     beforeEach(function() {
-      var analysis = {
-        id: 1,
-        owner: userId,
-      };
-      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
       sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
       sinon.stub(modelService, 'update').onCall(0).yields(null);
       sinon.stub(pataviTaskRepository, 'deleteTask').onCall(0).yields(null);
     });
     afterEach(function() {
-      analysisRepository.get.restore();
       modelRepository.get.restore();
       pataviTaskRepository.deleteTask.restore();
       modelService.update.restore();
@@ -298,15 +241,9 @@ describe('modelRouter', function() {
       id: 2
     };
     beforeEach(function() {
-      var analysis = {
-        id: 1,
-        owner: userId,
-      };
-      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
       sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
     });
     afterEach(function() {
-      analysisRepository.get.restore();
       modelRepository.get.restore();
     });
 
@@ -327,12 +264,7 @@ describe('modelRouter', function() {
       analysisId: 1,
       id: 2
     };
-    var analysis = {
-      id: 1,
-      owner: userId,
-    };
     beforeEach(function() {
-      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
       sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
       sinon.stub(modelService, 'update').onCall(0).yields({
         statusCode: 500,
@@ -341,7 +273,6 @@ describe('modelRouter', function() {
       sinon.stub(pataviTaskRepository, 'deleteTask').onCall(0).yields(null);
     });
     afterEach(function() {
-      analysisRepository.get.restore();
       modelRepository.get.restore();
       pataviTaskRepository.deleteTask.restore();
       modelService.update.restore();
@@ -364,22 +295,16 @@ describe('modelRouter', function() {
       analysisId: 1,
       id: 2
     };
-    var analysis = {
-      id: 1,
-      owner: userId,
-    };
 
     var setArchiveStub;
 
     beforeEach(function() {
-      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
       sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
       setArchiveStub = sinon.stub(modelRepository, 'setArchive');
       setArchiveStub.onCall(0).yields(null);
     });
 
     afterEach(function() {
-      analysisRepository.get.restore();
       modelRepository.get.restore();
       modelRepository.setArchive.restore();
     });
@@ -404,17 +329,11 @@ describe('modelRouter', function() {
       id: 2
     };
     beforeEach(function() {
-      var analysis = {
-        owner: userId,
-      };
-
-      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
       sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
       funnelCreate = sinon.stub(funnelPlotRepository, 'create');
       funnelCreate.onCall(0).yields(null);
     });
     afterEach(function() {
-      analysisRepository.get.restore();
       funnelPlotRepository.create.restore();
       modelRepository.get.restore();
     });
@@ -524,22 +443,17 @@ describe('modelRouter', function() {
       "name": "D",
       "type": "dnorm"
     };
-    var analysis = {
-      owner: userId,
-    };
     var model = {
       analysisId: 1,
       id: modelId
     };
 
     beforeEach(function() {
-      sinon.stub(analysisRepository, 'get').onCall(0).yields(null, analysis);
       sinon.stub(modelRepository, 'get').onCall(0).yields(null, model);
       sinon.stub(modelBaselineRepository, 'set').onCall(0).yields(null);
     });
 
     afterEach(function() {
-      analysisRepository.get.restore();
       modelRepository.get.restore();
       modelBaselineRepository.set.restore();
     });

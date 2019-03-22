@@ -17,10 +17,6 @@ function queryAnalyses(request, response, next) {
   });
 }
 
-function isAnalysisOwner(analysis, accountId) {
-  return analysis.owner === accountId;
-}
-
 function getAnalysis(request, response, next) {
   logger.debug('get analysis by id ' + request.params.analysisId);
   analysisRepository.get(request.params.analysisId, function(error, analysis) {
@@ -29,11 +25,7 @@ function getAnalysis(request, response, next) {
       response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
       response.end();
     } else {
-      if (isAnalysisOwner(analysis, request.user.id)) {
-        response.json(analysis);
-      } else {
-        response.sendStatus(statusCodes.FORBIDDEN);
-      }
+      response.json(analysis);
       next();
     }
   });

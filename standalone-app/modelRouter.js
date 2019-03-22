@@ -4,7 +4,6 @@ var logger = require('./logger'),
   httpStatus = require('http-status-codes'),
   _ = require('lodash'),
   async = require('async'),
-  analysisRepository = require('./analysisRepository'),
   modelRepository = require('./modelRepository'),
   modelService = require('./modelService'),
   pataviTaskRouter = require('./pataviTaskRouter'),
@@ -13,8 +12,8 @@ var logger = require('./logger'),
   modelBaselineRepository = require('./modelBaselineRepository');
 
 module.exports = express.Router({
-    mergeParams: true
-  })
+  mergeParams: true
+})
   .get('/', find)
   .post('/', createModel)
   .get('/:modelId', getModel)
@@ -29,10 +28,7 @@ module.exports = express.Router({
   .use('/:modelId/task', pataviTaskRouter);
 
 function decorateWithRunStatus(modelsResult, pataviResult) {
-  var pataviTasks = _.reduce(pataviResult, function(accum, result) {
-    accum[result.id] = result;
-    return accum;
-  }, {});
+  var pataviTasks = _.keyBy(pataviResult, 'id');
   return _.map(modelsResult, function(model) {
     return _.extend(model, {
       runStatus: pataviTasks[model.taskUrl].runStatus
@@ -47,34 +43,35 @@ function find(request, response, next) {
   modelRepository.findByAnalysis(analysisId, function(error, modelsResult) {
 
     if (error) {
-      next({
+      return next({
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
         message: error
       });
-    } else {
-      var modelsWithTasks = _.filter(modelsResult, function(model) {
-        return model.taskUrl !== null && model.taskUrl !== undefined;
-      });
-      var modelsWithoutTasks = _.filter(modelsResult, function(model) {
-        return model.taskUrl === null || model.taskUrl === undefined;
-      });
-      if (modelsWithTasks.length) {
-        var taskUrls = _.map(modelsWithTasks, 'taskUrl');
-        pataviTaskRepository.getPataviTasksStatus(taskUrls, function(error, pataviResult) {
-          if (error) {
-            next({
-              statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-              message: error
-            });
-          } else {
-            var decoratedResult = decorateWithRunStatus(modelsWithTasks, pataviResult);
-            response.json(decoratedResult.concat(modelsWithoutTasks));
-          }
-        });
-      } else {
-        response.json(modelsResult);
-      }
     }
+
+    var modelsWithTasks = _.filter(modelsResult, function(model) {
+      return model.taskUrl !== null && model.taskUrl !== undefined;
+    });
+    var modelsWithoutTasks = _.filter(modelsResult, function(model) {
+      return model.taskUrl === null || model.taskUrl === undefined;
+    });
+    if (modelsWithTasks.length) {
+      var taskUrls = _.map(modelsWithTasks, 'taskUrl');
+      pataviTaskRepository.getPataviTasksStatus(taskUrls, function(error, pataviResult) {
+        if (error) {
+          next({
+            statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+            message: error
+          });
+        } else {
+          var decoratedResult = decorateWithRunStatus(modelsWithTasks, pataviResult);
+          response.json(decoratedResult.concat(modelsWithoutTasks));
+        }
+      });
+    } else {
+      response.json(modelsResult);
+    }
+
   });
 }
 
@@ -85,7 +82,6 @@ function getResult(request, response, next) {
   var modelCache;
 
   async.waterfall([
-
     function(callback) {
       modelRepository.get(modelId, callback);
     },
@@ -122,18 +118,9 @@ function createModel(request, response, next) {
   logger.debug('create model.');
   logger.debug('request.params.analysisId' + request.params.analysisId);
   var analysisId = Number.parseInt(request.params.analysisId);
-  var userId = request.user.id;
-
   async.waterfall([
-
     function(callback) {
-      analysisRepository.get(analysisId, callback);
-    },
-    function(analysis, callback) {
-      checkOwnership(analysis.owner, userId, callback);
-    },
-    function(callback) {
-      modelRepository.create(userId, analysisId, request.body, callback);
+      modelRepository.create(analysisId, request.body, callback);
     },
     function(createdId) {
       response
@@ -150,47 +137,16 @@ function createModel(request, response, next) {
   });
 }
 
-function checkOwnership(owner, userId, callback) {
-  logger.debug('check owner with ownerId = ' + owner + ' and userId = ' + userId);
-  if (owner !== userId) {
-    callback({
-      statusCode: httpStatus.FORBIDDEN,
-      message: 'attempt to modify model in not-owned analysis'
-    });
-  } else {
-    callback();
-  }
-}
-
-function checkCoordinates(analysisId, model, callback) {
-  logger.debug('check analysisId = ' + analysisId + ' and model.analysisId = ' + model.analysisId);
-  if (analysisId !== model.analysisId) {
-    callback({
-      statusCode: httpStatus.NOT_FOUND,
-      message: 'analysis/model combination not found'
-    });
-  } else {
-    callback();
-  }
-}
-
 function extendRunLength(request, response, next) {
   logger.debug('extend model runlength.');
   logger.debug('analysisId ' + request.params.analysisId);
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = request.user.id;
 
   var modelCache;
   var newModel = request.body;
 
   async.waterfall([
-    function(callback) {
-      analysisRepository.get(analysisId, callback);
-    },
-    function(analysis, callback) {
-      checkOwnership(analysis.owner, userId, callback);
-    },
     function(callback) {
       modelRepository.get(modelId, callback);
     },
@@ -214,15 +170,8 @@ function addFunnelPlot(request, response, next) {
   logger.debug('add funnel plot');
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = request.user.id;
 
   async.waterfall([
-    function(callback) {
-      analysisRepository.get(analysisId, callback);
-    },
-    function(analysis, callback) {
-      checkOwnership(analysis.owner, userId, callback);
-    },
     function(callback) {
       modelRepository.get(modelId, callback);
     },
@@ -238,23 +187,20 @@ function addFunnelPlot(request, response, next) {
   ], next);
 }
 
+
 function queryFunnnelPlots(request, response, next) {
   var modelId = Number.parseInt(request.params.modelId);
-  funnelPlotRepository.findByModelId(modelId, function(error, result) {
-    if (error) {
-      next({
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        message: error
-      });
-    } else {
-      response.json(result);
-    }
-  });
+  getFunnelPlotsById(request, response, next, funnelPlotRepository.findByModelId, modelId);
 }
 
 function getFunnelPlot(request, response, next) {
   var plotId = Number.parseInt(request.params.plotId);
-  funnelPlotRepository.findByPlotId(plotId, function(error, result) {
+  getFunnelPlotsById(request, response, next, funnelPlotRepository.findByPlotId, plotId);
+}
+
+
+function getFunnelPlotsById(request, response, next, getter, id) {
+  getter(id, function(error, result) {
     if (error) {
       next({
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
@@ -284,15 +230,8 @@ function setBaseline(request, response, next) {
   logger.debug('set model baseline');
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = request.user.id;
   var baseline = request.body;
   async.waterfall([
-    function(callback) {
-      analysisRepository.get(analysisId, callback);
-    },
-    function(analysis, callback) {
-      checkOwnership(analysis.owner, userId, callback);
-    },
     function(callback) {
       modelRepository.get(modelId, callback);
     },
@@ -312,17 +251,10 @@ function setAttributes(request, response, next) {
   logger.debug('set model attributes');
   var analysisId = Number.parseInt(request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var userId = Number.parseInt(request.user.id);
   var isArchived = request.body.archived;
   var modelToSet;
   var archivedOn = isArchived ? new Date() : null;
-    async.waterfall([
-    function(callback) {
-      analysisRepository.get(analysisId, callback);
-    },
-    function(analysis, callback) {
-      checkOwnership(analysis.owner, userId, callback);
-    },
+  async.waterfall([
     function(callback) {
       modelRepository.get(modelId, callback);
     },
@@ -351,4 +283,16 @@ function getModel(request, response, next) {
       response.json(result);
     }
   });
+}
+
+function checkCoordinates(analysisId, model, callback) {
+  logger.debug('check analysisId = ' + analysisId + ' and model.analysisId = ' + model.analysisId);
+  if (analysisId !== model.analysisId) {
+    callback({
+      statusCode: httpStatus.NOT_FOUND,
+      message: 'analysis/model combination not found'
+    });
+  } else {
+    callback();
+  }
 }
