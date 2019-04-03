@@ -110,7 +110,7 @@ app.all('*', loginUtils.securityMiddleware);
 app.use('/user', function(req, res) {
   res.json(_.omit(req.user, ['username', 'id', 'password']));
 });
-app.all(rightsManagement.expressMiddleware);
+app.use(rightsManagement.expressMiddleware);
 app.use('/patavi', mcdaPataviTaskRouter);
 app.use('/analyses', analysisRouter);
 app.use('/analyses/:analysisId/models', modelRouter);
