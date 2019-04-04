@@ -6,7 +6,7 @@
           distribution
         </h3>
       </div>
-      <div class="cell" ng-if="arms.length">
+      <div class="cell" ng-if="armCount > 0">
         <label>Alternative
           <select ng-model="baselineDistribution.selectedAlternative"
             ng-options="filteredAlternative.name for filteredAlternative in filteredAlternatives"
@@ -102,7 +102,7 @@
       </div>
     </div>
 
-    <div class="grid-x" ng-show="arms">
+    <div class="grid-x" ng-show="armCount > 0">
       <div class="cell">
         <caption>Evidence for baseline alternative</caption>
         <table>

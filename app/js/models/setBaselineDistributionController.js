@@ -68,6 +68,7 @@ define(['lodash'], function(_) {
 
     $scope.arms = ModelService.buildBaselineSelectionEvidence(problem, localAlternatives,
       settings.absoluteScale, settings.link);
+    $scope.armCount = _.keys($scope.arms).length;
 
     $scope.isMissingSampleSize = _.find($scope.arms, function(armList) {
       return _.find(armList, function(arm) {
