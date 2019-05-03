@@ -50,8 +50,14 @@ function createAnalysis(request, response, next) {
 function getProblem(request, response, next) {
   logger.debug('analysisRouter.getProblem');
   analysisRepository.get(request.params.analysisId, function(error, result) {
-    response.json(result.problem);
-    next();
+    if (error) {
+      logger.error(error);
+      response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
+      response.end();
+    } else {
+      response.json(result.problem);
+      next();
+    }
   });
 }
 
@@ -64,10 +70,28 @@ function setPrimaryModel(request, response, next) {
       logger.error(error);
       response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
       response.end();
+    } else {
+      response.sendStatus(statusCodes.OK);
+      next();
     }
-    response.sendStatus(statusCodes.OK);
-    next();
   });
+}
+
+function setTitle(request, response, next) {
+  logger.debug('analysisRouter.setTitle');
+  var analysisId = request.params.analysisId;
+  var newTitle = request.body.newTitle;
+  analysisRepository.setTitle(analysisId, newTitle, function(error) {
+    if (error) {
+      logger.error(error);
+      response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
+      response.end();
+    } else {
+      response.sendStatus(statusCodes.OK);
+      next();
+    }
+  });
+
 }
 
 module.exports = {
@@ -75,5 +99,6 @@ module.exports = {
   getAnalysis: getAnalysis,
   createAnalysis: createAnalysis,
   getProblem: getProblem,
-  setPrimaryModel: setPrimaryModel
+  setPrimaryModel: setPrimaryModel,
+  setTitle: setTitle
 };

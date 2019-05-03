@@ -46,6 +46,5 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
         expect(modal.open).toHaveBeenCalled();
       });
     });
-
   });
 });
