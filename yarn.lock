@@ -2856,14 +2856,14 @@ expect-ct@0.2.0:
   resolved "https://registry.yarnpkg.com/expect-ct/-/expect-ct-0.2.0.tgz#3a54741b6ed34cc7a93305c605f63cd268a54a62"
   integrity sha512-6SK3MG/Bbhm8MsgyJAylg+ucIOU71/FzyFalcfu5nY19dH8y/z0tBJU0wrNBXD4B27EoQtqPF/9wqH0iYAd04g==
 
-export-directive@drugis/export-directive#1.2.2:
-  version "1.2.2"
-  resolved "https://codeload.github.com/drugis/export-directive/tar.gz/040dc24d7619bc185fb8723cb35f33b9da0c37fb"
+export-directive@drugis/export-directive#1.2.3:
+  version "1.2.3"
+  resolved "https://codeload.github.com/drugis/export-directive/tar.gz/555631f8288840abdd59dc0c00fc13f0725bc731"
   dependencies:
     angular "~1.6.6"
     clipboard "~2.0.1"
     d3 "~3.5.6"
-    jquery "~3.3.1"
+    jquery "~3.4.0"
     js-base64 "^2.4.9"
     lodash "^4.17.10"
 
@@ -4054,11 +4054,6 @@ jasmine-core@~3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.2.1.tgz#8e4ff5b861603ee83343f2b49eee6a0ffe9650ce"
   integrity sha512-pa9tbBWgU0EE4SWgc85T4sa886ufuQdsgruQANhECYjwqgV4z7Vw/499aCaP8ZH79JDS4vhm8doDG9HO4+e4sA==
-
-jquery@~3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
-  integrity sha512-Ubldcmxp5np52/ENotGxlLe6aGMvmF4R8S6tZjsP6Knsaxd/xp3Zrh50cG93lR6nPXyUFwzN3ZSOQI0wRJNdGg==
 
 jquery@~3.4.0:
   version "3.4.1"
