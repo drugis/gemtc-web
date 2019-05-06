@@ -2,6 +2,7 @@
 var logger = require('./logger');
 var analysisRepository = require('./analysisRepository');
 var statusCodes = require('http-status-codes');
+var _ = require('lodash');
 
 function queryAnalyses(request, response, next) {
   logger.debug('query analyses');
@@ -48,7 +49,7 @@ function createAnalysis(request, response, next) {
 }
 
 function getProblem(request, response, next) {
-  logger.debug('analysisRouter.getProblem');
+  logger.debug('analysisHandler.getProblem');
   analysisRepository.get(request.params.analysisId, function(error, result) {
     if (error) {
       logger.error(error);
@@ -62,51 +63,41 @@ function getProblem(request, response, next) {
 }
 
 function setPrimaryModel(request, response, next) {
-  logger.info('analysisRouter.setPrimaryModel');
+  logger.info('analysisHandler.setPrimaryModel');
   var analysisId = request.params.analysisId;
   var modelId = request.query.modelId;
-  analysisRepository.setPrimaryModel(analysisId, modelId, function(error) {
-    if (error) {
-      logger.error(error);
-      response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
-      response.end();
-    } else {
-      response.sendStatus(statusCodes.OK);
-      next();
-    }
-  });
+  analysisRepository.setPrimaryModel(analysisId, modelId, _.partial(defaultCallback, response, next));
 }
 
 function setTitle(request, response, next) {
-  logger.debug('analysisRouter.setTitle');
+  logger.debug('analysisHandler.setTitle');
   var analysisId = request.params.analysisId;
   var newTitle = request.body.newTitle;
-  analysisRepository.setTitle(analysisId, newTitle, function(error) {
-    if (error) {
-      logger.error(error);
-      response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
-      response.end();
-    } else {
-      response.sendStatus(statusCodes.OK);
-      next();
-    }
-  });
+  analysisRepository.setTitle(analysisId, newTitle, _.partial(defaultCallback, response, next));
 }
 
 function setOutcome(request, response, next) {
-  logger.debug('analysisRouter.setOutcome');
+  logger.debug('analysisHandler.setOutcome');
   var analysisId = request.params.analysisId;
   var newOutcome = request.body;
-  analysisRepository.setOutcome(analysisId, newOutcome, function(error) {
-    if (error) {
-      logger.error(error);
-      response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
-      response.end();
-    } else {
-      response.sendStatus(statusCodes.OK);
-      next();
-    }
-  });
+  analysisRepository.setOutcome(analysisId, newOutcome, _.partial(defaultCallback, response, next));
+}
+
+function deleteAnalysis(request, response, next) {
+  logger.debug('analysisHandler.deleteAnalysis');
+  var analysisId = request.params.analysisId;
+  analysisRepository.deleteAnalysis(analysisId, _.partial(defaultCallback, response, next));
+}
+
+function defaultCallback(response, next, error) {
+  if (error) {
+    logger.error(error);
+    response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
+    response.end();
+  } else {
+    response.sendStatus(statusCodes.OK);
+    next();
+  }
 }
 
 module.exports = {
@@ -116,5 +107,6 @@ module.exports = {
   getProblem: getProblem,
   setPrimaryModel: setPrimaryModel,
   setTitle: setTitle,
-  setOutcome: setOutcome
+  setOutcome: setOutcome,
+  deleteAnalysis: deleteAnalysis
 };

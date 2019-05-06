@@ -244,7 +244,7 @@ describe('analyses handlers', function() {
         direction: -1
       }
     };
-    
+
     it('should update the outcome of the analysis', function() {
       var response = {
         sendStatus: chai.spy()
@@ -267,6 +267,42 @@ describe('analyses handlers', function() {
       analysisRepositoryStub.setOutcome = sinon.fake.yields('error');
 
       analysisHandlers.setOutcome(request, response, next);
+
+      expect(response.sendStatus).to.have.been.called.with(500);
+      expect(response.end).to.have.been.called();
+      expect(next).to.have.not.been.called();
+    });
+  });
+
+  describe('deleteAnalysis', function() {
+    var request = {
+      params: {
+        analysisId: 1
+      }
+    };
+
+    it('should call the repository function responsible for deletion', () => {
+      var response = {
+        sendStatus: chai.spy()
+      };
+      var next = chai.spy();
+      analysisRepositoryStub.deleteAnalysis = sinon.fake.yields();
+
+      analysisHandlers.deleteAnalysis(request, response, next);
+
+      expect(response.sendStatus).to.have.been.called.with(200);
+      expect(next).to.have.been.called();
+    });
+
+    it('should send back statuscode 500 if error occurs', () => {
+      var response = {
+        sendStatus: chai.spy(),
+        end: chai.spy()
+      };
+      var next = chai.spy();
+      analysisRepositoryStub.deleteAnalysis = sinon.fake.yields('error');
+
+      analysisHandlers.deleteAnalysis(request, response, next);
 
       expect(response.sendStatus).to.have.been.called.with(500);
       expect(response.end).to.have.been.called();

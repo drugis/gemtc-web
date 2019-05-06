@@ -4,23 +4,23 @@ var appEnvironmentSettings = {
   googleSecret: process.env.GEMTC_GOOGLE_SECRET,
   host: process.env.GEMTC_HOST
 };
-var express = require('express'),
-  session = require('express-session'),
-  helmet = require('helmet'),
-  bodyparser = require('body-parser'),
-  _ = require('lodash'),
-  csurf = require('csurf'),
-  dbUtil = require('./standalone-app/dbUtil'),
-  db = require('./standalone-app/db')(dbUtil.connectionConfig),
-  loginUtils = require('./standalone-app/loginUtils'),
-  signin = require('signin')(db, appEnvironmentSettings),
-  analysisRepository = require('./standalone-app/analysisRepository'),
-  rightsManagement = require('rights-management')(analysisRepository.get),
-  analysisRouter = require('./standalone-app/analysisRouter'),
-  modelRouter = require('./standalone-app/modelRouter'),
-  mcdaPataviTaskRouter = require('./standalone-app/mcdaPataviTaskRouter'),
-  errorHandler = require('./standalone-app/errorHandler'),
-  logger = require('./standalone-app/logger');
+var express = require('express');
+var session = require('express-session');
+var helmet = require('helmet');
+var bodyparser = require('body-parser');
+var _ = require('lodash');
+var csurf = require('csurf');
+var dbUtil = require('./standalone-app/dbUtil');
+var db = require('./standalone-app/db')(dbUtil.connectionConfig);
+var loginUtils = require('./standalone-app/loginUtils');
+var signin = require('signin')(db, appEnvironmentSettings);
+var analysisRepository = require('./standalone-app/analysisRepository');
+var rightsManagement = require('rights-management')(analysisRepository.get);
+var analysisRouter = require('./standalone-app/analysisRouter');
+var modelRouter = require('./standalone-app/modelRouter');
+var mcdaPataviTaskRouter = require('./standalone-app/mcdaPataviTaskRouter');
+var errorHandler = require('./standalone-app/errorHandler');
+var logger = require('./standalone-app/logger');
 
 var authenticationMethod = process.env.GEMTC_AUTHENTICATION_METHOD;
 
@@ -52,10 +52,11 @@ rightsManagement.setRequiredRights([
   makeRights('/analyses', 'GET', 'none'),
   makeRights('/analyses', 'POST', 'none'),
   makeRights('/analyses/:analysisId', 'GET', 'read'),
+  makeRights('/analyses/:analysisId', 'DELETE', 'owner'),
   makeRights('/analyses/:analysisId/problem', 'GET', 'read'),
   makeRights('/analyses/:analysisId/setPrimaryModel', 'POST', 'write'),
-  makeRights('/analyses/:analysisId/setTitle','PUT', 'write'),
-  makeRights('/analyses/:analysisId/setOutcome','PUT', 'write'),
+  makeRights('/analyses/:analysisId/setTitle', 'PUT', 'write'),
+  makeRights('/analyses/:analysisId/setOutcome', 'PUT', 'write'),
   makeRights('/analyses/:analysisId/models', 'GET', 'read'),
   makeRights('/analyses/:analysisId/models', 'POST', 'write'),
   makeRights('/analyses/:analysisId/models/:modelId', 'GET', 'read'),

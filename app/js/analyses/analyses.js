@@ -8,6 +8,7 @@ define([
   './relativeEvidenceTableController',
   './editAnalysisTitleController',
   './editOutcomeNameController',
+  './deleteAnalysisController',
   './analysisResource',
   './problemResource',
   './analysisService',
@@ -23,6 +24,7 @@ define([
   RelativeEvidenceTableController,
   EditAnalysisTitleController,
   EditOutcomeNameController,
+  DeleteAnalysisController,
   AnalysisResource,
   ProblemResource,
   AnalysisService,
@@ -42,6 +44,7 @@ define([
       .controller('RelativeEvidenceTableController', RelativeEvidenceTableController)
       .controller('EditAnalysisTitleController', EditAnalysisTitleController)
       .controller('EditOutcomeNameController', EditOutcomeNameController)
+      .controller('DeleteAnalysisController', DeleteAnalysisController)
 
       // resources
       .factory('AnalysisResource', AnalysisResource)

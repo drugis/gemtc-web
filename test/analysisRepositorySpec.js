@@ -134,13 +134,7 @@ describe('the analysis repository', function() {
           id: 1
         }]
       };
-      var expectedResult = {
-        id: 1,
-        ownerId: 1,
-        outcome: 'outcome',
-        problem: 'problem',
-        title: 'title'
-      };
+      var expectedResult = 1;
       query.onCall(0).yields(null, queryResult);
       var expectedValues = [newAnalysis.title, newAnalysis.outcome, newAnalysis.problem, ownerAccountId];
       var callback = succesCallback(query, expectedQuery, expectedValues, expectedResult, done);

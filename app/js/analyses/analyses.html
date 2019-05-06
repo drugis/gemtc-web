@@ -26,11 +26,13 @@
           <th class="large-9">Outcome name
             <inline-help help-key="outcome"></inline-help>
           </th>
+          <th></th>
         </tr>
         <tr ng-repeat="analysis in analyses">
           <td style="vertical-align: top;">
             <a ui-sref="networkMetaAnalysis({analysisId: analysis.id})">{{analysis.title}}</a></td>
           <td style="white-space: pre-wrap;">{{analysis.outcome.name}}</td>
+          <td class="text-center"><a ng-click="deleteAnalysis(analysis)" style="color:red"><i class="fa fa-trash"></i></a></td>
         </tr>
       </table>
     </div>

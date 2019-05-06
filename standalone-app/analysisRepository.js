@@ -1,7 +1,8 @@
 'use strict';
-var logger = require('./logger'),
-  dbUtil = require('./dbUtil'),
-  db = require('./db')(dbUtil.connectionConfig);
+var async = require('async');
+var logger = require('./logger');
+var dbUtil = require('./dbUtil');
+var db = require('./db')(dbUtil.connectionConfig);
 
 function rowMapper(row) {
   row.primaryModel = row.primarymodel;
@@ -92,11 +93,39 @@ function setOutcome(analysisId, newOutcome, callback) {
     });
 }
 
+function deleteAnalysis(analysisId, callback) {
+  logger.debug('deleteAnalysis');
+  // delete from analysis
+  // delete from model (analysisId)
+  // delete from funnelplot (modelId)
+  // delete from modelbaseline (modelId)
+  db.runInTransaction((client, transactionCallback) => {
+    async.waterfall([
+      _.partial(getModelIds, client, analysisId),
+      _.partial(deleteModelBaseline, client)
+    ], transactionCallback);
+  }, callback);
+}
+
+function getModelIds(client, analysisId, callback) {
+  client.query('SELECT id FROM model WHERE analysisId = $1',
+    [analysisId],
+    callback);
+}
+
+function deleteModelBaseline(client, modelIds, callback) {
+  // models ~= [1,2,3,4]
+  client.query('DELETE FROM modelbaseline WHERE modelid = $1',
+    [modelIds],
+    callback);
+}
+
 module.exports = {
   get: get,
   query: query,
   create: create,
   setPrimaryModel: setPrimaryModel,
   setTitle: setTitle,
-  setOutcome: setOutcome
+  setOutcome: setOutcome,
+  deleteAnalysis: deleteAnalysis
 };

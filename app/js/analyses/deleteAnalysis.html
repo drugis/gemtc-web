@@ -1,0 +1,20 @@
+<form id="add-analysis-form" novalidate ng-submit="deleteAnalysis()">
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="cell">
+        <h3>Delete analysis: {{ analysis.title }}</h3>
+      </div>
+      <div class="cell alert">
+        Are you certain you want to delete this analysis?
+      </div>
+      <div class="cell">
+        <button ng-click="deleteAnalysis()" class="button" type="button">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+  <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</form>
