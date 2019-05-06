@@ -8266,28 +8266,24 @@ table tr td.input-cell input[type="number"] {
   text-align: center;
 }
 /* line 118, ../../app/drugis-css/_drugis.scss */
-table tr td.input-cell select {
-  padding-right: 1rem;
-}
-/* line 121, ../../app/drugis-css/_drugis.scss */
 table tr td.input-cell input[type="number"].ng-invalid,
 table tr td.input-cell input[type="number"].ng-invalid-number,
 table tr td.input-cell input[type="number"].invalid-trialverse-number {
   background-color: #ed9090;
 }
 
-/* line 131, ../../app/drugis-css/_drugis.scss */
+/* line 128, ../../app/drugis-css/_drugis.scss */
 .legend-table tbody {
   border: none;
 }
 
-/* line 135, ../../app/drugis-css/_drugis.scss */
+/* line 132, ../../app/drugis-css/_drugis.scss */
 .legend-table td {
   background: #333333;
   border: none;
 }
 
-/* line 140, ../../app/drugis-css/_drugis.scss */
+/* line 137, ../../app/drugis-css/_drugis.scss */
 table tr td.input-cell-leftpad {
   margin: 0;
   padding: 0;
@@ -8295,78 +8291,78 @@ table tr td.input-cell-leftpad {
   padding-right: 0.5rem;
 }
 
-/* line 147, ../../app/drugis-css/_drugis.scss */
+/* line 144, ../../app/drugis-css/_drugis.scss */
 table tr td.input-cell input[type="text"] {
   margin: 0;
   padding: 0;
   padding-left: 0.5rem;
 }
 
-/* line 154, ../../app/drugis-css/_drugis.scss */
+/* line 151, ../../app/drugis-css/_drugis.scss */
 tr.disabled-row td {
   background: lightgrey;
   color: #666;
 }
 
-/* line 159, ../../app/drugis-css/_drugis.scss */
+/* line 156, ../../app/drugis-css/_drugis.scss */
 tr.clickable td {
   color: #452F8C;
 }
 
-/* line 163, ../../app/drugis-css/_drugis.scss */
+/* line 160, ../../app/drugis-css/_drugis.scss */
 td.empty-cell {
   background-color: #cacaca;
 }
 
-/* line 168, ../../app/drugis-css/_drugis.scss */
+/* line 165, ../../app/drugis-css/_drugis.scss */
 tr.on-hover:hover {
   background: #757575;
   cursor: pointer;
   text-decoration: none;
 }
 
-/* line 174, ../../app/drugis-css/_drugis.scss */
+/* line 171, ../../app/drugis-css/_drugis.scss */
 table.layout-table {
   border: none;
   background-color: #F3F0FA;
 }
-/* line 177, ../../app/drugis-css/_drugis.scss */
+/* line 174, ../../app/drugis-css/_drugis.scss */
 table.layout-table tbody {
   background-color: #F3F0FA;
 }
-/* line 180, ../../app/drugis-css/_drugis.scss */
+/* line 177, ../../app/drugis-css/_drugis.scss */
 table.layout-table td {
   border: none;
 }
 
-/* line 185, ../../app/drugis-css/_drugis.scss */
+/* line 182, ../../app/drugis-css/_drugis.scss */
 .noborder {
   border: none;
 }
 
-/* line 189, ../../app/drugis-css/_drugis.scss */
+/* line 186, ../../app/drugis-css/_drugis.scss */
 .callout.primary {
   background-color: #F3F0FA;
   color: #333333;
 }
 
-/* line 194, ../../app/drugis-css/_drugis.scss */
+/* line 191, ../../app/drugis-css/_drugis.scss */
 .callout.alert {
   background-color: #e66464;
 }
 
-/* line 199, ../../app/drugis-css/_drugis.scss */
+/* line 196, ../../app/drugis-css/_drugis.scss */
 .error-message {
   display: block;
   color: #F57C00;
 }
 
-/* line 204, ../../app/drugis-css/_drugis.scss */
+/* line 201, ../../app/drugis-css/_drugis.scss */
 .application-link a {
   text-decoration: underline;
 }
 
-/* line 209, ../../app/drugis-css/_drugis.scss */
+/* line 206, ../../app/drugis-css/_drugis.scss */
 input[type="number"],
 input[type="text"],
 select,
@@ -8374,45 +8370,45 @@ select option {
   line-height: 1.1rem;
 }
 
-/* line 217, ../../app/drugis-css/_drugis.scss */
+/* line 214, ../../app/drugis-css/_drugis.scss */
 .menu a,
 .menu a:hover,
 .menu a:active {
   color: white;
 }
 
-/* line 223, ../../app/drugis-css/_drugis.scss */
+/* line 220, ../../app/drugis-css/_drugis.scss */
 .breadcrumbs {
   background: #f4f4f4;
   padding: 0.4rem 0.7rem;
 }
 
-/* line 228, ../../app/drugis-css/_drugis.scss */
+/* line 225, ../../app/drugis-css/_drugis.scss */
 .bar-padding {
   padding-top: 0.61rem;
   padding-bottom: 0.61rem;
 }
 
-/* line 232, ../../app/drugis-css/_drugis.scss */
+/* line 229, ../../app/drugis-css/_drugis.scss */
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
-/* line 237, ../../app/drugis-css/_drugis.scss */
+/* line 234, ../../app/drugis-css/_drugis.scss */
 button.info {
   background-color: #a0d3e8;
   border-color: #61b6d9;
   color: #333333;
 }
 
-/* line 243, ../../app/drugis-css/_drugis.scss */
+/* line 240, ../../app/drugis-css/_drugis.scss */
 button.info:hover {
   color: #FFFFFF;
   background-color: #61b6d9;
 }
 
-/* line 248, ../../app/drugis-css/_drugis.scss */
+/* line 245, ../../app/drugis-css/_drugis.scss */
 .breadcrumbs.fixed {
   margin-top: 57px;
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
@@ -8422,7 +8418,7 @@ button.info:hover {
   z-index: 50;
 }
 
-/* line 258, ../../app/drugis-css/_drugis.scss */
+/* line 255, ../../app/drugis-css/_drugis.scss */
 #hero h1 {
   font-size: 4em;
   color: white;
@@ -8431,19 +8427,19 @@ button.info:hover {
   line-height: 100%;
 }
 
-/* line 266, ../../app/drugis-css/_drugis.scss */
+/* line 263, ../../app/drugis-css/_drugis.scss */
 #hero h1 small {
   color: white;
 }
 
-/* line 270, ../../app/drugis-css/_drugis.scss */
+/* line 267, ../../app/drugis-css/_drugis.scss */
 #hero h4 {
   font-size: 1.35em;
   color: white;
   font-weight: 300;
 }
 
-/* line 276, ../../app/drugis-css/_drugis.scss */
+/* line 273, ../../app/drugis-css/_drugis.scss */
 header {
   background: #F57C00;
   text-align: left;
@@ -8451,7 +8447,7 @@ header {
   padding: 25px 20px 35px 0px;
 }
 
-/* line 283, ../../app/drugis-css/_drugis.scss */
+/* line 280, ../../app/drugis-css/_drugis.scss */
 header h2 {
   font-size: 3.5em;
   color: white;
@@ -8460,64 +8456,64 @@ header h2 {
   line-height: 100%;
 }
 
-/* line 291, ../../app/drugis-css/_drugis.scss */
+/* line 288, ../../app/drugis-css/_drugis.scss */
 header h4 {
   color: white;
 }
 
-/* line 295, ../../app/drugis-css/_drugis.scss */
+/* line 292, ../../app/drugis-css/_drugis.scss */
 header small {
   color: white;
 }
 
-/* line 299, ../../app/drugis-css/_drugis.scss */
+/* line 296, ../../app/drugis-css/_drugis.scss */
 .content {
   padding-top: 20px;
 }
 
-/* line 303, ../../app/drugis-css/_drugis.scss */
+/* line 300, ../../app/drugis-css/_drugis.scss */
 h3 img {
   float: right;
   margin-right: 10px;
 }
 
-/* line 308, ../../app/drugis-css/_drugis.scss */
+/* line 305, ../../app/drugis-css/_drugis.scss */
 .row-divider {
   margin: 2rem 0;
 }
 
-/* line 312, ../../app/drugis-css/_drugis.scss */
+/* line 309, ../../app/drugis-css/_drugis.scss */
 .screen-shot {
   border: 1px solid #dddddd;
   padding: 4px;
   margin: 0.5rem;
 }
 
-/* line 318, ../../app/drugis-css/_drugis.scss */
+/* line 315, ../../app/drugis-css/_drugis.scss */
 .footer {
   background: #333333;
   padding: 24px 0 10px;
 }
 
-/* line 323, ../../app/drugis-css/_drugis.scss */
+/* line 320, ../../app/drugis-css/_drugis.scss */
 .footer a,
 .footer h4,
 .footer p {
   color: #666666;
 }
 
-/* line 329, ../../app/drugis-css/_drugis.scss */
+/* line 326, ../../app/drugis-css/_drugis.scss */
 .footer a:hover {
   color: #777777;
 }
 
-/* line 333, ../../app/drugis-css/_drugis.scss */
+/* line 330, ../../app/drugis-css/_drugis.scss */
 .f-topbar-fixed {
   margin-top: 32px;
   padding-top: 4rem;
 }
 
-/* line 338, ../../app/drugis-css/_drugis.scss */
+/* line 335, ../../app/drugis-css/_drugis.scss */
 .fixed {
   width: 100%;
   left: 0;
@@ -8527,18 +8523,18 @@ h3 img {
 }
 
 /* ---------sticky footer --------------*/
-/* line 349, ../../app/drugis-css/_drugis.scss */
+/* line 346, ../../app/drugis-css/_drugis.scss */
 * {
   margin: 0;
 }
 
-/* line 353, ../../app/drugis-css/_drugis.scss */
+/* line 350, ../../app/drugis-css/_drugis.scss */
 html,
 body {
   height: 100%;
 }
 
-/* line 358, ../../app/drugis-css/_drugis.scss */
+/* line 355, ../../app/drugis-css/_drugis.scss */
 .wrapper {
   min-height: 100%;
   height: auto !important;
@@ -8546,35 +8542,35 @@ body {
   margin: 0 auto -4rem;
 }
 
-/* line 365, ../../app/drugis-css/_drugis.scss */
+/* line 362, ../../app/drugis-css/_drugis.scss */
 .push {
   height: 4.5rem;
 }
 
-/* line 369, ../../app/drugis-css/_drugis.scss */
+/* line 366, ../../app/drugis-css/_drugis.scss */
 .footer {
   height: 4.5rem;
 }
 
-/* line 373, ../../app/drugis-css/_drugis.scss */
+/* line 370, ../../app/drugis-css/_drugis.scss */
 .footer,
 .push {
   clear: both;
 }
 
-/* line 378, ../../app/drugis-css/_drugis.scss */
+/* line 375, ../../app/drugis-css/_drugis.scss */
 .copyright {
   display: inline;
 }
 
 /* -------- end sticky footer---------*/
-/* line 384, ../../app/drugis-css/_drugis.scss */
+/* line 381, ../../app/drugis-css/_drugis.scss */
 #map_canvas {
   height: 280px;
 }
 
 /* standard */
-/* line 390, ../../app/drugis-css/_drugis.scss */
+/* line 387, ../../app/drugis-css/_drugis.scss */
 pre {
   margin-bottom: 1rem;
   border: 1px solid #434343;
@@ -8584,14 +8580,14 @@ pre {
   overflow-x: auto;
 }
 
-/* line 399, ../../app/drugis-css/_drugis.scss */
+/* line 396, ../../app/drugis-css/_drugis.scss */
 pre code {
   border: none;
   background: none;
   padding: 0px;
 }
 
-/* line 405, ../../app/drugis-css/_drugis.scss */
+/* line 402, ../../app/drugis-css/_drugis.scss */
 code {
   border: 1px solid #434343;
   background-color: #767676;
@@ -8599,22 +8595,22 @@ code {
 }
 
 /* -------- inline help directive---------*/
-/* line 414, ../../app/drugis-css/_drugis.scss */
+/* line 411, ../../app/drugis-css/_drugis.scss */
 inline-help {
   margin: 0.1rem;
 }
 
-/* line 418, ../../app/drugis-css/_drugis.scss */
+/* line 415, ../../app/drugis-css/_drugis.scss */
 inline-help a {
   color: grey;
 }
 
-/* line 422, ../../app/drugis-css/_drugis.scss */
+/* line 419, ../../app/drugis-css/_drugis.scss */
 inline-help a:hover {
   color: #676767;
 }
 
-/* line 426, ../../app/drugis-css/_drugis.scss */
+/* line 423, ../../app/drugis-css/_drugis.scss */
 .tooltip {
   max-width: 300px;
   background-color: #333333;
@@ -8623,12 +8619,12 @@ inline-help a:hover {
   padding: 1.5rem;
 }
 
-/* line 433, ../../app/drugis-css/_drugis.scss */
+/* line 430, ../../app/drugis-css/_drugis.scss */
 .tooltip a {
   color: #008CBA;
 }
 
-/* line 436, ../../app/drugis-css/_drugis.scss */
+/* line 433, ../../app/drugis-css/_drugis.scss */
 .tooltip.bottom::before {
   border-top-style: solid;
   border-color: #333333;
@@ -8637,7 +8633,7 @@ inline-help a:hover {
   border-right-color: transparent !important;
 }
 
-/* line 443, ../../app/drugis-css/_drugis.scss */
+/* line 440, ../../app/drugis-css/_drugis.scss */
 .tooltip.top::before {
   border-top-style: solid;
   border-color: #333333;
@@ -8649,42 +8645,42 @@ inline-help a:hover {
 }
 
 /* -------- end inline help directive---------*/
-/* line 454, ../../app/drugis-css/_drugis.scss */
+/* line 451, ../../app/drugis-css/_drugis.scss */
 .reveal-modal {
   overflow-x: auto;
   min-width: 540px;
 }
 
-/* line 459, ../../app/drugis-css/_drugis.scss */
+/* line 456, ../../app/drugis-css/_drugis.scss */
 .tooltip-content {
   max-height: 300px;
   overflow-y: auto;
 }
 
-/* line 464, ../../app/drugis-css/_drugis.scss */
+/* line 461, ../../app/drugis-css/_drugis.scss */
 .has-tip {
   border-bottom: none;
 }
 
-/* line 468, ../../app/drugis-css/_drugis.scss */
+/* line 465, ../../app/drugis-css/_drugis.scss */
 .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
   background: #fefefe;
 }
 
-/* line 472, ../../app/drugis-css/_drugis.scss */
+/* line 469, ../../app/drugis-css/_drugis.scss */
 ul.tabs {
   border-left: 0;
   border-right: 0;
   border-top: 0;
 }
 
-/* line 478, ../../app/drugis-css/_drugis.scss */
+/* line 475, ../../app/drugis-css/_drugis.scss */
 li.tabs-title.is-active {
   margin-bottom: -1px;
   border-bottom: 1px solid white;
 }
 
-/* line 483, ../../app/drugis-css/_drugis.scss */
+/* line 480, ../../app/drugis-css/_drugis.scss */
 .tabs-title > a {
   background: #efefef;
   border: 1px solid;
@@ -8697,7 +8693,7 @@ li.tabs-title.is-active {
   border-bottom: 0;
 }
 
-/* line 495, ../../app/drugis-css/_drugis.scss */
+/* line 492, ../../app/drugis-css/_drugis.scss */
 .tabs-title {
   margin-bottom: -2px;
   border-bottom: 1px solid #e6e6e6;

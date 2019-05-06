@@ -6,6 +6,8 @@ define([
   './networkGraphController',
   './evidenceTableController',
   './relativeEvidenceTableController',
+  './editAnalysisTitleController',
+  './editOutcomeNameController',
   './analysisResource',
   './problemResource',
   './analysisService',
@@ -19,6 +21,8 @@ define([
   NetworkGraphController,
   EvidenceTableController,
   RelativeEvidenceTableController,
+  EditAnalysisTitleController,
+  EditOutcomeNameController,
   AnalysisResource,
   ProblemResource,
   AnalysisService,
@@ -36,6 +40,8 @@ define([
       .controller('NetworkGraphController', NetworkGraphController)
       .controller('EvidenceTableController', EvidenceTableController)
       .controller('RelativeEvidenceTableController', RelativeEvidenceTableController)
+      .controller('EditAnalysisTitleController', EditAnalysisTitleController)
+      .controller('EditOutcomeNameController', EditOutcomeNameController)
 
       // resources
       .factory('AnalysisResource', AnalysisResource)

@@ -91,7 +91,7 @@
     "proxyquire": "~1.5.0",
     "raw-loader": "^0.5.1",
     "rights-management": "drugis/rights-management#1.0.3",
-    "sinon": "~1.17.0",
+    "sinon": "~7.3.2",
     "style-loader": "^0.22.1",
     "superagent": "~3.8.3",
     "tocbot": "^4.3.2",
