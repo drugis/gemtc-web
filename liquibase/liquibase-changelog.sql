@@ -138,28 +138,3 @@ ALTER TABLE account ADD COLUMN password VARCHAR DEFAULT '';
 --changeset reidd:16
 ALTER TABLE account DROP COLUMN name;
 
---changeset reidd:17
-CREATE TYPE user_rights AS ENUM ('read', 'write', 'owner', 'admin');
-
-CREATE TABLE userRights
-(
-  analysisId INT NOT NULL,
-  accountId INT NOT NULL,
-  rightsLevel user_rights NOT NULL,
-  PRIMARY KEY (analysisId, accountId),
-  FOREIGN KEY (analysisId) REFERENCES analysis(id),
-  FOREIGN KEY (accountId) REFERENCES account(id)
-);
-CREATE UNIQUE INDEX analysis_owners ON userrights(analysisid) WHERE rightslevel='owner';
---rollback DROP TABLE userRights;
---rollback DROP TYPE user_rights;
-
-CREATE TABLE administrator (
-  accountId INT NOT NULL,
-  PRIMARY KEY (accountId),
-  FOREIGN KEY (accountId) REFERENCES account(id)
-);
---rollback DROP TABLE administrator;
-INSERT INTO userRights(accountid, analysisid, rightsLevel) 
-SELECT account.id, analysis.id, 'owner' FROM account, analysis 
-WHERE account.id = analysis.owner;
