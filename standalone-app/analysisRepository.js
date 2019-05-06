@@ -45,8 +45,8 @@ function create(ownerAccountId, newAnalysis, callback) {
         logger.error('error creating analysis, error: ' + error);
         callback(error);
       } else {
-        newAnalysis.id = result.rows[0].id;
-        callback(error, newAnalysis);
+        var newAnalysisId = result.rows[0].id;
+        callback(error, newAnalysisId);
       }
     });
 }
@@ -79,10 +79,24 @@ function setTitle(analysisId, newTitle, callback) {
     });
 }
 
+function setOutcome(analysisId, newOutcome, callback) {
+  logger.debug('setOutcome');
+  db.query('UPDATE analysis SET outcome = $1 WHERE id = $2', [newOutcome, analysisId],
+    (error) => {
+      if (error) {
+        logger.error('error occured while setting the outcome: ' + error);
+        callback(error);
+      } else {
+        callback();
+      }
+    });
+}
+
 module.exports = {
   get: get,
   query: query,
   create: create,
   setPrimaryModel: setPrimaryModel,
-  setTitle: setTitle
+  setTitle: setTitle,
+  setOutcome: setOutcome
 };

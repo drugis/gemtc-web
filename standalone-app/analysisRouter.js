@@ -9,4 +9,5 @@ module.exports = express.Router()
   .post('/:analysisId/setPrimaryModel', analysisHandlers.setPrimaryModel)
   .post('/', analysisHandlers.createAnalysis)
   .put('/:analysisId/setTitle', analysisHandlers.setTitle)
+  .put('/:analysisId/setOutcome', analysisHandlers.setOutcome)
 ;

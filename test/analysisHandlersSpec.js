@@ -20,6 +20,7 @@ describe('analyses handlers', function() {
         id: 'userId'
       }
     };
+
     it('should query the analyses repository', function() {
       var response = {
         json: chai.spy()
@@ -31,6 +32,7 @@ describe('analyses handlers', function() {
       expect(response.json).to.have.been.called.with(result.rows);
       expect(next).to.have.been.called();
     });
+
     it('should send back statuscode 500 if error occurs', function() {
       var response = {
         sendStatus: chai.spy(),
@@ -52,6 +54,7 @@ describe('analyses handlers', function() {
         analysisId: 1
       }
     };
+
     it('should get analysis given an id', function() {
       var response = {
         json: chai.spy()
@@ -63,6 +66,7 @@ describe('analyses handlers', function() {
       expect(response.json).to.have.been.called.with(analysis);
       expect(next).to.have.been.called();
     });
+
     it('should send back statuscode 500 if error occurs', function() {
       var response = {
         sendStatus: chai.spy(),
@@ -85,20 +89,22 @@ describe('analyses handlers', function() {
       },
       body: 'body'
     };
+
     it('should create analysis', function() {
       var response = {
         location: chai.spy(),
         sendStatus: chai.spy()
       };
       var next = chai.spy();
-      var newAnalysis = { id: 1 };
-      analysisRepositoryStub.create = sinon.fake.yields(undefined, newAnalysis);
+      var newAnalysisId = 1;
+      analysisRepositoryStub.create = sinon.fake.yields(undefined, newAnalysisId);
       analysisHandlers.createAnalysis(request, response, next);
 
-      expect(response.location).to.have.been.called.with('/analyses/' + newAnalysis.id);
+      expect(response.location).to.have.been.called.with('/analyses/' + newAnalysisId);
       expect(response.sendStatus).to.have.been.called.with(201);
       expect(next).to.have.been.called();
     });
+
     it('should send back statuscode 500 if error occurs', function() {
       var response = {
         sendStatus: chai.spy(),
@@ -123,6 +129,7 @@ describe('analyses handlers', function() {
         modelId: 1
       }
     };
+
     it('should set the primary model', function() {
       var response = {
         location: chai.spy(),
@@ -135,6 +142,7 @@ describe('analyses handlers', function() {
       expect(response.sendStatus).to.have.been.called.with(200);
       expect(next).to.have.been.called();
     });
+
     it('should send back statuscode 500 if error occurs', function() {
       var response = {
         sendStatus: chai.spy(),
@@ -156,6 +164,7 @@ describe('analyses handlers', function() {
         analysisId: 1
       }
     };
+
     it('should get the problem', function() {
       var response = {
         json: chai.spy()
@@ -170,6 +179,7 @@ describe('analyses handlers', function() {
       expect(response.json).to.have.been.called.with(result.problem);
       expect(next).to.have.been.called();
     });
+
     it('should send back statuscode 500 if error occurs', function() {
       var response = {
         sendStatus: chai.spy(),
@@ -194,7 +204,8 @@ describe('analyses handlers', function() {
         newTitle: 'newTitle'
       }
     };
-    it('should update analysis title', function() {
+
+    it('should update the analysis title', function() {
       var response = {
         sendStatus: chai.spy()
       };
@@ -216,6 +227,46 @@ describe('analyses handlers', function() {
       analysisRepositoryStub.setTitle = sinon.fake.yields('error');
 
       analysisHandlers.setTitle(request, response, next);
+
+      expect(response.sendStatus).to.have.been.called.with(500);
+      expect(response.end).to.have.been.called();
+      expect(next).to.have.not.been.called();
+    });
+  });
+
+  describe('setOutcome', function() {
+    var request = {
+      params: {
+        analysisId: 1
+      },
+      body: {
+        name: 'newName',
+        direction: -1
+      }
+    };
+    
+    it('should update the outcome of the analysis', function() {
+      var response = {
+        sendStatus: chai.spy()
+      };
+      var next = chai.spy();
+      analysisRepositoryStub.setOutcome = sinon.fake.yields();
+
+      analysisHandlers.setOutcome(request, response, next);
+
+      expect(response.sendStatus).to.have.been.called.with(200);
+      expect(next).to.have.been.called();
+    });
+
+    it('should send back statuscode 500 if error occurs', () => {
+      var response = {
+        sendStatus: chai.spy(),
+        end: chai.spy()
+      };
+      var next = chai.spy();
+      analysisRepositoryStub.setOutcome = sinon.fake.yields('error');
+
+      analysisHandlers.setOutcome(request, response, next);
 
       expect(response.sendStatus).to.have.been.called.with(500);
       expect(response.end).to.have.been.called();

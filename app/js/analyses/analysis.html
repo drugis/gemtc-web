@@ -8,9 +8,10 @@
       <inline-help help-key="outcome"></inline-help>
     </h5>
     <h5 id="analysisOutcome" class="inline">
-      {{::analysis.outcome.name}}
+      {{analysis.outcome.name}}
       <span ng-if="analysis.outcome.direction != -1"> (higher is better)</span>
       <span ng-if="analysis.outcome.direction == -1"> (lower is better)</span>
+      <a ng-click="editOutcomeName()"><i class="fa fa-edit"></i></a>
     </h5>
   </div>
 </div>

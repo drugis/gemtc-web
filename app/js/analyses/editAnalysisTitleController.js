@@ -22,6 +22,9 @@ define([], function() {
     };
 
     function editTitle() {
+      if($scope.title.new === ''){
+        return;
+      }
       callback($scope.title.new);
       $modalInstance.close();
     }

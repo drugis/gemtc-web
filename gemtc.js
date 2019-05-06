@@ -55,6 +55,7 @@ rightsManagement.setRequiredRights([
   makeRights('/analyses/:analysisId/problem', 'GET', 'read'),
   makeRights('/analyses/:analysisId/setPrimaryModel', 'POST', 'write'),
   makeRights('/analyses/:analysisId/setTitle','PUT', 'write'),
+  makeRights('/analyses/:analysisId/setOutcome','PUT', 'write'),
   makeRights('/analyses/:analysisId/models', 'GET', 'read'),
   makeRights('/analyses/:analysisId/models', 'POST', 'write'),
   makeRights('/analyses/:analysisId/models/:modelId', 'GET', 'read'),

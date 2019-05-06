@@ -13,6 +13,10 @@ define([], function() {
       setTitle: {
         url: '/analyses/:analysisId/setTitle',
         method: 'PUT'
+      },
+      setOutcome: {
+        url: '/analyses/:analysisId/setOutcome',
+        method: 'PUT'
       }
     });
   };
