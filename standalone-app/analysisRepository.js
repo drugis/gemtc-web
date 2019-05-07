@@ -95,29 +95,15 @@ function setOutcome(analysisId, newOutcome, callback) {
 
 function deleteAnalysis(analysisId, callback) {
   logger.debug('deleteAnalysis');
-  // delete from analysis
-  // delete from model (analysisId)
-  // delete from funnelplot (modelId)
-  // delete from modelbaseline (modelId)
-  db.runInTransaction((client, transactionCallback) => {
-    async.waterfall([
-      _.partial(getModelIds, client, analysisId),
-      _.partial(deleteModelBaseline, client)
-    ], transactionCallback);
-  }, callback);
-}
-
-function getModelIds(client, analysisId, callback) {
-  client.query('SELECT id FROM model WHERE analysisId = $1',
-    [analysisId],
-    callback);
-}
-
-function deleteModelBaseline(client, modelIds, callback) {
-  // models ~= [1,2,3,4]
-  client.query('DELETE FROM modelbaseline WHERE modelid = $1',
-    [modelIds],
-    callback);
+  db.query('DELETE FROM analysis WHERE id = $1', [analysisId],
+    (error) => {
+      if (error) {
+        logger.error('error occured while deleting the analysis: ' + error);
+        callback(error);
+      } else {
+        callback();
+      }
+    });
 }
 
 module.exports = {

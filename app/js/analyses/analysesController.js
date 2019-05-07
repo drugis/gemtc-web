@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(['lodash'], function(_) {
   var dependencies = [
     '$scope',
     '$modal',
@@ -41,6 +41,11 @@ define([], function() {
         resolve: {
           analysis: function() {
             return analysis;
+          },
+          callback: function() {
+            return function(analysisId){
+              $scope.analyses = _.reject($scope.analyses, ['id', analysisId]);
+            };
           }
         }
       });

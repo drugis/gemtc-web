@@ -4,13 +4,15 @@ define([], function() {
     '$scope',
     '$modalInstance',
     'AnalysisResource',
-    'analysis'
+    'analysis',
+    'callback'
   ];
   var DeleteAnalysisController = function(
     $scope,
     $modalInstance,
     AnalysisResource,
-    analysis
+    analysis,
+    callback
   ) {
     // functions
     $scope.cancel = $modalInstance.close;
@@ -22,8 +24,10 @@ define([], function() {
     function deleteAnalysis() {
       AnalysisResource.delete({
         analysisId: $scope.analysis.id
+      }, function() {
+        callback($scope.analysis.id);
+        $scope.cancel();
       });
-      $scope.cancel();
     }
 
   };

@@ -233,4 +233,32 @@ describe('the analysis repository', function() {
       analysisRepository.setOutcome(analysisId, newOutcome, callback);
     });
   });
+
+  describe('deleteAnalysis', function() {
+    var query;
+    var expectedQuery = 'DELETE FROM analysis WHERE id = $1';
+
+    beforeEach(function() {
+      query = sinon.stub(queryStub, 'query');
+    });
+
+    afterEach(function() {
+      query.restore();
+    });
+
+    it('should call a query with a DELETE command from analysis table', function(done) {
+      query.onCall(0).yields(null);
+      var expectedValues = [analysisId];
+      var callback = succesCallbackWithoutReturnValue(query, expectedQuery, expectedValues, done);
+      analysisRepository.deleteAnalysis(analysisId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      var expectedValues = [analysisId];
+      var callback = errorCallback(query, expectedQuery, expectedValues, done);
+      analysisRepository.deleteAnalysis(analysisId, callback);
+    });
+  });
+
 });
