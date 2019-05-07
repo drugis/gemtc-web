@@ -54,11 +54,12 @@
           style="width:100%;">
           <thead>
             <tr>
-              <td class="text-center large-6 medium-6">Title</td>
-              <td class="text-center large-2 medium-2">Type</td>
-              <td class="text-center large-2 medium-2">Model computed
+              <th class="text-center">Title</th>
+              <th class="text-center">Type</th>
+              <th class="text-center">Model computed
                 <inline-help help-key="model-computed"></inline-help>
-              </td>
+              </th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -79,6 +80,9 @@
               <td class="text-center">
                 <i class="fa fa-check" style="color:green;" ng-if="model.runStatus === 'done'"></i>
                 <i class="fa fa-times" style="color:red;" ng-if="model.runStatus === 'failed'"></i>
+              </td>
+              <td class="text-center">
+                <a ng-click="editModelName(model)"><i class="fa fa-edit"></i></a>
               </td>
             </tr>
           </tbody>

@@ -4,6 +4,7 @@ define(['lodash', 'angular'], function(_, angular) {
     '$scope',
     '$state',
     '$stateParams',
+    '$modal',
     'AnalysisResource',
     'ModelResource'
   ];
@@ -11,32 +12,31 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope,
     $state,
     $stateParams,
+    $modal,
     AnalysisResource,
     ModelResource
   ) {
-    $scope.modelsLoaded = false;
-    $scope.archivedFilter = archivedFilter;
-    $scope.analysisId = $stateParams.analysisId;
-    $scope.setAsPrimary = setAsPrimary;
-    $scope.modelParams = modelParams;
-    $scope.loadModels = loadModels;
+    // functions
     $scope.archiveModel = archiveModel;
-    $scope.unArchiveModel = unArchiveModel;
     $scope.gotoCreateModel = gotoCreateModel;
     $scope.gotoModel = gotoModel;
+    $scope.unArchiveModel = unArchiveModel;
     $scope.hasPrimaryLabel = hasPrimaryLabel;
+    $scope.setAsPrimary = setAsPrimary;
+    $scope.archivedFilter = archivedFilter;
+    $scope.editModelTitle = editModelTitle;
+
+    //init
+    $scope.modelsLoaded = false;
+    $scope.analysisId = $stateParams.analysisId;
     $scope.showArchived = false;
     $scope.numberOfModelsArchived = 0;
-    $scope.loadModels();
+    loadModels();
 
-    function modelParams(model) {
+    function getModelParams(model) {
       return _.extend({}, $stateParams, {
         modelId: model.id
       });
-    }
-
-    function byName(a, b) {
-      return a.title.localeCompare(b.title);
     }
 
     function loadModels() {
@@ -45,16 +45,41 @@ define(['lodash', 'angular'], function(_, angular) {
         $scope.$parent.analysis.$promise.then(function() {
           $scope.$parent.primaryModel = _.find(result, ['id', $scope.analysis.primaryModel]);
         });
-        $scope.$watch('$parent.primaryModel', function(newValue, oldValue) {
-          if (oldValue !== newValue) {
-            setAsPrimary(newValue);
-          }
-        });
-        $scope.numberOfModelsArchived = result.reduce(function(accum, model) {
-          return model.archived ? ++accum : accum;
-        }, 0);
-        $scope.$parent.models = result.sort(byName);
+        setPrimaryModelWatcher();
+        $scope.numberOfModelsArchived = countArchivedModels(result);
+        $scope.$parent.models = result.sort(byNameSorter);
       });
+    }
+
+    function byNameSorter(a, b) {
+      return a.title.localeCompare(b.title);
+    }
+
+    function setPrimaryModelWatcher() {
+      $scope.$watch('$parent.primaryModel', function(newValue, oldValue) {
+        if (oldValue !== newValue) {
+          setAsPrimary(newValue);
+        }
+      });
+    }
+
+    function setAsPrimary(primaryModel) {
+      var modelId = primaryModel ? primaryModel.id : null;
+      $scope.$emit('primaryModelSet', {
+        analysisId: $scope.analysisId,
+        projectId: $scope.analysis.projectId
+      });
+      return AnalysisResource.setPrimaryModel({
+        projectId: $scope.analysis.projectId,
+        analysisId: $scope.analysis.id,
+        modelId: modelId
+      }, null);
+    }
+
+    function countArchivedModels(models) {
+      return _.reduce(models, function(accum, model) {
+        return model.archived ? ++accum : accum;
+      }, 0);
     }
 
     function archivedFilter(model) {
@@ -85,26 +110,34 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function gotoModel(model) {
-      $state.go('model', $scope.modelParams(model));
+      $state.go('model', getModelParams(model));
     }
 
     function hasPrimaryLabel(model) {
       return model && $scope.$parent.primaryModel && model.id === $scope.$parent.primaryModel.id;
     }
 
-    function setAsPrimary(primaryModel) {
-      var modelId = primaryModel ? primaryModel.id : null;
-      $scope.$emit('primaryModelSet', {
-        analysisId: $scope.analysisId,
-        projectId: $scope.analysis.projectId
+    function editModelTitle(model){
+      $modal.open({
+        templateUrl: './editModelTitle.html',
+        scope: $scope,
+        controller: 'EditModelTitleController',
+        resolve: {
+          modelTitle: function() {
+            return model.title;
+          },
+          callback: function() {
+            return function(newTitle) {
+              ModelResource.setTitle(getModelParams(model), {
+                newTitle: newTitle
+              }, function() {
+                model.title = newTitle;
+              });
+            };
+          }
+        }
       });
-      return AnalysisResource.setPrimaryModel({
-        projectId: $scope.analysis.projectId,
-        analysisId: $scope.analysis.id,
-        modelId: modelId
-      }, null);
     }
-
   };
 
   return dependencies.concat(ModelsController);

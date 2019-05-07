@@ -10,6 +10,10 @@ define([], function() {
       setAttributes: {
         url: '/analyses/:analysisId/models/:modelId/attributes',
         method: 'POST'
+      },
+      setTitle: {
+        url: 'analyses/:analysisId/models/:modelId/setTitle',
+        method: 'PUT'
       }
     });
   };

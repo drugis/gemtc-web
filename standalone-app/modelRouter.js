@@ -1,15 +1,15 @@
 'use strict';
-var logger = require('./logger'),
-  express = require('express'),
-  httpStatus = require('http-status-codes'),
-  _ = require('lodash'),
-  async = require('async'),
-  modelRepository = require('./modelRepository'),
-  modelService = require('./modelService'),
-  pataviTaskRouter = require('./pataviTaskRouter'),
-  pataviTaskRepository = require('./pataviTaskRepository'),
-  funnelPlotRepository = require('./funnelPlotRepository'),
-  modelBaselineRepository = require('./modelBaselineRepository');
+var logger = require('./logger');
+var express = require('express');
+var httpStatus = require('http-status-codes');
+var _ = require('lodash');
+var async = require('async');
+var modelRepository = require('./modelRepository');
+var modelService = require('./modelService');
+var pataviTaskRouter = require('./pataviTaskRouter');
+var pataviTaskRepository = require('./pataviTaskRepository');
+var funnelPlotRepository = require('./funnelPlotRepository');
+var modelBaselineRepository = require('./modelBaselineRepository');
 
 module.exports = express.Router({
   mergeParams: true
@@ -21,11 +21,13 @@ module.exports = express.Router({
   .get('/:modelId/result', getResult)
   .get('/:modelId/baseline', getBaseline)
   .put('/:modelId/baseline', setBaseline)
+  .put('/:modelId/setTitle', setTitle)
   .post('/:modelId/attributes', setAttributes)
   .post('/:modelId/funnelPlots', addFunnelPlot)
   .get('/:modelId/funnelPlots', queryFunnnelPlots)
   .get('/:modelId/funnelPlots/:plotId', getFunnelPlot)
-  .use('/:modelId/task', pataviTaskRouter);
+  .use('/:modelId/task', pataviTaskRouter)
+  ;
 
 function decorateWithRunStatus(modelsResult, pataviResult) {
   var pataviTasks = _.keyBy(pataviResult, 'id');
@@ -295,4 +297,9 @@ function checkCoordinates(analysisId, model, callback) {
   } else {
     callback();
   }
+}
+
+function setTitle(request, response, next){
+  logger.debug('modelRouter.setTitle');
+  
 }

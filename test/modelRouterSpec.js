@@ -1,14 +1,14 @@
 'use strict';
-var assert = require('assert'),
-  proxyquire = require('proxyquire'),
-  httpStatus = require('http-status-codes'),
-  sinon = require('sinon'),
-  chai = require('chai'),
-  session = require('express-session'),
-  request = require('superagent'),
-  express = require('express'),
-  bodyParser = require('body-parser'),
-  errorHandler = require('../standalone-app/errorHandler');
+var assert = require('assert');
+var proxyquire = require('proxyquire');
+var httpStatus = require('http-status-codes');
+var sinon = require('sinon');
+var chai = require('chai');
+var session = require('express-session');
+var request = require('superagent');
+var express = require('express');
+var bodyParser = require('body-parser');
+var errorHandler = require('../standalone-app/errorHandler');
 
 chai.should();
 var app = express();
@@ -43,7 +43,7 @@ describe('modelRouter', function() {
       .use(session(sessionOpts))
       .use(function(req, res, next) {
         req.user = {
-          id : userId
+          id: userId
         };
         next();
       })
