@@ -1,22 +1,14 @@
 'use strict';
-var logger = require('./logger'),
-  dbUtil = require('./dbUtil'),
-  _ = require('lodash'),
-  db = require('./db')(dbUtil.connectionConfig),
-  columnString = 'title, analysisId, linearModel,' +
+var logger = require('./logger');
+var dbUtil = require('./dbUtil');
+var _ = require('lodash');
+var db = require('./db')(dbUtil.connectionConfig);
+var columnString = 'title, analysisId, linearModel,' +
   ' burn_in_iterations, inference_iterations, ' +
   ' thinning_factor, modelType, likelihood, link,' +
   ' outcome_scale, heterogeneity_prior, regressor,' +
   ' sensitivity, archived, archived_on';
 
-module.exports = {
-  create: createModel,
-  get: getModel,
-  update: update,
-  findByAnalysis: findByAnalysis,
-  setTaskUrl: setTaskUrl,
-  setArchive: setArchive
-};
 
 function mapModelRow(modelRow) {
   var model = {
@@ -62,7 +54,6 @@ function findByAnalysis(analysisId, callback) {
 }
 
 function createModel(analysisId, newModel, callback) {
-
   db.query(
     ' INSERT INTO model (' + columnString + ') ' +
     ' VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id', [
@@ -113,7 +104,7 @@ function setTaskUrl(modelId, taskUrl, callback) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);
     } else {
-      callback();
+      callback(error);
     }
   });
 }
@@ -125,11 +116,10 @@ function setArchive(modelId, isArchived, archivedOn, callback) {
         logger.error('error setting model.archived, error: ' + error);
         callback(error);
       } else {
-        callback();
+        callback(error);
       }
     });
 }
-
 
 function update(newModel, callback) {
   db.query('UPDATE model SET burn_in_iterations=$2, inference_iterations=$3, thinning_factor=$4, taskUrl=NULL where id = $1', [
@@ -142,7 +132,31 @@ function update(newModel, callback) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);
     } else {
-      callback();
+      callback(error);
     }
   });
 }
+
+function setTitle(modelId, newTitle, callback) {
+  logger.debug('modelRepository.setTitle');
+  db.query('UPDATE model SET title = $1 WHERE id = $2', [newTitle, modelId],
+    function(error) {
+      if (error) {
+        logger.error('error setting model title: ' + error);
+        callback(error);
+      } else {
+        callback(error);
+      }
+    }
+  );
+}
+
+module.exports = {
+  create: createModel,
+  get: getModel,
+  update: update,
+  findByAnalysis: findByAnalysis,
+  setTaskUrl: setTaskUrl,
+  setArchive: setArchive,
+  setTitle: setTitle
+};

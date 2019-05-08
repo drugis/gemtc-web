@@ -7,28 +7,14 @@ var _ = require('lodash');
 function queryAnalyses(request, response, next) {
   logger.debug('query analyses');
   analysisRepository.query(request.user.id, function(error, result) {
-    if (error) {
-      logger.error(error);
-      response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
-      response.end();
-    } else {
-      response.json(result.rows);
-      next();
-    }
+    jsonCallback(response, next, error, error ? undefined : result.rows);
   });
 }
 
 function getAnalysis(request, response, next) {
   logger.debug('get analysis by id ' + request.params.analysisId);
   analysisRepository.get(request.params.analysisId, function(error, analysis) {
-    if (error) {
-      logger.error(error);
-      response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
-      response.end();
-    } else {
-      response.json(analysis);
-      next();
-    }
+    jsonCallback(response, next, error, analysis);
   });
 }
 
@@ -37,13 +23,13 @@ function createAnalysis(request, response, next) {
   logger.debug('request.user.id: ' + request.user.id);
   analysisRepository.create(request.user.id, request.body, function(error, newAnalysisId) {
     if (error) {
-      logger.error(error);
-      response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
-      response.end();
+      next({
+        statusCode: statusCodes.INTERNAL_SERVER_ERROR,
+        message: error
+      });
     } else {
       response.location('/analyses/' + newAnalysisId);
       response.sendStatus(statusCodes.CREATED);
-      next();
     }
   });
 }
@@ -51,14 +37,7 @@ function createAnalysis(request, response, next) {
 function getProblem(request, response, next) {
   logger.debug('analysisHandler.getProblem');
   analysisRepository.get(request.params.analysisId, function(error, result) {
-    if (error) {
-      logger.error(error);
-      response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
-      response.end();
-    } else {
-      response.json(result.problem);
-      next();
-    }
+    jsonCallback(response, next, error, error ? undefined : result.problem);
   });
 }
 
@@ -66,40 +45,50 @@ function setPrimaryModel(request, response, next) {
   logger.info('analysisHandler.setPrimaryModel');
   var analysisId = request.params.analysisId;
   var modelId = request.query.modelId;
-  analysisRepository.setPrimaryModel(analysisId, modelId, _.partial(defaultCallback, response, next));
+  analysisRepository.setPrimaryModel(analysisId, modelId, _.partial(okCallback, response, next));
 }
 
 function setTitle(request, response, next) {
   logger.debug('analysisHandler.setTitle');
   var analysisId = request.params.analysisId;
   var newTitle = request.body.newTitle;
-  analysisRepository.setTitle(analysisId, newTitle, _.partial(defaultCallback, response, next));
+  analysisRepository.setTitle(analysisId, newTitle, _.partial(okCallback, response, next));
 }
 
 function setOutcome(request, response, next) {
   logger.debug('analysisHandler.setOutcome');
   var analysisId = request.params.analysisId;
   var newOutcome = request.body;
-  analysisRepository.setOutcome(analysisId, newOutcome, _.partial(defaultCallback, response, next));
+  analysisRepository.setOutcome(analysisId, newOutcome, _.partial(okCallback, response, next));
 }
 
 function deleteAnalysis(request, response, next) {
   logger.debug('analysisHandler.deleteAnalysis');
   var analysisId = request.params.analysisId;
-  analysisRepository.deleteAnalysis(analysisId, _.partial(defaultCallback, response, next));
+  analysisRepository.deleteAnalysis(analysisId, _.partial(okCallback, response, next));
 }
 
-function defaultCallback(response, next, error) {
+function okCallback(response, next, error) {
   if (error) {
-    logger.error(error);
-    response.sendStatus(statusCodes.INTERNAL_SERVER_ERROR);
-    response.end();
+    next({
+      statusCode: statusCodes.INTERNAL_SERVER_ERROR,
+      message: error
+    });
   } else {
     response.sendStatus(statusCodes.OK);
-    next();
   }
 }
 
+function jsonCallback(response, next, error, result) {
+  if (error) {
+    next({
+      statusCode: statusCodes.INTERNAL_SERVER_ERROR,
+      message: error
+    });
+  } else {
+    response.json(result);
+  }
+}
 module.exports = {
   queryAnalyses: queryAnalyses,
   getAnalysis: getAnalysis,

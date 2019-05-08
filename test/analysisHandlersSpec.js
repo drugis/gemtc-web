@@ -7,11 +7,24 @@ var spies = require('chai-spies');
 var expect = chai.expect;
 
 chai.use(spies);
-var analysisRepositoryStub = chai.spy.object(['query', 'create', 'get']);
+var analysisRepositoryStub = chai.spy.object([
+  'query',
+  'create',
+  'get'
+]);
 
 var analysisHandlers = proxyquire('../standalone-app/analysisHandlers', {
   './analysisRepository': analysisRepositoryStub
 });
+
+var error = 'error';
+
+function expectError(next) {
+  expect(next).to.have.been.called.with({
+    statusCode: 500,
+    message: error
+  });
+}
 
 describe('analyses handlers', function() {
   describe('queryAnalyses', function() {
@@ -29,22 +42,18 @@ describe('analyses handlers', function() {
       var result = { rows: [] };
       analysisRepositoryStub.query = sinon.fake.yields(undefined, result);
       analysisHandlers.queryAnalyses(request, response, next);
+      
       expect(response.json).to.have.been.called.with(result.rows);
-      expect(next).to.have.been.called();
+      expect(next).to.not.have.been.called();
     });
 
-    it('should send back statuscode 500 if error occurs', function() {
-      var response = {
-        sendStatus: chai.spy(),
-        end: chai.spy()
-      };
+    it('should if an error occurs pass it to next', function() {
+      var response = {};
       var next = chai.spy();
       analysisRepositoryStub.query = sinon.fake.yields('error');
-      analysisHandlers.queryAnalyses(request, response);
+      analysisHandlers.queryAnalyses(request, response, next);
 
-      expect(response.sendStatus).to.have.been.called.with(500);
-      expect(response.end).to.have.been.called();
-      expect(next).to.have.not.been.called();
+      expectError(next);
     });
   });
 
@@ -64,21 +73,16 @@ describe('analyses handlers', function() {
       analysisRepositoryStub.get = sinon.fake.yields(undefined, analysis);
       analysisHandlers.getAnalysis(request, response, next);
       expect(response.json).to.have.been.called.with(analysis);
-      expect(next).to.have.been.called();
+      expect(next).to.not.have.been.called();
     });
 
-    it('should send back statuscode 500 if error occurs', function() {
-      var response = {
-        sendStatus: chai.spy(),
-        end: chai.spy()
-      };
+    it('should if an error occurs pass it to next', function() {
+      var response = {};
       var next = chai.spy();
       analysisRepositoryStub.get = sinon.fake.yields('error');
       analysisHandlers.getAnalysis(request, response, next);
 
-      expect(response.sendStatus).to.have.been.called.with(500);
-      expect(next).to.have.not.been.called();
-      expect(response.end).to.have.been.called();
+      expectError(next);
     });
   });
 
@@ -102,21 +106,16 @@ describe('analyses handlers', function() {
 
       expect(response.location).to.have.been.called.with('/analyses/' + newAnalysisId);
       expect(response.sendStatus).to.have.been.called.with(201);
-      expect(next).to.have.been.called();
+      expect(next).to.not.have.been.called();
     });
 
-    it('should send back statuscode 500 if error occurs', function() {
-      var response = {
-        sendStatus: chai.spy(),
-        end: chai.spy()
-      };
+    it('should if an error occurs pass it to next', function() {
+      var response = {};
       var next = chai.spy();
       analysisRepositoryStub.create = sinon.fake.yields('error');
       analysisHandlers.createAnalysis(request, response, next);
 
-      expect(response.sendStatus).to.have.been.called.with(500);
-      expect(next).to.have.not.been.called();
-      expect(response.end).to.have.been.called();
+      expectError(next);
     });
   });
 
@@ -140,21 +139,16 @@ describe('analyses handlers', function() {
       analysisHandlers.setPrimaryModel(request, response, next);
 
       expect(response.sendStatus).to.have.been.called.with(200);
-      expect(next).to.have.been.called();
+      expect(next).to.not.have.been.called();
     });
 
-    it('should send back statuscode 500 if error occurs', function() {
-      var response = {
-        sendStatus: chai.spy(),
-        end: chai.spy()
-      };
+    it('should if an error occurs pass it to next', function() {
+      var response = {};
       var next = chai.spy();
       analysisRepositoryStub.setPrimaryModel = sinon.fake.yields('error');
       analysisHandlers.setPrimaryModel(request, response, next);
 
-      expect(response.sendStatus).to.have.been.called.with(500);
-      expect(next).to.have.not.been.called();
-      expect(response.end).to.have.been.called();
+      expectError(next);
     });
   });
 
@@ -177,21 +171,16 @@ describe('analyses handlers', function() {
       analysisHandlers.getProblem(request, response, next);
 
       expect(response.json).to.have.been.called.with(result.problem);
-      expect(next).to.have.been.called();
+      expect(next).to.not.have.been.called();
     });
 
-    it('should send back statuscode 500 if error occurs', function() {
-      var response = {
-        sendStatus: chai.spy(),
-        end: chai.spy()
-      };
+    it('should if an error occurs pass it to next', function() {
+      var response = {};
       var next = chai.spy();
       analysisRepositoryStub.get = sinon.fake.yields('error');
       analysisHandlers.getProblem(request, response, next);
 
-      expect(response.sendStatus).to.have.been.called.with(500);
-      expect(next).to.have.not.been.called();
-      expect(response.end).to.have.been.called();
+      expectError(next);
     });
   });
 
@@ -215,22 +204,17 @@ describe('analyses handlers', function() {
       analysisHandlers.setTitle(request, response, next);
 
       expect(response.sendStatus).to.have.been.called.with(200);
-      expect(next).to.have.been.called();
+      expect(next).to.not.have.been.called();
     });
 
-    it('should send back statuscode 500 if error occurs', () => {
-      var response = {
-        sendStatus: chai.spy(),
-        end: chai.spy()
-      };
+    it('should if an error occurs pass it to next', () => {
+      var response = {};
       var next = chai.spy();
       analysisRepositoryStub.setTitle = sinon.fake.yields('error');
 
       analysisHandlers.setTitle(request, response, next);
 
-      expect(response.sendStatus).to.have.been.called.with(500);
-      expect(response.end).to.have.been.called();
-      expect(next).to.have.not.been.called();
+      expectError(next);
     });
   });
 
@@ -255,22 +239,17 @@ describe('analyses handlers', function() {
       analysisHandlers.setOutcome(request, response, next);
 
       expect(response.sendStatus).to.have.been.called.with(200);
-      expect(next).to.have.been.called();
+      expect(next).to.not.have.been.called();
     });
 
-    it('should send back statuscode 500 if error occurs', () => {
-      var response = {
-        sendStatus: chai.spy(),
-        end: chai.spy()
-      };
+    it('should if an error occurs pass it to next', () => {
+      var response = {};
       var next = chai.spy();
       analysisRepositoryStub.setOutcome = sinon.fake.yields('error');
 
       analysisHandlers.setOutcome(request, response, next);
 
-      expect(response.sendStatus).to.have.been.called.with(500);
-      expect(response.end).to.have.been.called();
-      expect(next).to.have.not.been.called();
+      expectError(next);
     });
   });
 
@@ -291,22 +270,17 @@ describe('analyses handlers', function() {
       analysisHandlers.deleteAnalysis(request, response, next);
 
       expect(response.sendStatus).to.have.been.called.with(200);
-      expect(next).to.have.been.called();
+      expect(next).to.not.have.been.called();
     });
 
-    it('should send back statuscode 500 if error occurs', () => {
-      var response = {
-        sendStatus: chai.spy(),
-        end: chai.spy()
-      };
+    it('should if an error occurs pass it to next', () => {
+      var response = {};
       var next = chai.spy();
       analysisRepositoryStub.deleteAnalysis = sinon.fake.yields('error');
 
       analysisHandlers.deleteAnalysis(request, response, next);
 
-      expect(response.sendStatus).to.have.been.called.with(500);
-      expect(response.end).to.have.been.called();
-      expect(next).to.have.not.been.called();
+      expectError(next);
     });
   });
 });

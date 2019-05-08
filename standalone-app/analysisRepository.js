@@ -1,5 +1,4 @@
 'use strict';
-var async = require('async');
 var logger = require('./logger');
 var dbUtil = require('./dbUtil');
 var db = require('./db')(dbUtil.connectionConfig);
