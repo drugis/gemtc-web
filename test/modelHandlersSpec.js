@@ -647,4 +647,31 @@ describe('the model handlers', function() {
       expect(next).to.have.been.called.with(error500);
     });
   });
+
+  describe('deleteModel', function(){
+    var request = {
+      params: {
+        modelId: 1
+      }
+    };
+
+    it('should call the repository.deleteModel', function() {
+      var response = {
+        sendStatus: chai.spy()
+      };
+      var next = chai.spy();
+      modelRepositoryStub.deleteModel = sinon.fake.yields(null);
+      modelHandlers.deleteModel(request, response, next);
+      expect(response.sendStatus).to.have.been.called.with(200);
+    });
+
+    it('should call next with an error if one occurs', function() {
+      var response = {};
+      var next = chai.spy();
+      modelRepositoryStub.deleteModel = sinon.fake.yields(errorMessage);
+      modelHandlers.deleteModel(request, response, next);
+      expect(next).to.have.been.called.with(error500);
+    });
+  });
+
 });

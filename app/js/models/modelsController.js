@@ -25,6 +25,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.setAsPrimary = setAsPrimary;
     $scope.archivedFilter = archivedFilter;
     $scope.editModelTitle = editModelTitle;
+    $scope.deleteModel = deleteModel;
 
     //init
     $scope.modelsLoaded = false;
@@ -138,6 +139,25 @@ define(['lodash', 'angular'], function(_, angular) {
         }
       });
     }
+
+    function deleteModel(model) {
+      $modal.open({
+        templateUrl: './deleteModel.html',
+        scope: $scope,
+        controller: 'DeleteModelController',
+        resolve: {
+          model: function() {
+            return model;
+          },
+          callback: function() {
+            return function(modelId){
+              $scope.$parent.models = _.reject($scope.$parent.models, ['id', modelId]);
+            };
+          }
+        }
+      });
+    }
+    
   };
 
   return dependencies.concat(ModelsController);

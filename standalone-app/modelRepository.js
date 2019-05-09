@@ -151,6 +151,19 @@ function setTitle(modelId, newTitle, callback) {
   );
 }
 
+function deleteModel(modelId, callback) {
+  logger.debug('modelRepository.delete');
+  db.query('DELETE FROM model WHERE id = $1', [modelId],
+    function(error) {
+      if (error) {
+        logger.error('error deleting model ' + error);
+        callback(error);
+      } else {
+        callback(error);
+      }
+    });
+}
+
 module.exports = {
   create: createModel,
   get: getModel,
@@ -158,5 +171,6 @@ module.exports = {
   findByAnalysis: findByAnalysis,
   setTaskUrl: setTaskUrl,
   setArchive: setArchive,
-  setTitle: setTitle
+  setTitle: setTitle,
+  deleteModel: deleteModel
 };

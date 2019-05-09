@@ -8,6 +8,7 @@ define([
   './addComparisonFunnelPlotController',
   './setBaselineDistributionController',
   './editModelTitleController',
+  './deleteModelController',
   './standaloneModelResource',
   './standaloneModelBaselineResource',
   './standaloneProblemResource',
@@ -43,6 +44,7 @@ define([
   AddComparisonFunnelPlotController,
   SetBaselineDistributionController,
   EditModelTitleController,
+  DeleteModelController,
   ModelResource,
   ModelBaselineResource,
   ProblemResource,
@@ -80,6 +82,7 @@ define([
       .controller('AddComparisonFunnelPlotController', AddComparisonFunnelPlotController)
       .controller('SetBaselineDistributionController', SetBaselineDistributionController)
       .controller('EditModelTitleController', EditModelTitleController)
+      .controller('DeleteModelController', DeleteModelController)
 
       // resources
       .factory('ModelResource', ModelResource)

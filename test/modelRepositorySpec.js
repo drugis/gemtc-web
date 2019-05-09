@@ -366,4 +366,32 @@ describe('the model repository', function() {
       modelRepository.update(newModel, callback);
     });
   });
+
+  describe('delete', function() {
+    var query;
+    var expectedQuery = 'DELETE FROM model WHERE id = $1';
+    var modelId = 1;
+    var expectedValues = [modelId];
+    var expectedResult;
+
+    beforeEach(function() {
+      query = sinon.stub(queryStub, 'query');
+    });
+
+    afterEach(function() {
+      query.restore();
+    });
+
+    it('should delete the model and call the callback', function(done) {
+      query.onCall(0).yields(null);
+      var callback = succesCallback(query, expectedQuery, expectedValues, expectedResult, done);
+      modelRepository.deleteModel(modelId, callback);
+    });
+
+    it('should call the callback if an error if an error occurs', function(done) {
+      query.onCall(0).yields(expectedError);
+      var callback = errorCallback(query, expectedQuery, expectedValues, done);
+      modelRepository.deleteModel(modelId, callback);
+    });
+  });
 });

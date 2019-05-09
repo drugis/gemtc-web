@@ -10,6 +10,7 @@ module.exports = express.Router({
   .post('/', modelHandlers.createModel)
   .get('/:modelId', modelHandlers.getModel)
   .post('/:modelId', modelHandlers.extendRunLength)
+  .delete('/:modelId', modelHandlers.deleteModel)
   .get('/:modelId/result', modelHandlers.getResult)
   .get('/:modelId/baseline', modelHandlers.getBaseline)
   .put('/:modelId/baseline', modelHandlers.setBaseline)

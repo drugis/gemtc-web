@@ -59,7 +59,8 @@
               <th class="text-center">Model computed
                 <inline-help help-key="model-computed"></inline-help>
               </th>
-              <th></th>
+              <th ng-hide="loginUserId !== userId"></th>
+              <th ng-hide="loginUserId !== userId"></th>
             </tr>
           </thead>
           <tbody>
@@ -81,9 +82,14 @@
                 <i class="fa fa-check" style="color:green;" ng-if="model.runStatus === 'done'"></i>
                 <i class="fa fa-times" style="color:red;" ng-if="model.runStatus === 'failed'"></i>
               </td>
-              <td class="text-center">
+              <td class="text-center" ng-hide="loginUserId !== userId">
                 <a ng-click="editModelTitle(model)" tooltip="Edit model title">
                   <i class="fa fa-edit"></i>
+                </a>
+              </td>
+              <td class="text-center"  ng-hide="loginUserId !== userId">
+                <a ng-click="deleteModel(model)" tooltip="Delete model" style="color:red">
+                  <i class="fa fa-trash"></i>
                 </a>
               </td>
             </tr>

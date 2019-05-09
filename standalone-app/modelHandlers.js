@@ -26,10 +26,7 @@ function find(request, response, next) {
       var taskUrls = _.map(modelsWithTask, 'taskUrl');
       pataviTaskRepository.getPataviTasksStatus(taskUrls, function(error, pataviResult) {
         if (error) {
-          next({
-            statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-            message: error
-          });
+          errorCallback(next, error);
         } else {
           var decoratedResult = modelService.decorateWithRunStatus(modelsWithTask, pataviResult);
           response.json(decoratedResult.concat(modelsWithoutTask));
@@ -66,7 +63,7 @@ function getResult(request, response, next) {
       response.status(httpStatus.OK);
       response.json(pataviResult);
     }
-  ], _.partial(asyncCallback, next));
+  ], _.partial(errorCallback, next));
 }
 
 function createModel(request, response, next) {
@@ -84,7 +81,7 @@ function createModel(request, response, next) {
         id: createdId
       });
     }
-  ], _.partial(asyncCallback, next));
+  ], _.partial(errorCallback, next));
 }
 
 function extendRunLength(request, response, next) {
@@ -113,7 +110,7 @@ function extendRunLength(request, response, next) {
     function() {
       response.sendStatus(httpStatus.OK);
     }
-  ], _.partial(asyncCallback, next));
+  ], _.partial(errorCallback, next));
 }
 
 function addFunnelPlot(request, response, next) {
@@ -134,7 +131,7 @@ function addFunnelPlot(request, response, next) {
     function() {
       response.sendStatus(httpStatus.CREATED);
     }
-  ], _.partial(asyncCallback, next));
+  ], _.partial(errorCallback, next));
 }
 
 function queryFunnelPlots(request, response, next) {
@@ -155,10 +152,7 @@ function getBaseline(request, response, next) {
 function getFromGetterById(response, next, getter, id) {
   getter(id, function(error, result) {
     if (error) {
-      next({
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        message: error
-      });
+      errorCallback(next, error);
     } else {
       response.json(result);
     }
@@ -184,7 +178,7 @@ function setBaseline(request, response, next) {
     function() {
       response.sendStatus(httpStatus.OK);
     }
-  ], _.partial(asyncCallback, next));
+  ], _.partial(errorCallback, next));
 }
 
 function checkCoordinates(analysisId, model, callback) {
@@ -217,7 +211,7 @@ function setAttributes(request, response, next) {
     function() {
       response.sendStatus(httpStatus.OK);
     }
-  ], _.partial(asyncCallback, next));
+  ], _.partial(errorCallback, next));
 }
 
 function getModel(request, response, next) {
@@ -238,26 +232,27 @@ function setTitle(request, response, next) {
   logger.debug('modelHandler.setTitle');
   var modelId = request.params.modelId;
   var newTitle = request.body.newTitle;
-  modelRepository.setTitle(modelId, newTitle, function(error) {
-    if (error) {
-      next({
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        message: error
-      });
-    } else {
-      response.sendStatus(httpStatus.OK);
-    }
+  modelRepository.setTitle(modelId, newTitle, _.partial(okCallback, response, next));
+}
+
+function deleteModel(request, response, next) {
+  logger.debug('modelHanderl.deleteModel');
+  var modelId = request.params.modelId;
+  modelRepository.deleteModel(modelId, _.partial(okCallback, response, next));
+}
+
+function errorCallback(next, error) {
+  next({
+    statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+    message: error
   });
 }
 
-function asyncCallback(next, error) {
+function okCallback(response, next, error) {
   if (error) {
-    next({
-      statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-      message: error
-    });
+    errorCallback(next, error);
   } else {
-    next();
+    response.sendStatus(httpStatus.OK);
   }
 }
 
@@ -273,5 +268,6 @@ module.exports = {
   setAttributes: setAttributes,
   addFunnelPlot: addFunnelPlot,
   queryFunnelPlots: queryFunnelPlots,
-  getFunnelPlot: getFunnelPlot
+  getFunnelPlot: getFunnelPlot,
+  deleteModel: deleteModel
 };
