@@ -24,6 +24,10 @@ define([], function() {
       setAttributes: {
         url: '/projects/:projectId/analyses/:analysisId/models/:modelId/attributes',
         method: 'POST'
+      },
+      setTitle: {
+        url:'/projects/:projectId/analyses/:analysisId/models/:modelId/setTitle',
+        method: 'PUT'
       }
     });
   };

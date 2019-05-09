@@ -11,6 +11,7 @@ define([
   './util/graphModalDirective/plotNavigationController',
   './models/setBaselineDistributionController',
   './analyses/editAnalysisTitleController',
+  './models/editModelTitleController',
   'angular'
 ], function(
   ModelController,
@@ -23,6 +24,7 @@ define([
   PlotNavigationController,
   SetBaselineDistributionController,
   EditAnalysisTitleController,
+  EditModelTitleController,
   angular) {
     return angular.module('gemtc.controllers', [])
       .controller('ModelController', ModelController)
@@ -35,5 +37,6 @@ define([
       .controller('PlotNavigationController', PlotNavigationController)
       .controller('SetBaselineDistributionController', SetBaselineDistributionController)
       .controller('EditAnalysisTitleController', EditAnalysisTitleController)
+      .controller('EditModelTitleController', EditModelTitleController)
       ;
   });
