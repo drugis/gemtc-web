@@ -7,6 +7,7 @@ define([
   './createNetworkModelController',
   './addComparisonFunnelPlotController',
   './setBaselineDistributionController',
+  './editModelTitleController',
   './standaloneModelResource',
   './standaloneModelBaselineResource',
   './standaloneProblemResource',
@@ -41,6 +42,7 @@ define([
   CreateNetworkModelController,
   AddComparisonFunnelPlotController,
   SetBaselineDistributionController,
+  EditModelTitleController,
   ModelResource,
   ModelBaselineResource,
   ProblemResource,
@@ -77,6 +79,7 @@ define([
       .controller('CreateNetworkModelController', CreateNetworkModelController)
       .controller('AddComparisonFunnelPlotController', AddComparisonFunnelPlotController)
       .controller('SetBaselineDistributionController', SetBaselineDistributionController)
+      .controller('EditModelTitleController', EditModelTitleController)
 
       // resources
       .factory('ModelResource', ModelResource)

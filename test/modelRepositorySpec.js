@@ -18,7 +18,7 @@ var modelRepository = proxyquire('../standalone-app/modelRepository', {
   './db': dbStub
 });
 
-var expectedError = 'error';
+var expectedError = 'error message';
 var columnString = 'title, analysisId, linearModel,' +
   ' burn_in_iterations, inference_iterations, ' +
   ' thinning_factor, modelType, likelihood, link,' +

@@ -14,7 +14,6 @@ function find(request, response, next) {
 
   var analysisId = request.params.analysisId;
   modelRepository.findByAnalysis(analysisId, function(error, modelsResult) {
-
     if (error) {
       return next({
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
@@ -22,14 +21,9 @@ function find(request, response, next) {
       });
     }
 
-    var modelsWithTasks = _.filter(modelsResult, function(model) {
-      return model.taskUrl !== null && model.taskUrl !== undefined;
-    });
-    var modelsWithoutTasks = _.filter(modelsResult, function(model) {
-      return model.taskUrl === null || model.taskUrl === undefined;
-    });
-    if (modelsWithTasks.length) {
-      var taskUrls = _.map(modelsWithTasks, 'taskUrl');
+    var { modelsWithTask, modelsWithoutTask } = modelService.partitionModels(modelsResult);
+    if (modelsWithTask.length) {
+      var taskUrls = _.map(modelsWithTask, 'taskUrl');
       pataviTaskRepository.getPataviTasksStatus(taskUrls, function(error, pataviResult) {
         if (error) {
           next({
@@ -37,22 +31,13 @@ function find(request, response, next) {
             message: error
           });
         } else {
-          var decoratedResult = decorateWithRunStatus(modelsWithTasks, pataviResult);
-          response.json(decoratedResult.concat(modelsWithoutTasks));
+          var decoratedResult = modelService.decorateWithRunStatus(modelsWithTask, pataviResult);
+          response.json(decoratedResult.concat(modelsWithoutTask));
         }
       });
     } else {
       response.json(modelsResult);
     }
-  });
-}
-
-function decorateWithRunStatus(modelsResult, pataviResult) {
-  var pataviTasks = _.keyBy(pataviResult, 'id');
-  return _.map(modelsResult, function(model) {
-    return _.extend(model, {
-      runStatus: pataviTasks[model.taskUrl].runStatus
-    });
   });
 }
 
@@ -68,7 +53,11 @@ function getResult(request, response, next) {
     },
     function(model, callback) {
       modelCache = model;
-      callback(model.taskUrl === null || model.taskUrl === undefined);
+      if (model.taskUrl === null || model.taskUrl === undefined) {
+        callback('Error, model ' + modelId + ' does not have a task url');
+      } else {
+        callback();
+      }
     },
     function(callback) {
       pataviTaskRepository.getResult(modelCache.taskUrl, callback);
@@ -77,16 +66,7 @@ function getResult(request, response, next) {
       response.status(httpStatus.OK);
       response.json(pataviResult);
     }
-  ], function(error) {
-    if (error) {
-      next({
-        statusCode: httpStatus.NOT_FOUND,
-        message: 'no result found for model with id ' + modelId
-      });
-    } else {
-      next();
-    }
-  });
+  ], _.partial(asyncCallback, next));
 }
 
 function createModel(request, response, next) {
@@ -104,16 +84,7 @@ function createModel(request, response, next) {
         id: createdId
       });
     }
-  ], function(error) {
-    if (error) {
-      next({
-        statusCode: httpStatus.NOT_FOUND,
-        message: 'Error creating model for analysis: ' + analysisId
-      });
-    } else {
-      next();
-    }
-  });
+  ], _.partial(asyncCallback, next));
 }
 
 function extendRunLength(request, response, next) {
@@ -142,16 +113,7 @@ function extendRunLength(request, response, next) {
     function() {
       response.sendStatus(httpStatus.OK);
     }
-  ], function(error) {
-    if (error) {
-      next({
-        statusCode: httpStatus.NOT_FOUND,
-        message: 'Error extending run length of model: ' + modelId
-      });
-    } else {
-      next();
-    }
-  });
+  ], _.partial(asyncCallback, next));
 }
 
 function addFunnelPlot(request, response, next) {
@@ -172,44 +134,26 @@ function addFunnelPlot(request, response, next) {
     function() {
       response.sendStatus(httpStatus.CREATED);
     }
-  ], function(error) {
-    if (error) {
-      next({
-        statusCode: httpStatus.NOT_FOUND,
-        message: 'Error adding funnelplot for model: ' + modelId
-      });
-    } else {
-      next();
-    }
-  });
+  ], _.partial(asyncCallback, next));
 }
 
-function queryFunnnelPlots(request, response, next) {
+function queryFunnelPlots(request, response, next) {
   var modelId = Number.parseInt(request.params.modelId);
-  getFunnelPlotsById(request, response, next, funnelPlotRepository.findByModelId, modelId);
+  getFromGetterById(response, next, funnelPlotRepository.findByModelId, modelId);
 }
 
 function getFunnelPlot(request, response, next) {
   var plotId = Number.parseInt(request.params.plotId);
-  getFunnelPlotsById(request, response, next, funnelPlotRepository.findByPlotId, plotId);
-}
-
-function getFunnelPlotsById(request, response, next, getter, id) {
-  getter(id, function(error, result) {
-    if (error) {
-      next({
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        message: error
-      });
-    } else {
-      response.json(result);
-    }
-  });
+  getFromGetterById(response, next, funnelPlotRepository.findByPlotId, plotId);
 }
 
 function getBaseline(request, response, next) {
   var modelId = Number.parseInt(request.params.modelId);
-  modelBaselineRepository.get(modelId, function(error, result) {
+  getFromGetterById(response, next, modelBaselineRepository.get, modelId);
+}
+
+function getFromGetterById(response, next, getter, id) {
+  getter(id, function(error, result) {
     if (error) {
       next({
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
@@ -240,25 +184,13 @@ function setBaseline(request, response, next) {
     function() {
       response.sendStatus(httpStatus.OK);
     }
-  ], function(error) {
-    if (error) {
-      next(error.hasOwnProperty('message') ? error : {
-        statusCode: httpStatus.NOT_FOUND,
-        message: 'Error setting baseline for model: ' + modelId
-      });
-    } else {
-      next();
-    }
-  });
+  ], _.partial(asyncCallback, next));
 }
 
 function checkCoordinates(analysisId, model, callback) {
   logger.debug('check analysisId = ' + analysisId + ' and model.analysisId = ' + model.analysisId);
   if (analysisId !== model.analysisId) {
-    callback({
-      statusCode: httpStatus.NOT_FOUND,
-      message: 'Error, could not find analysis/model combination'
-    });
+    callback('Error, could not find analysis/model combination');
   } else {
     callback();
   }
@@ -285,7 +217,7 @@ function setAttributes(request, response, next) {
     function() {
       response.sendStatus(httpStatus.OK);
     }
-  ], next);
+  ], _.partial(asyncCallback, next));
 }
 
 function getModel(request, response, next) {
@@ -318,6 +250,17 @@ function setTitle(request, response, next) {
   });
 }
 
+function asyncCallback(next, error) {
+  if (error) {
+    next({
+      statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+      message: error
+    });
+  } else {
+    next();
+  }
+}
+
 module.exports = {
   find: find,
   createModel: createModel,
@@ -329,6 +272,6 @@ module.exports = {
   setTitle: setTitle,
   setAttributes: setAttributes,
   addFunnelPlot: addFunnelPlot,
-  queryFunnnelPlots: queryFunnnelPlots,
+  queryFunnelPlots: queryFunnelPlots,
   getFunnelPlot: getFunnelPlot
 };

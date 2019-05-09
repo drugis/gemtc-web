@@ -16,7 +16,7 @@ module.exports = express.Router({
   .put('/:modelId/setTitle', modelHandlers.setTitle)
   .post('/:modelId/attributes', modelHandlers.setAttributes)
   .post('/:modelId/funnelPlots', modelHandlers.addFunnelPlot)
-  .get('/:modelId/funnelPlots', modelHandlers.queryFunnnelPlots)
+  .get('/:modelId/funnelPlots', modelHandlers.queryFunnelPlots)
   .get('/:modelId/funnelPlots/:plotId', modelHandlers.getFunnelPlot)
   .use('/:modelId/task', pataviTaskRouter)
   ;
