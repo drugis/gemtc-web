@@ -32,7 +32,11 @@
           <td style="vertical-align: top;">
             <a ui-sref="networkMetaAnalysis({analysisId: analysis.id})">{{analysis.title}}</a></td>
           <td style="white-space: pre-wrap;">{{analysis.outcome.name}}</td>
-          <td class="text-center"><a ng-click="deleteAnalysis(analysis)" style="color:red"><i class="fa fa-trash"></i></a></td>
+          <td class="text-center">
+            <a ng-click="deleteAnalysis(analysis)" tooltip="Delete analysis" style="color:red">
+              <i class="fa fa-trash"></i>
+            </a>
+          </td>
         </tr>
       </table>
     </div>
