@@ -38,7 +38,7 @@ var analysisId = 1;
 var modelId = -1;
 
 describe('the model handlers', function() {
-  describe.only('find', function() {
+  describe('find', function() {
     var request = {
       params: {
         analysisId: 1
