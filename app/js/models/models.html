@@ -17,7 +17,7 @@
           </h5>
           <div class="input-group" ng-hide="!models.length">
             <select class="input-group-field" ng-hide="loginUserId !== userId" ng-model="analysis.primaryModel"
-              ng-options="model.id as model.title for model in models | filter:{archived : false} | orderBy:'title' track by model.id"
+              ng-options="model.id as model.title for model in models | filter:archivedFilter | orderBy:'title'"
               ng-change="setPrimaryModel()"></select>
             <div ng-if="loginUserId !== userId && analysis.primaryModel">
               Primary model: {{getPrimaryModelTitle()}}
@@ -92,7 +92,8 @@
                   <i class="fa fa-edit"></i>
                 </a>
               </td>
-              <td class="text-center" ng-hide="userId"> <!-- userId is only set in ADDIS -->
+              <td class="text-center" ng-hide="userId">
+                <!-- userId is only set in ADDIS -->
                 <a ng-click="deleteModel(model)" tooltip="Delete model" style="color:red"
                   ng-if="analysis.primaryModel !== model.id">
                   <i class="fa fa-trash"></i>

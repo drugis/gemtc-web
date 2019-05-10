@@ -57,19 +57,19 @@ define(['lodash', 'angular'], function(_, angular) {
         projectId: $scope.analysis.projectId,
         analysisId: $scope.analysis.id,
         modelId: $scope.analysis.primaryModel
-      }, null, function(){
+      }, null, function() {
         evictFromFrontEndCache();
       });
     }
 
-    function evictFromFrontEndCache(){ //For ADDIS
+    function evictFromFrontEndCache() { //For ADDIS
       $scope.$emit('primaryModelSet', {
         analysisId: $scope.analysis.id,
         projectId: $scope.analysis.projectId
       });
     }
 
-    function removePrimary(){
+    function removePrimary() {
       $scope.$parent.analysis.primaryModel = null;
       setPrimaryModel();
     }
@@ -152,7 +152,8 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function getPrimaryModelTitle() {
-      return _.find($scope.$parent.models, ['id', $scope.$parent.analysis.primaryModel]).title;
+      var primaryModel = _.find($scope.$parent.models, ['id', $scope.$parent.analysis.primaryModel]);
+      return primaryModel ? primaryModel.title : '';
     }
   };
 
