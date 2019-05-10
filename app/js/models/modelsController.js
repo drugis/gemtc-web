@@ -21,15 +21,15 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.gotoCreateModel = gotoCreateModel;
     $scope.gotoModel = gotoModel;
     $scope.unArchiveModel = unArchiveModel;
-    $scope.hasPrimaryLabel = hasPrimaryLabel;
-    $scope.setAsPrimary = setAsPrimary;
+    $scope.setPrimaryModel = setPrimaryModel;
     $scope.archivedFilter = archivedFilter;
     $scope.editModelTitle = editModelTitle;
     $scope.deleteModel = deleteModel;
+    $scope.getPrimaryModelTitle = getPrimaryModelTitle;
+    $scope.removePrimary = removePrimary;
 
     //init
     $scope.modelsLoaded = false;
-    $scope.analysisId = $stateParams.analysisId;
     $scope.showArchived = false;
     $scope.numberOfModelsArchived = 0;
     loadModels();
@@ -43,10 +43,6 @@ define(['lodash', 'angular'], function(_, angular) {
     function loadModels() {
       ModelResource.query($stateParams, function(result) {
         $scope.modelsLoaded = true;
-        $scope.$parent.analysis.$promise.then(function() {
-          $scope.$parent.primaryModel = _.find(result, ['id', $scope.analysis.primaryModel]);
-        });
-        setPrimaryModelWatcher();
         $scope.numberOfModelsArchived = countArchivedModels(result);
         $scope.$parent.models = result.sort(byNameSorter);
       });
@@ -56,25 +52,26 @@ define(['lodash', 'angular'], function(_, angular) {
       return a.title.localeCompare(b.title);
     }
 
-    function setPrimaryModelWatcher() {
-      $scope.$watch('$parent.primaryModel', function(newValue, oldValue) {
-        if (oldValue !== newValue) {
-          setAsPrimary(newValue);
-        }
-      });
-    }
-
-    function setAsPrimary(primaryModel) {
-      var modelId = primaryModel ? primaryModel.id : null;
-      $scope.$emit('primaryModelSet', {
-        analysisId: $scope.analysisId,
-        projectId: $scope.analysis.projectId
-      });
+    function setPrimaryModel() {
       return AnalysisResource.setPrimaryModel({
         projectId: $scope.analysis.projectId,
         analysisId: $scope.analysis.id,
-        modelId: modelId
-      }, null);
+        modelId: $scope.analysis.primaryModel
+      }, null, function(){
+        evictFromFrontEndCache();
+      });
+    }
+
+    function evictFromFrontEndCache(){ //For ADDIS
+      $scope.$emit('primaryModelSet', {
+        analysisId: $scope.analysis.id,
+        projectId: $scope.analysis.projectId
+      });
+    }
+
+    function removePrimary(){
+      $scope.$parent.analysis.primaryModel = null;
+      setPrimaryModel();
     }
 
     function countArchivedModels(models) {
@@ -114,11 +111,7 @@ define(['lodash', 'angular'], function(_, angular) {
       $state.go('model', getModelParams(model));
     }
 
-    function hasPrimaryLabel(model) {
-      return model && $scope.$parent.primaryModel && model.id === $scope.$parent.primaryModel.id;
-    }
-
-    function editModelTitle(model){
+    function editModelTitle(model) {
       $modal.open({
         templateUrl: './editModelTitle.html',
         scope: $scope,
@@ -150,14 +143,17 @@ define(['lodash', 'angular'], function(_, angular) {
             return model;
           },
           callback: function() {
-            return function(modelId){
+            return function(modelId) {
               $scope.$parent.models = _.reject($scope.$parent.models, ['id', modelId]);
             };
           }
         }
       });
     }
-    
+
+    function getPrimaryModelTitle() {
+      return _.find($scope.$parent.models, ['id', $scope.$parent.analysis.primaryModel]).title;
+    }
   };
 
   return dependencies.concat(ModelsController);
