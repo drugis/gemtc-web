@@ -22,6 +22,9 @@
             <td rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}"
               style="vertical-align: top;">
               {{treatment.studyTitle}}
+              <a ng-click="editStudyTitle(treatment.studyTitle)" tooltip="Edit study title" ng-if="!editmode.disableEditing">
+                  <i class="fa fa-edit"></i>
+                </a>
             </td>
             <td ng-repeat="covariate in treatment.covariatesColumns" rowspan="{{treatment.studyRowSpan}}"
               ng-show="{{treatment.showStudyColumn}}" style="vertical-align:top" class="text-center">

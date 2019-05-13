@@ -2,22 +2,27 @@
 define(['lodash'], function(_) {
   var dependencies = [
     '$scope',
+    '$modal',
+    '$stateParams',
     'AnalysisService',
+    'AnalysisResource',
     'EvidenceTableService'
   ];
   var EvidenceTableController = function(
     $scope,
+    $modal,
+    $stateParams,
     AnalysisService,
+    AnalysisResource,
     EvidenceTableService
   ) {
+    // functions 
+    $scope.editStudyTitle = editStudyTitle;
 
-    function matcherFactory(arg) {
-      return function(row) {
-        return row.evidence[arg];
-      };
-    }
+    // init
+    $scope.analysis.$promise.then(createEvidenceTable);
 
-    $scope.analysis.$promise.then(function() {
+    function createEvidenceTable() {
       var studyMap = AnalysisService.problemToStudyMap($scope.analysis.problem);
       var studies = EvidenceTableService.studyMapToStudyArray(studyMap);
       $scope.outcomeType = EvidenceTableService.determineOutcomeType(studies);
@@ -27,8 +32,45 @@ define(['lodash'], function(_) {
       $scope.showStdErr = _.find($scope.tableRows, matcherFactory('stdErr'));
       $scope.showSampleSize = _.find($scope.tableRows, matcherFactory('sampleSize'));
       $scope.showExposure = _.find($scope.tableRows, matcherFactory('exposure'));
-    });
+    }
 
+    function matcherFactory(arg) {
+      return function(row) {
+        return row.evidence[arg];
+      };
+    }
+
+    function editStudyTitle(title) {
+      $modal.open({
+        templateUrl: './editStudyTitle.html',
+        controller: 'EditStudyTitleController',
+        resolve: {
+          studyTitle: function() {
+            return title;
+          },
+          entries: function() {
+            var relativeEntries = $scope.analysis.problem.relativeEffectData ? EvidenceTableService.getRelativeEntries($scope.analysis.problem.relativeEffectData.data) : [];
+            return relativeEntries.concat($scope.analysis.problem.entries);
+          },
+          callback: function() {
+            return function(newTitle) {
+              var entries = $scope.analysis.problem.entries;
+              $scope.analysis.problem.entries = EvidenceTableService.getNewEntries(title, newTitle, entries);
+              var oldCovariate = $scope.analysis.problem.studyLevelCovariates[title];
+              delete $scope.analysis.problem.studyLevelCovariates[title];
+              $scope.analysis.problem.studyLevelCovariates[newTitle] = oldCovariate;
+              AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
+                _.forEach($scope.models, function(model) {
+                  delete model.taskUrl;
+                  delete model.runStatus;
+                });
+                createEvidenceTable();
+              });
+            };
+          }
+        }
+      });
+    }
   };
   return dependencies.concat(EvidenceTableController);
 });

@@ -10,5 +10,6 @@ module.exports = express.Router()
   .post('/', analysisHandlers.createAnalysis)
   .put('/:analysisId/setTitle', analysisHandlers.setTitle)
   .put('/:analysisId/setOutcome', analysisHandlers.setOutcome)
+  .put('/:analysisId/setProblem', analysisHandlers.setProblem)
   .delete('/:analysisId', analysisHandlers.deleteAnalysis)
 ;

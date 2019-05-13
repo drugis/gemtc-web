@@ -17,6 +17,10 @@ define([], function() {
       setOutcome: {
         url: '/analyses/:analysisId/setOutcome',
         method: 'PUT'
+      },
+      setProblem: {
+        url: '/analyses/:analysisId/setProblem',
+        method: 'PUT'
       }
     });
   };

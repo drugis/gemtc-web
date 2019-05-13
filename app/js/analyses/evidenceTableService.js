@@ -5,7 +5,7 @@ define(['angular', 'lodash'], function(angular, _) {
   var EvidenceTableService = function() {
 
     function determineOutcomeType(studyList) {
-      if(studyList[0].arms[0].data.responders) {
+      if (studyList[0].arms[0].data.responders) {
         return studyList[0].arms[0].data.exposure ? 'survival' : 'dichotomous';
       }
       return 'continuous';
@@ -134,12 +134,33 @@ define(['angular', 'lodash'], function(angular, _) {
       return tableRows;
     }
 
+    function getRelativeEntries(relativeData) {
+      return _.map(relativeData, function(entry, title) {
+        return _.merge({}, entry, {
+          study: title
+        });
+      });
+    }
+
+    function getNewEntries(oldTitle, newTitle, entries) {
+      return _.map(entries, function(entry) {
+        if (entry.study !== oldTitle) {
+          return entry;
+        } else {
+          return _.merge({}, entry, {
+            study: newTitle
+          });
+        }
+      });
+    }
 
     return {
       determineOutcomeType: determineOutcomeType,
       studyMapToStudyArray: studyMapToStudyArray,
       studyListToEvidenceRows: studyListToEvidenceRows,
-      buildRelativeEffectDataRows: buildRelativeEffectDataRows
+      buildRelativeEffectDataRows: buildRelativeEffectDataRows,
+      getRelativeEntries: getRelativeEntries,
+      getNewEntries: getNewEntries
     };
 
   };

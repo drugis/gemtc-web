@@ -3,6 +3,10 @@ var logger = require('./logger');
 var analysisRepository = require('./analysisRepository');
 var statusCodes = require('http-status-codes');
 var _ = require('lodash');
+var async = require('async');
+var modelRepository = require('./modelRepository');
+var modelService = require('./modelService');
+var pataviTaskRepository = require('./pataviTaskRepository');
 
 function queryAnalyses(request, response, next) {
   logger.debug('query analyses');
@@ -68,6 +72,31 @@ function deleteAnalysis(request, response, next) {
   analysisRepository.deleteAnalysis(analysisId, _.partial(okCallback, response, next));
 }
 
+function setProblem(request, response, next) {
+  logger.debug('analysisHandler.setProblem');
+  var analysisId = request.params.analysisId;
+  var problem = request.body;
+  async.waterfall([
+    function(callback) {
+      modelRepository.findByAnalysis(analysisId, callback);
+    },
+    function(models, callback) {
+      var { modelsWithTask } = modelService.partitionModels(models);
+      if (modelsWithTask.length) {
+        _.forEach(modelsWithTask, (model) => {
+          pataviTaskRepository.deleteTask(model.taskUrl, callback);
+          modelRepository.setTaskUrl(model.id, undefined, callback);
+        });
+      } else {
+        callback();
+      }
+    },
+    function(callback) {
+      analysisRepository.setProblem(analysisId, problem, callback);
+    }
+  ], _.partial(okCallback, response, next));
+}
+
 function okCallback(response, next, error) {
   if (error) {
     next({
@@ -89,6 +118,7 @@ function jsonCallback(response, next, error, result) {
     response.json(result);
   }
 }
+
 module.exports = {
   queryAnalyses: queryAnalyses,
   getAnalysis: getAnalysis,
@@ -97,5 +127,6 @@ module.exports = {
   setPrimaryModel: setPrimaryModel,
   setTitle: setTitle,
   setOutcome: setOutcome,
-  deleteAnalysis: deleteAnalysis
+  deleteAnalysis: deleteAnalysis,
+  setProblem: setProblem
 };

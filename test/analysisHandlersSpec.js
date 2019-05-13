@@ -7,14 +7,16 @@ var spies = require('chai-spies');
 var expect = chai.expect;
 
 chai.use(spies);
-var analysisRepositoryStub = chai.spy.object([
-  'query',
-  'create',
-  'get'
-]);
+var analysisRepositoryStub = chai.spy();
+var modelRepositoryStub = chai.spy();
+var pataviTaskRepositoryStub = chai.spy();
+var modelServiceStub = chai.spy();
 
 var analysisHandlers = proxyquire('../standalone-app/analysisHandlers', {
-  './analysisRepository': analysisRepositoryStub
+  './analysisRepository': analysisRepositoryStub,
+  './modelRepository': modelRepositoryStub,
+  './pataviTaskRepository': pataviTaskRepositoryStub,
+  './modelService': modelServiceStub
 });
 
 var error = 'error';
@@ -42,7 +44,7 @@ describe('analyses handlers', function() {
       var result = { rows: [] };
       analysisRepositoryStub.query = sinon.fake.yields(undefined, result);
       analysisHandlers.queryAnalyses(request, response, next);
-      
+
       expect(response.json).to.have.been.called.with(result.rows);
       expect(next).to.not.have.been.called();
     });
@@ -283,4 +285,94 @@ describe('analyses handlers', function() {
       expectError(next);
     });
   });
+
+  describe('setProblem', function() {
+    var request = {
+      params: {
+        analysisId: 1
+      },
+      body: {}
+    };
+    var errorMessage = 'error';
+    var error = {
+      message: errorMessage,
+      statusCode: 500
+    };
+    var modelsWithTasks = {
+      modelsWithTask: [{
+        taskUrl: 'taskUrl',
+        id: 37
+      }]
+    };
+    var models = [];
+    var response = {};
+
+    it('should call the repository function responsible for updating the analysis problem', (done) => {
+      var response = {
+        sendStatus: function(code) {
+          expect(code).to.equal(200);
+          expect(next).to.not.have.been.called();
+          done();
+        }
+      };
+      var next = chai.spy();
+      modelRepositoryStub.findByAnalysis = sinon.fake.yields(null, models);
+      modelServiceStub.partitionModels = sinon.fake.returns(modelsWithTasks);
+      pataviTaskRepositoryStub.deleteTask = sinon.fake.yields(null);
+      modelRepositoryStub.setTaskUrl = sinon.fake.yields(null);
+      analysisRepositoryStub.setProblem = sinon.fake.yields(null);
+
+      analysisHandlers.setProblem(request, response, next);
+    });
+
+    it('should call next with an error if modelRepository.findByAnalysis fails', (done) => {
+      var next = function(thrownError) {
+        expect(thrownError).to.deep.equal(error);
+        done();
+      };
+      modelRepositoryStub.findByAnalysis = sinon.fake.yields(errorMessage);
+      analysisHandlers.setProblem(request, response, next);
+    });
+
+    it('should call next with an error if pataviTaskRepositoryStub.deleteTask fails', (done) => {
+      var next = function(thrownError) {
+        expect(thrownError).to.deep.equal(error);
+        done();
+      };
+      modelRepositoryStub.findByAnalysis = sinon.fake.yields(null, models);
+      modelServiceStub.partitionModels = sinon.fake.returns(modelsWithTasks);
+      pataviTaskRepositoryStub.deleteTask = sinon.fake.yields(errorMessage);
+
+      analysisHandlers.setProblem(request, response, next);
+    });
+
+    it('should call next with an error if modelRepositoryStub.setTaskUrl fails', (done) => {
+      var next = function(thrownError) {
+        expect(thrownError).to.deep.equal(error);
+        done();
+      };
+      modelRepositoryStub.findByAnalysis = sinon.fake.yields(null, models);
+      modelServiceStub.partitionModels = sinon.fake.returns(modelsWithTasks);
+      pataviTaskRepositoryStub.deleteTask = sinon.fake.yields(null);
+      modelRepositoryStub.setTaskUrl = sinon.fake.yields(errorMessage);
+
+      analysisHandlers.setProblem(request, response, next);
+    });
+
+    it('should call next with an error if analysisRepositoryStub.setProblem fails', (done) => {
+      var next = function(thrownError) {
+        expect(thrownError).to.deep.equal(error);
+        done();
+      };
+      modelRepositoryStub.findByAnalysis = sinon.fake.yields(null, models);
+      modelServiceStub.partitionModels = sinon.fake.returns(modelsWithTasks);
+      pataviTaskRepositoryStub.deleteTask = sinon.fake.yields(null);
+      modelRepositoryStub.setTaskUrl = sinon.fake.yields(null);
+      analysisRepositoryStub.setProblem = sinon.fake.yields(errorMessage);
+
+      analysisHandlers.setProblem(request, response, next);
+    });
+
+  });
+
 });

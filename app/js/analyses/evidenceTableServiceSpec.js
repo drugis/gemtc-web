@@ -331,7 +331,7 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
             headerTitle: 'LENGTH_OF_FOLLOW_UP'
           }, {
             data: 1,
-          headerTitle: 'BLINDING_AT_LEAST_DOUBLE_BLIND'
+            headerTitle: 'BLINDING_AT_LEAST_DOUBLE_BLIND'
           }]
         };
 
@@ -357,6 +357,42 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
         expect(tableRows[1]).toEqual(expecetdFirstOtherArmRow);
       });
 
+    });
+
+    describe('getRelativeEntries', function() {
+      it('should mutate the relative data object into an array of entries each with their key on them as a study parameter', function() {
+        var relativeData = {
+          study1: {},
+          study2: {}
+        };
+        var result = evidenceTableService.getRelativeEntries(relativeData);
+        var expectedResult = [{
+          study: 'study1'
+        }, {
+          study: 'study2'
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('getNewEntries', function() {
+      it('should replace the study parameter with a given value for all entries with studies matching the old value', function() {
+        var oldTitle = 'old title';
+        var newTitle = 'new title';
+        var unchangedTitle = 'not changed';
+        var entries = [{
+          study: oldTitle
+        }, {
+          study: unchangedTitle
+        }];
+        var result = evidenceTableService.getNewEntries(oldTitle, newTitle, entries);
+        var expectedResult = [{
+          study: newTitle
+        }, {
+          study: unchangedTitle
+        }];
+        expect(result).toEqual(expectedResult);
+      });
     });
 
   });

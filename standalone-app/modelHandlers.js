@@ -42,22 +42,20 @@ function getResult(request, response, next) {
   logger.debug('modelHandler.getResult');
   logger.debug('request.params.analysisId' + request.params.analysisId);
   var modelId = Number.parseInt(request.params.modelId);
-  var modelCache;
 
   async.waterfall([
     function(callback) {
       modelRepository.get(modelId, callback);
     },
     function(model, callback) {
-      modelCache = model;
       if (model.taskUrl === null || model.taskUrl === undefined) {
         callback('Error, model ' + modelId + ' does not have a task url');
       } else {
-        callback();
+        callback(null, model);
       }
     },
-    function(callback) {
-      pataviTaskRepository.getResult(modelCache.taskUrl, callback);
+    function(model, callback) {
+      pataviTaskRepository.getResult(model.taskUrl, callback);
     },
     function(pataviResult) {
       response.status(httpStatus.OK);
@@ -236,7 +234,7 @@ function setTitle(request, response, next) {
 }
 
 function deleteModel(request, response, next) {
-  logger.debug('modelHanderl.deleteModel');
+  logger.debug('modelHandler.deleteModel');
   var modelId = request.params.modelId;
   modelRepository.deleteModel(modelId, _.partial(okCallback, response, next));
 }

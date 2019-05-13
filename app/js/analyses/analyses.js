@@ -9,6 +9,7 @@ define([
   './editAnalysisTitleController',
   './editOutcomeNameController',
   './deleteAnalysisController',
+  './editStudyTitleController',
   './analysisResource',
   './problemResource',
   './analysisService',
@@ -25,6 +26,7 @@ define([
   EditAnalysisTitleController,
   EditOutcomeNameController,
   DeleteAnalysisController,
+  EditStudyTitleController,
   AnalysisResource,
   ProblemResource,
   AnalysisService,
@@ -45,6 +47,7 @@ define([
       .controller('EditAnalysisTitleController', EditAnalysisTitleController)
       .controller('EditOutcomeNameController', EditOutcomeNameController)
       .controller('DeleteAnalysisController', DeleteAnalysisController)
+      .controller('EditStudyTitleController', EditStudyTitleController)
 
       // resources
       .factory('AnalysisResource', AnalysisResource)
