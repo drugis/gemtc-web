@@ -233,6 +233,13 @@ function setTitle(request, response, next) {
   modelRepository.setTitle(modelId, newTitle, _.partial(okCallback, response, next));
 }
 
+function setSensitivity(request, response, next) {
+  logger.debug('modelHandler.setSensitivity');
+  var modelId = request.params.modelId;
+  var newSensitivity = request.body;
+  modelRepository.setSensitivity(modelId, newSensitivity, _.partial(okCallback, response, next));
+}
+
 function deleteModel(request, response, next) {
   logger.debug('modelHandler.deleteModel');
   var modelId = request.params.modelId;
@@ -263,6 +270,7 @@ module.exports = {
   getBaseline: getBaseline,
   setBaseline: setBaseline,
   setTitle: setTitle,
+  setSensitivity: setSensitivity,
   setAttributes: setAttributes,
   addFunnelPlot: addFunnelPlot,
   queryFunnelPlots: queryFunnelPlots,

@@ -6,7 +6,8 @@ define(['lodash'], function(_) {
     '$stateParams',
     'AnalysisService',
     'AnalysisResource',
-    'EvidenceTableService'
+    'EvidenceTableService',
+    'ModelResource'
   ];
   var EvidenceTableController = function(
     $scope,
@@ -14,7 +15,8 @@ define(['lodash'], function(_) {
     $stateParams,
     AnalysisService,
     AnalysisResource,
-    EvidenceTableService
+    EvidenceTableService,
+    ModelResource
   ) {
     // functions 
     $scope.editStudyTitle = editStudyTitle;
@@ -59,6 +61,16 @@ define(['lodash'], function(_) {
               var oldCovariate = $scope.analysis.problem.studyLevelCovariates[title];
               delete $scope.analysis.problem.studyLevelCovariates[title];
               $scope.analysis.problem.studyLevelCovariates[newTitle] = oldCovariate;
+
+              _.forEach($scope.models, function(model) {
+                if (model.sensitivity && model.sensitivity.omittedStudy === title) {
+                  model.sensitivity.omittedStudy = newTitle;
+                  ModelResource.setSensitivity(_.merge({}, $stateParams, {
+                    modelId: model.id
+                  }), model.sensitivity, null);
+                }
+              });
+
               AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
                 _.forEach($scope.models, function(model) {
                   delete model.taskUrl;

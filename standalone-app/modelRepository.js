@@ -151,6 +151,20 @@ function setTitle(modelId, newTitle, callback) {
   );
 }
 
+function setSensitivity(modelId, newSensitivity, callback) {
+  logger.debug('modelRepository.setSensitivity');
+  db.query('UPDATE model SET sensitivity = $1 WHERE id = $2', [newSensitivity, modelId],
+    function(error) {
+      if (error) {
+        logger.error('error setting model sensitivity: ' + error);
+        callback(error);
+      } else {
+        callback(error);
+      }
+    }
+  );
+}
+
 function deleteModel(modelId, callback) {
   logger.debug('modelRepository.delete');
   db.query('DELETE FROM model WHERE id = $1', [modelId],
@@ -172,5 +186,6 @@ module.exports = {
   setTaskUrl: setTaskUrl,
   setArchive: setArchive,
   setTitle: setTitle,
+  setSensitivity: setSensitivity,
   deleteModel: deleteModel
 };

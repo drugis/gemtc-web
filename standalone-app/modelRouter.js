@@ -15,6 +15,7 @@ module.exports = express.Router({
   .get('/:modelId/baseline', modelHandlers.getBaseline)
   .put('/:modelId/baseline', modelHandlers.setBaseline)
   .put('/:modelId/setTitle', modelHandlers.setTitle)
+  .put('/:modelId/setSensitivity', modelHandlers.setSensitivity)
   .post('/:modelId/attributes', modelHandlers.setAttributes)
   .post('/:modelId/funnelPlots', modelHandlers.addFunnelPlot)
   .get('/:modelId/funnelPlots', modelHandlers.queryFunnelPlots)
