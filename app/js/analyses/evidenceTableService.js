@@ -181,6 +181,13 @@ define(['lodash'], function(_) {
       });
     }
 
+
+    function findTreatment(treatments, treatmentRow) {
+      return _.find(treatments, function(treatment) {
+        return treatment.name === treatmentRow.treatmentTitle;
+      });
+    }
+
     return {
       determineOutcomeType: determineOutcomeType,
       studyMapToStudyArray: studyMapToStudyArray,
@@ -189,7 +196,8 @@ define(['lodash'], function(_) {
       getRelativeEntries: getRelativeEntries,
       getNewEntries: getNewEntries,
       updateStudyCovariates: updateStudyCovariates,
-      updateOmittedStudy: updateOmittedStudy
+      updateOmittedStudy: updateOmittedStudy,
+      findTreatment: findTreatment
     };
 
   };

@@ -16,6 +16,7 @@ define(['lodash'], function(_) {
   ) {
     // functions 
     $scope.editStudyTitle = editStudyTitle;
+    $scope.editTreatmentName = editTreatmentName;
 
     // init
     $scope.analysis.$promise.then(createEvidenceTable);
@@ -45,13 +46,29 @@ define(['lodash'], function(_) {
                 title,
                 newTitle
               );
-              AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
-                _.forEach($scope.models, function(model) {
-                  delete model.taskUrl;
-                  delete model.runStatus;
-                });
-                createEvidenceTable($scope.analysis);
-              });
+              saveProblem();
+            };
+          }
+        }
+      });
+    }
+
+    function editTreatmentName(treatmentRow) {
+      $modal.open({
+        templateUrl: './editTreatmentName.html',
+        controller: 'EditTreatmentNameController',
+        resolve: {
+          name: function() {
+            return treatmentRow.treatmentTitle;
+          },
+          treatments: function() {
+            return $scope.analysis.problem.treatments;
+          },
+          callback: function() {
+            return function(newName) {
+              var treatment = EvidenceTableService.findTreatment($scope.analysis.problem.treatments, treatmentRow);
+              treatment.name = newName;
+              saveProblem();
             };
           }
         }
@@ -64,6 +81,17 @@ define(['lodash'], function(_) {
       $scope.analysis.problem.relativeEffectData.data[newTitle] = oldStudy;
     }
 
+    function saveProblem() {
+      AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
+        _.forEach($scope.models, deleteModelResults);
+        createEvidenceTable($scope.analysis);
+      });
+    }
+
+    function deleteModelResults(model) {
+      delete model.taskUrl;
+      delete model.runStatus;
+    }
   };
   return dependencies.concat(RelativeEvidenceTableController);
 });

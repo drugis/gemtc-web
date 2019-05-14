@@ -78,23 +78,17 @@ define(['lodash'], function(_) {
           name: function() {
             return treatmentRow.treatmentTitle;
           },
-          treatments: function(){
+          treatments: function() {
             return $scope.analysis.problem.treatments;
           },
           callback: function() {
             return function(newName) {
-              var treatment = findTreatment(treatmentRow);
+              var treatment = EvidenceTableService.findTreatment($scope.analysis.problem.treatments, treatmentRow);
               treatment.name = newName;
               saveProblem();
             };
           }
         }
-      });
-    }
-
-    function findTreatment(treatmentRow) {
-      return _.find($scope.analysis.problem.treatments, function(treatment) {
-        return treatment.name === treatmentRow.treatmentTitle;
       });
     }
 
