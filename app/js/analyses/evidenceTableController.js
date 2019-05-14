@@ -18,6 +18,7 @@ define(['lodash'], function(_) {
   ) {
     // functions 
     $scope.editStudyTitle = editStudyTitle;
+    $scope.editTreatmentName = editTreatmentName;
 
     // init
     $scope.analysis.$promise.then(createEvidenceTable);
@@ -27,11 +28,11 @@ define(['lodash'], function(_) {
       var studies = EvidenceTableService.studyMapToStudyArray(studyMap);
       $scope.outcomeType = EvidenceTableService.determineOutcomeType(studies);
       $scope.tableRows = EvidenceTableService.studyListToEvidenceRows(studies, $scope.analysis.problem.studyLevelCovariates);
-      $scope.showMean = _.find($scope.tableRows, matcherFactory('mean'));
-      $scope.showStdDev = _.find($scope.tableRows, matcherFactory('stdDev'));
-      $scope.showStdErr = _.find($scope.tableRows, matcherFactory('stdErr'));
-      $scope.showSampleSize = _.find($scope.tableRows, matcherFactory('sampleSize'));
-      $scope.showExposure = _.find($scope.tableRows, matcherFactory('exposure'));
+      $scope.showMean = _.some($scope.tableRows, matcherFactory('mean'));
+      $scope.showStdDev = _.some($scope.tableRows, matcherFactory('stdDev'));
+      $scope.showStdErr = _.some($scope.tableRows, matcherFactory('stdErr'));
+      $scope.showSampleSize = _.some($scope.tableRows, matcherFactory('sampleSize'));
+      $scope.showExposure = _.some($scope.tableRows, matcherFactory('exposure'));
     }
 
     function matcherFactory(arg) {
@@ -62,18 +63,51 @@ define(['lodash'], function(_) {
                 newTitle
               );
               EvidenceTableService.updateOmittedStudy($scope.models, title, newTitle);
-
-              AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
-                _.forEach($scope.models, function(model) {
-                  delete model.taskUrl;
-                  delete model.runStatus;
-                });
-                createEvidenceTable();
-              });
+              saveProblem();
             };
           }
         }
       });
+    }
+
+    function editTreatmentName(treatmentRow) {
+      $modal.open({
+        templateUrl: './editTreatmentName.html',
+        controller: 'EditTreatmentNameController',
+        resolve: {
+          name: function() {
+            return treatmentRow.treatmentTitle;
+          },
+          treatments: function(){
+            return $scope.analysis.problem.treatments;
+          },
+          callback: function() {
+            return function(newName) {
+              var treatment = findTreatment(treatmentRow);
+              treatment.name = newName;
+              saveProblem();
+            };
+          }
+        }
+      });
+    }
+
+    function findTreatment(treatmentRow) {
+      return _.find($scope.analysis.problem.treatments, function(treatment) {
+        return treatment.name === treatmentRow.treatmentTitle;
+      });
+    }
+
+    function saveProblem() {
+      AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
+        _.forEach($scope.models, deleteModelResults);
+        createEvidenceTable();
+      });
+    }
+
+    function deleteModelResults(model) {
+      delete model.taskUrl;
+      delete model.runStatus;
     }
 
   };

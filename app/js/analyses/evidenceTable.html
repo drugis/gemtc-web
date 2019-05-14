@@ -38,6 +38,9 @@
             </td>
             <td>
               {{treatment.treatmentTitle}}
+              <a ng-click="editTreatmentName(treatment)" tooltip="Edit treatment name" ng-if="!editmode.disableEditing">
+                <i class="fa fa-edit"></i>
+              </a>
             </td>
             <td class="text-center" ng-show="outcomeType === 'dichotomous' || outcomeType === 'survival'">
               {{treatment.evidence.responders}}
