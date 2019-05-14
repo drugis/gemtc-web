@@ -1,14 +1,20 @@
 'use strict';
-define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = [];
+define(['lodash'], function(_) {
+  var dependencies = [
+    '$stateParams',
+    'ModelResource'
+  ];
 
-  var EvidenceTableService = function() {
-
+  var EvidenceTableService = function(
+    $stateParams,
+    ModelResource
+  ) {
     function determineOutcomeType(studyList) {
       if (studyList[0].arms[0].data.responders) {
         return studyList[0].arms[0].data.exposure ? 'survival' : 'dichotomous';
+      } else {
+        return 'continuous';
       }
-      return 'continuous';
     }
 
     function studyMapToStudyArray(studyMap) {
@@ -154,13 +160,36 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
+    function updateStudyCovariates(oldCovariates, oldTitle, newTitle) {
+      var newCovariates = _.cloneDeep(oldCovariates);
+      if (oldCovariates) {
+        var oldCovariate = oldCovariates[oldTitle];
+        delete newCovariates[oldTitle];
+        newCovariates[newTitle] = oldCovariate;
+      }
+      return newCovariates;
+    }
+
+    function updateOmittedStudy(models, oldTitle, newTitle) {
+      _.forEach(models, function(model) {
+        if (model.sensitivity && model.sensitivity.omittedStudy === oldTitle) {
+          model.sensitivity.omittedStudy = newTitle;
+          ModelResource.setSensitivity(_.merge({}, $stateParams, {
+            modelId: model.id
+          }), model.sensitivity, null);
+        }
+      });
+    }
+
     return {
       determineOutcomeType: determineOutcomeType,
       studyMapToStudyArray: studyMapToStudyArray,
       studyListToEvidenceRows: studyListToEvidenceRows,
       buildRelativeEffectDataRows: buildRelativeEffectDataRows,
       getRelativeEntries: getRelativeEntries,
-      getNewEntries: getNewEntries
+      getNewEntries: getNewEntries,
+      updateStudyCovariates: updateStudyCovariates,
+      updateOmittedStudy: updateOmittedStudy
     };
 
   };

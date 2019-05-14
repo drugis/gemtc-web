@@ -25,23 +25,27 @@ define(['lodash'], function(_) {
       $scope.tableRows = EvidenceTableService.buildRelativeEffectDataRows(analysis.problem);
     }
 
-    function editStudyTitle(title){
+    function editStudyTitle(title) {
       $modal.open({
         templateUrl: './editStudyTitle.html',
         controller: 'EditStudyTitleController',
-        resolve:{
-          studyTitle: function(){
+        resolve: {
+          studyTitle: function() {
             return title;
           },
-          entries: function(){
+          entries: function() {
             var relativeEntries = EvidenceTableService.getRelativeEntries($scope.analysis.problem.relativeEffectData.data);
             return relativeEntries.concat($scope.analysis.problem.entries);
           },
-          callback: function(){
-            return function(newTitle){
+          callback: function() {
+            return function(newTitle) {
               updateStudyTitle(title, newTitle);
-              updateStudyCovariates(title, newTitle);
-              AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function(){
+              $scope.analysis.problem.studyLevelCovariates = EvidenceTableService.updateStudyCovariates(
+                $scope.analysis.problem.studyLevelCovariates,
+                title,
+                newTitle
+              );
+              AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
                 _.forEach($scope.models, function(model) {
                   delete model.taskUrl;
                   delete model.runStatus;
@@ -54,19 +58,12 @@ define(['lodash'], function(_) {
       });
     }
 
-    function updateStudyTitle(oldTitle, newTitle){
+    function updateStudyTitle(oldTitle, newTitle) {
       var oldStudy = $scope.analysis.problem.relativeEffectData.data[oldTitle];
       delete $scope.analysis.problem.relativeEffectData.data[oldTitle];
       $scope.analysis.problem.relativeEffectData.data[newTitle] = oldStudy;
     }
-    
-    function updateStudyCovariates(oldTitle, newTitle){
-      if($scope.analysis.problem.studyLevelCovariates){
-        var oldCovariate = $scope.analysis.problem.studyLevelCovariates[oldTitle];
-        delete $scope.analysis.problem.studyLevelCovariates[oldTitle];
-        $scope.analysis.problem.studyLevelCovariates[newTitle] = oldCovariate;
-      }
-    }
+
   };
   return dependencies.concat(RelativeEvidenceTableController);
 });

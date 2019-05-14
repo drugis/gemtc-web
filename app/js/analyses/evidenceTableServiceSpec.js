@@ -2,8 +2,15 @@
 define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(angular) {
   describe('The evidence service', function() {
     var evidenceTableService;
+    var stateParamsMock = {};
+    var modelResourceMock = jasmine.createSpyObj('ModelResource', ['setSensitivity']);
 
-    beforeEach(angular.mock.module('gemtc.analyses'));
+    beforeEach(function() {
+      angular.mock.module('gemtc.analyses', function($provide) {
+        $provide.value('$stateParams', stateParamsMock);
+        $provide.value('ModelResource', modelResourceMock);
+      });
+    });
 
     beforeEach(inject(function(EvidenceTableService) {
       evidenceTableService = EvidenceTableService;
@@ -11,27 +18,27 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
 
     describe('studyMapToStudyArray', function() {
       var studyMap = {
-        'Study1': {
+        Study1: {
           arms: {
-            'Treatment1': {
-              "responders": 58,
-              "sampleSize": 100
+            Treatment1: {
+              responders: 58,
+              sampleSize: 100
             },
-            'Treatment2': {
-              "responders": 53,
-              "sampleSize": 103
+            Treatment2: {
+              responders: 53,
+              sampleSize: 103
             }
           }
         },
-        'Study2': {
+        Study2: {
           arms: {
-            'Treatment1': {
-              "responders": 58,
-              "sampleSize": 100
+            Treatment1: {
+              responders: 58,
+              sampleSize: 100
             },
-            'Treatment2': {
-              "responders": 53,
-              "sampleSize": 103
+            Treatment2: {
+              responders: 53,
+              sampleSize: 103
             }
           }
         }
@@ -53,7 +60,6 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
     });
 
     describe('studyListToEvidenceRows with no covariates', function() {
-
       var studyList = [{
         title: 'title1',
         arms: [{
@@ -108,7 +114,6 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
     });
 
     describe('studyListToEvidenceRows with covariates', function() {
-
       var studyList = [{
         title: 'title1',
         arms: [{
@@ -142,12 +147,12 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
       }];
       var studyLevelCovariates = {
         title1: {
-          'SOME_COVARIATE_1': 1,
-          'SOME_COVARIATE_2': 2
+          SOME_COVARIATE_1: 1,
+          SOME_COVARIATE_2: 2
         },
         title2: {
-          'SOME_COVARIATE_1': 3,
-          'SOME_COVARIATE_2': 4
+          SOME_COVARIATE_1: 3,
+          SOME_COVARIATE_2: 4
         }
       };
       var evidenceRows;
@@ -183,7 +188,6 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
     });
 
     describe('determineOutcomeType', function() {
-
       it('should return dichotomous if the first arm in the first study has responders', function() {
         var studyList = [{
           title: 'title1',
@@ -237,42 +241,41 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
 
 
     describe('buildTableRows', function() {
-
       it('should build the table rows', function() {
         var problem = {
-          'entries': [{
-            'study': 'Rudolph and Feiger, 1999',
-            'treatment': 2,
-            'responders': 58,
-            'sampleSize': 100
+          entries: [{
+            study: 'Rudolph and Feiger, 1999',
+            treatment: 2,
+            responders: 58,
+            sampleSize: 100
           }, {
-            'study': 'Rudolph and Feiger, 1999',
-            'treatment': 3,
-            'responders': 53,
-            'sampleSize': 103
+            study: 'Rudolph and Feiger, 1999',
+            treatment: 3,
+            responders: 53,
+            sampleSize: 103
           }, {
-            'study': 'De Wilde et al, 1993',
-            'treatment': 3,
-            'responders': 24,
-            'sampleSize': 37
+            study: 'De Wilde et al, 1993',
+            treatment: 3,
+            responders: 24,
+            sampleSize: 37
           }, {
-            'study': 'De Wilde et al, 1993',
-            'treatment': 2,
-            'responders': 25,
-            'sampleSize': 41
+            study: 'De Wilde et al, 1993',
+            treatment: 2,
+            responders: 25,
+            sampleSize: 41
           }],
-          'treatments': [{
-            'id': 2,
-            'name': 'Fluoxetine'
+          treatments: [{
+            id: 2,
+            name: 'Fluoxetine'
           }, {
-            'id': 3,
-            'name': 'Paroxetine'
+            id: 3,
+            name: 'Paroxetine'
           }, {
-            'id': 4,
-            'name': 'Sertraline'
+            id: 4,
+            name: 'Sertraline'
           }],
           relativeEffectData: {
-            scale: "log odds ratio",
+            scale: 'log odds ratio',
             data: {
               'Schone and Ludwig, 1993': {
                 baseArm: {
@@ -301,22 +304,22 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
               }
             }
           },
-          'studyLevelCovariates': {
+          studyLevelCovariates: {
             'De Wilde et al, 1993': {
-              'LENGTH_OF_FOLLOW_UP': 10,
-              'BLINDING_AT_LEAST_DOUBLE_BLIND': 1
+              LENGTH_OF_FOLLOW_UP: 10,
+              BLINDING_AT_LEAST_DOUBLE_BLIND: 1
             },
             'Schone and Ludwig, 1993': {
-              'LENGTH_OF_FOLLOW_UP': 20,
-              'BLINDING_AT_LEAST_DOUBLE_BLIND': 1
+              LENGTH_OF_FOLLOW_UP: 20,
+              BLINDING_AT_LEAST_DOUBLE_BLIND: 1
             },
             'Rudolph and Feiger, 1999': {
-              'LENGTH_OF_FOLLOW_UP': 25,
-              'BLINDING_AT_LEAST_DOUBLE_BLIND': 0
+              LENGTH_OF_FOLLOW_UP: 25,
+              BLINDING_AT_LEAST_DOUBLE_BLIND: 0
             },
             'Aberg-Wistedt et al, 2000': {
-              'LENGTH_OF_FOLLOW_UP': 30,
-              'BLINDING_AT_LEAST_DOUBLE_BLIND': 0
+              LENGTH_OF_FOLLOW_UP: 30,
+              BLINDING_AT_LEAST_DOUBLE_BLIND: 0
             }
           }
         };
@@ -395,5 +398,44 @@ define(['angular', 'angular-mocks', 'gemtc-web/analyses/analyses'], function(ang
       });
     });
 
+    describe('updateStudyCovariates', function() {
+      it('should move the covariate on the old title to the new title', function() {
+        var oldCovariates = {
+          oldTitle: {
+            some: 'thing'
+          }
+        };
+        var oldTitle = 'oldTitle';
+        var newTitle = 'newTitle';
+        var result = evidenceTableService.updateStudyCovariates(oldCovariates, oldTitle, newTitle);
+        var expectedResult = {
+          newTitle: {
+            some: 'thing'
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('updateOmittedStudy', function() {
+      it('should update the title of the omitted study to its new title, and send the new information to the backend', function() {
+        var oldTitle = 'oldTitle';
+        var models = [{
+          id: 1,
+          sensitivity: {
+            omittedStudy: oldTitle
+          }
+        }];
+        var newTitle = 'newTitle';
+        evidenceTableService.updateOmittedStudy(models, oldTitle, newTitle);
+        expect(modelResourceMock.setSensitivity).toHaveBeenCalledWith({
+          modelId: 1
+        }, {
+            omittedStudy: newTitle
+          },
+          null
+        );
+      });
+    });
   });
 });

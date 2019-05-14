@@ -6,8 +6,7 @@ define(['lodash'], function(_) {
     '$stateParams',
     'AnalysisService',
     'AnalysisResource',
-    'EvidenceTableService',
-    'ModelResource'
+    'EvidenceTableService'
   ];
   var EvidenceTableController = function(
     $scope,
@@ -15,8 +14,7 @@ define(['lodash'], function(_) {
     $stateParams,
     AnalysisService,
     AnalysisResource,
-    EvidenceTableService,
-    ModelResource
+    EvidenceTableService
   ) {
     // functions 
     $scope.editStudyTitle = editStudyTitle;
@@ -58,9 +56,12 @@ define(['lodash'], function(_) {
             return function(newTitle) {
               var entries = $scope.analysis.problem.entries;
               $scope.analysis.problem.entries = EvidenceTableService.getNewEntries(title, newTitle, entries);
-
-              updateStudyCovariates(title, newTitle);
-              updateOmmittedStudy(title, newTitle);
+              $scope.analysis.problem.studyLevelCovariates = EvidenceTableService.updateStudyCovariates(
+                $scope.analysis.problem.studyLevelCovariates,
+                title,
+                newTitle
+              );
+              EvidenceTableService.updateOmittedStudy($scope.models, title, newTitle);
 
               AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
                 _.forEach($scope.models, function(model) {
@@ -75,25 +76,6 @@ define(['lodash'], function(_) {
       });
     }
 
-
-    function updateStudyCovariates(oldTitle, newTitle) {
-      if ($scope.analysis.problem.studyLevelCovariates) {
-        var oldCovariate = $scope.analysis.problem.studyLevelCovariates[oldTitle];
-        delete $scope.analysis.problem.studyLevelCovariates[oldTitle];
-        $scope.analysis.problem.studyLevelCovariates[newTitle] = oldCovariate;
-      }
-    }
-
-    function updateOmmittedStudy(oldTitle, newTitle) {
-      _.forEach($scope.models, function(model) {
-        if (model.sensitivity && model.sensitivity.omittedStudy === oldTitle) {
-          model.sensitivity.omittedStudy = newTitle;
-          ModelResource.setSensitivity(_.merge({}, $stateParams, {
-            modelId: model.id
-          }), model.sensitivity, null);
-        }
-      });
-    }
   };
   return dependencies.concat(EvidenceTableController);
 });
