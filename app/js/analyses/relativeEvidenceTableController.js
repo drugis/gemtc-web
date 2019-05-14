@@ -40,6 +40,7 @@ define(['lodash'], function(_) {
           callback: function(){
             return function(newTitle){
               updateStudyTitle(title, newTitle);
+              updateStudyCovariates(title, newTitle);
               AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function(){
                 _.forEach($scope.models, function(model) {
                   delete model.taskUrl;
@@ -57,9 +58,14 @@ define(['lodash'], function(_) {
       var oldStudy = $scope.analysis.problem.relativeEffectData.data[oldTitle];
       delete $scope.analysis.problem.relativeEffectData.data[oldTitle];
       $scope.analysis.problem.relativeEffectData.data[newTitle] = oldStudy;
-      var oldCovariate = $scope.analysis.problem.studyLevelCovariates[oldTitle];
-      delete $scope.analysis.problem.studyLevelCovariates[oldTitle];
-      $scope.analysis.problem.studyLevelCovariates[newTitle] = oldCovariate;
+    }
+    
+    function updateStudyCovariates(oldTitle, newTitle){
+      if($scope.analysis.problem.studyLevelCovariates){
+        var oldCovariate = $scope.analysis.problem.studyLevelCovariates[oldTitle];
+        delete $scope.analysis.problem.studyLevelCovariates[oldTitle];
+        $scope.analysis.problem.studyLevelCovariates[newTitle] = oldCovariate;
+      }
     }
   };
   return dependencies.concat(RelativeEvidenceTableController);

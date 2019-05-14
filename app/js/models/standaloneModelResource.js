@@ -12,7 +12,11 @@ define([], function() {
         method: 'POST'
       },
       setTitle: {
-        url: 'analyses/:analysisId/models/:modelId/setTitle',
+        url: '/analyses/:analysisId/models/:modelId/setTitle',
+        method: 'PUT'
+      },
+      setSensitivity: {
+        url:'/analyses/:analysisId/models/:modelId/setSensitivity',
         method: 'PUT'
       }
     });

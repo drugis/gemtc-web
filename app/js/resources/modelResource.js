@@ -28,10 +28,6 @@ define([], function() {
       setTitle: {
         url:'/projects/:projectId/analyses/:analysisId/models/:modelId/setTitle',
         method: 'PUT'
-      },
-      setSensitivity: {
-        url:'/projects/:projectId/analyses/:analysisId/models/:modelId/setSensitivity',
-        method: 'PUT'
       }
     });
   };

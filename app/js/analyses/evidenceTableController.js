@@ -58,18 +58,9 @@ define(['lodash'], function(_) {
             return function(newTitle) {
               var entries = $scope.analysis.problem.entries;
               $scope.analysis.problem.entries = EvidenceTableService.getNewEntries(title, newTitle, entries);
-              var oldCovariate = $scope.analysis.problem.studyLevelCovariates[title];
-              delete $scope.analysis.problem.studyLevelCovariates[title];
-              $scope.analysis.problem.studyLevelCovariates[newTitle] = oldCovariate;
 
-              _.forEach($scope.models, function(model) {
-                if (model.sensitivity && model.sensitivity.omittedStudy === title) {
-                  model.sensitivity.omittedStudy = newTitle;
-                  ModelResource.setSensitivity(_.merge({}, $stateParams, {
-                    modelId: model.id
-                  }), model.sensitivity, null);
-                }
-              });
+              updateStudyCovariates(title, newTitle);
+              updateOmmittedStudy(title, newTitle);
 
               AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
                 _.forEach($scope.models, function(model) {
@@ -80,6 +71,26 @@ define(['lodash'], function(_) {
               });
             };
           }
+        }
+      });
+    }
+
+
+    function updateStudyCovariates(oldTitle, newTitle) {
+      if ($scope.analysis.problem.studyLevelCovariates) {
+        var oldCovariate = $scope.analysis.problem.studyLevelCovariates[oldTitle];
+        delete $scope.analysis.problem.studyLevelCovariates[oldTitle];
+        $scope.analysis.problem.studyLevelCovariates[newTitle] = oldCovariate;
+      }
+    }
+
+    function updateOmmittedStudy(oldTitle, newTitle) {
+      _.forEach($scope.models, function(model) {
+        if (model.sensitivity && model.sensitivity.omittedStudy === oldTitle) {
+          model.sensitivity.omittedStudy = newTitle;
+          ModelResource.setSensitivity(_.merge({}, $stateParams, {
+            modelId: model.id
+          }), model.sensitivity, null);
         }
       });
     }
