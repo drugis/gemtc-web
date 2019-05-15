@@ -216,7 +216,7 @@
   },
   "residual-deviance": {
     "title": "Residual deviance",
-    "text": " The mean deviance (TODO) under the current model, relative to the deviance under a saturated model (with one parameter per data point). Smaller residual deviance indicates better model fit, and in a well fitting model the residual deviance should be approximately equal to the number of data points.",
+    "text": " The mean deviance under the current model, relative to the deviance under a saturated model (with one parameter per data point). Smaller residual deviance indicates better model fit, and in a well fitting model the residual deviance should be approximately equal to the number of data points.",
     "link": "/manual.html#model-fit"
   },
   "risk-ratio":{
