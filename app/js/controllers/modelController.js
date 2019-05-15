@@ -102,13 +102,21 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     }).$promise;
 
     $scope.modelPromise.then(function(model) {
+      if (model.modelType.type === 'pairwise') {
+        $scope.pairwiseTreatments = {
+          from: _.find($scope.analysis.problem.treatments,
+            ['id', model.modelType.details.from.id]),
+          to: _.find($scope.analysis.problem.treatments,
+            ['id', model.modelType.details.to.id])
+        };
+      }
       PageTitleService.setPageTitle('ModelController', model.title);
     });
-    
+
     function isNumeric(n) {
       return !isNaN(parseFloat(n)) && isFinite(n);
     }
-    
+
     function goToRefineModel() {
       $state.go('refineModel', $stateParams);
     }

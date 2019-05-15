@@ -1,29 +1,30 @@
 <form id="edit-study-title-form" novalidate ng-submit="editTitle(title.new)">
-    <div class="grid-container">
-      <div class="grid-x">
-        <div class="cell">
-          <h3>Edit study title</h3>
-        </div>
-        <div class="cell">
-          <label>Study title</label>
-        </div>
-        <div class="cell alert">
-          Changing the study title will delete all model results!
-        </div>
-        <div class="cell large-6">
-          <input autofocus="true" type="text" ng-model="title.new" ng-change="checkTitle(title.new)">
-        </div>
-        <div class="cell">
-          <button ng-disabled="error" ng-click="editTitle(title.new)" class="button" type="button">
-            Edit
-          </button>
-        </div>
-        <div class="cell alert" ng-if="error">
-          {{error}}
-        </div>
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="cell">
+        <h3>Edit study title</h3>
+      </div>
+      <div class="cell">
+        <label>Study title</label>
+      </div>
+      <div class="cell large-6">
+        <input autofocus="true" type="text" ng-model="title.new" ng-change="checkTitle(title.new)">
+      </div>
+      <div class="cell">
+        <i class="fa fa-exclamation-triangle"></i>
+        <em>Changing the study title will delete all model results!</em>
+      </div>
+      <div class="cell alert">
+        <button ng-disabled="error" ng-click="editTitle(title.new)" class="button alert" type="button">
+          Edit
+        </button>
+      </div>
+      <div class="cell alert" ng-if="error">
+        {{error}}
       </div>
     </div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </form>
+  </div>
+  <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</form>
