@@ -20,10 +20,11 @@ define(['lodash'], function(_) {
 
     // init
     $scope.analysis.$promise.then(createEvidenceTable);
+    $scope.$watch('analysis.problem.treatments', createEvidenceTable, true);
 
-    function createEvidenceTable(analysis) {
-      $scope.scale = analysis.problem.relativeEffectData.scale;
-      $scope.tableRows = EvidenceTableService.buildRelativeEffectDataRows(analysis.problem);
+    function createEvidenceTable() {
+      $scope.scale = $scope.analysis.problem.relativeEffectData.scale;
+      $scope.tableRows = EvidenceTableService.buildRelativeEffectDataRows($scope.analysis.problem);
     }
 
     function editStudyTitle(title) {
@@ -84,7 +85,6 @@ define(['lodash'], function(_) {
     function saveProblem() {
       AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
         _.forEach($scope.models, deleteModelResults);
-        createEvidenceTable($scope.analysis);
       });
     }
 

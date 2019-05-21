@@ -22,6 +22,7 @@ define(['lodash'], function(_) {
 
     // init
     $scope.analysis.$promise.then(createEvidenceTable);
+    $scope.$watch('analysis.problem.treatments', createEvidenceTable, true);
 
     function createEvidenceTable() {
       var studyMap = AnalysisService.problemToStudyMap($scope.analysis.problem);
@@ -95,7 +96,6 @@ define(['lodash'], function(_) {
     function saveProblem() {
       AnalysisResource.setProblem($stateParams, $scope.analysis.problem, function() {
         _.forEach($scope.models, deleteModelResults);
-        createEvidenceTable();
       });
     }
 
