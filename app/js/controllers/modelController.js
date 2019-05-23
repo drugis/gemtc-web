@@ -102,7 +102,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     }).$promise;
 
     $scope.modelPromise.then(function(model) {
-      if (model.modelType.type === 'pairwise') {
+      if (model.modelType.type === 'pairwise' || model.modelType.type === 'node-split') {
         $scope.pairwiseTreatments = {
           from: _.find($scope.analysis.problem.treatments,
             ['id', model.modelType.details.from.id]),
