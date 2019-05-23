@@ -101,9 +101,11 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
       projectId: $stateParams.projectId
     }).$promise;
 
-    $q.all([$scope.modelPromise, $scope.analysis.$promise]).then(function(model, analysis) {
+    $q.all([$scope.modelPromise, $scope.analysis.$promise]).then(function(results) {
+      var model = results[0];
+      var analysis = results[1];
       if (model.modelType.type === 'pairwise' || model.modelType.type === 'node-split') {
-        
+
         $scope.pairwiseTreatments = {
           from: _.find(analysis.problem.treatments,
             ['id', model.modelType.details.from.id]),
