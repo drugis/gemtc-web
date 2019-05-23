@@ -228,7 +228,15 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
     describe('when a nodesplit model is loaded', function() {
       beforeEach(function() {
         scope.model.modelType = {
-          type: 'node-split'
+          type: 'node-split',
+          details: {
+            from: {
+              id: 1
+            },
+            to: {
+              id: 2
+            }
+          }
         };
         modelDeferred.resolve(modelMock);
         pataviTaskIdDeferred.resolve(pataviTaskIdMock);
