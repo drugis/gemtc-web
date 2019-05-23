@@ -14,13 +14,5 @@
       }
     ]
   }
-  //  devServer: {
-  //    contentBase: './dist'
-  //  }
  });
-
-
-
-
-
 module.exports = config;
