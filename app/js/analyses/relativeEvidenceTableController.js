@@ -20,7 +20,7 @@ define(['lodash'], function(_) {
 
     // init
     $scope.analysis.$promise.then(createEvidenceTable);
-    $scope.$watch('analysis.problem.treatments', createEvidenceTable, true);
+    $scope.$watch('analysis.problem', createEvidenceTable, true);
 
     function createEvidenceTable() {
       $scope.scale = $scope.analysis.problem.relativeEffectData.scale;
