@@ -59,7 +59,7 @@ describe('the analysis repository', function() {
       query.restore();
     });
 
-    it('should get the analysis and call the callback withg the result', function(done) {
+    it('should get the analysis and call the callback with the result', function(done) {
       var queryResult = {
         rows: [{ primarymodel: {} }]
       };
