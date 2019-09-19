@@ -15,14 +15,26 @@ var dbUtil = require('./standalone-app/dbUtil');
 var db = require('./standalone-app/db')(dbUtil.connectionConfig);
 var loginUtils = require('./standalone-app/loginUtils');
 var signin = require('signin')(db, appEnvironmentSettings);
-var analysisRepository = require('./standalone-app/analysisRepository');
-var rightsManagement = require('rights-management')(analysisRepository.get);
+var AnalysisRepository = require('./standalone-app/analysisRepository');
+var rightsManagement = require('rights-management')();
 var analysisRouter = require('./standalone-app/analysisRouter');
 var modelRouter = require('./standalone-app/modelRouter');
 var mcdaPataviTaskRouter = require('./standalone-app/mcdaPataviTaskRouter');
 var errorHandler = require('./standalone-app/errorHandler');
 var logger = require('./standalone-app/logger');
 var StartupDiagnosticsService = require('./standalone-app/startupDiagnosticsService')(db);
+
+
+
+function rightsCallback(response, next, userId, error, workspace) {
+  if (error) { next(error); }
+  if (workspace.owner !== userId) {
+    response.status(403).send('Insufficient user rights');
+  } else {
+    next();
+  }
+}
+
 
 var app = express();
 logger.info('Start Gemtc stand-alone app');
@@ -125,29 +137,33 @@ function setRequiredRights() {
     makeRights('/patavi', 'POST', 'none'),
     makeRights('/analyses', 'GET', 'none'),
     makeRights('/analyses', 'POST', 'none'),
-    makeRights('/analyses/:analysisId', 'GET', 'read'),
-    makeRights('/analyses/:analysisId', 'DELETE', 'owner'),
-    makeRights('/analyses/:analysisId/problem', 'GET', 'read'),
-    makeRights('/analyses/:analysisId/setPrimaryModel', 'POST', 'write'),
-    makeRights('/analyses/:analysisId/setTitle', 'PUT', 'write'),
-    makeRights('/analyses/:analysisId/setOutcome', 'PUT', 'write'),
-    makeRights('/analyses/:analysisId/setProblem', 'PUT', 'write'),
-    makeRights('/analyses/:analysisId/models', 'GET', 'read'),
-    makeRights('/analyses/:analysisId/models', 'POST', 'write'),
-    makeRights('/analyses/:analysisId/models/:modelId', 'GET', 'read'),
-    makeRights('/analyses/:analysisId/models/:modelId', 'POST', 'write'),
-    makeRights('/analyses/:analysisId/models/:modelId', 'DELETE', 'owner'),
-    makeRights('/analyses/:analysisId/models/:modelId/task', 'GET', 'read'),
-    makeRights('/analyses/:analysisId/models/:modelId/result', 'GET', 'read'),
-    makeRights('/analyses/:analysisId/models/:modelId/baseline', 'GET', 'read'),
-    makeRights('/analyses/:analysisId/models/:modelId/setTitle', 'PUT', 'write'),
-    makeRights('/analyses/:analysisId/models/:modelId/setSensitivity', 'PUT', 'write'),
-    makeRights('/analyses/:analysisId/models/:modelId/baseline', 'PUT', 'write'),
-    makeRights('/analyses/:analysisId/models/:modelId/attributes', 'POST', 'write'),
-    makeRights('/analyses/:analysisId/models/:modelId/funnelPlots', 'GET', 'read'),
-    makeRights('/analyses/:analysisId/models/:modelId/funnelPlots', 'POST', 'write'),
-    makeRights('/analyses/:analysisId/models/:modelId/funnelPlots/:plotId', 'GET', 'read')
+    makeRights('/analyses/:analysisId', 'GET', 'read', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId', 'DELETE', 'owner', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/problem', 'GET', 'read', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/setPrimaryModel', 'POST', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/setTitle', 'PUT', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/setOutcome', 'PUT', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/setProblem', 'PUT', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models', 'GET', 'read', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models', 'POST', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId', 'GET', 'read', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId', 'POST', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId', 'DELETE', 'owner', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/task', 'GET', 'read', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/result', 'GET', 'read', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/baseline', 'GET', 'read', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/setTitle', 'PUT', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/setSensitivity', 'PUT', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/baseline', 'PUT', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/attributes', 'POST', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/funnelPlots', 'GET', 'read', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/funnelPlots', 'POST', 'write', ownerRightsNeeded),
+    makeRights('/analyses/:analysisId/models/:modelId/funnelPlots/:plotId', 'GET', 'read', ownerRightsNeeded)
   ]);
+}
+
+function ownerRightsNeeded(response, next, workspaceId, userId) {
+  AnalysisRepository.get(workspaceId, _.partial(rightsCallback, response, next, userId));
 }
 
 function makeRights(path, method, requiredRight) {

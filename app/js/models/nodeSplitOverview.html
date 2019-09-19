@@ -120,7 +120,7 @@
             <td class="text-center">{{comparison.label}}</td>
 
             <td class="button-cell" class="text-center">
-              <button ng-show="!comparison.hasModel" class="button tiny success" ng-click="openCreateNodeSplitDialog(comparison)" ng-hide="editMode.disableEditing">create model</button>
+              <button class="button tiny success" ng-click="openCreateNodeSplitDialog(comparison)" ng-hide="comparison.hasModel || editMode.disableEditing">create model</button>
               <a ng-show="comparison.hasModel" ng-click="goToModel(comparison.modelId)">{{comparison.modelTitle}}</a>
             </td>
 
