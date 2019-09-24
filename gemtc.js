@@ -22,9 +22,7 @@ var modelRouter = require('./standalone-app/modelRouter');
 var mcdaPataviTaskRouter = require('./standalone-app/mcdaPataviTaskRouter');
 var errorHandler = require('./standalone-app/errorHandler');
 var logger = require('./standalone-app/logger');
-var StartupDiagnosticsService = require('./standalone-app/startupDiagnosticsService')(db);
-
-
+var StartupDiagnostics = require('startup-diagnostics')(db, logger, 'GeMTC');
 
 function rightsCallback(response, next, userId, error, workspace) {
   if (error) { next(error); }
@@ -35,14 +33,13 @@ function rightsCallback(response, next, userId, error, workspace) {
   }
 }
 
-
 var app = express();
 logger.info('Start Gemtc stand-alone app');
 
 app.use(helmet());
 app.use(bodyparser.json({ limit: '5mb' }));
 
-StartupDiagnosticsService.runStartupDiagnostics((errorBody) => {
+StartupDiagnostics.runStartupDiagnostics((errorBody) => {
   if (errorBody) {
     initError(errorBody);
   } else {
@@ -76,7 +73,7 @@ function initApp() {
       authenticationMethod = 'GOOGLE';
       signin.useGoogleLogin(app);
   }
-  console.log('Authentication method: ' + authenticationMethod);
+  logger.info('Authentication method: ' + authenticationMethod);
 
   app.get('/logout', function(req, res) {
     req.session.destroy(function() {
@@ -128,7 +125,7 @@ function initError(errorBody) {
       .send(errorBody);
   });
   app.listen(3001, function() {
-    console.error('Access the diagnostics summary at http://localhost:3001');
+    logger.error('Access the diagnostics summary at http://localhost:3001');
   });
 }
 
