@@ -163,10 +163,11 @@ function ownerRightsNeeded(response, next, workspaceId, userId) {
   AnalysisRepository.get(workspaceId, _.partial(rightsCallback, response, next, userId));
 }
 
-function makeRights(path, method, requiredRight) {
+function makeRights(path, method, requiredRight, checkRights) {
   return {
     path: path,
     method: method,
-    requiredRight: requiredRight
+    requiredRight: requiredRight,
+    checkRights: checkRights
   };
 }
