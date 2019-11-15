@@ -105,6 +105,19 @@ function deleteAnalysis(analysisId, callback) {
     });
 }
 
+function setProblem(analysisId, problem, callback) {
+  logger.debug('setProblem'); 
+  db.query('UPDATE analysis SET problem = $1 WHERE id = $2', [problem, analysisId],
+  (error) => {
+    if (error) {
+      logger.error('error occured while setting the problem: ' + error);
+      callback(error);
+    } else {
+      callback();
+    }
+  });
+}
+
 module.exports = {
   get: get,
   query: query,
@@ -112,5 +125,6 @@ module.exports = {
   setPrimaryModel: setPrimaryModel,
   setTitle: setTitle,
   setOutcome: setOutcome,
-  deleteAnalysis: deleteAnalysis
+  deleteAnalysis: deleteAnalysis,
+  setProblem: setProblem
 };

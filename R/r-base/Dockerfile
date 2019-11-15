@@ -5,6 +5,7 @@ FROM patavi/worker-amqp
 USER root
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-api-3 r-cran-coda
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-rjags
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-xml
 

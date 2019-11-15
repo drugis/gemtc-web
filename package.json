@@ -1,6 +1,6 @@
 {
   "name": "gemtc-web",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "gemtc",
   "main": "gemtc.js",
   "scripts": {
@@ -37,6 +37,7 @@
     "passport-google-oauth20": "^1.0.0",
     "pg": "~7.4.3",
     "signin": "https://github.com/drugis/signin",
+    "startup-diagnostics": "drugis/startup-diagnostics#1.1.1",
     "uglifyjs-webpack-plugin": "^1.3.0",
     "winston": "~3.0.0"
   },
@@ -89,7 +90,7 @@
     "papaparse": "~4.6.0",
     "proxyquire": "~1.5.0",
     "raw-loader": "^0.5.1",
-    "rights-management": "drugis/rights-management#1.0.3",
+    "rights-management": "drugis/rights-management#1.0.4",
     "sinon": "~7.3.2",
     "style-loader": "^0.22.1",
     "superagent": "~3.8.3",

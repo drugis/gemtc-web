@@ -39,13 +39,13 @@
             <td class="large-6 text-right">
               <strong>pairwise comparison</strong>
             </td>
-            <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
+            <td>{{pairwiseTreatments.from.name}} &mdash; {{pairwiseTreatments.to.name}}</td>
           </tr>
           <tr ng-if="model.modelType.type === 'node-split'">
             <td class="large-6 text-right">
               <strong>split comparison</strong>
             </td>
-            <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
+            <td>{{pairwiseTreatments.from.name}} &mdash; {{pairwiseTreatments.to.name}}</td>
           </tr>
           <tr ng-if="model.modelType.type === 'regression'">
             <td class="large-5 text-right">

@@ -1,44 +1,43 @@
 'use strict';
 define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) {
   describe('the modelController', function() {
-    var scope,
-      analysisDeferred,
-      analysisMock,
-      analysisResource,
-      analysisServiceMock,
-      devianceStatisticsServiceMock,
-      diagnosticsService,
-      funnelPlotResourceMock,
-      metaRegressionService,
-      modelBaselineDefer,
-      modelBaselineMock,
-      modelBaselineResource,
-      modelDeferred,
-      modalMock,
-      modelMock,
-      modelResource,
-      modelserviceMock,
-      pageTitleServiceMock,
-      pataviResult,
-      pataviResultDeferred,
-      pataviService,
-      pataviTaskIdDeferred,
-      pataviTaskIdMock = {
-        uri: 'https://something/1'
-      },
-      pataviTaskIdResource,
-      pataviTaskIdResult,
-      problemDeferred,
-      problemMock,
-      problemResource,
-      stateParamsMock = {
-        analysisId: 1,
-        projectId: 11
-      },
-      resultsPlotsServiceMock,
-      relativeEffectsTableService,
-      stateMock
-      ;
+    var scope;
+    var analysisDeferred;
+    var analysisMock;
+    var analysisResource;
+    var analysisServiceMock;
+    var devianceStatisticsServiceMock;
+    var diagnosticsService;
+    var funnelPlotResourceMock;
+    var metaRegressionService;
+    var modelBaselineDefer;
+    var modelBaselineMock;
+    var modelBaselineResource;
+    var modelDeferred;
+    var modalMock;
+    var modelMock;
+    var modelResource;
+    var modelserviceMock;
+    var pageTitleServiceMock;
+    var pataviResult;
+    var pataviResultDeferred;
+    var pataviService;
+    var pataviTaskIdDeferred;
+    var pataviTaskIdMock = {
+      uri: 'https://something/1'
+    };
+    var pataviTaskIdResource;
+    var pataviTaskIdResult;
+    var problemDeferred;
+    var problemMock;
+    var problemResource;
+    var stateParamsMock = {
+      analysisId: 1,
+      projectId: 11
+    };
+    var resultsPlotsServiceMock;
+    var relativeEffectsTableService;
+    var stateMock;
 
     beforeEach(angular.mock.module('gemtc.controllers'));
 
@@ -229,7 +228,15 @@ define(['angular', 'angular-mocks', 'gemtc-web/controllers'], function(angular) 
     describe('when a nodesplit model is loaded', function() {
       beforeEach(function() {
         scope.model.modelType = {
-          type: 'node-split'
+          type: 'node-split',
+          details: {
+            from: {
+              id: 1
+            },
+            to: {
+              id: 2
+            }
+          }
         };
         modelDeferred.resolve(modelMock);
         pataviTaskIdDeferred.resolve(pataviTaskIdMock);
