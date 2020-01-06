@@ -9,11 +9,13 @@
 </div>
 
 <div class="grid-x" ng-show="result && model.linearModel === 'random'" style="padding-top: 1rem;">
-  <div class="cell">
+  <div id="random-effects-standard-deviation" class="cell">
     <p>
-      <strong>Random effects standard deviation </strong> {{result.summaries.quantiles["sd.d"]["50%"]
+      <strong>Random effects standard deviation </strong>
+      {{result.summaries.quantiles["sd.d"]["50%"]
       | number: 3}} ({{result.summaries.quantiles["sd.d"]["2.5%"] | number: 3}},
-      {{result.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})</p>
+      {{result.summaries.quantiles["sd.d"]["97.5%"] | number: 3}})
+    </p>
   </div>
 </div>
 
@@ -74,9 +76,10 @@
 
 <div ng-if="result && model.modelType.type === 'network' && scaleName !== 'risk ratio'">
   <div class="grid-x" ng-if="problem.entries.length">
-    <div class="cell">
+    <div id="absolute-treatment-effects" class="cell">
       <p>
-        <Strong>Absolute treatment effects
+        <Strong>
+          Absolute treatment effects
           <inline-help help-key="absolute-effects"></inline-help>
         </Strong>
       </p>
@@ -114,7 +117,8 @@
   </div>
   <div class="grid-x" ng-if="problem.entries.length">
     <div class="cell">
-      <button class="button" ng-if="!editMode.disableEditing" ng-click="openBaselineDistributionModal()">Set Baseline Distribution</button>
+      <button class="button" ng-if="!editMode.disableEditing" ng-click="openBaselineDistributionModal()">Set Baseline
+        Distribution</button>
     </div>
   </div>
 </div>
@@ -123,30 +127,33 @@
   <div class="grid-x" style="padding-top: 1rem;">
     <div class="cell large-4">
       <p>
-        <strong>Relative effects table
+        <strong>
+          Relative effects table
           <inline-help help-key="relative-effects"></inline-help>
         </strong>
       </p>
       <label ng-show="relativeEffectsTables.length > 1">
         Covariate level
-        <select ng-options="relativeEffectsTable as relativeEffectsTable.level for relativeEffectsTable in relativeEffectsTables"
+        <select
+          ng-options="relativeEffectsTable as relativeEffectsTable.level for relativeEffectsTable in relativeEffectsTables"
           ng-model="relativeEffectsTable"></select>
       </label>
     </div>
   </div>
   <div class="grid-x">
     <div class="cell large-8">
-      <table id="relativeEffectsTableCopy">
-        <caption>Comparison of the included interventions: {{::scaleName}} (95% CrI). Each
-          cell gives the effect of the column-defining intervention relative to the
-          row-defining intervention.
+      <table id="relative-effects-table">
+        <caption>
+          Comparison of the included interventions: {{::scaleName}} (95% CrI). Each cell gives the effect of the
+          column-defining intervention relative to the row-defining intervention.
         </caption>
         <tr ng-repeat="relativeEffectsRow in relativeEffectsTable.data.rows">
-          <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}" ng-repeat="relativeEffectsCell in relativeEffectsRow.cells"
-            ng-switch="relativeEffectsCell.cellType">
+          <td class="text-center" ng-class="{'empty-cell': $index <= $parent.$index-1}"
+            ng-repeat="relativeEffectsCell in relativeEffectsRow.cells" ng-switch="relativeEffectsCell.cellType">
             <span ng-switch-when="effect">
-              {{relativeEffectsCell.mean | number: 3}} ({{relativeEffectsCell.lowerBound | number:
-              3}}, {{relativeEffectsCell.upperBound | number: 3}})
+              {{relativeEffectsCell.mean | number: 3}} (
+              {{relativeEffectsCell.lowerBound | number: 3}},
+              {{relativeEffectsCell.upperBound | number: 3}})
             </span>
             <span ng-switch-when="label" class="table-cell-label">
               {{relativeEffectsCell.label}}
@@ -157,19 +164,19 @@
       </table>
     </div>
     <div class="cell large-4">
-      <button class="button small info clipboard-button" data-clipboard-target="#relativeEffectsTableCopy">
+      <button class="button small info clipboard-button" data-clipboard-target="#relative-effects-table">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
   </div>
 </div>
 
-<relative-effect-plots model-promise="modelPromise" results-promise="resultsPromise"
-  problem-promise="problemPromise"></relative-effect-plots>
-<pairwise-forest-plots model-promise="modelPromise" results-promise="resultsPromise"
-  problem-promise="problemPromise"></pairwise-forest-plots>
+<relative-effect-plots model-promise="modelPromise" results-promise="resultsPromise" problem-promise="problemPromise">
+</relative-effect-plots>
+<pairwise-forest-plots model-promise="modelPromise" results-promise="resultsPromise" problem-promise="problemPromise">
+</pairwise-forest-plots>
 
-<div ng-if="result && model.modelType.type === 'pairwise'">
+<div id="study-effect-funnel-plot" ng-if="result && model.modelType.type === 'pairwise'">
   <div class="grid-x">
     <div class="cell">
       <p>
@@ -181,93 +188,80 @@
   <funnel-plot results-promise="resultsPromise"></funnel-plot>
 </div>
 
-<div ng-if="result && model.modelType.type === 'network' && result.studyRelativeEffects">
-  <div class="grid-x">
-    <div class="cell">
-      <p>
-        <strong>Study effect funnel plot </strong>
-        <inline-help help-key="funnel-plot"></inline-help>
-      </p>
-    </div>
+<div id="study-effect-funnel-plot" class="grid-x"
+  ng-if="result && model.modelType.type === 'network' && result.studyRelativeEffects">
+  <div class="cell">
+    <p>
+      <strong>Study effect funnel plot </strong>
+      <inline-help help-key="funnel-plot"></inline-help>
+    </p>
   </div>
-  <div class="grid-x" ng-if="comparisonAdjustedFunnelPlots.length > 0" ng-repeat="funnelPlot in comparisonAdjustedFunnelPlots">
-    <div class="cell">
-      <comparison-adjusted-funnel-plot plot-data="funnelPlot" problem-promise="problemPromise"
-        results-promise="resultsPromise"></comparison-adjusted-funnel-plot>
-    </div>
+  <div class="cell" ng-if="comparisonAdjustedFunnelPlots.length > 0"
+    ng-repeat="funnelPlot in comparisonAdjustedFunnelPlots">
+    <comparison-adjusted-funnel-plot plot-data="funnelPlot" problem-promise="problemPromise"
+      results-promise="resultsPromise"></comparison-adjusted-funnel-plot>
   </div>
-  <div class="grid-x" ng-if="comparisonAdjustedFunnelPlots.length === 0">
-    <div class="cell">
-      No funnel plots have been created
-    </div>
+  <div class="cell" ng-if="comparisonAdjustedFunnelPlots.length === 0">
+    No funnel plots have been created
   </div>
-</div>
-
-<div ng-if="result && model.modelType.type === 'network' && !editMode.disableEditing">
-  <div class="grid-x">
-    <div class="cell">
-      <button class="button" ng-click="openComparisonAdjustedModal()">Add comparison-adjusted funnel plot</button>
-    </div>
+  <div class="cell" ng-if="!editMode.disableEditing">
+    <button class="button" ng-click="openComparisonAdjustedModal()">
+      Add comparison-adjusted funnel plot
+    </button>
   </div>
 </div>
 
 <node-split-density-plots model-promise="modelPromise" results-promise="resultsPromise"
   problem-promise="problemPromise"></node-split-density-plots>
 
-<div ng-if="result && model.modelType.type !== 'node-split'">
-  <div class="grid-x" style="padding-top: 1rem;">
-    <div class="cell large-8">
-      <div>
-        <p>
-          <strong>Rank probabilities </strong>
-          <inline-help help-key="rank-probabilities"></inline-help>
-        </p>
-      </div>
-      <div class="grid-x">
-        <div class="cell large-6 small-8">
-          <label ng-show="rankProbabilitiesByLevel.length > 1">
-            Covariate level
-            <select ng-options="rankProbabilities as rankProbabilities.level for rankProbabilities in rankProbabilitiesByLevel"
-              ng-model="rankProbabilities"></select>
-          </label>
-        </div>
-      </div>
-      <table id="rankProbabilitiesTableCopy">
-        <caption>Rank probabilities table</caption>
-        <thead>
-          <tr>
-            <th></th>
-            <th ng-repeat="rank in rankProbabilities.data">Rank {{::$index + 1}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="(treatment, rankValues) in rankProbabilities.data">
-            <td>{{::treatment}}</td>
-            <td ng-repeat="rank in rankValues track by $index">
-              {{rank | number : 3}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="cell large-4">
-      <button class="button small info clipboard-button" data-clipboard-target="#rankProbabilitiesTableCopy">
-        <i class="fa fa-clipboard"></i> Copy to clipboard
-      </button>
-    </div>
+<div id="rank-probabilities" class="grid-x" style="padding-top: 1rem;"
+  ng-if="result && model.modelType.type !== 'node-split'">
+  <div class="cell large-8">
+    <p>
+      <strong>Rank probabilities </strong>
+      <inline-help help-key="rank-probabilities"></inline-help>
+    </p>
+  </div>
+  <div class="cell large-6 small-8" ng-show="rankProbabilitiesByLevel.length > 1">
+    <label>
+      Covariate level
+      <select
+        ng-options="rankProbabilities as rankProbabilities.level for rankProbabilities in rankProbabilitiesByLevel"
+        ng-model="rankProbabilities"></select>
+    </label>
+  </div>
+  <div class="cell large-8">
+    <table id="rank-probabilities-table">
+      <caption>Rank probabilities table</caption>
+      <thead>
+        <tr>
+          <th></th>
+          <th ng-repeat="rank in rankProbabilities.data">Rank {{::$index + 1}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(treatment, rankValues) in rankProbabilities.data">
+          <td id="rank-probabilities-treatment-{{ $index }}">{{::treatment}}</td>
+          <td ng-repeat="rank in rankValues track by $index">
+            {{rank | number : 3}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cell large-4">
+    <button class="button small info clipboard-button" data-clipboard-target="#rank-probabilities-table">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
   </div>
 
-  <div class="grid-x" style="padding-top: 1rem;">
-    <div class="cell">
-      Rank probabilities plot
-    </div>
+  <div id="rank-probabilities-plot" class="cell" style="padding-top: 1rem;">
+    <caption>Rank probabilities plot</caption>
   </div>
-  <div class="grid-x">
-    <div class="cell">
-      <div class="addis-graph" style="width:450px; height:450px;" export file-name="'rankProbabilities'">
-        <data-gemtc-rank-plot value="rankProbabilities.data" stacked="true"></data-gemtc-rank-plot>
-      </div>
+
+  <div class="cell">
+    <div class="addis-graph" style="width:450px; height:450px;" export file-name="'rankProbabilities'">
+      <data-gemtc-rank-plot value="rankProbabilities.data" stacked="true"></data-gemtc-rank-plot>
     </div>
   </div>
 </div>
-<!-- -end  results section -->

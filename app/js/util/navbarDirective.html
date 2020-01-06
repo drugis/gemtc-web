@@ -16,13 +16,13 @@
             </a>
         </li>
         <li>
-          <a href="#">
+          <a id="user-image-link" href="#">
             <img class="user-image" ng-src="{{user.userPicture}}">
             <span ng-show="!navSettings.isHidden">{{user.firstname +' '+ user.lastname}}</span>
           </a>
           <ul class="menu vertical">
             <li>
-              <a href="logout">Sign out</a>
+              <a id="logout-link" href="logout">Sign out</a>
             </li>
           </ul>
         </li>
