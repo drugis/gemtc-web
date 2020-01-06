@@ -40,7 +40,7 @@
 
   <ng-include src="'convergence-diagnostics-section.html'"></ng-include>
 
-  <ng-include ng-if="model.modelType.type === 'regression'" src="'meta-regression-section.html'"></ng-include>
+  <ng-include ng-show="model.modelType.type === 'regression'" src="'meta-regression-section.html'"></ng-include>
 
   <ng-include src="'results-section.html'"></ng-include>
 
