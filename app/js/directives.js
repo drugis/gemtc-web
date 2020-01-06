@@ -1,6 +1,5 @@
 'use strict';
-var requires = [
-];
+/* This file is used only by ADDIS */
 define([
   './analyses/networkPlotDirective',
   './models/rankPlotDirective',
