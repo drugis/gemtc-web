@@ -20,7 +20,7 @@
               <inline-help help-key="model-type"></inline-help>
             </td>
           </tr>
-          <tr ng-if="model.sensitivity.omittedStudy">
+          <tr id="model-sub-type" ng-if="model.sensitivity.omittedStudy">
             <td class="large-6 text-right">
               <strong>sub type</strong>
             </td>
@@ -149,15 +149,15 @@
             </td>
             <td>
               <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
-                <li style="padding-bottom: 0.5rem">
+                <li id="burn-in-iterations" style="padding-bottom: 0.5rem">
                   burn-in: {{::result.burnInIterations}}
                   <inline-help help-key="burn-in-iterations"></inline-help>
                 </li>
-                <li style="padding-bottom: 0.5rem">
+                <li id="inference-iterations" style="padding-bottom: 0.5rem">
                   inference: {{::result.inferenceIterations}}
                   <inline-help help-key="inference-iterations"></inline-help>
                 </li>
-                <li style="padding-bottom: 0.5rem">
+                <li id="thinning-factor" style="padding-bottom: 0.5rem">
                   thinning: {{::result.thinningFactor}}
                   <inline-help help-key="thinning-factor"></inline-help>
                 </li>
@@ -166,7 +166,7 @@
           </tr>
         </table>
         <div class="button-group">
-          <button class="button" ng-if="!editMode.disableEditing" ng-click="goToRefineModel()">Refine model</button>
+          <button id="refine-model-button" class="button" ng-if="!editMode.disableEditing" ng-click="goToRefineModel()">Refine model</button>
           <button class="button" ng-click="goToModelData()">Get model data</button>
           <button class="button" ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R
             script{{!taskInfo._links.script ? '*' : ''}}</button>

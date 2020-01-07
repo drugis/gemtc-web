@@ -14,8 +14,8 @@ module.exports = {
 
   afterEach: function(browser) {
     browser.waitForElementVisible('#analysis-header')
-      .assert.containsText('#analysisTitle', TITLE)
-      .assert.containsText('#analysisOutcome', OUTCOME);
+      .assert.containsText('#analysis-title', TITLE)
+      .assert.containsText('#analysis-outcome', OUTCOME);
 
     analysesService.deleteFromList(browser).end();
   },

@@ -16,7 +16,8 @@ function deleteFromList(browser, index = 0) {
   browser
     .click('#logo')
     .click('#analysis-delete-' + index)
-    .click('#delete-confirm-button');
+    .click('#delete-confirm-button')
+    .waitForElementVisible('#empty-analyses-message');
   return browser;
 }
 

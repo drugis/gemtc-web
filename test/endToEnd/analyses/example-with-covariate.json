@@ -1,146 +1,75 @@
 {
-  "linearModel": "random",
-  "burnInIterations": 100,
-  "inferenceIterations": 1000,
-  "thinningFactor": 1,
-  "modelType": {
-    "type": "regression"
-  },
-  "regressor": {
-    "variable": "LENGTH_OF_FOLLOW_UP",
-    "coefficient": "unrelated",
-    "control": "2",
-    "levels": [20, 25, 30]
-  },
-  "entries": [{
-    "study": "Rudolph and Feiger, 1999",
-    "treatment": 4,
-    "sampleSize": 100,
-    "responders": 58
-  }, {
-    "study": "Rudolph and Feiger, 1999",
-    "treatment": 2,
-    "sampleSize": 103,
-    "responders": 53
-  }, {
-    "study": "De Wilde et al, 1993",
-    "treatment": 3,
-    "sampleSize": 37,
-    "responders": 24
-  }, {
-    "study": "De Wilde et al, 1993",
-    "treatment": 2,
-    "sampleSize": 41,
-    "responders": 25
-  }, {
-    "study": "Schone and Ludwig, 1993",
-    "treatment": 2,
-    "sampleSize": 52,
-    "responders": 9
-  }, {
-    "study": "Schone and Ludwig, 1993",
-    "treatment": 3,
-    "sampleSize": 54,
-    "responders": 21
-  }, {
-    "study": "Aberg-Wistedt et al, 2000",
-    "treatment": 3,
-    "sampleSize": 177,
-    "responders": 158
-  }, {
-    "study": "Aberg-Wistedt et al, 2000",
-    "treatment": 5,
-    "sampleSize": 176,
-    "responders": 157
-  }, {
-    "study": "Alves et al, 1999",
-    "treatment": 2,
-    "sampleSize": 47,
-    "responders": 26
-  }, {
-    "study": "Alves et al, 1999",
-    "treatment": 4,
-    "sampleSize": 40,
-    "responders": 32
-  }, {
-    "study": "Ballus et al, 2000",
-    "treatment": 3,
-    "sampleSize": 43,
-    "responders": 27
-  }, {
-    "study": "Ballus et al, 2000",
-    "treatment": 4,
-    "sampleSize": 41,
-    "responders": 26
-  }, {
-    "study": "Boyer et al, 1998",
-    "treatment": 2,
-    "sampleSize": 120,
-    "responders": 61
-  }, {
-    "study": "Boyer et al, 1998",
-    "treatment": 5,
-    "sampleSize": 122,
-    "responders": 63
-  }],
-  "treatments": [{
-    "id": 2,
-    "name": "Fluoxetine"
-  }, {
-    "id": 3,
-    "name": "Paroxetine"
-  }, {
-    "id": 4,
-    "name": "Venlafaxine"
-  }, {
-    "id": 5,
-    "name": "Sertraline"
-  }],
+  "entries": [
+    {
+      "mean": -1.8,
+      "study": "Chouinard et al, 1999",
+      "std.dev": 0.16,
+      "treatment": 9,
+      "sampleSize": 101
+    },
+    {
+      "mean": -0.69,
+      "study": "Chouinard et al, 1999",
+      "std.dev": 0.16,
+      "treatment": 12,
+      "sampleSize": 102
+    },
+    {
+      "mean": -2.3,
+      "study": "McPartlin et al, 1998",
+      "std.dev": 1.4,
+      "treatment": 12,
+      "sampleSize": 178
+    },
+    {
+      "mean": -2.3,
+      "study": "McPartlin et al, 1998",
+      "std.dev": 1.3,
+      "treatment": 11,
+      "sampleSize": 183
+    },
+    {
+      "mean": -1.5,
+      "study": "Detke et al, 2004",
+      "std.dev": 0.1,
+      "treatment": 10,
+      "sampleSize": 93
+    },
+    {
+      "mean": -2.1,
+      "study": "Detke et al, 2004",
+      "std.dev": 0.1,
+      "treatment": 12,
+      "sampleSize": 85
+    }
+  ],
+  "treatments": [
+    {
+      "id": 10,
+      "name": "Placebo"
+    },
+    {
+      "id": 12,
+      "name": "Paroxetine"
+    },
+    {
+      "id": 9,
+      "name": "Fluoxetine"
+    },
+    {
+      "id": 11,
+      "name": "Venlafaxine"
+    }
+  ],
   "studyLevelCovariates": {
-    "Alves et al, 1999": {
-      "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-      "LENGTH_OF_FOLLOW_UP": 30.0,
-      "MULTI_CENTER_STUDY": 1.0
+    "Detke et al, 2004": {
+      "HAMD bas": 1.0
     },
-    "Boyer et al, 1998": {
-      "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-      "LENGTH_OF_FOLLOW_UP": 30.0,
-      "MULTI_CENTER_STUDY": 1.0
+    "Chouinard et al, 1999": {
+      "HAMD bas": 1.0
     },
-    "Behnke et al, 2003": {
-      "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-      "LENGTH_OF_FOLLOW_UP": 30.0,
-      "MULTI_CENTER_STUDY": 1.0
-    },
-    "Bennie et al, 1995": {
-      "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-      "LENGTH_OF_FOLLOW_UP": 25.0,
-      "MULTI_CENTER_STUDY": null
-    },
-    "Rudolph and Feiger, 1999": {
-      "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-      "LENGTH_OF_FOLLOW_UP": 25.0,
-      "MULTI_CENTER_STUDY": null
-    },
-    "De Wilde et al, 1993": {
-      "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-      "LENGTH_OF_FOLLOW_UP": 10.0,
-      "MULTI_CENTER_STUDY": null
-    },
-    "Schone and Ludwig, 1993": {
-      "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-      "LENGTH_OF_FOLLOW_UP": 20.0,
-      "MULTI_CENTER_STUDY": null
-    },
-    "Aberg-Wistedt et al, 2000": {
-      "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-      "LENGTH_OF_FOLLOW_UP": 30.0,
-      "MULTI_CENTER_STUDY": null
-    },
-    "Ballus et al, 2000": {
-      "BLINDING_AT_LEAST_DOUBLE_BLIND": 1.0,
-      "LENGTH_OF_FOLLOW_UP": 30.0,
-      "MULTI_CENTER_STUDY": null
+    "McPartlin et al, 1998": {
+      "HAMD bas": 0.0
     }
   }
 }

@@ -8,23 +8,23 @@
         <label>Treatment name</label>
       </div>
       <div class="cell large-6">
-        <input autofocus="true" type="text" ng-model="name.new" ng-change="checkName(name.new)">
+        <input id="treatment-title-input" autofocus="true" type="text" ng-model="name.new" ng-change="checkName(name.new)">
       </div>
-      <div class="cell">
+      <div id="edit-treatment-title-warning" class="cell">
         <i class="fa fa-exclamation-triangle"></i>
         <em> Changing the treatment name will delete all model results!</em>
       </div>
       <div class="cell">
-        <button ng-disabled="error" ng-click="editName(name.new)" class="button alert" type="button">
+        <button id="confirm-edit-treatment-title-button" ng-disabled="error" ng-click="editName(name.new)" class="button alert" type="button">
           Edit
         </button>
       </div>
-      <div class="cell alert" ng-if="error">
+      <div id="edit-treatment-title-error" class="cell alert" ng-if="error">
         {{error}}
       </div>
     </div>
   </div>
-  <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+  <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
     <span aria-hidden="true">&times;</span>
   </button>
 </form>

@@ -83,7 +83,7 @@
           <inline-help help-key="absolute-effects"></inline-help>
         </Strong>
       </p>
-      <p ng-if="!baselineDistribution">
+      <p id="no-baseline-warning" ng-if="!baselineDistribution">
         <em>No baseline distribution set.</em>
       </p>
     </div>
@@ -117,8 +117,9 @@
   </div>
   <div class="grid-x" ng-if="problem.entries.length">
     <div class="cell">
-      <button class="button" ng-if="!editMode.disableEditing" ng-click="openBaselineDistributionModal()">Set Baseline
-        Distribution</button>
+      <button id="set-baseline-distribution-button" class="button" ng-if="!editMode.disableEditing" ng-click="openBaselineDistributionModal()">
+        Set Baseline Distribution
+      </button>
     </div>
   </div>
 </div>
@@ -196,16 +197,16 @@
       <inline-help help-key="funnel-plot"></inline-help>
     </p>
   </div>
-  <div class="cell" ng-if="comparisonAdjustedFunnelPlots.length > 0"
+  <div id="funnel-plots-container" class="cell" ng-if="comparisonAdjustedFunnelPlots.length > 0"
     ng-repeat="funnelPlot in comparisonAdjustedFunnelPlots">
     <comparison-adjusted-funnel-plot plot-data="funnelPlot" problem-promise="problemPromise"
       results-promise="resultsPromise"></comparison-adjusted-funnel-plot>
   </div>
-  <div class="cell" ng-if="comparisonAdjustedFunnelPlots.length === 0">
+  <div id="no-funnel-plots-message" class="cell" ng-if="comparisonAdjustedFunnelPlots.length === 0">
     No funnel plots have been created
   </div>
   <div class="cell" ng-if="!editMode.disableEditing">
-    <button class="button" ng-click="openComparisonAdjustedModal()">
+    <button id="add-funnel-plots-button" class="button" ng-click="openComparisonAdjustedModal()">
       Add comparison-adjusted funnel plot
     </button>
   </div>
