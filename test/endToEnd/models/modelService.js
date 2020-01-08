@@ -1,10 +1,10 @@
 'use strict';
 
-function addDefaultModel(browser) {
+function addDefaultModel(browser, modelTitle = 'title') {
   return browser
   .waitForElementVisible('#add-model-button')
   .click('#add-model-button')
-  .setValue('#title-input', 'title')
+  .setValue('#title-input', modelTitle)
   .click('#submit-add-model-button')
   .waitForElementVisible('#model-settings-section', 10000);
 }

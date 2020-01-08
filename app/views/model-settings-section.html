@@ -167,8 +167,8 @@
         </table>
         <div class="button-group">
           <button id="refine-model-button" class="button" ng-if="!editMode.disableEditing" ng-click="goToRefineModel()">Refine model</button>
-          <button class="button" ng-click="goToModelData()">Get model data</button>
-          <button class="button" ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R
+          <button id="get-model-data-button" class="button" ng-click="goToModelData()">Get model data</button>
+          <button id="get-r-script-button" class="button" ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R
             script{{!taskInfo._links.script ? '*' : ''}}</button>
         </div>
         <div ng-if="!taskInfo._links.script">

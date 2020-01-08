@@ -164,8 +164,8 @@ module.exports = {
 
     analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
     modelService.addModel(browser, modelSettings)
-      .waitForElementVisible('#model-0')
-      .waitForElementVisible('#model-1');
+      .waitForElementVisible('#model-title-0')
+      .waitForElementVisible('#model-title-1');
     verifyPairwiseModelContents(browser, 0);
     verifyPairwiseModelContents(browser, 1);
   },
