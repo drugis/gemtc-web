@@ -1,7 +1,15 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$q', 'ModelService', 'ResultsPlotService'];
-  var relativeEffectPlotsDirective = function($q, ModelService, ResultsPlotService) {
+  var dependencies = [
+    '$q',
+    'ModelService',
+    'ResultsPlotService'
+  ];
+  var relativeEffectPlotsDirective = function(
+    $q,
+    ModelService,
+    ResultsPlotService
+  ) {
     return {
       scope: {
         modelPromise: '=',

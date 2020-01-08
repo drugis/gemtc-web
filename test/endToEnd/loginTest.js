@@ -2,17 +2,20 @@
 
 const loginService = require('./util/loginService.js');
 
-module.exports = {
-  'Login success': function(browser) {
-    loginService.login(browser)
-      .waitForElementVisible('#analyses-header')
-      .assert.containsText('#analyses-header', 'Analyses')
-      .end();
-  },
+function loginSucces(browser) {
+  loginService.login(browser)
+    .waitForElementVisible('#analyses-header')
+    .assert.containsText('#analyses-header', 'Analyses')
+    .end();
+}
 
-  'Login fail': function(browser) {
-    loginService.login(browser, 'wrong name', 'wrong password')
-      .waitForElementVisible('#loginWarning')
-      .end();
-  }
+function loginFail(browser) {
+  loginService.login(browser, 'wrong name', 'wrong password')
+    .waitForElementVisible('#loginWarning')
+    .end();
+}
+
+module.exports = {
+  'Login success': loginSucces,
+  'Login fail': loginFail
 };
