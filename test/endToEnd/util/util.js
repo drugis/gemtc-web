@@ -2,7 +2,7 @@
 
 const TIMEOUT = 10;
 
-function delayedClick(browser, clickPath, expectPath, attempts = 500) {
+function delayedClick(browser, clickPath, expectPath, attempts = 50) {
   if (attempts === 0) {
     throw new Error('! Could not locate "' + expectPath + '".');
   } else {

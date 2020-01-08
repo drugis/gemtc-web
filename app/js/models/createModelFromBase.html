@@ -1,34 +1,37 @@
 <form id="create-node-split-model-form" novalidate ng-submit="createNodeSplitModel(model)">
   <div class="grid-container">
-<div class="grid-x">
-    <div class="cell">
-      <h3>Create {{modelTypeLabel}} model</h3>
+    <div class="grid-x">
+      <div class="cell">
+        <h3 id="create-model-header">
+          Create model
+        </h3>
+      </div>
     </div>
-  </div>
-  <div class="grid-x section">
-    <div class="cell">
-      <label class="form-item-header">Title
-        <small>required</small>
-        <input id="title-input" autofocus="true" type="text" ng-model="model.title">
-      </label>
+    <div class="grid-x section">
+      <div class="cell">
+        <label class="form-item-header">
+          Title
+          <input id="title-input" autofocus="true" type="text" ng-model="model.title">
+        </label>
+      </div>
     </div>
-  </div>
-  <run-length 
-  model="model" 
-  problem="problem"
-  burn-in-iterations="model.burnInIterations"
-  inference-iterations="model.inferenceIterations"
-  thinning-factor="model.thinningFactor"
-   is-valid-run-length="isValidRunLength"></run-length>
-  <div class="grid-x modal-bottom-button-bar">
-    <div class="cell">
-      <button id="submit-extend-run-length-btn" class="button success" type="submit" ng-disabled="!isValidRunLength || isCreatingModel || !model.title">Create model</button>
-       <div class="alert" ng-show='!model.title'>Model title missing.</div>
-    </div>
+    <run-length model="model" problem="problem" burn-in-iterations="model.burnInIterations"
+      inference-iterations="model.inferenceIterations" thinning-factor="model.thinningFactor"
+      is-valid-run-length="isValidRunLength"></run-length>
+    <div class="grid-x modal-bottom-button-bar">
+      <div class="cell">
+        <button id="confirm-create-model-button" class="button success" type="submit"
+          ng-disabled="!isValidRunLength || isCreatingModel || !model.title">
+          Create model
+        </button>
+        <div id="missing-title-warning" class="alert" ng-show='!model.title'>
+          Model title missing.
+        </div>
+      </div>
 
+    </div>
+    <button id="close-model-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 </form>

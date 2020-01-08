@@ -1,19 +1,21 @@
 'use strict';
 
+const WAIT_TIME_OUT = 15000;
+
 function addDefaultModel(browser, modelTitle = 'title') {
   return browser
-  .waitForElementVisible('#add-model-button')
-  .click('#add-model-button')
-  .setValue('#title-input', modelTitle)
-  .click('#submit-add-model-button')
-  .waitForElementVisible('#model-settings-section', 10000);
+    .waitForElementVisible('#add-model-button')
+    .click('#add-model-button')
+    .setValue('#title-input', modelTitle)
+    .click('#submit-add-model-button')
+    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
 }
 
 function addModel(browser, modelSettings) {
   return beforeEach(browser, modelSettings)
     .click(modelSettings.modelSubType)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', 10000);
+    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
 }
 
 function addModelWithPrior(browser, modelSettings) {
@@ -23,7 +25,7 @@ function addModelWithPrior(browser, modelSettings) {
     .setValue('#heterogeneity-log-n-parameter1-input', 3)
     .setValue('#heterogeneity-log-n-parameter2-input', 0.2)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', 10000);
+    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
 }
 
 function addModelWithRunLengthParameters(browser, modelSettings) {
@@ -36,7 +38,7 @@ function addModelWithRunLengthParameters(browser, modelSettings) {
     .clearValue('#nr-thinning-factor-input')
     .setValue('#nr-thinning-factor-input', 2)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', 10000);
+    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
 }
 
 function addModelWithLeaveOneOut(browser, modelSettings) {
@@ -44,14 +46,14 @@ function addModelWithLeaveOneOut(browser, modelSettings) {
     .click('#leave-one-out-checkbox')
     .click('#leave-one-out-specific-type-radio')
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', 10000);
+    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
 }
 
 function addDesignAdjustedModel(browser, modelSettings) {
   return beforeEach(browser, modelSettings)
     .click('#adjustment-checkbox')
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', 10000);
+    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
 }
 
 function beforeEach(browser, modelSettings) {

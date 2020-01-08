@@ -9,7 +9,8 @@ function login(browser, username = USER_NAME, password = PASSWORD) {
         .waitForElementVisible('#signinButton', 5000)
         .setValue('#username', username)
         .setValue('#password', password)
-        .click('#signinButton');
+        .click('#signinButton')
+        .waitForElementVisible('#analyses-header');
     return browser;
 }
 

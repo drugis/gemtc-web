@@ -3,9 +3,11 @@
     <h4 ng-if="!result" class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
     <progressbar ng-hide="result" value="progress.percentage"></progressbar>
     <div id="model-settings-section" ng-if="result" style="padding-top: 1rem;">
-      <a ui-sref="nodeSplitOverview(stateParams)"
+      <a id="node-split-overview-link" ui-sref="nodeSplitOverview(stateParams)"
         ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 "
-        class="grid-x">Go to node-split overview</a>
+        class="grid-x">
+        Go to node-split overview
+      </a>
       <div class="panel callout primary">
         <h5>
           <strong>Model settings</strong>

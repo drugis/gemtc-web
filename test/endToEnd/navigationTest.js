@@ -34,7 +34,7 @@ module.exports = {
   'Home navigation from login name': function(browser) {
     loginService.login(browser);
     analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
-    util.delayedClick(browser, '#user-image-link', '#create-workspace-button');
+    util.delayedClick(browser, '#user-image-link', '#add-analysis-button');
     analysesService
       .deleteFromList(browser);
   },
