@@ -9,7 +9,6 @@ var columnString = 'title, analysisId, linearModel,' +
   ' outcome_scale, heterogeneity_prior, regressor,' +
   ' sensitivity, archived, archived_on';
 
-
 function mapModelRow(modelRow) {
   var model = {
     id: modelRow.id,
@@ -57,22 +56,22 @@ function createModel(analysisId, newModel, callback) {
   db.query(
     ' INSERT INTO model (' + columnString + ') ' +
     ' VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id', [
-      newModel.title,
-      analysisId,
-      newModel.linearModel,
-      newModel.burnInIterations,
-      newModel.inferenceIterations,
-      newModel.thinningFactor,
-      newModel.modelType,
-      newModel.likelihood,
-      newModel.link,
-      newModel.outcomeScale,
-      newModel.heterogeneityPrior,
-      newModel.regressor,
-      newModel.sensitivity,
-      false, // is archived
-      null // archived on
-    ],
+    newModel.title,
+    analysisId,
+    newModel.linearModel,
+    newModel.burnInIterations,
+    newModel.inferenceIterations,
+    newModel.thinningFactor,
+    newModel.modelType,
+    newModel.likelihood,
+    newModel.link,
+    newModel.outcomeScale,
+    newModel.heterogeneityPrior,
+    newModel.regressor,
+    newModel.sensitivity,
+    false, // is archived
+    null // archived on
+  ],
     function(error, result) {
       if (error) {
         logger.error('error creating model, error: ' + error);
@@ -91,6 +90,9 @@ function getModel(modelId, callback) {
       if (error) {
         logger.error('error retrieving model, error: ' + error);
         callback(error);
+      } else if (result.rowCount === 0) {
+        logger.error('error retrieving model, error: requested model not found');
+        callback('Model not found');
       } else {
         logger.debug('ModelRepository.getModel return model = ' + JSON.stringify(result.rows[0]));
         callback(error, mapModelRow(result.rows[0]));
