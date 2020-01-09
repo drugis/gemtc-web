@@ -8,7 +8,7 @@ define(['angular', 'lodash'], function(angular, _) {
     'baseModel',
     'successCallback'
   ];
-  var CreateNetworkModelModelController = function(
+  var CreateNetworkModelController = function(
     $scope,
     $modalInstance,
     $stateParams,
@@ -36,5 +36,5 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
   };
-  return dependencies.concat(CreateNetworkModelModelController);
+  return dependencies.concat(CreateNetworkModelController);
 });

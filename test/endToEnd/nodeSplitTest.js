@@ -48,8 +48,7 @@ function createNodeSplit(browser) {
     .click('#node-split-overview-link')
     .waitForElementVisible('#nodesplit-overview-header')
     .assert.containsText('#dic-0', '27.')
-    .assert.containsText('#random-effects-standard-deviation-0', '0.4')
-    ;
+    .assert.containsText('#random-effects-standard-deviation-0', '0.4')    ;
 }
 
 function missingtTitleAndCancel(browser) {
