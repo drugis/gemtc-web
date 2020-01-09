@@ -38,9 +38,10 @@
         </button>
       </div>
       <div class="cell large-3 large-offset-6 text-right">
-        <button tabindex="1" ng-disabled="numberOfModelsArchived === 0" ng-hide="!modelsLoaded"
-          class="button small secondary" ng-click="showArchived = !showArchived"><i
-            class="fa fa-eye"></i>{{showArchived ? ' Hide' : ' Show'}} archived
+        <button tabindex="1" ng-if="loginUserId" ng-disabled="numberOfModelsArchived === 0" ng-hide="!modelsLoaded"
+          class="button small secondary" ng-click="showArchived = !showArchived">
+          <i class="fa fa-eye"></i>
+          {{showArchived ? ' Hide' : ' Show'}} archived
           {{showArchived ? '' : '('}}{{showArchived?'':numberOfModelsArchived}}{{showArchived
             ? '' : ')'}}
         </button>
@@ -118,4 +119,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>
