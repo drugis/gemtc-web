@@ -10,7 +10,12 @@ function loginSucces(browser) {
 }
 
 function loginFail(browser) {
-  loginService.login(browser, 'wrong name', 'wrong password')
+  browser
+    .url(loginService.TEST_URL)
+    .waitForElementVisible('#signinButton', 5000)
+    .setValue('#username', 'wrong username')
+    .setValue('#password', ' wrong password')
+    .click('#signinButton')
     .waitForElementVisible('#loginWarning')
     .end();
 }

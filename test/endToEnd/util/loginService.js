@@ -15,5 +15,6 @@ function login(browser, username = USER_NAME, password = PASSWORD) {
 }
 
 module.exports = {
-    login: login
+    login: login,
+    TEST_URL:TEST_URL
 };

@@ -9,6 +9,7 @@ const OUTCOME = 'my outcome';
 const MODEL_TITLE = 'model title';
 const FIXED_EFFECT_MODEL = '#fixed-effect-radio';
 const RANDOM_EFFECT_MODEL = '#random-effect-radio';
+const MODEL_WAIT_TIME = 15000;
 
 const networkModelSettings = {
   title: MODEL_TITLE,
@@ -18,8 +19,9 @@ const networkModelSettings = {
 };
 
 function verifyPairwiseModelContents(browser, modelIndex) {
-  browser.click('#model-' + modelIndex);
-  verifyCommonContent(browser, 'pairwise', 'fixed')
+  browser.click('#model-title-' + modelIndex)
+    .waitForElementVisible('#model-settings-section', MODEL_WAIT_TIME);
+  return verifyCommonContent(browser, 'pairwise', 'fixed')
     .assert.containsText('#model-pairwise-comparison', 'Fluoxetine — ')
     .waitForElementVisible('#relative-effects-table')
     .waitForElementVisible('#study-effect-forest-plot')
@@ -31,12 +33,12 @@ function verifyPairwiseModelContents(browser, modelIndex) {
     .waitForElementVisible('#rank-probabilities-treatment-1')
     .waitForElementVisible('#absolute-residual-deviance-table')
     .click('#logo')
-    .click('#analysis-title-0');
-  return browser;
+    .click('#analysis-title-0')
+    .waitForElementVisible('#analysis-header');
 }
 
 function verifyNetworkModelContents(browser) {
-  verifyCommonContent(browser)
+  return verifyCommonContent(browser)
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#random-effects-standard-deviation')
     .waitForElementVisible('#absolute-treatment-effects')
@@ -46,11 +48,10 @@ function verifyNetworkModelContents(browser) {
     .waitForElementVisible('#rank-probabilities-plot')
     .waitForElementVisible('#rank-probabilities-table')
     .waitForElementVisible('#absolute-residual-deviance-table');
-  return browser;
 }
 
 function verifyMetaRegressionModelContents(browser) {
-  verifyCommonContent(browser, 'regression')
+  return verifyCommonContent(browser, 'regression')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#covariate-effect-plot')
     .waitForElementVisible('#meta-regression-table')
@@ -60,11 +61,10 @@ function verifyMetaRegressionModelContents(browser) {
     .waitForElementVisible('#rank-probabilities-plot')
     .waitForElementVisible('#rank-probabilities-table')
     .waitForElementVisible('#contrast-residual-deviance-table');
-  return browser;
 }
 
 function verifyFixedConsistencyModelContents(browser) {
-  verifyCommonContent(browser, 'network', 'fixed')
+  return verifyCommonContent(browser, 'network', 'fixed')
     .assert.containsText('#model-likelihood', 'binom / logit')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#relative-effects-table')
@@ -73,11 +73,10 @@ function verifyFixedConsistencyModelContents(browser) {
     .waitForElementVisible('#rank-probabilities-table')
     .waitForElementVisible('#absolute-residual-deviance-table')
     .click('#logo');
-  return browser;
 }
 
 function verifyLeaveOneOutModelContents(browser) {
-  verifyCommonContent(browser)
+  return verifyCommonContent(browser)
     .assert.containsText('#model-sub-type', 'leave one out')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#random-effects-standard-deviation')
@@ -86,11 +85,10 @@ function verifyLeaveOneOutModelContents(browser) {
     .waitForElementVisible('#relative-effects-table')
     .waitForElementVisible('#relative-effects-plots')
     .waitForElementVisible('#absolute-residual-deviance-table');
-  return browser;
 }
 
 function verifyDesignAdjustedModelContents(browser) {
-  verifyCommonContent(browser)
+  return verifyCommonContent(browser)
     .assert.containsText('#model-likelihood', 'normal / identity')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#random-effects-standard-deviation')
@@ -101,11 +99,10 @@ function verifyDesignAdjustedModelContents(browser) {
     .waitForElementVisible('#rank-probabilities-plot')
     .waitForElementVisible('#rank-probabilities-table')
     .waitForElementVisible('#absolute-residual-deviance-table');
-  return browser;
 }
 
 function verifyCommonContent(browser, modelType = 'network', modelEffectsType = 'random') {
-  browser
+  return browser
     .assert.containsText('#model-label', MODEL_TITLE)
     .assert.containsText('#model-view-analysis', TITLE)
     .assert.containsText('#model-view-outcome', OUTCOME)
@@ -113,9 +110,7 @@ function verifyCommonContent(browser, modelType = 'network', modelEffectsType = 
     .assert.containsText('#model-effects-type', modelEffectsType)
     .waitForElementVisible('#residual-deviance-plot')
     .waitForElementVisible('#model-fit-table')
-    .waitForElementVisible('#rank-probabilities')
-    ;
-  return browser;
+    .waitForElementVisible('#rank-probabilities');
 }
 
 function beforeEach(browser) {
@@ -158,7 +153,8 @@ function fixedEffectPairwiseModel(browser) {
     title: MODEL_TITLE,
     effectsType: FIXED_EFFECT_MODEL,
     modelMainType: '#pairwise-model-main-type-radio',
-    modelSubType: '#all-pairwise-model-type-radio'
+    modelSubType: '#all-pairwise-model-type-radio',
+    dontWaitForResults: true
   };
 
   analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
@@ -272,7 +268,7 @@ function extendRunLenthModel(browser) {
     .clearValue('#nr-thinning-factor-input')
     .setValue('#nr-thinning-factor-input', 2)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', 10000)
+    .waitForElementVisible('#model-settings-section', MODEL_WAIT_TIME)
     .assert.containsText('#model-label', refinedModelTitle)
     .assert.containsText('#burn-in-iterations', 1000)
     .assert.containsText('#inference-iterations', 2000)

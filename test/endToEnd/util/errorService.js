@@ -1,14 +1,17 @@
 'use strict';
 
-const util = require('./util');
-
 function isErrorBarNotPresent(browser) {
-  util.isElementNotPresent(browser, '/html/body/error-reporting');
+  return browser
+    .useXpath()
+    .assert.not.elementPresent('/html/body/error-reporting')
+    .useCss();
 }
 
 function isErrorBarHidden(browser) {
-  util.isElementHidden(browser, '/html/body/error-reporting');
-  return browser;
+  return browser
+    .useXpath()
+    .assert.not.visible('/html/body/error-reporting')
+    .useCss();
 }
 
 module.exports = {

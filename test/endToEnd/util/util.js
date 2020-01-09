@@ -22,27 +22,6 @@ function delayedClick(browser, clickPath, expectPath, attempts = 50) {
   return browser;
 }
 
-function isElementHidden(browser, path, selectorType = 'xpath') {
-  browser.element(selectorType, path, function(result) {
-    const elementId = getFirstProperty(result.value);
-    browser.elementIdDisplayed(elementId, function(isDisplayedResult) {
-      chai.expect(isDisplayedResult.value).to.be.false;
-    });
-  });
-}
-
-function isElementNotPresent(browser, path) {
-  browser.elements('xpath', path, function(result) {
-    chai.expect(result.value.length).to.equal(0);
-  });
-}
-
-function getFirstProperty(value) {
-  return _.values(value)[0];
-}
-
 module.exports = {
-  delayedClick: delayedClick,
-  isElementHidden: isElementHidden,
-  isElementNotPresent: isElementNotPresent
+  delayedClick: delayedClick
 };

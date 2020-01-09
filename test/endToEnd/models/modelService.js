@@ -12,10 +12,13 @@ function addDefaultModel(browser, modelTitle = 'title') {
 }
 
 function addModel(browser, modelSettings) {
-  return beforeEach(browser, modelSettings)
+  beforeEach(browser, modelSettings)
     .click(modelSettings.modelSubType)
-    .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
+    .click('#submit-add-model-button');
+  if (!modelSettings.dontWaitForResults) {
+    browser.waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
+  }
+  return browser;
 }
 
 function addModelWithPrior(browser, modelSettings) {

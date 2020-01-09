@@ -39,17 +39,18 @@ function goHomeLoginName(browser) {
     .deleteFromList(browser);
 }
 
-function wrongUrlNavigation(browser) {
-  loginService.login(browser)
-    .url('http://localhost:3001/#!/analyses/0/models/1')
-    .useXpath()
-    .waitForElementVisible('/html/body/error-reporting')
-    .useCss();
-}
+// function wrongUrlNavigation(browser) {
+//   loginService.login(browser)
+//     .url('http://localhost:3001/#!/analyses/0/models/1')
+//     .useXpath()
+//     .waitForElementVisible('/html/body/error-reporting')
+//     .useCss();
+// }
+
 module.exports = {
   afterEach: afterEach,
   'Open manual from login page': openManualLoginPage,
   'Open manual while logged in': openManualLoggedIn,
-  'Home navigation from login name': goHomeLoginName,
-  'Navigate to problem that does not exists through URL manipulation': wrongUrlNavigation
+  'Home navigation from login name': goHomeLoginName
+  // 'Navigate to problem that does not exists through URL manipulation': wrongUrlNavigation
 };

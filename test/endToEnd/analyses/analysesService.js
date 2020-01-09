@@ -8,7 +8,8 @@ function addAnalysis(browser, title, outcome, filename) {
     .setValue('#title-input', title)
     .setValue('#outcome-input', outcome)
     .setValue('#problem-file-upload', require('path').resolve(__dirname + filename))
-    .click('#submit-add-analysis-button');
+    .click('#submit-add-analysis-button')
+    .waitForElementVisible('#analysis-header');
   return browser;
 }
 
