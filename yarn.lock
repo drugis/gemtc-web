@@ -922,19 +922,24 @@ angular-animate@~1.6.6:
   resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.6.10.tgz#c520f6d341370e34e0a62060c99bcf47b7d7db8c"
   integrity sha512-RU9ZJbTspq0W0x675H5k1DeSgKbAFfp2aiYoNGdlD+wQNKvwwMR5ho+EkDKkx9zE02a5goe8Z6EhhYPQSff9dA==
 
-angular-cookies@~1.6.6:
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/angular-cookies/-/angular-cookies-1.6.10.tgz#20a014d501242e2edacd21397c0e5480e08dee00"
-  integrity sha512-ADfbqXLhwcaecAiWIaxpl8XWFJgWsrDl/ksSEkYm5dSoXHYlj3HKlAhPbjBv/foYS7pdI0apmSGHWrBPqdjF/g==
+angular-animate@~1.7.9:
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.7.9.tgz#a397f82434c1e7ed5b7a298fa70fc3de989a6785"
+  integrity sha512-fV+AISy/HTzurQH2ngsJg+lLIvfu0ahc1h4AYKauaXVw97rZc2k4iUA1bMstiEyClsdayQX568kjQc1NK+oYhw==
+
+angular-cookies@~1.7.9:
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/angular-cookies/-/angular-cookies-1.7.9.tgz#0f0cd2a9d1c81e5b8d6c6711d41f0909f9d0b8e0"
+  integrity sha512-3eRq/aPrtCZKDWQnc3nW3sFoMbLiHkCkyDF2O9u7VXnqvVsUPaipk5R1ZqahgcSQHQrN/F5IU4T4nrz52qAZmA==
 
 angular-foundation-6@drugis/angular-foundation-6#master:
   version "0.11.16"
   resolved "https://codeload.github.com/drugis/angular-foundation-6/tar.gz/6ddb6a90f17a7263020cea5ef3b9bc14be84a569"
 
-angular-mocks@~1.6.6:
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/angular-mocks/-/angular-mocks-1.6.10.tgz#6a139e43c461d0c9a5a1acebc91e63db16031176"
-  integrity sha512-1865/NmqHNogibNoglY1MGBjx882iu2hI46BBhYDWyz0C4TDM5ER8H8SnYwQKUUG4RXMDsJizszEQ2BEoYKV9w==
+angular-mocks@~1.7.9:
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/angular-mocks/-/angular-mocks-1.7.9.tgz#0a3b7e28b9a493b4e3010ed2b0f69a68e9b4f79b"
+  integrity sha512-LQRqqiV3sZ7NTHBnNmLT0bXtE5e81t97+hkJ56oU0k3dqKv1s6F+nBWRlOVzqHWPGFOiPS8ZJVdrS8DFzHyNIA==
 
 angular-patavi-client@drugis/angular-patavi-client#2.1.1:
   version "2.1.1"
@@ -942,20 +947,20 @@ angular-patavi-client@drugis/angular-patavi-client#2.1.1:
   dependencies:
     angular "~1.6.6"
 
-angular-resource@~1.6.6:
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/angular-resource/-/angular-resource-1.6.10.tgz#28c1834e9fa623467d2f9894716a4e6c7e077459"
-  integrity sha512-jrYXUGPtpv/lTBlYZ6HZefIV6Lb+6e1HUavBPg9TSzW7s4zYRBWzMj6vMg8gZzVjWdH/nYBWfilV0qfnmZSI+A==
+angular-resource@~1.7.9:
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/angular-resource/-/angular-resource-1.7.9.tgz#fa53623fae2c60debe2410d692447dcb0ba02396"
+  integrity sha512-rXXhCE2qT31Pn4Sl+2XL+ntv4zxnA2OzY+clCl8/pOp/s/gIzxpQlEtXipo3QK8Qur3glbIkeF/bJw+gjVAdUw==
 
-angular-sanitize@~1.6.0:
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/angular-sanitize/-/angular-sanitize-1.6.10.tgz#635a362afb2dd040179f17d3a5455962b2c1918f"
-  integrity sha512-01i1Xoq9ykUrsoYQMSB6dWZmPp9Df5hfCqMAGGzJBWZ7L2WY0OtUphdI0YvR8ZF9lAsWtGNtsEFilObjq5nTgQ==
+angular-sanitize@~1.7.9:
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/angular-sanitize/-/angular-sanitize-1.7.9.tgz#6b4d5e826abdabd352b13a7c65c8c74daf6a7b15"
+  integrity sha512-nB/xe7JQWF9nLvhHommAICQ3eWrfRETo0EVGFESi952CDzDa+GAJ/2BFBNw44QqQPxj1Xua/uYKrbLsOGWZdbQ==
 
-angular-touch@~1.6.6:
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/angular-touch/-/angular-touch-1.6.10.tgz#bd51fa48bd2c2c477fea776817535601e6340c2f"
-  integrity sha512-ZblW46aN5s7OOihpXDa0qzrJXdaVGE44jc+a8e1NpOjhCKZDQze+nBHh3xw3toAF1BIfDJIkRstadk4h2R/uLg==
+angular-touch@~1.7.9:
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/angular-touch/-/angular-touch-1.7.9.tgz#a85375407f9f2fb20442cb3ded48937c558d9267"
+  integrity sha512-qNKWUnecfah4mZxG7GM96AemhXyOVcE03kg3SrWExfmyO/hQNPE50Qqyszb+1UE8GO7WiWOYn1Y5wn9CtOInqA==
 
 angular-ui-router@~1.0.5:
   version "1.0.22"
@@ -975,6 +980,11 @@ angular@~1.6.6:
   version "1.6.10"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.6.10.tgz#eed3080a34d29d0f681ff119b18ce294e3f74826"
   integrity sha512-PCZ5/hVdvPQiYyH0VwsPjrErPHRcITnaXxhksceOXgtJeesKHLA7KDu4X/yvcAi+1zdGgGF+9pDxkJvghXI9Wg==
+
+angular@~1.7.9:
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.9.tgz#e52616e8701c17724c3c238cfe4f9446fd570bc4"
+  integrity sha512-5se7ZpcOtu0MBFlzGv5dsM1quQDoDeUTwZrWjGtTNA7O88cD8TEk5IEKCTDa3uECV9XnvKREVUr7du1ACiWGFQ==
 
 ansi-colors@3.2.3:
   version "3.2.3"
@@ -2917,11 +2927,11 @@ error-ex@^1.2.0, error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
-error-reporting@drugis/error-reporting#~1.3.1:
-  version "1.3.1"
-  resolved "https://codeload.github.com/drugis/error-reporting/tar.gz/3caac291ef38c067379d6e4e7399811900be9200"
+error-reporting@drugis/error-reporting#~1.3.3:
+  version "1.3.3"
+  resolved "https://codeload.github.com/drugis/error-reporting/tar.gz/a5e776d6ebf0dd9e1bd8ff697ed0c556a8416502"
   dependencies:
-    angular "~1.6.6"
+    angular "~1.7.9"
 
 es-abstract@^1.12.0, es-abstract@^1.5.1:
   version "1.13.0"

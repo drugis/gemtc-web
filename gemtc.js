@@ -25,8 +25,9 @@ var logger = require('./standalone-app/logger');
 var StartupDiagnostics = require('startup-diagnostics')(db, logger, 'GeMTC');
 
 function rightsCallback(response, next, userId, error, workspace) {
-  if (error) { next(error); }
-  if (workspace.owner !== userId) {
+  if (error) {
+    next(error);
+  } else if (workspace.owner !== userId) {
     response.status(403).send('Insufficient user rights');
   } else {
     next();
