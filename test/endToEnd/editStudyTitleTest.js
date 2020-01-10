@@ -1,10 +1,11 @@
 'use strict';
 
+const constants = require('./util/constants');
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
 
-const TITLE = 'my title';
-const OUTCOME = 'my outcome';
+const TITLE = constants.ANALYSIS_TITLE;
+const OUTCOME = constants.OUTCOME;
 const STUDY_TITLE = 'Rudolph and Feiger, 1999';
 const NEW_TITLE = 'new title';
 

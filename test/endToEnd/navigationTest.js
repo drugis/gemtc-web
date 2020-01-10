@@ -1,11 +1,13 @@
 'use strict';
+
+const constants = require('./util/constants');
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
 const util = require('./util/util');
 
 const TEST_URL = 'http://localhost:3001';
-const TITLE = 'my title';
-const OUTCOME = 'my outcome';
+const TITLE = constants.ANALYSIS_TITLE;
+const OUTCOME = constants.OUTCOME;
 
 function afterEach(browser) {
   browser.end();

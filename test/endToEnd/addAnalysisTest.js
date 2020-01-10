@@ -1,9 +1,10 @@
 'use strict';
 var loginService = require('./util/loginService');
 var analysesService = require('./analyses/analysesService');
+const constants = require('./util/constants');
 
-var TITLE = 'my title';
-var OUTCOME = 'my outcome';
+var TITLE = constants.ANALYSIS_TITLE;
+var OUTCOME = constants.OUTCOME;
 
 module.exports = {
   beforeEach: function(browser) {

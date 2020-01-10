@@ -1,12 +1,13 @@
 'use strict';
 
+const constants = require('./util/constants');
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
 const modelService = require('./models/modelService.js');
 
-const TITLE = 'my title';
-const OUTCOME = 'my outcome';
-const MODEL_TITLE = 'model title';
+const TITLE = constants.ANALYSIS_TITLE;
+const OUTCOME = constants.OUTCOME;
+const MODEL_TITLE = constants.MODEL_TITLE;
 const FIXED_EFFECT_MODEL = '#fixed-effect-radio';
 const RANDOM_EFFECT_MODEL = '#random-effect-radio';
 const MODEL_WAIT_TIME = 15000;
@@ -21,7 +22,7 @@ const networkModelSettings = {
 function verifyPairwiseModelContents(browser, modelIndex) {
   browser.click('#model-title-' + modelIndex)
     .waitForElementVisible('#model-settings-section', MODEL_WAIT_TIME);
-  return verifyCommonContent(browser, 'pairwise', 'fixed')
+  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME, 'pairwise', 'fixed')
     .assert.containsText('#model-pairwise-comparison', 'Fluoxetine — ')
     .waitForElementVisible('#relative-effects-table')
     .waitForElementVisible('#study-effect-forest-plot')
@@ -37,21 +38,8 @@ function verifyPairwiseModelContents(browser, modelIndex) {
     .waitForElementVisible('#analysis-header');
 }
 
-function verifyNetworkModelContents(browser) {
-  return verifyCommonContent(browser)
-    .waitForElementVisible('#convergence-diagnostics-table')
-    .waitForElementVisible('#random-effects-standard-deviation')
-    .waitForElementVisible('#absolute-treatment-effects')
-    .waitForElementVisible('#study-effect-funnel-plot')
-    .waitForElementVisible('#relative-effects-table')
-    .waitForElementVisible('#relative-effects-plots')
-    .waitForElementVisible('#rank-probabilities-plot')
-    .waitForElementVisible('#rank-probabilities-table')
-    .waitForElementVisible('#absolute-residual-deviance-table');
-}
-
 function verifyMetaRegressionModelContents(browser) {
-  return verifyCommonContent(browser, 'regression')
+  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME, 'regression')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#covariate-effect-plot')
     .waitForElementVisible('#meta-regression-table')
@@ -64,7 +52,7 @@ function verifyMetaRegressionModelContents(browser) {
 }
 
 function verifyFixedConsistencyModelContents(browser) {
-  return verifyCommonContent(browser, 'network', 'fixed')
+  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME, 'network', 'fixed')
     .assert.containsText('#model-likelihood', 'binom / logit')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#relative-effects-table')
@@ -76,7 +64,7 @@ function verifyFixedConsistencyModelContents(browser) {
 }
 
 function verifyLeaveOneOutModelContents(browser) {
-  return verifyCommonContent(browser)
+  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME)
     .assert.containsText('#model-sub-type', 'leave one out')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#random-effects-standard-deviation')
@@ -88,7 +76,7 @@ function verifyLeaveOneOutModelContents(browser) {
 }
 
 function verifyDesignAdjustedModelContents(browser) {
-  return verifyCommonContent(browser)
+  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME)
     .assert.containsText('#model-likelihood', 'normal / identity')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#random-effects-standard-deviation')
@@ -99,18 +87,6 @@ function verifyDesignAdjustedModelContents(browser) {
     .waitForElementVisible('#rank-probabilities-plot')
     .waitForElementVisible('#rank-probabilities-table')
     .waitForElementVisible('#absolute-residual-deviance-table');
-}
-
-function verifyCommonContent(browser, modelType = 'network', modelEffectsType = 'random') {
-  return browser
-    .assert.containsText('#model-label', MODEL_TITLE)
-    .assert.containsText('#model-view-analysis', TITLE)
-    .assert.containsText('#model-view-outcome', OUTCOME)
-    .assert.containsText('#model-type', modelType)
-    .assert.containsText('#model-effects-type', modelEffectsType)
-    .waitForElementVisible('#residual-deviance-plot')
-    .waitForElementVisible('#model-fit-table')
-    .waitForElementVisible('#rank-probabilities');
 }
 
 function beforeEach(browser) {
@@ -134,7 +110,7 @@ function fixedEffectSpecificPairwiseModel(browser) {
 
   analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
   modelService.addModel(browser, modelSettings);
-  verifyCommonContent(browser, 'pairwise', 'fixed')
+  modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME, 'pairwise', 'fixed')
     .assert.containsText('#model-pairwise-comparison', pairwiseComparison)
     .assert.containsText('#diagnostic-label-0', 'd.2.3 (Fluoxetine, Paroxetine)')
     .waitForElementVisible('#relative-effects-table')
@@ -168,14 +144,14 @@ function fixedEffectPairwiseModel(browser) {
 function relativeNetworkModel(browser) {
   analysesService.addAnalysis(browser, TITLE, OUTCOME, '/parkinson-shared.csv');
   modelService.addModel(browser, networkModelSettings);
-  verifyNetworkModelContents(browser)
+  modelService.verifyNetworkModelContents(browser)
     .waitForElementVisible('#contrast-residual-deviance-table');
 }
 
 function netWorkModel(browser) {
   analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
   modelService.addModel(browser, networkModelSettings);
-  verifyNetworkModelContents(browser);
+  modelService.verifyNetworkModelContents(browser);
 }
 
 function nodesplitSpecificModel(browser) {
@@ -242,7 +218,7 @@ function designAdjustedConsistencyModel(browser) {
 function nonDefaultPriorModel(browser) {
   analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
   modelService.addModelWithPrior(browser, networkModelSettings);
-  verifyNetworkModelContents(browser);
+  modelService.verifyNetworkModelContents(browser);
 }
 
 function nonDefaultRunLengthModel(browser) {

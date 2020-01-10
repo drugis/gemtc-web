@@ -1,13 +1,14 @@
 'use strict';
 
+const constants = require('./util/constants');
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
 const modelService = require('./models/modelService');
 const errorService = require('./util/errorService');
 
 const TEST_URL = 'http://localhost:3001';
-const TITLE = 'my title';
-const OUTCOME = 'my outcome';
+const TITLE = constants.ANALYSIS_TITLE;
+const OUTCOME = constants.OUTCOME;
 
 function addAnalysisAndModel(browser) {
   loginService.login(browser)

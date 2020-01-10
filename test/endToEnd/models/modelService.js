@@ -1,6 +1,6 @@
 'use strict';
 
-const WAIT_TIME_OUT = 15000;
+const constants = require('../util/constants');
 
 function addDefaultModel(browser, modelTitle = 'title') {
   return browser
@@ -8,7 +8,7 @@ function addDefaultModel(browser, modelTitle = 'title') {
     .click('#add-model-button')
     .setValue('#title-input', modelTitle)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
+    .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT);
 }
 
 function addModel(browser, modelSettings) {
@@ -16,7 +16,7 @@ function addModel(browser, modelSettings) {
     .click(modelSettings.modelSubType)
     .click('#submit-add-model-button');
   if (!modelSettings.dontWaitForResults) {
-    browser.waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
+    browser.waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT);
   }
   return browser;
 }
@@ -28,7 +28,7 @@ function addModelWithPrior(browser, modelSettings) {
     .setValue('#heterogeneity-log-n-parameter1-input', 3)
     .setValue('#heterogeneity-log-n-parameter2-input', 0.2)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
+    .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT);
 }
 
 function addModelWithRunLengthParameters(browser, modelSettings) {
@@ -41,7 +41,7 @@ function addModelWithRunLengthParameters(browser, modelSettings) {
     .clearValue('#nr-thinning-factor-input')
     .setValue('#nr-thinning-factor-input', 2)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
+    .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT);
 }
 
 function addModelWithLeaveOneOut(browser, modelSettings) {
@@ -49,14 +49,14 @@ function addModelWithLeaveOneOut(browser, modelSettings) {
     .click('#leave-one-out-checkbox')
     .click('#leave-one-out-specific-type-radio')
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
+    .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT);
 }
 
 function addDesignAdjustedModel(browser, modelSettings) {
   return beforeEach(browser, modelSettings)
     .click('#adjustment-checkbox')
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', WAIT_TIME_OUT);
+    .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT);
 }
 
 function beforeEach(browser, modelSettings) {
@@ -68,11 +68,38 @@ function beforeEach(browser, modelSettings) {
     .click(modelSettings.modelMainType);
 }
 
+function verifyCommonContent(browser, modelTitle = constants.MODEL_TITLE, analysisTitle = constants.ANALYSIS_TITLE, outcome = constants.OUTCOME, modelType = 'network', modelEffectsType = 'random') {
+  return browser
+    .assert.containsText('#model-label', modelTitle)
+    .assert.containsText('#model-view-analysis', analysisTitle)
+    .assert.containsText('#model-view-outcome', outcome)
+    .assert.containsText('#model-type', modelType)
+    .assert.containsText('#model-effects-type', modelEffectsType)
+    .waitForElementVisible('#residual-deviance-plot')
+    .waitForElementVisible('#model-fit-table')
+    .waitForElementVisible('#rank-probabilities');
+}
+
+function verifyNetworkModelContents(browser, modelTitle = constants.MODEL_TITLE, analysisTitle = constants.ANALYSIS_TITLE, outcome = constants.OUTCOME) {
+  return verifyCommonContent(browser, modelTitle, analysisTitle, outcome)
+    .waitForElementVisible('#convergence-diagnostics-table')
+    .waitForElementVisible('#random-effects-standard-deviation')
+    .waitForElementVisible('#absolute-treatment-effects')
+    .waitForElementVisible('#study-effect-funnel-plot')
+    .waitForElementVisible('#relative-effects-table')
+    .waitForElementVisible('#relative-effects-plots')
+    .waitForElementVisible('#rank-probabilities-plot')
+    .waitForElementVisible('#rank-probabilities-table')
+    .waitForElementVisible('#absolute-residual-deviance-table');
+}
+
 module.exports = {
   addDefaultModel: addDefaultModel,
   addModel: addModel,
   addModelWithPrior: addModelWithPrior,
   addModelWithRunLengthParameters: addModelWithRunLengthParameters,
   addModelWithLeaveOneOut: addModelWithLeaveOneOut,
-  addDesignAdjustedModel: addDesignAdjustedModel
+  addDesignAdjustedModel: addDesignAdjustedModel,
+  verifyCommonContent: verifyCommonContent,
+  verifyNetworkModelContents: verifyNetworkModelContents
 };

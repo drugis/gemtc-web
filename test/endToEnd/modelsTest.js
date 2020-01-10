@@ -1,16 +1,17 @@
 'use strict';
 
+const constants = require('./util/constants');
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
 const modelService = require('./models/modelService.js');
 
-const MODEL_TITLE = 'title';
+const MODEL_TITLE = constants.MODEL_TITLE;
 
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser)
     .waitForElementVisible('#analyses-header');
-  analysesService.addAnalysis(browser, 'my title', 'my outcome', '/example.json');
+  analysesService.addAnalysis(browser, constants.ANALYSIS_TITLE, constants.OUTCOME, '/example.json');
   modelService.addDefaultModel(browser)
     .click('#breadcrumbs-analysis')
     .waitForElementVisible('#analysis-header');
