@@ -1,5 +1,10 @@
 'use strict';
 
+module.exports = {
+  isErrorBarNotPresent: isErrorBarNotPresent,
+  isErrorBarHidden: isErrorBarHidden
+};
+
 function isErrorBarNotPresent(browser) {
   return browser
     .useXpath()
@@ -13,8 +18,3 @@ function isErrorBarHidden(browser) {
     .assert.not.visible('/html/body/error-reporting')
     .useCss();
 }
-
-module.exports = {
-  isErrorBarNotPresent: isErrorBarNotPresent,
-  isErrorBarHidden: isErrorBarHidden
-};

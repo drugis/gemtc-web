@@ -1,6 +1,12 @@
 'use strict';
 
-const loginService = require('./util/loginService.js');
+module.exports = {
+  'Login success': loginSucces,
+  'Login fail': loginFail
+};
+
+const constants = require('./util/constants');
+const loginService = require('./util/loginService');
 
 function loginSucces(browser) {
   loginService.login(browser)
@@ -11,7 +17,7 @@ function loginSucces(browser) {
 
 function loginFail(browser) {
   browser
-    .url(loginService.TEST_URL)
+    .url(constants.TEST_URL)
     .waitForElementVisible('#signinButton', 5000)
     .setValue('#username', 'wrong username')
     .setValue('#password', ' wrong password')
@@ -19,8 +25,3 @@ function loginFail(browser) {
     .waitForElementVisible('#loginWarning')
     .end();
 }
-
-module.exports = {
-  'Login success': loginSucces,
-  'Login fail': loginFail
-};

@@ -1,19 +1,26 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Login page': loginPage,
+  'Analyses view': analysesView,
+  'The models view': modelsView,
+  'The model titles view': modeltitlesView,
+  'Refine model view': RefineModelView,
+  'Nodesplit overview': NodesplitOverview
+};
+
 const constants = require('./util/constants');
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
 const modelService = require('./models/modelService');
 const errorService = require('./util/errorService');
 
-const TEST_URL = 'http://localhost:3001';
-const TITLE = constants.ANALYSIS_TITLE;
-const OUTCOME = constants.OUTCOME;
-
 function addAnalysisAndModel(browser) {
   loginService.login(browser)
     .waitForElementVisible('#analyses-header');
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addDefaultModel(browser);
   return browser;
 }
@@ -28,7 +35,7 @@ function afterEach(browser) {
 
 function loginPage(browser) {
   browser
-    .url(TEST_URL)
+    .url(constants.TEST_URL)
     .waitForElementVisible('#signinButton')
     .getTitle(function(title) {
       browser.assert.equal(title, 'gemtc.drugis.org');
@@ -48,9 +55,9 @@ function analysesView(browser) {
 function modelsView(browser) {
   loginService.login(browser)
     .waitForElementVisible('#analyses-header');
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json')
+  analysesService.addDefaultAnalysis(browser)
     .getTitle(function(title) {
-      browser.assert.equal(title, TITLE);
+      browser.assert.equal(title, constants.ANALYSIS_TITLE);
       analysesService.deleteFromList(browser);
     });
 }
@@ -58,7 +65,7 @@ function modelsView(browser) {
 function modeltitlesView(browser) {
   addAnalysisAndModel(browser)
     .getTitle(function(title) {
-      browser.assert.equal(title, 'title');
+      browser.assert.equal(title, constants.MODEL_TITLE);
       analysesService.deleteFromList(browser);
     });
 }
@@ -76,18 +83,7 @@ function NodesplitOverview(browser) {
   addAnalysisAndModel(browser)
     .click('#node-split-overview-link')
     .getTitle(function(title) {
-      browser.assert.equal(title, 'title');
+      browser.assert.equal(title, constants.MODEL_TITLE);
       analysesService.deleteFromList(browser);
     });
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Login page': loginPage,
-  'Analyses view': analysesView,
-  'The models view': modelsView,
-  'The model titles view': modeltitlesView,
-  'Refine model view': RefineModelView,
-  'Nodesplit overview': NodesplitOverview
-};

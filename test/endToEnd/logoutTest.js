@@ -1,6 +1,10 @@
 'use strict';
 
-const loginService = require('./util/loginService.js');
+module.exports = {
+  'Logout': logout,
+};
+
+const loginService = require('./util/loginService');
 
 function logout(browser) {
   loginService.login(browser)
@@ -11,6 +15,3 @@ function logout(browser) {
     .waitForElementVisible('#signinButton')
     .end();
 }
-module.exports = {
-  'Logout': logout,
-};

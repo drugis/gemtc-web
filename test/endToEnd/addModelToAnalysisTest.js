@@ -1,19 +1,32 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Create fixed effect pairwise specific pair model': fixedEffectSpecificPairwiseModel,
+  'Create fixed effect pairwise model': fixedEffectPairwiseModel,
+  'Create new network model using relative data': relativeNetworkModel,
+  'Create new network model': netWorkModel,
+  'Create new nodesplit specific model': nodesplitSpecificModel,
+  'Create new meta regression model': metaRegressionModel,
+  'Create new fixed consistency model': fixedConsistencyModel,
+  'Create consistency model leaving one specific study out': leaveSpecificStudyOutConsistencyModel,
+  'Create design adjusted consistency model': designAdjustedConsistencyModel,
+  'Create model with non-default prior': nonDefaultPriorModel,
+  'Create model with non-default run length parameters': nonDefaultRunLengthModel,
+  'Extend run length of an existing model': extendRunLenthModel
+};
+
 const constants = require('./util/constants');
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
-const modelService = require('./models/modelService.js');
+const modelService = require('./models/modelService');
 
-const TITLE = constants.ANALYSIS_TITLE;
-const OUTCOME = constants.OUTCOME;
-const MODEL_TITLE = constants.MODEL_TITLE;
 const FIXED_EFFECT_MODEL = '#fixed-effect-radio';
 const RANDOM_EFFECT_MODEL = '#random-effect-radio';
-const MODEL_WAIT_TIME = 15000;
 
 const networkModelSettings = {
-  title: MODEL_TITLE,
+  title: constants.MODEL_TITLE,
   effectsType: RANDOM_EFFECT_MODEL,
   modelMainType: '#network-model-type-radio',
   modelSubType: '#network-model-type-radio'
@@ -21,8 +34,8 @@ const networkModelSettings = {
 
 function verifyPairwiseModelContents(browser, modelIndex) {
   browser.click('#model-title-' + modelIndex)
-    .waitForElementVisible('#model-settings-section', MODEL_WAIT_TIME);
-  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME, 'pairwise', 'fixed')
+    .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT);
+  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME, 'pairwise', 'fixed')
     .assert.containsText('#model-pairwise-comparison', 'Fluoxetine — ')
     .waitForElementVisible('#relative-effects-table')
     .waitForElementVisible('#study-effect-forest-plot')
@@ -39,7 +52,7 @@ function verifyPairwiseModelContents(browser, modelIndex) {
 }
 
 function verifyMetaRegressionModelContents(browser) {
-  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME, 'regression')
+  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME, 'regression')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#covariate-effect-plot')
     .waitForElementVisible('#meta-regression-table')
@@ -52,7 +65,7 @@ function verifyMetaRegressionModelContents(browser) {
 }
 
 function verifyFixedConsistencyModelContents(browser) {
-  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME, 'network', 'fixed')
+  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME, 'network', 'fixed')
     .assert.containsText('#model-likelihood', 'binom / logit')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#relative-effects-table')
@@ -64,7 +77,7 @@ function verifyFixedConsistencyModelContents(browser) {
 }
 
 function verifyLeaveOneOutModelContents(browser) {
-  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME)
+  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME)
     .assert.containsText('#model-sub-type', 'leave one out')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#random-effects-standard-deviation')
@@ -76,7 +89,7 @@ function verifyLeaveOneOutModelContents(browser) {
 }
 
 function verifyDesignAdjustedModelContents(browser) {
-  return modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME)
+  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME)
     .assert.containsText('#model-likelihood', 'normal / identity')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#random-effects-standard-deviation')
@@ -101,16 +114,16 @@ function afterEach(browser) {
 
 function fixedEffectSpecificPairwiseModel(browser) {
   const modelSettings = {
-    title: MODEL_TITLE,
+    title: constants.MODEL_TITLE,
     effectsType: FIXED_EFFECT_MODEL,
     modelMainType: '#pairwise-model-main-type-radio',
     modelSubType: '#pairwise-specific-type-radio'
   };
   const pairwiseComparison = 'Fluoxetine — Paroxetine';
 
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addModel(browser, modelSettings);
-  modelService.verifyCommonContent(browser, MODEL_TITLE, TITLE, OUTCOME, 'pairwise', 'fixed')
+  modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME, 'pairwise', 'fixed')
     .assert.containsText('#model-pairwise-comparison', pairwiseComparison)
     .assert.containsText('#diagnostic-label-0', 'd.2.3 (Fluoxetine, Paroxetine)')
     .waitForElementVisible('#relative-effects-table')
@@ -126,14 +139,14 @@ function fixedEffectSpecificPairwiseModel(browser) {
 
 function fixedEffectPairwiseModel(browser) {
   const modelSettings = {
-    title: MODEL_TITLE,
+    title: constants.MODEL_TITLE,
     effectsType: FIXED_EFFECT_MODEL,
     modelMainType: '#pairwise-model-main-type-radio',
     modelSubType: '#all-pairwise-model-type-radio',
     dontWaitForResults: true
   };
 
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addModel(browser, modelSettings)
     .waitForElementVisible('#model-title-0')
     .waitForElementVisible('#model-title-1');
@@ -142,30 +155,30 @@ function fixedEffectPairwiseModel(browser) {
 }
 
 function relativeNetworkModel(browser) {
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/parkinson-shared.csv');
+  analysesService.addAnalysis(browser, '/parkinson-shared.csv');
   modelService.addModel(browser, networkModelSettings);
   modelService.verifyNetworkModelContents(browser)
     .waitForElementVisible('#contrast-residual-deviance-table');
 }
 
 function netWorkModel(browser) {
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addModel(browser, networkModelSettings);
   modelService.verifyNetworkModelContents(browser);
 }
 
 function nodesplitSpecificModel(browser) {
   const modelSettings = {
-    title: MODEL_TITLE,
+    title: constants.MODEL_TITLE,
     effectsType: RANDOM_EFFECT_MODEL,
     modelMainType: '#node-split-model-main-type-radio',
     modelSubType: '#node-split-specific-type-radio'
   };
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addModel(browser, modelSettings)
-    .assert.containsText('#model-label', MODEL_TITLE)
-    .assert.containsText('#model-view-analysis', TITLE)
-    .assert.containsText('#model-view-outcome', OUTCOME)
+    .assert.containsText('#model-label', constants.MODEL_TITLE)
+    .assert.containsText('#model-view-analysis', constants.ANALYSIS_TITLE)
+    .assert.containsText('#model-view-outcome', constants.OUTCOME)
     .assert.containsText('#model-type', 'node-split')
     .assert.containsText('#model-node-split', 'Fluoxetine — Paroxetine')
     .assert.containsText('#model-effects-type', 'random')
@@ -180,49 +193,49 @@ function nodesplitSpecificModel(browser) {
 
 function metaRegressionModel(browser) {
   const modelSettings = {
-    title: MODEL_TITLE,
+    title: constants.MODEL_TITLE,
     effectsType: RANDOM_EFFECT_MODEL,
     modelMainType: '#meta-regression-model-type-radio',
     modelSubType: '#meta-regression-model-type-radio'
   };
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/parkinson-rel.csv');
+  analysesService.addAnalysis(browser, '/parkinson-rel.csv');
   modelService.addModel(browser, modelSettings);
   verifyMetaRegressionModelContents(browser);
 }
 
 function fixedConsistencyModel(browser) {
   const modelSettings = {
-    title: MODEL_TITLE,
+    title: constants.MODEL_TITLE,
     effectsType: FIXED_EFFECT_MODEL,
     modelMainType: '#network-model-type-radio',
     modelSubType: '#network-model-type-radio'
   };
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addModel(browser, modelSettings);
   verifyFixedConsistencyModelContents(browser);
 }
 
 function leaveSpecificStudyOutConsistencyModel(browser) {
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addModelWithLeaveOneOut(browser, networkModelSettings);
 
   verifyLeaveOneOutModelContents(browser);
 }
 
 function designAdjustedConsistencyModel(browser) {
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example-with-covariate.json');
+  analysesService.addAnalysis(browser, '/example-with-covariate.json');
   modelService.addDesignAdjustedModel(browser, networkModelSettings);
   verifyDesignAdjustedModelContents(browser);
 }
 
 function nonDefaultPriorModel(browser) {
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addModelWithPrior(browser, networkModelSettings);
   modelService.verifyNetworkModelContents(browser);
 }
 
 function nonDefaultRunLengthModel(browser) {
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addModelWithRunLengthParameters(browser, networkModelSettings);
   browser
     .assert.containsText('#burn-in-iterations', 1000)
@@ -232,7 +245,7 @@ function nonDefaultRunLengthModel(browser) {
 
 function extendRunLenthModel(browser) {
   const refinedModelTitle = 'refined model';
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addModelWithRunLengthParameters(browser, networkModelSettings);
   browser
     .click('#refine-model-button')
@@ -244,27 +257,9 @@ function extendRunLenthModel(browser) {
     .clearValue('#nr-thinning-factor-input')
     .setValue('#nr-thinning-factor-input', 2)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', MODEL_WAIT_TIME)
+    .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT)
     .assert.containsText('#model-label', refinedModelTitle)
     .assert.containsText('#burn-in-iterations', 1000)
     .assert.containsText('#inference-iterations', 2000)
-    .assert.containsText('#thinning-factor', 2)
-    ;
+    .assert.containsText('#thinning-factor', 2);
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Create fixed effect pairwise specific pair model': fixedEffectSpecificPairwiseModel,
-  'Create fixed effect pairwise model': fixedEffectPairwiseModel,
-  'Create new network model using relative data': relativeNetworkModel,
-  'Create new network model': netWorkModel,
-  'Create new nodesplit specific model': nodesplitSpecificModel,
-  'Create new meta regression model': metaRegressionModel,
-  'Create new fixed consistency model': fixedConsistencyModel,
-  'Create consistency model leaving one specific study out': leaveSpecificStudyOutConsistencyModel,
-  'Create design adjusted consistency model': designAdjustedConsistencyModel,
-  'Create model with non-default prior': nonDefaultPriorModel,
-  'Create model with non-default run length parameters': nonDefaultRunLengthModel,
-  'Extend run length of an existing model': extendRunLenthModel
-};

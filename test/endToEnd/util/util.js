@@ -1,6 +1,8 @@
 'use strict';
-const _ = require('lodash');
-const chai = require('chai');
+
+module.exports = {
+  delayedClick: delayedClick
+};
 
 const TIMEOUT = 10;
 
@@ -21,7 +23,3 @@ function delayedClick(browser, clickPath, expectPath, attempts = 50) {
   }
   return browser;
 }
-
-module.exports = {
-  delayedClick: delayedClick
-};

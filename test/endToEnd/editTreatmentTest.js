@@ -1,11 +1,17 @@
 'use strict';
 
-const constants = require('./util/constants');
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Edit treatment title': editTitle,
+  'Empty treatment title error': emptyTitle,
+  'Duplicate treatment title error': duplicateTitle,
+  'Cancel editing treatment title': cancelEdit
+};
+
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
 
-const TITLE = constants.ANALYSIS_TITLE;
-const OUTCOME = constants.OUTCOME;
 const TREATMENT_TITLE = 'Venlafaxine';
 const NEW_TITLE = 'new title';
 
@@ -13,7 +19,7 @@ function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser)
     .waitForElementVisible('#analyses-header');
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json')
+  analysesService.addDefaultAnalysis(browser)
     .assert.containsText('#treatment-title-0', TREATMENT_TITLE)
     .click('#edit-treatment-title-0')
     .waitForElementVisible('#treatment-title-input')
@@ -57,12 +63,3 @@ function cancelEdit(browser) {
     .click('#close-modal-button')
     .assert.containsText('#treatment-title-0', TREATMENT_TITLE);
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Edit treatment title': editTitle,
-  'Empty treatment title error': emptyTitle,
-  'Duplicate treatment title error': duplicateTitle,
-  'Cancel editing treatment title': cancelEdit
-};

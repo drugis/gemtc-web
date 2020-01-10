@@ -1,11 +1,17 @@
 'use strict';
 
-const constants = require('./util/constants');
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Edit study title': editStudyTitle,
+  'Empty study title error': emptyStudyTitle,
+  'Duplicate study title error': duplicateStudyTitle,
+  'Cancel editing study title': cancelEditStudyTitle
+};
+
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
 
-const TITLE = constants.ANALYSIS_TITLE;
-const OUTCOME = constants.OUTCOME;
 const STUDY_TITLE = 'Rudolph and Feiger, 1999';
 const NEW_TITLE = 'new title';
 
@@ -13,7 +19,7 @@ function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser)
     .waitForElementVisible('#analyses-header');
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json')
+  analysesService.addDefaultAnalysis(browser)
     .assert.containsText('#study-title-0', STUDY_TITLE)
     .click('#edit-study-title-0')
     .waitForElementVisible('#study-title-input')
@@ -55,12 +61,3 @@ function cancelEditStudyTitle(browser) {
     .click('#close-modal-button')
     .assert.containsText('#study-title-0', STUDY_TITLE);
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Edit study title': editStudyTitle,
-  'Empty study title error': emptyStudyTitle,
-  'Duplicate study title error': duplicateStudyTitle,
-  'Cancel editing study title': cancelEditStudyTitle
-};

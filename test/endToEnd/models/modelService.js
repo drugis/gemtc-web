@@ -1,5 +1,16 @@
 'use strict';
 
+module.exports = {
+  addDefaultModel: addDefaultModel,
+  addModel: addModel,
+  addModelWithPrior: addModelWithPrior,
+  addModelWithRunLengthParameters: addModelWithRunLengthParameters,
+  addModelWithLeaveOneOut: addModelWithLeaveOneOut,
+  addDesignAdjustedModel: addDesignAdjustedModel,
+  verifyCommonContent: verifyCommonContent,
+  verifyNetworkModelContents: verifyNetworkModelContents
+};
+
 const constants = require('../util/constants');
 
 function addDefaultModel(browser, modelTitle = 'title') {
@@ -92,14 +103,3 @@ function verifyNetworkModelContents(browser, modelTitle = constants.MODEL_TITLE,
     .waitForElementVisible('#rank-probabilities-table')
     .waitForElementVisible('#absolute-residual-deviance-table');
 }
-
-module.exports = {
-  addDefaultModel: addDefaultModel,
-  addModel: addModel,
-  addModelWithPrior: addModelWithPrior,
-  addModelWithRunLengthParameters: addModelWithRunLengthParameters,
-  addModelWithLeaveOneOut: addModelWithLeaveOneOut,
-  addDesignAdjustedModel: addDesignAdjustedModel,
-  verifyCommonContent: verifyCommonContent,
-  verifyNetworkModelContents: verifyNetworkModelContents
-};

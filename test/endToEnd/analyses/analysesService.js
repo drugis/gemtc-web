@@ -1,6 +1,14 @@
 'use strict';
 
-function addAnalysis(browser, title, outcome, filename) {
+module.exports = {
+  addAnalysis: addAnalysis,
+  addDefaultAnalysis: addDefaultAnalysis,
+  deleteFromList: deleteFromList
+};
+
+const constants = require('../util/constants');
+
+function addAnalysis(browser, filename, title = constants.ANALYSIS_TITLE, outcome = constants.OUTCOME) {
   browser
     .waitForElementVisible('#add-analysis-button')
     .click('#add-analysis-button')
@@ -13,6 +21,10 @@ function addAnalysis(browser, title, outcome, filename) {
   return browser;
 }
 
+function addDefaultAnalysis(browser) {
+  return addAnalysis(browser, constants.DEFAULT_ANALYSIS);
+}
+
 function deleteFromList(browser, index = 0) {
   browser
     .click('#logo')
@@ -21,8 +33,3 @@ function deleteFromList(browser, index = 0) {
     .waitForElementVisible('#empty-analyses-message');
   return browser;
 }
-
-module.exports = {
-  addAnalysis: addAnalysis,
-  deleteFromList: deleteFromList
-};

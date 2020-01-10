@@ -1,13 +1,21 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Create node split model from a consistency model': createNodeSplit,
+  'Check missing title when creating nodesplit model from a consistency model': missingtTitleAndCancel,
+  'Create consistency model from a node split model': createConsistencyModel
+};
+
 const constants = require('./util/constants');
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
-const modelService = require('./models/modelService.js');
+const modelService = require('./models/modelService');
 
 const NODE_SPLIT_MODEL_TITLE = 'Nodesplit model (Fluoxetine - Paroxetine)';
 
-function checkNodeSplitOverviewForConsistnecyModel(browser) {
+function checkNodeSplitOverviewForConsistencyModel(browser) {
   modelService.addDefaultModel(browser)
     .click('#node-split-overview-link')
     .waitForElementVisible('#nodesplit-overview-header');
@@ -29,7 +37,7 @@ function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser)
     .waitForElementVisible('#analyses-header');
-  analysesService.addAnalysis(browser, constants.ANALYSIS_TITLE, constants.OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
 }
 
 function afterEach(browser) {
@@ -39,7 +47,7 @@ function afterEach(browser) {
 }
 
 function createNodeSplit(browser) {
-  checkNodeSplitOverviewForConsistnecyModel(browser);
+  checkNodeSplitOverviewForConsistencyModel(browser);
   browser
     .click('#confirm-create-model-button')
     .assert.containsText('#model-title-0', NODE_SPLIT_MODEL_TITLE)
@@ -55,7 +63,7 @@ function createNodeSplit(browser) {
 }
 
 function missingtTitleAndCancel(browser) {
-  checkNodeSplitOverviewForConsistnecyModel(browser);
+  checkNodeSplitOverviewForConsistencyModel(browser);
   browser.
     clearValue('#title-input')
     .waitForElementVisible('#missing-title-warning')
@@ -83,11 +91,3 @@ function createConsistencyModel(browser) {
     .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT);
   modelService.verifyNetworkModelContents(browser, networkModelTitle);
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Create node split model from a consistency model': createNodeSplit,
-  'Check missing title when createing nodesplit model from a consistency model': missingtTitleAndCancel,
-  'Create consistency model from a node split model': createConsistencyModel
-};

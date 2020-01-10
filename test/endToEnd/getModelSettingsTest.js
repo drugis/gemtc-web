@@ -1,15 +1,21 @@
 'use strict';
 
-const constants = require('./util/constants');
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Get model data': getModelData,
+  'Get R script': getRScript
+};
+
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
-const modelService = require('./models/modelService.js');
+const modelService = require('./models/modelService');
 
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser)
     .waitForElementVisible('#analyses-header');
-  analysesService.addAnalysis(browser, constants.ANALYSIS_TITLE, constants.OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addDefaultModel(browser);
 }
 
@@ -40,9 +46,3 @@ function getRScript(browser) {
         .switchWindow(result.value[0]);
     });
 }
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Get model data': getModelData,
-  'Get R script': getRScript
-};

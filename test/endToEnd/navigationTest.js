@@ -1,13 +1,17 @@
 'use strict';
 
+module.exports = {
+  afterEach: afterEach,
+  'Open manual from login page': openManualLoginPage,
+  'Open manual while logged in': openManualLoggedIn,
+  'Home navigation from login name': goHomeLoginName,
+  'Navigate to problem that does not exists through URL manipulation': wrongUrlNavigation
+};
+
 const constants = require('./util/constants');
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
 const util = require('./util/util');
-
-const TEST_URL = 'http://localhost:3001';
-const TITLE = constants.ANALYSIS_TITLE;
-const OUTCOME = constants.OUTCOME;
 
 function afterEach(browser) {
   browser.end();
@@ -15,7 +19,7 @@ function afterEach(browser) {
 
 function openManualLoginPage(browser) {
   browser
-    .url(TEST_URL)
+    .url(constants.TEST_URL)
     .waitForElementVisible('#manual-link')
     .click('#manual-link')
     .windowHandles(function(result) {
@@ -35,7 +39,7 @@ function openManualLoggedIn(browser) {
 
 function goHomeLoginName(browser) {
   loginService.login(browser);
-  analysesService.addAnalysis(browser, TITLE, OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   util.delayedClick(browser, '#user-image-link', '#add-analysis-button');
   analysesService
     .deleteFromList(browser);
@@ -43,16 +47,8 @@ function goHomeLoginName(browser) {
 
 function wrongUrlNavigation(browser) {
   loginService.login(browser)
-    .url('http://localhost:3001/#!/analyses/0/models/1')
+    .url(constants.TEST_URL + '/#!/analyses/0/models/1')
     .useXpath()
     .waitForElementVisible('/html/body/error-reporting')
     .useCss();
 }
-
-module.exports = {
-  afterEach: afterEach,
-  'Open manual from login page': openManualLoginPage,
-  'Open manual while logged in': openManualLoggedIn,
-  'Home navigation from login name': goHomeLoginName,
-  'Navigate to problem that does not exists through URL manipulation': wrongUrlNavigation
-};

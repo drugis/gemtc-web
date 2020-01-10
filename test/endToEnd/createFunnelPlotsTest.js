@@ -1,15 +1,21 @@
 'use strict';
 
-const constants = require('./util/constants');
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Add comparison-adjusted funnel plots': addFunnelPlot,
+  'Cancel adding comparison-adjusted funnel plots': cancelFunnelPlot
+};
+
 const loginService = require('./util/loginService');
 const analysesService = require('./analyses/analysesService');
-const modelService = require('./models/modelService.js');
+const modelService = require('./models/modelService');
 
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser)
     .waitForElementVisible('#analyses-header');
-  analysesService.addAnalysis(browser, constants.ANALYSIS_TITLE, constants.OUTCOME, '/example.json');
+  analysesService.addDefaultAnalysis(browser);
   modelService.addDefaultModel(browser);
 }
 
@@ -41,11 +47,4 @@ function cancelFunnelPlot(browser) {
     .click('#close-modal-button')
     .waitForElementVisible('#no-funnel-plots-message')
     ;
-}
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Add comparison-adjusted funnel plots': addFunnelPlot,
-  'Cancel adding comparison-adjusted funnel plots': cancelFunnelPlot
 }
