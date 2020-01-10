@@ -28,7 +28,7 @@ define(['lodash'], function(_) {
       if (newName === '') {
         $scope.error = 'Name is empty';
       } else if (newName !== name && _.some(treatments, ['name', newName])) {
-        $scope.error = 'Study with that name already exists';
+        $scope.error = 'Treatment with that name already exists';
       } else {
         $scope.error = undefined;
       }

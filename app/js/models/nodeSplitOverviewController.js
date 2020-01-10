@@ -29,10 +29,10 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.goToModel = goToModel;
     $scope.openCreateNodeSplitDialog = openCreateNodeSplitDialog;
     $scope.openCreateNetworkDialog = openCreateNetworkDialog;
+    
+    // init
     $scope.networkModelResultsDefer = $q.defer();
     $scope.baseModelNotShown = false;
-
-    // init
     $scope.modelPromise.then(function(model) {
       function foo() {
         $scope.baseModelNotShown = model.modelType.type === 'node-split' && !_.some($scope.comparisons, ['modelId', model.id]);

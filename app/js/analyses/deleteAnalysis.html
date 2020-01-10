@@ -9,13 +9,13 @@
         <em> Are you certain you want to delete this analysis?</em>
       </div>
       <div class="cell">
-        <button ng-click="deleteAnalysis()" class="button alert" type="button">
+        <button id="delete-confirm-button" ng-click="deleteAnalysis()" class="button alert" type="button">
           Delete
         </button>
       </div>
     </div>
   </div>
-  <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+  <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
     <span aria-hidden="true">&times;</span>
   </button>
 </form>

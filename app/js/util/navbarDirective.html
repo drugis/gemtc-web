@@ -3,7 +3,9 @@
     <div class="top-bar-left">
       <ul class="menu">
         <li>
-            <a id="logo" ui-sref="analyses">gemtc.drugis.org</a>
+          <a id="logo" ui-sref="analyses">
+            gemtc.drugis.org
+          </a>
         </li>
       </ul>
     </div>
@@ -11,18 +13,18 @@
       <ul class="dropdown menu" data-dropdown-menu>
         <li>
           <a class="manual" href="/manual.html" target="_blank">
-              <i class="fa fa-book"></i>
-              Manual
-            </a>
+            <i id="manual-link" class="fa fa-book"></i>
+            Manual
+          </a>
         </li>
         <li>
-          <a href="#">
+          <a id="user-image-link" href="#">
             <img class="user-image" ng-src="{{user.userPicture}}">
             <span ng-show="!navSettings.isHidden">{{user.firstname +' '+ user.lastname}}</span>
           </a>
           <ul class="menu vertical">
             <li>
-              <a href="logout">Sign out</a>
+              <a id="logout-link" href="logout">Sign out</a>
             </li>
           </ul>
         </li>

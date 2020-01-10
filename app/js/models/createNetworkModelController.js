@@ -1,8 +1,21 @@
 'use strict';
 define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = ['$scope', '$modalInstance', '$stateParams', 'ModelResource', 'problem', 'baseModel', 'successCallback'];
-  var CreateNetworkModelModelController = function($scope, $modalInstance, $stateParams, ModelResource, problem, baseModel, successCallback) {
-
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
+    '$stateParams',
+    'ModelResource',
+    'baseModel',
+    'successCallback'
+  ];
+  var CreateNetworkModelController = function(
+    $scope,
+    $modalInstance,
+    $stateParams,
+    ModelResource,
+    baseModel,
+    successCallback
+  ) {
     var modelCopy = angular.copy(baseModel);
     delete modelCopy.result;
     modelCopy.title = 'Network model';
@@ -11,11 +24,7 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.model = modelCopy;
     $scope.isCreatingModel = false;
     $scope.createNodeSplitModel = createNodeSplitModel;
-    $scope.modelTypeLabel = 'network';
-
-    $scope.cancel = function() {
-      $modalInstance.close();
-    };
+    $scope.cancel = $modalInstance.close;
 
     function createNodeSplitModel(model) {
       $scope.isCreatingModel = true;
@@ -27,5 +36,5 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
   };
-  return dependencies.concat(CreateNetworkModelModelController);
+  return dependencies.concat(CreateNetworkModelController);
 });

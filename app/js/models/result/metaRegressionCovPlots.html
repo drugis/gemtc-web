@@ -3,7 +3,7 @@
     <div class="cell large-4 end">
       <select ng-options="covariateEffectPlot as covariateEffectPlot.treatmentName for covariateEffectPlot in covariateEffectPlots"
         ng-model="covariateEffectPlot"></select>
-      <img ng-src="{{covariateEffectPlot.plot.href}}" crossOrigin="anonymous" export file-name="'covariate-effect-plot'">
+      <img id="covariate-effect-plot" ng-src="{{covariateEffectPlot.plot.href}}" crossOrigin="anonymous" export file-name="'covariate-effect-plot'">
     </div>
   </div>
 </div>

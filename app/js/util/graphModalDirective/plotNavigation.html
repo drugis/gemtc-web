@@ -1,42 +1,34 @@
 <div class="grid-container">
   <div class="grid-x">
-    <div class="cell">
-      <div class="image-selector text-center">
-        <div class="grid-x">
-          <div class="cell">
-            <div class="large expanded button-group">
-              <button class="button info" ng-disabled="type === 'tracePlot'" ng-click="type = 'tracePlot'">time series</button>
-              <button class="button info" ng-disabled="type === 'densityPlot'" ng-click="type='densityPlot'">density</button>
-              <button class="button info" ng-disabled="type === 'psrfPlot'" ng-click="type='psrfPlot'">PSRF</button>
-            </div>
-            <div class="grid-x">
-              <div class="cell large-centered text-center">
-                <img ng-src="{{diagnosticsMap[comparisonLabel][type].href}}" crossOrigin="anonymous"
-                  export dont-float-sibling="true" file-name="type"></img>
-              </div>
-            </div>
-          </div>
+    <div class="cell image-selector text-center">
+      <div class="grid-x">
+        <div class="cell expanded button-group">
+          <button id="time-series-plots" class="button info" ng-disabled="type === 'tracePlot'"
+            ng-click="type = 'tracePlot'">time series</button>
+          <button id="density-plots" class="button info" ng-disabled="type === 'densityPlot'"
+            ng-click="type='densityPlot'">density</button>
+          <button id="psrf-plots" class="button info" ng-disabled="type === 'psrfPlot'"
+            ng-click="type='psrfPlot'">PSRF</button>
         </div>
-        <div class="grid-x hidden-for-large-up text-center">
-          <div class="cell">
-            {{comparisonLabel}}
-          </div>
-        </div>
-        <div class="grid-x">
-          <div class="cell large-4">
-            <button class="button expand secondary" ng-click="previousComparison()" ng-disabled="selectedIndex === 0">previous</button>
-          </div>
-          <div class="cell large-4 show-for-large-up text-center">
-            {{comparisonLabel}}
-          </div>
-          <div class="cell large-4">
-            <button class="button expand secondary" ng-click="nextComparison()" ng-disabled="selectedIndex === sortedLabels.length - 1">next</button>
-          </div>
+        <div class="cell large-centered text-center">
+          <img ng-src="{{diagnosticsMap[comparisonLabel][type].href}}" crossOrigin="anonymous" export
+            dont-float-sibling="true" file-name="type"></img>
         </div>
       </div>
     </div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <div class="cell large-4 text-center">
+      <button id="previous-plot-button" class="button secondary" ng-click="previousComparison()"
+        ng-disabled="selectedIndex === 0">previous</button>
+    </div>
+    <div id="comparison-plot-label" class="cell large-4 text-center">
+      {{comparisonLabel}}
+    </div>
+    <div class="cell large-4 text-center">
+      <button id="next-plot-button" class="button secondary" ng-click="nextComparison()"
+        ng-disabled="selectedIndex === sortedLabels.length - 1">next</button>
+    </div>
   </div>
 </div>
+<button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+  <span aria-hidden="true">&times;</span>
+</button>

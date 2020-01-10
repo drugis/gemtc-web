@@ -1,19 +1,19 @@
 <div class="grid-x">
   <div class="cell large-4 medium-5">
     <h5 class="subheader">Title</h5>
-    <h5 id="analysisTitle" class="inline">{{analysis.title}} 
-      <a ng-click="editAnalysisTitle()" tooltip="Edit analysis title">
+    <h5 id="analysis-title" class="inline">{{analysis.title}} 
+      <a id="edit-analysis-title-button" ng-click="editAnalysisTitle()" tooltip="Edit analysis title">
         <i class="fa fa-edit"></i>
       </a>
     </h5>
     <h5 class="subheader">Outcome
       <inline-help help-key="outcome"></inline-help>
     </h5>
-    <h5 id="analysisOutcome" class="inline">
+    <h5 id="analysis-outcome" class="inline">
       {{analysis.outcome.name}}
       <span ng-if="analysis.outcome.direction != -1"> (higher is better)</span>
       <span ng-if="analysis.outcome.direction == -1"> (lower is better)</span>
-      <a ng-click="editOutcomeName()" tooltip="Edit outcome name">
+      <a id="edit-analysis-outcome-button" ng-click="editOutcomeName()" tooltip="Edit outcome name">
         <i class="fa fa-edit"></i>
       </a>
     </h5>
