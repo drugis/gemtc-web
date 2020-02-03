@@ -4,13 +4,13 @@ ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update
-RUN apt-get upgrade -y
+RUN apt update
+RUN apt upgrade -y -f -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" 
 
 # Install nodejs
-RUN apt-get install -y curl
+RUN apt install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install -y nodejs git
+RUN apt install -y nodejs git
 
 RUN npm install -g yarn
 RUN npm install -g forever

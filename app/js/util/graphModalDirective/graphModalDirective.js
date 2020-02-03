@@ -5,10 +5,10 @@ define([], function() {
     return {
       scope: {
         diagnosticsMap: '=',
-        selectedComparison: '='
+        selectedComparison: '=',
+        parameterIndex: '='
       },
       restrict: 'E',
-      // using template because loading teplateUrl irritating in submodule
       templateUrl: './graphModalDirective.html',
       link: function(scope) {
 
