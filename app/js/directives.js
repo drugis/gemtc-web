@@ -21,7 +21,7 @@ define([
   gemtcRankPlot,
   pagedSvgPlot,
   pagedPngPlot,
-  runLength,
+  runLengthDirective,
   nodesplitForestPlot,
   heterogeneityPrior,
   funnelPlot,
@@ -38,7 +38,7 @@ define([
       .directive('gemtcRankPlot', gemtcRankPlot)
       .directive('pagedSvgPlot', pagedSvgPlot)
       .directive('pagedPngPlot', pagedPngPlot)
-      .directive('runLength', runLength)
+      .directive('runLength', runLengthDirective)
       .directive('nodesplitForestPlot', nodesplitForestPlot)
       .directive('heterogeneityPrior', heterogeneityPrior)
       .directive('funnelPlot', funnelPlot)
