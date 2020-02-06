@@ -54,3 +54,11 @@ img.paged-png {
   border-bottom: 1px solod rgba(0, 0, 0, 0.14);
   z-index: 50; // higher than content , but lower than nabbar foldout-menu
 }
+
+.left-pad {
+  padding-left: 2rem;
+}
+
+.dropdown.menu > li > a {
+  background: #333;
+}

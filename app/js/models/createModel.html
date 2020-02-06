@@ -56,7 +56,7 @@
         </label>
       </div>
       <div class="cell" ng-show="model.modelType.mainType == 'pairwise'">
-        <div class="grid-x grid-padding-x">
+        <div class="grid-x left-pad">
           <div class="cell">
             <label for="comparison-select">Select comparison for which to perform pair-wise model</label>
           </div>
@@ -89,7 +89,7 @@
         </label>
       </div>
       <div class="cell" ng-show="model.modelType.mainType == 'node-split'">
-        <div class="grid-x grid-padding-x">
+        <div class="grid-x left-pad">
           <div class="cell">
             <label for="comparison-select">
               Select comparison for which to perform node-splitting model
@@ -123,7 +123,7 @@
         </label>
       </div>
       <div class="cell" ng-show="model.modelType.mainType == 'regression'">
-        <div class="grid-x grid-padding-x">
+        <div class="grid-x left-pad">
           <div class="cell">
             <label for="covariate-select">
               Select covariate <inline-help help-key="covariate"></inline-help>
@@ -227,7 +227,7 @@
         </label>
       </div>
       <div class="cell" ng-show="isWeighted">
-        <div class="grid-x grid-padding-x">
+        <div class="grid-x left-pad">
           <div class="cell large-6">
             <label>
               Adjustment factor
@@ -295,7 +295,7 @@
         </label>
       </div>
       <div class="cell" ng-show="model.leaveOneOut.isSelected">
-        <div class="grid-x grid-padding-x">
+        <div class="grid-x left-pad">
           <div class="cell">
             <label for="leave-one-out-select">
               Select study to leave out
@@ -364,7 +364,7 @@
           style="display: inline; width:18%;">
       </div>
 
-      <div class="cell" style="padding-left: 1.2rem;">
+      <div class="cell" style="left-pad: 1.2rem;">
         <div ng-show="model.outcomeScale.value !== null && model.outcomeScale.value <= 0 ">
           <label class="alert">
             Outcome scale value can not be zero or lower.
@@ -404,26 +404,27 @@
         <div class="cell">
           <input type="radio" value="standard-deviation" ng-model="model.heterogeneityPrior.type"
             id="heterogeneity-prior-standard-deviation-radio" ng-change="heterogeneityPriorTypechange()">
-          <label for="heterogeneity-prior-standard-deviation-radio">Uniform for standard deviation</label>
+          <label for="heterogeneity-prior-standard-deviation-radio">
+            Uniform for standard deviation
+          </label>
         </div>
-
         <div class="cell large-6" ng-show="model.heterogeneityPrior.type === 'standard-deviation'">
-          <div class="grid-x grid-padding-x">
-            <div class="cell large-3">
+          <div class="grid-x left-pad">
+            <div class="cell large-6">
               <label>lower
                 <input type="number" ng-model="model.heterogeneityPrior.values.lower"
                   id="heterogeneity-uniform-parameter1-input" ng-change="heterogeneityParamsChange()">
               </label>
             </div>
-            <div class="cell large-3">
+            <div class="cell large-6">
               <label>upper
                 <input type="number" ng-model="model.heterogeneityPrior.values.upper"
                   id="heterogeneity-uniform-parameter2-input" ng-change="heterogeneityParamsChange()">
               </label>
             </div>
-            <div class="cell">
-              <label class="alert"
-                ng-show="model.heterogeneityPrior.values.lower < 0 || model.heterogeneityPrior.values.upper < 0">
+            <div class="cell"
+              ng-show="model.heterogeneityPrior.values.lower < 0 || model.heterogeneityPrior.values.upper < 0">
+              <label class="alert">
                 Values may not be below 0
               </label>
             </div>
@@ -434,25 +435,30 @@
       <div class="cell">
         <input type="radio" value="variance" ng-model="model.heterogeneityPrior.type"
           id="heterogeneity-prior-variance-radio" ng-change="heterogeneityPriorTypechange()">
-        <label for="heterogeneity-prior-variance-radio">Log-N for variance</label>
-        <div class="grid-x" ng-show="model.heterogeneityPrior.type === 'variance'">
-          <div class="cell large-2 medium-3 small-6 large-offset-1 medium-offset-1">
-            <label>mean
+        <label for="heterogeneity-prior-variance-radio">
+          Log-N for variance
+        </label>
+      </div>
+      <div class="cell large-6" ng-show="model.heterogeneityPrior.type === 'variance'">
+        <div class="grid-x left-pad">
+          <div class="cell large-6">
+            <label>
+              mean
               <input type="number" ng-model="model.heterogeneityPrior.values.mean"
                 id="heterogeneity-log-n-parameter1-input" ng-change="heterogeneityParamsChange()">
             </label>
           </div>
-          <div class="cell large-2 medium-3 small-6 end">
-            <label>std.dev
+          <div class="cell large-6">
+            <label>
+              std.dev
               <input type="number" ng-model="model.heterogeneityPrior.values.stdDev"
                 id="heterogeneity-log-n-parameter2-input" ng-change="heterogeneityParamsChange()">
             </label>
           </div>
-        </div>
-        <div class="grid-x">
-          <div class="cell large-offset-1 medium-offset-1 large-11">
-            <label class="alert" ng-show="model.heterogeneityPrior.values.stdDev < 0">Standard deviation may not be
-              below 0</label>
+          <div class="cell">
+            <label class="alert" ng-show="model.heterogeneityPrior.values.stdDev < 0">
+              Standard deviation may not be below 0
+            </label>
           </div>
         </div>
       </div>
@@ -460,47 +466,54 @@
       <div class="cell">
         <input type="radio" value="precision" ng-model="model.heterogeneityPrior.type"
           id="heterogeneity-prior-precision-radio" ng-change="heterogeneityPriorTypechange()">
-        <label for="heterogeneity-prior-precision-radio">Gamma for precision</label>
+        <label for="heterogeneity-prior-precision-radio">
+          Gamma for precision
+        </label>
+      </div>
 
-        <div class="grid-x" ng-show="model.heterogeneityPrior.type === 'precision'">
-          <div class="cell large-2 medium-3 small-6 large-offset-1 medium-offset-1">
-            <label>rate
+      <div class="cell large-6" ng-show="model.heterogeneityPrior.type === 'precision'">
+        <div class="grid-x left-pad">
+          <div class="cell large-6">
+            <label>
+              rate
               <input type="number" ng-model="model.heterogeneityPrior.values.rate"
                 id="heterogeneity-gamma-parameter1-input" ng-change="heterogeneityParamsChange()">
             </label>
           </div>
-          <div class="cell large-2 medium-3 small-6 end">
-            <label>shape
+          <div class="cell large-6">
+            <label>
+              shape
               <input type="number" ng-model="model.heterogeneityPrior.values.shape"
                 id="heterogeneity-gamma-parameter2-input" ng-change="heterogeneityParamsChange()">
             </label>
           </div>
 
-          <div class="cell large-offset-1 medium-offset-1 large-11">
-            <label class="alert"
-              ng-show="model.heterogeneityPrior.values.rate < 0 || model.heterogeneityPrior.values.shape < 0">
+          <div class="cell"
+            ng-show="model.heterogeneityPrior.values.rate < 0 || model.heterogeneityPrior.values.shape < 0">
+            <label class="alert">
               Values may not be below 0
             </label>
           </div>
         </div>
       </div>
-    </div>
-    <!-- end heterogeneity prior section -->
+      <!-- end heterogeneity prior section -->
+      <div class="cell">
+        <data-run-length problem="problem" model="model" burn-in-iterations="model.burnInIterations"
+          inference-iterations="model.inferenceIterations" thinning-factor="model.thinningFactor"
+          is-valid-run-length="isValidRunLength"></data-run-length>
+      </div>
 
-    <data-run-length problem="problem" model="model" burn-in-iterations="model.burnInIterations"
-      inference-iterations="model.inferenceIterations" thinning-factor="model.thinningFactor"
-      is-valid-run-length="isValidRunLength"></data-run-length>
-
-    <div class="grid-x">
-      <div class="large-9 cell">
+      <div class="cell">
         <button id="submit-add-model-button" class="button success" type="submit"
           ng-disabled="!isValidRunLength || !isValidHeterogeneityPrior || isAddButtonDisabled(model, problem)">
           Create Model(s)
         </button>
-        <div class="alert" ng-show='!model.title'>Model title missing.</div>
-        <div class="alert" ng-show="selectedCovariateValueHasNullValues">The selected covariate has missing values.
-        </div>
+      </div>
+      <div class="cell alert" ng-show='!model.title'>
+        Model title missing.
+      </div>
+      <div class="cell alert" ng-show="selectedCovariateValueHasNullValues">
+        The selected covariate has missing values.
       </div>
     </div>
-  </div>
 </form>
