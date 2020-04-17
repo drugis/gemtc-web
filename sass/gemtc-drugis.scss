@@ -3,7 +3,6 @@
 
 @import "foundation";
 @import "mmfoundation-animations";
-@import "gemtc-drugis-base";
 @include foundation-global-styles;
 @include foundation-xy-grid-classes;
 @include foundation-typography;
@@ -42,4 +41,5 @@
 @include foundation-visibility-classes;
 @include foundation-flex-classes;
 
+@import "gemtc-drugis-base";
 @import "drugis";

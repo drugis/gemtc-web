@@ -21,7 +21,6 @@ define(
     './models/models',
     'page-title-service',
     './patavi/patavi',
-    // './resources',
     './services',
     './util/util'
   ],
@@ -35,7 +34,6 @@ define(
       'gemtc.constants',
       'gemtc.models',
       'gemtc.patavi',
-      // 'gemtc.resources',
       'gemtc.services',
       'gemtc.util',
       'help-directive',

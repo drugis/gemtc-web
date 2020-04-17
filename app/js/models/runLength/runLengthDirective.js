@@ -14,7 +14,7 @@ define(['moment', 'lodash'], function(moment, _) {
   ) {
     return {
       restrict: 'E',
-      templateUrl: './runLength.html',
+      templateUrl: './runLengthDirective.html',
       scope: {
         problem: '=',
         model: '=',
