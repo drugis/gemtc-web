@@ -74,7 +74,7 @@
     "html-webpack-plugin": "^4.0.0-alpha",
     "imports-loader": "^0.8.0",
     "jasmine-core": "~3.2.1",
-    "jquery": "~3.4.0",
+    "jquery": "~3.5.0",
     "json-loader": "^0.5.7",
     "karma": "4.4.1",
     "karma-chrome-launcher": "~2.2.0",
