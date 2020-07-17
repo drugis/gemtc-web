@@ -31,7 +31,7 @@
     "express-session": "^1.15.6",
     "helmet": "~3.21.2",
     "http-status-codes": "~1.0.5",
-    "lodash": "~4.17.15",
+    "lodash": "~4.17.19",
     "optimize-css-assets-webpack-plugin": "^5.0.0",
     "passport": "passport-next/passport#^2.1.0",
     "passport-google-oauth20": "^1.0.0",
