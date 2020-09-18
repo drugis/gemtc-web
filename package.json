@@ -102,5 +102,8 @@
   },
   "engines": {
     "yarn": ">= 1.0.0"
+  },
+  "resolutions": {
+    "bcrypt": "5.0.0"
   }
 }
