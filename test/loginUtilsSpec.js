@@ -3,16 +3,14 @@ var loginUtils = require('../standalone-app/loginUtils.js');
 var chai = require('chai'),
   spies = require('chai-spies');
 
-describe('loginUtils', function() {
-
+describe('loginUtils', function () {
   chai.use(spies);
   var expect = chai.expect;
 
-  describe('securityMiddleware', function() {
-
+  describe('securityMiddleware', function () {
     var request, response, next;
 
-    beforeEach(function() {
+    beforeEach(function () {
       request = {
         session: {}
       };
@@ -21,8 +19,8 @@ describe('loginUtils', function() {
       response.redirect = chai.spy();
     });
 
-    it('should call next when logged in', function() {
-      request.isAuthenticated = function() {
+    it('should call next when logged in', function () {
+      request.isAuthenticated = function () {
         return true;
       };
       request.url = '/secure-me';
@@ -31,9 +29,9 @@ describe('loginUtils', function() {
       expect(next).to.have.been.called();
     });
 
-    it('should redirect to signin if no user signed in on a secure url', function() {
-      response = chai.spy.object(['sendStatus']);
-      request.isAuthenticated = function() {
+    it('should redirect to signin if no user signed in on a secure url', function () {
+      response = {sendStatus: chai.spy()};
+      request.isAuthenticated = function () {
         return false;
       };
       request.url = '/secure-me';
@@ -42,8 +40,8 @@ describe('loginUtils', function() {
       expect(response.sendStatus).to.have.been.called.with(403);
     });
 
-    it('should call next when requesting the signin page', function() {
-      request.isAuthenticated = function() {
+    it('should call next when requesting the signin page', function () {
+      request.isAuthenticated = function () {
         return false;
       };
       request.url = '/signin.html';
@@ -53,8 +51,8 @@ describe('loginUtils', function() {
       expect(next).to.have.been.called();
     });
 
-    it('should call next when requesting the google auth', function() {
-      request.isAuthenticated = function() {
+    it('should call next when requesting the google auth', function () {
+      request.isAuthenticated = function () {
         return false;
       };
       request.url = '/auth/google/some stuff ';
@@ -65,9 +63,9 @@ describe('loginUtils', function() {
     });
   });
 
-  describe('csrfValue', function() {
-    describe('should extract the token from the request\'s body', function() {
-      it('for the body._csrf', function() {
+  describe('csrfValue', function () {
+    describe("should extract the token from the request's body", function () {
+      it('for the body._csrf', function () {
         var request = {
           body: {
             _csrf: 'token'
@@ -76,7 +74,7 @@ describe('loginUtils', function() {
         var token = loginUtils.csrfValue(request);
         expect(token).to.equal(request.body._csrf);
       });
-      it('for the query._csrf', function() {
+      it('for the query._csrf', function () {
         var request = {
           query: {
             _csrf: 'token'
@@ -85,7 +83,7 @@ describe('loginUtils', function() {
         var token = loginUtils.csrfValue(request);
         expect(token).to.equal(request.query._csrf);
       });
-      it('for the headers x-csrf-token', function() {
+      it('for the headers x-csrf-token', function () {
         var request = {
           headers: {
             'x-csrf-token': 'token'
@@ -94,7 +92,7 @@ describe('loginUtils', function() {
         var token = loginUtils.csrfValue(request);
         expect(token).to.equal(request.headers['x-csrf-token']);
       });
-      it('for the headers x-xsrf-token', function() {
+      it('for the headers x-xsrf-token', function () {
         var request = {
           headers: {
             'x-xsrf-token': 'token'
@@ -106,15 +104,17 @@ describe('loginUtils', function() {
     });
   });
 
-  describe('setXSRFTokenMiddleware', function() {
-    it('should set a cookie with the session csrfSecret', function() {
+  describe('setXSRFTokenMiddleware', function () {
+    it('should set a cookie with the session csrfSecret', function () {
       var token = 'token';
       var request = {
-        csrfToken: function() {
+        csrfToken: function () {
           return token;
         }
       };
-      var response = chai.spy.object(['cookie']);
+      var response = {
+        cookie: chai.spy()
+      };
       var next = chai.spy();
 
       loginUtils.setXSRFTokenMiddleware(request, response, next);
@@ -122,5 +122,4 @@ describe('loginUtils', function() {
       expect(next).to.have.been.called();
     });
   });
-
 });

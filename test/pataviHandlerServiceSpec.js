@@ -10,23 +10,26 @@ chai.use(spies);
 var pataviTaskRepositoryStub;
 var pataviHandlerService;
 
-describe('the patavi handler service', function() {
-  describe('createPataviTask', function() {
-    beforeEach(function() {
-      pataviTaskRepositoryStub = chai.spy.object(['create']);
-      pataviHandlerService = proxyquire('../standalone-app/pataviHandlerService', {
-        './pataviTaskRepository': pataviTaskRepositoryStub
-      });
+describe('the patavi handler service', function () {
+  describe('createPataviTask', function () {
+    beforeEach(function () {
+      pataviTaskRepositoryStub = {
+        create: chai.spy()
+      };
+      pataviHandlerService = proxyquire(
+        '../standalone-app/pataviHandlerService',
+        {
+          './pataviTaskRepository': pataviTaskRepositoryStub
+        }
+      );
     });
-    it('for network models should simply create the task', function() {
+    it('for network models should simply create the task', function () {
       var analysisMock = {
         problem: {
           entries: [],
           treatments: []
         },
-        outcome: {
-
-        }
+        outcome: {}
       };
       var modelMock = {
         linearModel: 'random',
@@ -34,33 +37,46 @@ describe('the patavi handler service', function() {
           type: 'network'
         }
       };
-      var callback = function() {};
-      var expected = _.extend(analysisMock.problem, _.pick(modelMock, ['linearModel', 'modelType']));
+      var callback = function () {};
+      var expected = _.extend(
+        analysisMock.problem,
+        _.pick(modelMock, ['linearModel', 'modelType'])
+      );
 
       pataviHandlerService.createPataviTask(analysisMock, modelMock, callback);
 
-      expect(pataviTaskRepositoryStub.create).to.have.been.called.with(expected, callback);
+      expect(pataviTaskRepositoryStub.create).to.have.been.called.with(
+        expected,
+        callback
+      );
     });
-    it('for leave one out models should omit the omitted study', function() {
+    it('for leave one out models should omit the omitted study', function () {
       var analysisMock = {
         problem: {
-          entries: [{
-            treatment: 1,
-            study: 'study 1'
-          }, {
-            treatment: 2,
-            study: 'study 2'
-          }, {
-            treatment: 3,
-            study: 'study 3'
-          }],
-          treatments: [{
-            id: 1,
-            name: 'treatment1'
-          }, {
-            id: 2,
-            name: 'treatment2'
-          }]
+          entries: [
+            {
+              treatment: 1,
+              study: 'study 1'
+            },
+            {
+              treatment: 2,
+              study: 'study 2'
+            },
+            {
+              treatment: 3,
+              study: 'study 3'
+            }
+          ],
+          treatments: [
+            {
+              id: 1,
+              name: 'treatment1'
+            },
+            {
+              id: 2,
+              name: 'treatment2'
+            }
+          ]
         },
         outcome: {
           direction: -1
@@ -77,20 +93,26 @@ describe('the patavi handler service', function() {
       };
 
       var expected = {
-        entries: [{
-          treatment: 1,
-          study: 'study 1'
-        }, {
-          treatment: 3,
-          study: 'study 3'
-        }],
-        treatments: [{
-          id: 1,
-          name: 'treatment1'
-        }, {
-          id: 2,
-          name: 'treatment2'
-        }],
+        entries: [
+          {
+            treatment: 1,
+            study: 'study 1'
+          },
+          {
+            treatment: 3,
+            study: 'study 3'
+          }
+        ],
+        treatments: [
+          {
+            id: 1,
+            name: 'treatment1'
+          },
+          {
+            id: 2,
+            name: 'treatment2'
+          }
+        ],
         linearModel: 'random',
         modelType: {
           type: 'network'
@@ -101,10 +123,13 @@ describe('the patavi handler service', function() {
         preferredDirection: -1
       };
 
-      var callback = function() {};
+      var callback = function () {};
       pataviHandlerService.createPataviTask(analysisMock, modelMock, callback);
 
-      expect(pataviTaskRepositoryStub.create).to.have.been.called.with(expected, callback);
+      expect(pataviTaskRepositoryStub.create).to.have.been.called.with(
+        expected,
+        callback
+      );
     });
   });
 });
