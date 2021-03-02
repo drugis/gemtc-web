@@ -1,4 +1,4 @@
-FROM phusion/baseimage
+FROM phusion/baseimage:master
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
