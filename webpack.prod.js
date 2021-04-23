@@ -4,6 +4,8 @@ const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+let fs = require('fs');
 
 module.exports = merge(common, {
   mode: 'production',
@@ -29,6 +31,21 @@ module.exports = merge(common, {
       }
     ]
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: 'signin.html',
+      template: 'app/signin.ejs',
+      inject: 'head',
+      chunks: ['signin'],
+      signin: fs.readFileSync(require.resolve('signin/localSignin.html'))
+    }),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: 'css/[name].css',
+      chunkFilename: 'css/[id].css'
+    })
+  ],
   optimization: {
     minimizer: [
       new TerserPlugin({
@@ -39,13 +56,5 @@ module.exports = merge(common, {
       }),
       new OptimizeCSSAssetsPlugin({})
     ]
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
-      filename: 'css/[name].css',
-      chunkFilename: 'css/[id].css'
-    })
-  ]
+  }
 });
