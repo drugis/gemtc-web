@@ -64,7 +64,7 @@
     "css-loader": "^4.3.0",
     "d3": "~3.5.6",
     "error-reporting": "drugis/error-reporting#~1.3.3",
-    "export-directive": "drugis/export-directive#1.3.2",
+    "export-directive": "drugis/export-directive#1.3.4",
     "file-loader": "^6.1.0",
     "font-awesome": "~4.7.0",
     "foundation-sites": "~6.6.3",
