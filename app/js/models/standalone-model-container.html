@@ -1,8 +1,22 @@
 <ul class="breadcrumbs fixed">
-  <li><a ui-sref="analyses">Analyses</a></li>
-  <li><a ui-sref="networkMetaAnalysis({analysisId: analysis.id})">{{analysis.title}}</a></li>
-  <li ng-if="currentStateName === 'model'" class="current active">{{model.title}}</li>
-  <li ng-if="currentStateName === 'nodeSplitOverview'"><a ui-sref="model({analysisId: analysis.id, modelId: model.id})">{{model.title}}</a></li>
-  <li ng-if="currentStateName === 'nodeSplitOverview'" class="current active">node split overview</li>
+  <li>
+    <a id="breadcrumbs-analyses" ui-sref="analyses">Analyses</a>
+  </li>
+  <li>
+    <a id="breadcrumbs-analysis" ui-sref="networkMetaAnalysis({analysisId: analysis.id})">
+      {{analysis.title}}
+    </a>
+  </li>
+  <li ng-if="currentStateName === 'model'" class="current active">
+    {{model.title}}
+  </li>
+  <li ng-if="currentStateName === 'nodeSplitOverview'">
+    <a ui-sref="model({analysisId: analysis.id, modelId: model.id})">
+      {{model.title}}
+    </a>
+  </li>
+  <li ng-if="currentStateName === 'nodeSplitOverview'" class="current active">
+    node split overview
+  </li>
 </ul>
 <div ui-view></div>

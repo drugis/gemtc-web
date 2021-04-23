@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(['lodash'], function(_) {
   var dependencies = ['$q', 'MetaRegressionService'];
   var metaRegressionCovPlotsDirective = function($q, MetaRegressionService) {
     return {

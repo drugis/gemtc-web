@@ -1,22 +1,13 @@
 'use strict';
-var logger = require('./logger'),
-  dbUtil = require('./dbUtil'),
-  _ = require('lodash'),
-  db = require('./db')(dbUtil.connectionConfig),
-  columnString = 'title, analysisId, linearModel,' +
+var logger = require('./logger');
+var dbUtil = require('./dbUtil');
+var _ = require('lodash');
+var db = require('./db')(dbUtil.connectionConfig);
+var columnString = 'title, analysisId, linearModel,' +
   ' burn_in_iterations, inference_iterations, ' +
   ' thinning_factor, modelType, likelihood, link,' +
   ' outcome_scale, heterogeneity_prior, regressor,' +
   ' sensitivity, archived, archived_on';
-
-module.exports = {
-  create: createModel,
-  get: getModel,
-  update: update,
-  findByAnalysis: findByAnalysis,
-  setTaskUrl: setTaskUrl,
-  setArchive: setArchive
-};
 
 function mapModelRow(modelRow) {
   var model = {
@@ -61,27 +52,26 @@ function findByAnalysis(analysisId, callback) {
     });
 }
 
-function createModel(ownerAccountId, analysisId, newModel, callback) {
-
+function createModel(analysisId, newModel, callback) {
   db.query(
     ' INSERT INTO model (' + columnString + ') ' +
     ' VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id', [
-      newModel.title,
-      analysisId,
-      newModel.linearModel,
-      newModel.burnInIterations,
-      newModel.inferenceIterations,
-      newModel.thinningFactor,
-      newModel.modelType,
-      newModel.likelihood,
-      newModel.link,
-      newModel.outcomeScale,
-      newModel.heterogeneityPrior,
-      newModel.regressor,
-      newModel.sensitivity,
-      false, // is archived
-      null // archived on
-    ],
+    newModel.title,
+    analysisId,
+    newModel.linearModel,
+    newModel.burnInIterations,
+    newModel.inferenceIterations,
+    newModel.thinningFactor,
+    newModel.modelType,
+    newModel.likelihood,
+    newModel.link,
+    newModel.outcomeScale,
+    newModel.heterogeneityPrior,
+    newModel.regressor,
+    newModel.sensitivity,
+    false, // is archived
+    null // archived on
+  ],
     function(error, result) {
       if (error) {
         logger.error('error creating model, error: ' + error);
@@ -100,6 +90,9 @@ function getModel(modelId, callback) {
       if (error) {
         logger.error('error retrieving model, error: ' + error);
         callback(error);
+      } else if (result.rowCount === 0) {
+        logger.error('error retrieving model, error: requested model not found');
+        callback('Model not found');
       } else {
         logger.debug('ModelRepository.getModel return model = ' + JSON.stringify(result.rows[0]));
         callback(error, mapModelRow(result.rows[0]));
@@ -113,7 +106,7 @@ function setTaskUrl(modelId, taskUrl, callback) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);
     } else {
-      callback();
+      callback(error);
     }
   });
 }
@@ -125,11 +118,10 @@ function setArchive(modelId, isArchived, archivedOn, callback) {
         logger.error('error setting model.archived, error: ' + error);
         callback(error);
       } else {
-        callback();
+        callback(error);
       }
     });
 }
-
 
 function update(newModel, callback) {
   db.query('UPDATE model SET burn_in_iterations=$2, inference_iterations=$3, thinning_factor=$4, taskUrl=NULL where id = $1', [
@@ -142,7 +134,60 @@ function update(newModel, callback) {
       logger.error('error retrieving model, error: ' + error);
       callback(error);
     } else {
-      callback();
+      callback(error);
     }
   });
 }
+
+function setTitle(modelId, newTitle, callback) {
+  logger.debug('modelRepository.setTitle');
+  db.query('UPDATE model SET title = $1 WHERE id = $2', [newTitle, modelId],
+    function(error) {
+      if (error) {
+        logger.error('error setting model title: ' + error);
+        callback(error);
+      } else {
+        callback(error);
+      }
+    }
+  );
+}
+
+function setSensitivity(modelId, newSensitivity, callback) {
+  logger.debug('modelRepository.setSensitivity');
+  db.query('UPDATE model SET sensitivity = $1 WHERE id = $2', [newSensitivity, modelId],
+    function(error) {
+      if (error) {
+        logger.error('error setting model sensitivity: ' + error);
+        callback(error);
+      } else {
+        callback(error);
+      }
+    }
+  );
+}
+
+function deleteModel(modelId, callback) {
+  logger.debug('modelRepository.delete');
+  db.query('DELETE FROM model WHERE id = $1', [modelId],
+    function(error) {
+      if (error) {
+        logger.error('error deleting model ' + error);
+        callback(error);
+      } else {
+        callback(error);
+      }
+    });
+}
+
+module.exports = {
+  create: createModel,
+  get: getModel,
+  update: update,
+  findByAnalysis: findByAnalysis,
+  setTaskUrl: setTaskUrl,
+  setArchive: setArchive,
+  setTitle: setTitle,
+  setSensitivity: setSensitivity,
+  deleteModel: deleteModel
+};

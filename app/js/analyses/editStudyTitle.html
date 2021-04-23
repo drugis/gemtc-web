@@ -1,0 +1,30 @@
+<form novalidate ng-submit="editTitle(title.new)">
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="cell">
+        <h3>Edit study title</h3>
+      </div>
+      <div class="cell">
+        <label>Study title</label>
+      </div>
+      <div class="cell large-6">
+        <input id="study-title-input" autofocus="true" type="text" ng-model="title.new" ng-change="checkTitle(title.new)">
+      </div>
+      <div id="edit-study-title-warning" class="cell">
+        <i class="fa fa-exclamation-triangle"></i>
+        <em>Changing the study title will delete all model results!</em>
+      </div>
+      <div class="cell alert">
+        <button id="confirm-edit-study-title-button" ng-disabled="error" ng-click="editTitle(title.new)" class="button alert" type="button">
+          Edit
+        </button>
+      </div>
+      <div id="edit-study-title-error" class="cell alert" ng-if="error">
+        {{error}}
+      </div>
+    </div>
+  </div>
+  <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</form>

@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(['lodash'], function(_) {
   var dependencies = [
     '$scope',
     '$modal',
@@ -13,6 +13,7 @@ define([], function() {
     PageTitleService
   ) {
     $scope.createAnalysisDialog = createAnalysisDialog;
+    $scope.deleteAnalysis = deleteAnalysis;
 
     $scope.analysesLoaded = false;
     loadAnalyses();
@@ -29,6 +30,24 @@ define([], function() {
         templateUrl: './addAnalysis.html',
         scope: $scope,
         controller: 'AddAnalysisController'
+      });
+    }
+
+    function deleteAnalysis(analysis) {
+      $modal.open({
+        templateUrl: './deleteAnalysis.html',
+        scope: $scope,
+        controller: 'DeleteAnalysisController',
+        resolve: {
+          analysis: function() {
+            return analysis;
+          },
+          callback: function() {
+            return function(analysisId){
+              $scope.analyses = _.reject($scope.analyses, ['id', analysisId]);
+            };
+          }
+        }
       });
     }
 

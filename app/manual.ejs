@@ -1,192 +1,273 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
-  <title>GeMTC user manual</title>
-  <style type="text/css">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
+    <title>GeMTC user manual</title>
+    <style type="text/css">
       #scrollUp {
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 20px;
-      background-color: #555;
-      color: #fff;
-    }
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background-color: #555;
+        color: #fff;
+      }
 
-    #gemtc-shared-toc ol {
-      list-style-type: none;
-      background-color: #f4f4f4;
-      margin-left: 0;
-      padding-left: 1em;
-    }
+      #gemtc-shared-toc ol {
+        list-style-type: none;
+        background-color: #f4f4f4;
+        margin-left: 0;
+        padding-left: 1em;
+      }
 
-    #gemtc-shared-toc li {
-      font-size: 0.875rem;
-    }
+      #gemtc-shared-toc li {
+        font-size: 0.875rem;
+      }
 
-    #gemtc-shared-toc li a {
-      display: block;
-      margin: 0;
-      padding: 0.4375rem 0.875rem;
-    }
+      #gemtc-shared-toc li a {
+        display: block;
+        margin: 0;
+        padding: 0.4375rem 0.875rem;
+      }
 
-    #gemtc-shared-toc li a:hover,
-    #gemtc-shared-toc li a:focus {
-      background: rgba(0, 0, 0, 0.025);
-      color: #7056c6;
-    }
+      #gemtc-shared-toc li a:hover,
+      #gemtc-shared-toc li a:focus {
+        background: rgba(0, 0, 0, 0.025);
+        color: #7056c6;
+      }
 
-    #gemtc-shared-toc .node-name--H2 {
-      text-transform: uppercase;
-      font-weight: bold;
-    }
+      #gemtc-shared-toc .node-name--H2 {
+        text-transform: uppercase;
+        font-weight: bold;
+      }
 
-    .figure {
-      text-align: center;
-      margin-bottom: 1em;
-    }
+      .figure {
+        text-align: center;
+        margin-bottom: 1em;
+      }
 
-    .figure img {
-      padding: 5px;
-      border: 1px solid gray;
-    }
-  </style>
-  <%= htmlWebpackPlugin.options.matomo %>
-</head>
+      .figure img {
+        padding: 5px;
+        border: 1px solid gray;
+      }
+    </style>
+    <%= htmlWebpackPlugin.options.matomo %>
+  </head>
 
-<body>
-  <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
-    Your browser,
-    <span id="browserVersion1"></span>, is <b>out of date</b>. It has known <b>security flaws</b> and will <b>not run this web application correctly</b>.
-    <br>
-    <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a>    before continuing.
-  </div>
-  <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserUnknown">
-    Your browser is unknown to us. This web application may or may not work correctly
-    using it. Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a>    before continuing.
-  </div>
-  <script type="text/javascript">
-    if (bowser.c || (bowser.msie && bowser.version <= 8)) {
-      document.getElementById("browserVersion1").innerHTML = bowser.name + " " + bowser.version;
-      document.getElementById("browserCheck").style.display = "block";
-    }
-    if (bowser.x) {
-      document.getElementById("browserUnknown").style.display = "block";
-    }
-  </script>
-  <div class="top-bar">
-    <div class="top-bar-left bar-padding">
-      <ul class="menu">
-        <li>
-          <a href="#" tabindex="1001">gemtc.drugis.org</a>
-        </li>
-      </ul>
+  <body>
+    <div
+      class="alert-box warning"
+      style="display: none; margin-bottom: 0px"
+      id="browserCheck"
+    >
+      Your browser,
+      <span id="browserVersion1"></span>, is <b>out of date</b>. It has known
+      <b>security flaws</b> and will
+      <b>not run this web application correctly</b>.
+      <br />
+      <a href="http://browser-update.org/update-browser.html#drugis.org"
+        >Please update your browser</a
+      >
+      before continuing.
     </div>
-  </div>
-  <section id="hero">
-    <div class="grid-container">
-      <div class="grid-x">
-        <div class="cell large-offset-2 large-8 medium-12 end">
-          <h1>GeMTC Manual</h1>
-
-          <p style="margin-top: 30px; color: white;">Gert van Valkenhoef, Sylwia Bujkiewicz, Orestis Efthimiou, Daan Reid, Connor
-            Stroomberg, and Joris de Keijser</p>
-        </div>
+    <div
+      class="alert-box warning"
+      style="display: none; margin-bottom: 0px"
+      id="browserUnknown"
+    >
+      Your browser is unknown to us. This web application may or may not work
+      correctly using it. Proceed at your own risk, or
+      <a href="http://browser-update.org/update-browser.html#drugis.org"
+        >download a well-known browser</a
+      >
+      before continuing.
+    </div>
+    <script type="text/javascript">
+      if (bowser.c || (bowser.msie && bowser.version <= 8)) {
+        document.getElementById('browserVersion1').innerHTML =
+          bowser.name + ' ' + bowser.version;
+        document.getElementById('browserCheck').style.display = 'block';
+      }
+      if (bowser.x) {
+        document.getElementById('browserUnknown').style.display = 'block';
+      }
+    </script>
+    <div class="top-bar">
+      <div class="top-bar-left bar-padding">
+        <ul class="menu">
+          <li>
+            <a href="#" tabindex="1001">gemtc.drugis.org</a>
+          </li>
+        </ul>
       </div>
     </div>
-  </section>
+    <section id="hero">
+      <div class="grid-container">
+        <div class="grid-x">
+          <div class="cell large-offset-2 large-8 medium-12 end">
+            <h1 id="manual-title-header">GeMTC Manual</h1>
 
-  <section class="content">
-    <div class="grid-container">
-      <div class="grid-x grid-margin-x">
-        <div class="cell large-3">
-          <div id="gemtc-shared-toc" class="toc" data-toc="h2, h3, h4"></div>
+            <p style="margin-top: 30px; color: white">
+              Gert van Valkenhoef, Sylwia Bujkiewicz, Orestis Efthimiou, Daan
+              Reid, Connor Stroomberg, and Joris de Keijser
+            </p>
+          </div>
         </div>
-        <div class="js-toc-content cell large-8 medium-12 end">
+      </div>
+    </section>
 
-          <h2>Introduction</h2>
-
-          <p>
-            This is the manual for the GeMTC user interface for network meta-analysis. It starts
-            with a brief introduction to network meta-analysis in the Bayesian framework,
-            including issues such as model fit and convergence. This is followed
-            by a guide to the GeMTC user interface itself. The GeMTC user interface
-            uses question mark icon to provide help for specific terms, which when
-            clicked will show a brief explanation as well as a link to further information
-            in this manual.
-          </p>
-
-          <div style="text-align: center; margin-bottom: 1em;">
-            <img src="img/glossary_popover.png" alt="glossary popover" style=" padding: 5px; border: 1px solid gray;">
+    <section class="content">
+      <div class="grid-container">
+        <div class="grid-x grid-margin-x">
+          <div class="cell large-3">
+            <div id="gemtc-shared-toc" class="toc" data-toc="h2, h3, h4"></div>
           </div>
+          <div class="js-toc-content cell large-8 medium-12 end">
+            <h2>Introduction</h2>
 
-          <p>
-            Although this manual contains a brief introduction to the terminology and methodology
-            used in GeMTC, it is not a complete guide to network meta-analysis. For
-            further background, we recommend the following excellent open access
-            publications:
-          </p>
-          <ul>
-            <li>The Medical Decision Making series on network meta-analysis based on
-              the NICE Decision Support Unit series on evidence synthesis:
-              <a href="http://mdm.sagepub.com/content/33/5.toc" title="Table of Contents">Table of Contents</a>,
-              <a href="http://dx.doi.org/10.1177/0272989X12458724" title="S. Dias et al. (2012). Evidence Synthesis for Decision Making 2: A Generalized Linear Modeling Framework for Pairwise and Network Meta-analysis of Randomized Controlled Trials. Medical Decision Making.">MDM 2</a>,
-              <a href="http://dx.doi.org/10.1177/0272989X13485157" title="S. Dias et al. (2012).Evidence Synthesis for Decision Making 3: Heterogeneity - Subgroups, Meta-Regression, Bias, and Bias-Adjustment. Medical Decision Making.">MDM 3</a>,
-              <a href="http://dx.doi.org/10.1177/0272989X12455847" title="S. Dias et al (2012). Evidence Synthesis for Decision Making 4: Inconsistency in Networks of Evidence Based on Randomized Controlled Trials. Medical Decision Making.">MDM 4</a>
-            </li>
-            <li>The ISPOR guidelines on network meta-analysis:
-              <a title="A.E. Ades (2011). ISPOR States Its Position on Network Meta-Analysis. Value in Health."
-                href="http://dx.doi.org/10.1016/j.jval.2011.05.001">ISPOR 0</a>,
-              <a title="J.P. Jansen et al. (2011). Interpreting Indirect Treatment Comparisons and Network Meta-Analysis for Health-Care Decision Making: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 1. Value in Health."
-                href="http://dx.doi.org/10.1016/j.jval.2011.04.002">ISPOR 1</a>,
-              <a title="D.C. Hoaglin et al. (2011). Conducting Indirect-Treatment-Comparison and Network-Meta-Analysis Studies: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 2. Value in Health."
-                href="http://dx.doi.org/10.1016/j.jval.2011.01.011">ISPOR 2</a>
-            </li>
-            <li>Evaluating the quality of evidence from a network meta-analysis: <a href="http://dx.doi.org/10.1371/journal.pone.0099682"
-                title="G. Salanti et al. (2014). Evaluating the Quality of Evidence from a Network Meta-Analysis. PLOS ONE.">Salanti et al. (2014)</a></li>
-          </ul>
+            <p>
+              This is the manual for the GeMTC user interface for network
+              meta-analysis. It starts with a brief introduction to network
+              meta-analysis in the Bayesian framework, including issues such as
+              model fit and convergence. This is followed by a guide to the
+              GeMTC user interface itself. The GeMTC user interface uses
+              question mark icon to provide help for specific terms, which when
+              clicked will show a brief explanation as well as a link to further
+              information in this manual.
+            </p>
 
-          <p>
-            GeMTC is available as a stand-alone package at <a href="https://gemtc.drugis.org">gemtc.drugis.org</a>,
-            and is also part of the <a href="https://addis.drugis.org">ADDIS</a>            decision support system for evidence based medicine, developed at
-            <a href="https://drugis.org">drugis.org</a>. The functionality in the
-            GeMTC user interface is supported by the <a href="http://drugis.org/software/r-packages/gemtc">GeMTC R package</a>.
-            All <a href="https://drugis.org">drugis.org</a> software is open source,
-            and source code is available on <a href="https://github.com/drugis/">github.com/drugis</a>.
-          </p>
+            <div style="text-align: center; margin-bottom: 1em">
+              <img
+                src="img/glossary_popover.png"
+                alt="glossary popover"
+                style="padding: 5px; border: 1px solid gray"
+              />
+            </div>
 
-          <h3 id="gemtc-preparing-dataset">Preparing your dataset</h3>
-          <p>This section only applies to the stand-alone version of GeMTC, hosted on
-            <a href="https://gemtc.drugis.org">https://gemtc.drugis.org/</a>. In
-            ADDIS (
-            <a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this
-            step is not necessary.</p>
-          <p>After signing in to GeMTC, you will be redirected to your personal home
-            page. It contains a list of your previously created analyses (which will
-            be empty until you create one), and a button to create a new analysis.
-            Clicking this button will open the “New analysis” dialog, where you choose
-            a title for your analysis and outcome, and upload a dataset file:</p>
+            <p>
+              Although this manual contains a brief introduction to the
+              terminology and methodology used in GeMTC, it is not a complete
+              guide to network meta-analysis. For further background, we
+              recommend the following excellent open access publications:
+            </p>
+            <ul>
+              <li>
+                The Medical Decision Making series on network meta-analysis
+                based on the NICE Decision Support Unit series on evidence
+                synthesis:
+                <a
+                  href="http://mdm.sagepub.com/content/33/5.toc"
+                  title="Table of Contents"
+                  >Table of Contents</a
+                >,
+                <a
+                  href="http://dx.doi.org/10.1177/0272989X12458724"
+                  title="S. Dias et al. (2012). Evidence Synthesis for Decision Making 2: A Generalized Linear Modeling Framework for Pairwise and Network Meta-analysis of Randomized Controlled Trials. Medical Decision Making."
+                  >MDM 2</a
+                >,
+                <a
+                  href="http://dx.doi.org/10.1177/0272989X13485157"
+                  title="S. Dias et al. (2012).Evidence Synthesis for Decision Making 3: Heterogeneity - Subgroups, Meta-Regression, Bias, and Bias-Adjustment. Medical Decision Making."
+                  >MDM 3</a
+                >,
+                <a
+                  href="http://dx.doi.org/10.1177/0272989X12455847"
+                  title="S. Dias et al (2012). Evidence Synthesis for Decision Making 4: Inconsistency in Networks of Evidence Based on Randomized Controlled Trials. Medical Decision Making."
+                  >MDM 4</a
+                >
+              </li>
+              <li>
+                The ISPOR guidelines on network meta-analysis:
+                <a
+                  title="A.E. Ades (2011). ISPOR States Its Position on Network Meta-Analysis. Value in Health."
+                  href="http://dx.doi.org/10.1016/j.jval.2011.05.001"
+                  >ISPOR 0</a
+                >,
+                <a
+                  title="J.P. Jansen et al. (2011). Interpreting Indirect Treatment Comparisons and Network Meta-Analysis for Health-Care Decision Making: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 1. Value in Health."
+                  href="http://dx.doi.org/10.1016/j.jval.2011.04.002"
+                  >ISPOR 1</a
+                >,
+                <a
+                  title="D.C. Hoaglin et al. (2011). Conducting Indirect-Treatment-Comparison and Network-Meta-Analysis Studies: Report of the ISPOR Task Force on Indirect Treatment Comparisons Good Research Practices: Part 2. Value in Health."
+                  href="http://dx.doi.org/10.1016/j.jval.2011.01.011"
+                  >ISPOR 2</a
+                >
+              </li>
+              <li>
+                Evaluating the quality of evidence from a network meta-analysis:
+                <a
+                  href="http://dx.doi.org/10.1371/journal.pone.0099682"
+                  title="G. Salanti et al. (2014). Evaluating the Quality of Evidence from a Network Meta-Analysis. PLOS ONE."
+                  >Salanti et al. (2014)</a
+                >
+              </li>
+            </ul>
 
-          <div style="text-align: center; margin-bottom: 1em;">
-            <img src="img/gemtc_add_analysis.png" alt="add analysis screen shot" style=" padding: 5px; border: 1px solid gray;">
-          </div>
+            <p>
+              GeMTC is available as a stand-alone package at
+              <a href="https://gemtc.drugis.org">gemtc.drugis.org</a>, and is
+              also part of the
+              <a href="https://addis.drugis.org">ADDIS</a> decision support
+              system for evidence based medicine, developed at
+              <a href="https://drugis.org">drugis.org</a>. The functionality in
+              the GeMTC user interface is supported by the
+              <a href="http://drugis.org/software/r-packages/gemtc"
+                >GeMTC R package</a
+              >. All <a href="https://drugis.org">drugis.org</a> software is
+              open source, and source code is available on
+              <a href="https://github.com/drugis/">github.com/drugis</a>.
+            </p>
 
-          <p>Datasets can be uploaded in CSV format. The CSV file should contain one
-            row per arm, and needs to contain “study” and “treatment” columns, which
-            can contain names or identifiers for the study and treatment. The data
-            columns may be one of:</p>
-          <ul>
-            <li>Continuous data: “mean” and “std.err”</li>
-            <li>Continuous data: “mean”, “std.dev”, and “sampleSize”</li>
-            <li>Dichotomous data: “responders” and “sampleSize”</li>
-            <li>Survival data: “responders” and “exposure” (exposure in person-time)</li>
-          </ul>
+            <h3 id="gemtc-preparing-dataset">Preparing your dataset</h3>
+            <p>
+              This section only applies to the stand-alone version of GeMTC,
+              hosted on
+              <a href="https://gemtc.drugis.org">https://gemtc.drugis.org/</a>.
+              In ADDIS (
+              <a href="https://addis.drugis.org/">https://addis.drugis.org/</a
+              >), this step is not necessary.
+            </p>
+            <p>
+              After signing in to GeMTC, you will be redirected to your personal
+              home page. It contains a list of your previously created analyses
+              (which will be empty until you create one), and a button to create
+              a new analysis. Clicking this button will open the “New analysis”
+              dialog, where you choose a title for your analysis and outcome,
+              and upload a dataset file:
+            </p>
 
-          <p>The following is an example CSV file for a Parkinson’s disease dataset:</p>
+            <div style="text-align: center; margin-bottom: 1em">
+              <img
+                src="img/gemtc_add_analysis.png"
+                alt="add analysis screen shot"
+                style="padding: 5px; border: 1px solid gray"
+              />
+            </div>
 
-          <pre>
+            <p>
+              Datasets can be uploaded in CSV format. The CSV file should
+              contain one row per arm, and needs to contain “study” and
+              “treatment” columns, which can contain names or identifiers for
+              the study and treatment. The data columns may be one of:
+            </p>
+            <ul>
+              <li>Continuous data: “mean” and “std.err”</li>
+              <li>Continuous data: “mean”, “std.dev”, and “sampleSize”</li>
+              <li>Dichotomous data: “responders” and “sampleSize”</li>
+              <li>
+                Survival data: “responders” and “exposure” (exposure in
+                person-time)
+              </li>
+            </ul>
+
+            <p>
+              The following is an example CSV file for a Parkinson’s disease
+              dataset:
+            </p>
+
+            <pre>
           "study","treatment","mean","std.dev","sampleSize"
           "1","A",-1.22,3.7,54
           "1","C",-1.53,4.28,95
@@ -203,62 +284,82 @@
           "6","E",-2.5,2.18,131
           "7","D",-1.8,2.48,154
           "7","E",-2.1,2.99,143
-        </pre>
+        </pre
+            >
 
-          <h4 id="gemtc-data-covariates">Including covariates in the dataset</h4>
+            <h4 id="gemtc-data-covariates">
+              Including covariates in the dataset
+            </h4>
 
-          <p>To include covariates in a dataset, simply add additional columns to the
-            CSV file, but do not to use any of the column names already recognized
-            by GeMTC (study, treatment, mean, etc.). Covariates are currently only
-            considered at the study level. Therefore, you can include these data
-            in one of two different ways:</p>
-          <ul>
-            <li>Specify the covariate value for only one of the study arms, and leave
-              it as missing or "NA" for the others.</li>
-            <li>Specify the covariate value for all arms of the study, making sure that
-              each arm within a study has the same value as the other arms.</li>
-          </ul>
+            <p>
+              To include covariates in a dataset, simply add additional columns
+              to the CSV file, but do not to use any of the column names already
+              recognized by GeMTC (study, treatment, mean, etc.). Covariates are
+              currently only considered at the study level. Therefore, you can
+              include these data in one of two different ways:
+            </p>
+            <ul>
+              <li>
+                Specify the covariate value for only one of the study arms, and
+                leave it as missing or "NA" for the others.
+              </li>
+              <li>
+                Specify the covariate value for all arms of the study, making
+                sure that each arm within a study has the same value as the
+                other arms.
+              </li>
+            </ul>
 
-          <h4 id="gemtc-data-contrast-based">Including contrast-based data</h4>
+            <h4 id="gemtc-data-contrast-based">
+              Including contrast-based data
+            </h4>
 
-          <p>Contrast based data (e.g. log odds ratios) can also be analyzed in GeMTC.
-            Datasets can contain both contrast-based and arm-based data, but any
-            single study must be either completely contrast-based or completely arm-based.
-            Contrast based data are effect estimates and their standard errors on
-            a specific scale (e.g. mean difference or log-odds ratio); that scale
-            must be specified when uploading contrast-based data.</p>
+            <p>
+              Contrast based data (e.g. log odds ratios) can also be analyzed in
+              GeMTC. Datasets can contain both contrast-based and arm-based
+              data, but any single study must be either completely
+              contrast-based or completely arm-based. Contrast based data are
+              effect estimates and their standard errors on a specific scale
+              (e.g. mean difference or log-odds ratio); that scale must be
+              specified when uploading contrast-based data.
+            </p>
 
-          <p>Contrast-based data are also specified using the one arm per row format.
-            For every arm except the base arm, specify the effect estimate and its
-            standard error in the columns "re.diff" and "re.diff.se". For the base
-            arm, these columns must be left as missing or "NA".</p>
+            <p>
+              Contrast-based data are also specified using the one arm per row
+              format. For every arm except the base arm, specify the effect
+              estimate and its standard error in the columns "re.diff" and
+              "re.diff.se". For the base arm, these columns must be left as
+              missing or "NA".
+            </p>
 
-          <p>In multi-arm (that is, more than 2 arms) trials, the treatment contrasts
-            are correlated. This must be accounted for in the likelihood. To do this,
-            the standard error of the (absolute) effect in the base arm must be specified
-            in the column "re.base.se". For example, if the outcome scale is the
-            log-odds ratio, this is the standard error of the absolute log-odds in
-            the base arm. By a convenient statistical coincidence, the standard error
-            of the base arm squared is equal to the covariance between the treatment
-            contrasts. Thus, if the covariance is known, set "re.base.se" to the
-            square root of the covariance.</p>
+            <p>
+              In multi-arm (that is, more than 2 arms) trials, the treatment
+              contrasts are correlated. This must be accounted for in the
+              likelihood. To do this, the standard error of the (absolute)
+              effect in the base arm must be specified in the column
+              "re.base.se". For example, if the outcome scale is the log-odds
+              ratio, this is the standard error of the absolute log-odds in the
+              base arm. By a convenient statistical coincidence, the standard
+              error of the base arm squared is equal to the covariance between
+              the treatment contrasts. Thus, if the covariance is known, set
+              "re.base.se" to the square root of the covariance.
+            </p>
 
-          <p>There are a number of caveats when using contrast-based data. First, as
-            the number of participants is not known for this data, the size of nodes
-            in the evidence graph does not reflect the number of participants. Second,
-            the scale at which the relative effects were computed will restrict the
-            available likelihoods. Third, model fit statistics for contrast-based
-            data are not computed at the arm level, but at the study level.</p>
+            <p>
+              There are a number of caveats when using contrast-based data.
+              First, as the number of participants is not known for this data,
+              the size of nodes in the evidence graph does not reflect the
+              number of participants. Second, the scale at which the relative
+              effects were computed will restrict the available likelihoods.
+              Third, model fit statistics for contrast-based data are not
+              computed at the arm level, but at the study level.
+            </p>
 
-          <div id="gemtc-shared-content"></div>
-
+            <div id="gemtc-shared-content"></div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  <script>
-
-  </script>
-</body>
-
+    </section>
+    <script></script>
+  </body>
 </html>

@@ -1,6 +1,5 @@
 'use strict';
-var requires = [
-];
+/* This file is used only by ADDIS */
 define([
   './analyses/networkPlotDirective',
   './models/rankPlotDirective',
@@ -22,7 +21,7 @@ define([
   gemtcRankPlot,
   pagedSvgPlot,
   pagedPngPlot,
-  runLength,
+  runLengthDirective,
   nodesplitForestPlot,
   heterogeneityPrior,
   funnelPlot,
@@ -39,7 +38,7 @@ define([
       .directive('gemtcRankPlot', gemtcRankPlot)
       .directive('pagedSvgPlot', pagedSvgPlot)
       .directive('pagedPngPlot', pagedPngPlot)
-      .directive('runLength', runLength)
+      .directive('runLength', runLengthDirective)
       .directive('nodesplitForestPlot', nodesplitForestPlot)
       .directive('heterogeneityPrior', heterogeneityPrior)
       .directive('funnelPlot', funnelPlot)

@@ -1,7 +1,7 @@
 'use strict';
-var logger = require('./logger'),
-  dbUtil = require('./dbUtil'),
-  db = require('./db')(dbUtil.connectionConfig);
+var logger = require('./logger');
+var dbUtil = require('./dbUtil');
+var db = require('./db')(dbUtil.connectionConfig);
 
 function rowMapper(row) {
   row.primaryModel = row.primarymodel;
@@ -9,41 +9,55 @@ function rowMapper(row) {
   return row;
 }
 
-function getAnalysis(analysisId, callback) {
-  db.query('SELECT * FROM analysis WHERE ID=$1', [analysisId], function(error, result) {
-    if (error) {
-      logger.error('error at db.get, error: ' + error);
-    }
-    callback(error, rowMapper(result.rows[0]));
-  });
+function get(analysisId, callback) {
+  db.query('SELECT * FROM analysis WHERE ID=$1',
+    [analysisId], function(error, result) {
+      if (error) {
+        logger.error('error at db.get, error: ' + error);
+        callback(error);
+      } else if (result.rowCount === 0) {
+        logger.error('error at db.get, error: requested analysis not found');
+        callback({
+          message: 'Analysis not found',
+          statusCode: 404
+        });
+      } else {
+        callback(error, rowMapper(result.rows[0]));
+      }
+    });
 }
 
-function queryAnalyses(ownerAccountId, callback) {
+function query(ownerAccountId, callback) {
   logger.debug('get analyses for owner ' + ownerAccountId);
-  db.query('SELECT id, owner, title, problem, outcome FROM analysis WHERE OWNER=$1', [ownerAccountId], function(error, result) {
-    if (error) {
-      logger.error('error at db.query, error: ' + error);
-    }
-    callback(error, result);
-  });
+  db.query('SELECT id, owner, title, problem, outcome FROM analysis WHERE OWNER=$1',
+    [ownerAccountId], function(error, result) {
+      if (error) {
+        logger.error('error at db.query, error: ' + error);
+        callback(error);
+      } else {
+        callback(error, result);
+      }
+    });
 }
 
-function createAnalysis(ownerAccountId, newAnalysis, callback) {
-  db.query('INSERT INTO analysis (title, outcome, problem, owner) VALUES($1, $2, $3, $4) RETURNING id', [newAnalysis.title,
+function create(ownerAccountId, newAnalysis, callback) {
+  db.query('INSERT INTO analysis (title, outcome, problem, owner) VALUES($1, $2, $3, $4) RETURNING id',
+    [newAnalysis.title,
     newAnalysis.outcome,
     newAnalysis.problem,
-    ownerAccountId
-  ], function(error, result) {
-    if (error) {
-      logger.error('error creating analysis, error: ' + error);
-    }
-    newAnalysis.id = result.rows[0].id;
-    callback(error, newAnalysis);
-  });
+      ownerAccountId
+    ], function(error, result) {
+      if (error) {
+        logger.error('error creating analysis, error: ' + error);
+        callback(error);
+      } else {
+        var newAnalysisId = result.rows[0].id;
+        callback(error, newAnalysisId);
+      }
+    });
 }
 
 function setPrimaryModel(analysisId, primaryModelId, callback) {
-  //logger.debug('analysisRepository.setPrimaryModel with analysisId = ' + analysisId + ' primaryModelId = ' + primaryModelId);
   logger.debug('setPrimaryModel');
   var statement = 'UPDATE analysis SET primaryModel = $1 where id = $2';
   db.query(statement, [primaryModelId, analysisId],
@@ -52,15 +66,71 @@ function setPrimaryModel(analysisId, primaryModelId, callback) {
       if (error) {
         logger.error('error setting primaryModel, error: ' + error);
         callback(error);
+      } else {
+        callback();
       }
-      logger.debug('do call back');
-      callback();
+    });
+}
+
+function setTitle(analysisId, newTitle, callback) {
+  logger.debug('setTitle');
+  db.query('UPDATE analysis SET title = $1 WHERE id = $2', [newTitle, analysisId],
+    (error) => {
+      if (error) {
+        logger.error('error occured changing analysis title: ' + error);
+        callback(error);
+      } else {
+        callback();
+      }
+    });
+}
+
+function setOutcome(analysisId, newOutcome, callback) {
+  logger.debug('setOutcome');
+  db.query('UPDATE analysis SET outcome = $1 WHERE id = $2', [newOutcome, analysisId],
+    (error) => {
+      if (error) {
+        logger.error('error occured while setting the outcome: ' + error);
+        callback(error);
+      } else {
+        callback();
+      }
+    });
+}
+
+function deleteAnalysis(analysisId, callback) {
+  logger.debug('deleteAnalysis');
+  db.query('DELETE FROM analysis WHERE id = $1', [analysisId],
+    (error) => {
+      if (error) {
+        logger.error('error occured while deleting the analysis: ' + error);
+        callback(error);
+      } else {
+        callback();
+      }
+    });
+}
+
+function setProblem(analysisId, problem, callback) {
+  logger.debug('setProblem');
+  db.query('UPDATE analysis SET problem = $1 WHERE id = $2', [problem, analysisId],
+    (error) => {
+      if (error) {
+        logger.error('error occured while setting the problem: ' + error);
+        callback(error);
+      } else {
+        callback();
+      }
     });
 }
 
 module.exports = {
-  get: getAnalysis,
-  query: queryAnalyses,
-  create: createAnalysis,
-  setPrimaryModel: setPrimaryModel
+  get: get,
+  query: query,
+  create: create,
+  setPrimaryModel: setPrimaryModel,
+  setTitle: setTitle,
+  setOutcome: setOutcome,
+  deleteAnalysis: deleteAnalysis,
+  setProblem: setProblem
 };

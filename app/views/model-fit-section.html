@@ -19,7 +19,7 @@
 
 <div class="grid-x" ng-if="result">
   <div class="cell large-8 medium-6 small-12">
-    <table id="modelFitCopy">
+    <table id="model-fit-table">
       <caption>Model fit statistics</caption>
       <tbody>
         <tr>
@@ -52,21 +52,20 @@
     </table>
   </div>
   <div class="cell large-4">
-    <button class="button small info clipboard-button" data-clipboard-target="#modelFitCopy">
+    <button class="button small info clipboard-button" data-clipboard-target="#model-fit-table">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
-</div>
-<div class="grid-x" ng-if="result">
-  <div class="cell">
-    <img export file-name="'residualDeviancePlot'" crossOrigin="anonymous" ng-src="{{result.deviancePlot[0].href}}">
+  <div class="cell" ng-if="result">
+    <img id="residual-deviance-plot" export file-name="'residualDeviancePlot'" crossOrigin="anonymous"
+      ng-src="{{result.deviancePlot[0].href}}">
   </div>
 </div>
 
 
 <div class="grid-x" ng-if="result && absoluteDevianceStatisticsTable.length > 0">
   <div class="cell large-8 medium-12 small-12">
-    <table id="residualDeviance1Copy">
+    <table id="absolute-residual-deviance-table">
       <thead>
         <caption>Residual deviance per arm per study
           <inline-help help-key="residual-deviance"></inline-help>
@@ -89,7 +88,7 @@
     </table>
   </div>
   <div class="cell large-4">
-    <button class="button small info clipboard-button" data-clipboard-target="#residualDeviance1Copy">
+    <button class="button small info clipboard-button" data-clipboard-target="#absolute-residual-deviance-table">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
@@ -97,7 +96,7 @@
 
 <div class="grid-x" ng-if="result && relativeDevianceStatisticsTable.length > 0">
   <div class="cell large-8 medium-12 small-12">
-    <table id="resisdualDeviance2Copy">
+    <table id="contrast-residual-deviance-table">
       <thead>
         <caption>Residual deviance per study (contrast-based data)
           <inline-help help-key="residual-deviance"></inline-help>
@@ -118,7 +117,7 @@
     </table>
   </div>
   <div class="cell large-4">
-    <button class="button small info clipboard-button" data-clipboard-target="#resisdualDeviance2Copy">
+    <button class="button small info clipboard-button" data-clipboard-target="#contrast-residual-deviance-table">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>

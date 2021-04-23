@@ -1,6 +1,6 @@
 'use strict';
 
-const webpackConfig = require("./webpack.dev");
+const webpackConfig = require('./webpack.dev');
 
 delete webpackConfig.entry;
 webpackConfig.plugins = [];
@@ -8,9 +8,8 @@ webpackConfig.optimization = {
   splitChunks: false,
   runtimeChunk: false
 };
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
-
     // base path, that will be used to resolve files and exclude
     basePath: '.',
 
@@ -29,15 +28,13 @@ module.exports = function(config) {
 
     webpack: webpackConfig,
 
-    beforeMiddleware: ['webpackBlocker'],
+    // beforeMiddleware: ['webpackBlocker'],
 
     // frameworks to use
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'webpack'],
 
     // list of files / patterns to load in the browser
-    files: [
-      'app/js/test-main.js'
-    ],
+    files: ['app/js/test-main.js'],
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
@@ -46,7 +43,7 @@ module.exports = function(config) {
       outputFile: 'karma-test-results.xml'
     },
 
-     // web server port
+    // web server port
     port: 9876,
 
     // enable / disable colors in the output (reporters and logs)
@@ -70,7 +67,7 @@ module.exports = function(config) {
     browsers: ['ChromeHeadless'],
 
     // If browser does not capture in given timeout [ms], kill it
-    captureTimeout: 5000,
+    captureTimeout: 5000
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit

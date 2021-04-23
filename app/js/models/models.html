@@ -2,83 +2,116 @@
   <div class="cell">
     <h3 class="left">Models</h3>
   </div>
-</div>
-<div class="grid-x">
-  <div class="cell">
-    <div ng-show="!modelsLoaded">
-      <i class="fa fa-spinner fa-spin fa-3x"></i>
-      <p>Loading models...</p>
-    </div>
-    <div class="clearfix" ng-show="modelsLoaded">
-      <div class="grid-x align-bottom">
-        <div class="cell" ng-show="models.length">
-          <h5 class="subheader">Primary model
-            <inline-help help-key="primary-model"></inline-help>
-          </h5>
-          <div class="input-group" ng-hide="!models.length">
-            <select class="input-group-field" ng-hide="loginUserId !== userId" ng-model="$parent.primaryModel"
-              ng-options="model.title for model in models | orderBy:title | filter:{archived: false}"></select>
-            <div ng-hide="loginUserId === userId" ng-if="$parent.primaryModel">
-              Primary model: {{$parent.primaryModel.title}}
-            </div>
-            <div ng-hide="loginUserId === userId" ng-if="!$parent.primaryModel">
-              No primary model selected
-            </div>
-            <div class="input-group-button">
-              <button ng-hide="loginUserId !== userId || analysis.archived" ng-disabled="!primaryModel || analysis.archived"
-                ng-click="$parent.primaryModel = null" class="button alert postfix"
-                style="text-align: center;" ng-show="!model.isPrimary">Unset</button>
-            </div>
+  <div class="cell" ng-show="!modelsLoaded">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+    <p>Loading models...</p>
+  </div>
+  <div class="cell" ng-show="modelsLoaded">
+    <div class="grid-x align-bottom">
+      <div class="cell" ng-show="models.length">
+        <h5 class="subheader">Primary model
+          <inline-help help-key="primary-model"></inline-help>
+        </h5>
+        <div class="input-group" ng-hide="!models.length">
+          <select id="primary-model-selector" class="input-group-field" ng-hide="loginUserId !== userId"
+            ng-model="analysis.primaryModel"
+            ng-options="model.id as model.title for model in models | filter:archivedFilter | orderBy:'title'"
+            ng-change="setPrimaryModel()"></select>
+          <div ng-if="loginUserId !== userId && analysis.primaryModel">
+            Primary model: {{getPrimaryModelTitle()}}
+          </div>
+          <div ng-if="loginUserId !== userId && !analysis.primaryModel">
+            No primary model selected
+          </div>
+          <div class="input-group-button">
+            <button id="unset-primary-model-button" ng-hide="loginUserId !== userId || analysis.archived"
+              ng-disabled="!analysis.primaryModel || analysis.archived" ng-click="removePrimary()"
+              class="button alert postfix" style="text-align: center;">Unset</button>
           </div>
         </div>
-        <div class="cell large-3">
-          <!-- NB ng-hide code only for ADDIS purposes (can't see others' models in gemtc standalone)-->
-          <button id="add-model-btn" ng-hide="loginUserId !== userId || !modelsLoaded" tabindex="0"
-            class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked || analysis.archived"><i class="fa fa-plus"></i> Add model
-          </button>
-        </div>
-        <div class="cell large-3 large-offset-6 text-right">
-          <button tabindex="1" ng-disabled="numberOfModelsArchived === 0" ng-hide="!modelsLoaded"
-            class="button small secondary" ng-click="showArchived = !showArchived"><i class="fa fa-eye"></i>{{showArchived ? ' Hide' : ' Show'}} archived
-            {{showArchived ? '' : '('}}{{showArchived?'':numberOfModelsArchived}}{{showArchived
+      </div>
+      <div class="cell large-3">
+        <!-- NB ng-hide code only for ADDIS purposes (can't see others' models in gemtc standalone)-->
+        <button id="add-model-button" ng-hide="loginUserId !== userId || !modelsLoaded" tabindex="0"
+          class="button small" ng-click="gotoCreateModel()" ng-disabled="isModelCreationBlocked || analysis.archived"><i
+            class="fa fa-plus"></i> Add model
+        </button>
+      </div>
+      <div class="cell large-3 large-offset-6 text-right">
+        <button tabindex="1" ng-if="loginUserId" ng-disabled="numberOfModelsArchived === 0" ng-hide="!modelsLoaded"
+          class="button small secondary" ng-click="showArchived = !showArchived">
+          <i class="fa fa-eye"></i>
+          {{showArchived ? ' Hide' : ' Show'}} archived
+          {{showArchived ? '' : '('}}{{showArchived?'':numberOfModelsArchived}}{{showArchived
             ? '' : ')'}}
-          </button>
-        </div>
+        </button>
       </div>
     </div>
+
     <div class="grid-x">
       <div class="cell">
-        <em ng-show="models.length === 0">No models have been created</em>
-        <em ng-show="models.length > 0 && !showArchived && models.length === numberOfModelsArchived">All models have been archived</em>
+        <em id="no-models-message" ng-show="models.length === 0">
+          No models have been created
+        </em>
+        <em ng-show="models.length > 0 && !showArchived && models.length === numberOfModelsArchived">
+          All models have been archived
+        </em>
         <table ng-show="models.length > 0 && (showArchived || models.length !== numberOfModelsArchived)"
           style="width:100%;">
           <thead>
             <tr>
-              <td class="text-center large-6 medium-6">Title</td>
-              <td class="text-center large-2 medium-2">Type</td>
-              <td class="text-center large-2 medium-2">Model computed
+              <th class="text-center">Title</th>
+              <th class="text-center">Type</th>
+              <th class="text-center">Model computed
                 <inline-help help-key="model-computed"></inline-help>
-              </td>
+              </th>
+              <th ng-hide="loginUserId !== userId"></th>
+              <th ng-hide="userId"></th> <!-- userId is only set in ADDIS -->
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="model in models | orderBy:title | filter:archivedFilter">
-              <td>
-                <a ng-click="gotoModel(model)">{{model.title}} <span ng-show=model.archived>(archived {{model.archivedOn | date}})</span></a>
-                <span ng-show="hasPrimaryLabel(model)"> (primary model)</span>
-                <button ng-hide="loginUserId !== userId" ng-disabled="analysis.archived" ng-if="!model.archived &&  !hasPrimaryLabel(model)"
-                  ng-click="archiveModel(model)" type="button" class="button small info"
-                  style="margin-bottom:0; float: right;">archive</button>
+              <td id="model-{{ $index }}">
+                <a id="model-title-{{ $index }}" ng-click="gotoModel(model)">
+                  {{model.title}}
+                  <span ng-show="model.archived">(archived {{model.archivedOn | date}})</span>
+                </a>
+                <span ng-show="model.id === analysis.primaryModel"> (primary model)</span>
+                <!-- userId is only set in ADDIS -->
+                <button ng-hide="loginUserId !== userId" ng-disabled="analysis.archived"
+                  ng-if="!model.archived &&  !model.id === analysis.primaryModel" ng-click="archiveModel(model)"
+                  type="button" class="button small info" style="margin-bottom:0; float: right;">
+                  archive
+                </button>
                 <button ng-hide="loginUserId !== userId" ng-disabled="analysis.archived" ng-if="model.archived"
                   ng-click="unArchiveModel(model)" type="button" class="button small alert"
-                  style="margin-bottom:0; float:right;">unarchive</button>
+                  style="margin-bottom:0; float:right;">
+                  unarchive
+                </button>
               </td>
-              <td class="text-center">{{model.modelType.type}}
+              <td class="text-center">
+                {{model.modelType.type}}
                 <span ng-if="model.sensitivity.omittedStudy">(leave one out)</span>
               </td>
               <td class="text-center">
                 <i class="fa fa-check" style="color:green;" ng-if="model.runStatus === 'done'"></i>
                 <i class="fa fa-times" style="color:red;" ng-if="model.runStatus === 'failed'"></i>
+              </td>
+              <td class="text-center" ng-hide="loginUserId !== userId">
+                <a id="edit-model-title-{{ $index }}" ng-click="editModelTitle(model)" tooltip="Edit model title">
+                  <i class="fa fa-edit"></i>
+                </a>
+              </td>
+              <td class="text-center" ng-hide="userId">
+                <!-- userId is only set in ADDIS -->
+                <a id="delete-model-{{ $index }}" ng-click="deleteModel(model)" tooltip="Delete model" style="color:red"
+                  ng-if="analysis.primaryModel !== model.id">
+                  <i class="fa fa-trash"></i>
+                </a>
+                <a id="delete-disabled-model-{{ $index }}" tooltip="Cannot delete primary model" style="color:grey"
+                  ng-if="analysis.primaryModel === model.id">
+                  <i class="fa fa-trash" ng-disabled="true"></i>
+                </a>
               </td>
             </tr>
           </tbody>
@@ -86,4 +119,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

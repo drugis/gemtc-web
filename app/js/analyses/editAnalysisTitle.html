@@ -1,0 +1,23 @@
+<form novalidate ng-submit="editTitle(title.new)">
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="cell">
+        <h3>Edit analysis title</h3>
+      </div>
+      <div class="cell">
+        <label>Analysis title</label>
+      </div>
+      <div class="cell large-6">
+        <input id="analysis-title-input" autofocus="true" type="text" ng-model="title.new">
+      </div>
+      <div class="cell">
+        <button id="confirm-edit-analysis-title-button" ng-disabled="title.new === ''" ng-click="editTitle(title.new)" class="button" type="button">
+          Edit
+        </button>
+      </div>
+    </div>
+  </div>
+  <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</form>

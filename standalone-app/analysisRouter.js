@@ -1,3 +1,4 @@
+'use strict';
 var express = require('express');
 var analysisHandlers = require('./analysisHandlers');
 
@@ -7,4 +8,8 @@ module.exports = express.Router()
   .get('/:analysisId/problem', analysisHandlers.getProblem)
   .post('/:analysisId/setPrimaryModel', analysisHandlers.setPrimaryModel)
   .post('/', analysisHandlers.createAnalysis)
+  .put('/:analysisId/setTitle', analysisHandlers.setTitle)
+  .put('/:analysisId/setOutcome', analysisHandlers.setOutcome)
+  .put('/:analysisId/setProblem', analysisHandlers.setProblem)
+  .delete('/:analysisId', analysisHandlers.deleteAnalysis)
 ;

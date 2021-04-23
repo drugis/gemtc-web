@@ -2,9 +2,12 @@
   <div class="cell large-9 medium-11 small-12">
     <h4 ng-if="!result" class="inline-header">Loading model / {{progress.percentage | number:2}} % complete</h4>
     <progressbar ng-hide="result" value="progress.percentage"></progressbar>
-    <div ng-if="result" style="padding-top: 1rem;">
-      <a ui-sref="nodeSplitOverview(stateParams)" ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 "
-        class="grid-x">Go to node-split overview</a>
+    <div id="model-settings-section" ng-if="result" style="padding-top: 1rem;">
+      <a id="node-split-overview-link" ui-sref="nodeSplitOverview(stateParams)"
+        ng-if="(model.modelType.type === 'network' || model.modelType.type === 'node-split') && nodeSplitOptions.length > 0 "
+        class="grid-x">
+        Go to node-split overview
+      </a>
       <div class="panel callout primary">
         <h5>
           <strong>Model settings</strong>
@@ -14,16 +17,16 @@
             <td class="large-6 text-right">
               <strong>model type</strong>
             </td>
-            <td>
+            <td id="model-type">
               {{::model.modelType.type}}
               <inline-help help-key="model-type"></inline-help>
             </td>
           </tr>
-          <tr ng-if="model.sensitivity.omittedStudy">
+          <tr id="model-sub-type" ng-if="model.sensitivity.omittedStudy">
             <td class="large-6 text-right">
               <strong>sub type</strong>
             </td>
-            <td>
+            <td id="model-sub-type">
               leave one out
             </td>
           </tr>
@@ -31,7 +34,7 @@
             <td class="large-6 text-right">
               <strong>omitted study</strong>
             </td>
-            <td>
+            <td id="model-omitted-study">
               {{::model.sensitivity.omittedStudy}}
             </td>
           </tr>
@@ -39,19 +42,24 @@
             <td class="large-6 text-right">
               <strong>pairwise comparison</strong>
             </td>
-            <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
+            <td id="model-pairwise-comparison">
+              {{pairwiseTreatments.from.name}} &mdash; {{pairwiseTreatments.to.name}}
+            </td>
           </tr>
           <tr ng-if="model.modelType.type === 'node-split'">
             <td class="large-6 text-right">
               <strong>split comparison</strong>
             </td>
-            <td>{{::model.modelType.details.from.name}} &mdash; {{::model.modelType.details.to.name}}</td>
+            <td id="model-node-split">
+              {{pairwiseTreatments.from.name}} &mdash; {{pairwiseTreatments.to.name}}
+            </td>
           </tr>
           <tr ng-if="model.modelType.type === 'regression'">
             <td class="large-5 text-right">
               <strong>treatment-interaction model</strong>
             </td>
-            <td>{{::model.regressor.coefficient}} coefficient(s)
+            <td id="model-regressor-coefficient">
+              {{::model.regressor.coefficient}} coefficient(s)
               <inline-help help-key="treatment-interaction-model"></inline-help>
             </td>
           </tr>
@@ -59,7 +67,8 @@
             <td class="large-5 text-right">
               <strong>covariate</strong>
             </td>
-            <td>{{::model.regressor.variable}}
+            <td id="model-regressor-variable">
+              {{::model.regressor.variable}}
               <inline-help help-key="covariate"></inline-help>
             </td>
           </tr>
@@ -67,7 +76,9 @@
             <td class="large-5 text-right">
               <strong>standardization</strong>
             </td>
-            <td>x' = (x - {{::result.regressor.modelRegressor.mu|number:3}})/{{::result.regressor.modelRegressor.sd|number:3}}
+            <td id="model-regressor-standardization">
+              x' = (x -
+              {{::result.regressor.modelRegressor.mu|number:3}})/{{::result.regressor.modelRegressor.sd|number:3}}
               <inline-help help-key="covariate-standardization"></inline-help>
             </td>
           </tr>
@@ -75,7 +86,8 @@
             <td class="large-5 text-right">
               <strong>control treatment</strong>
             </td>
-            <td>{{::controlTreatment.name}}
+            <td id="model-control-treatment">
+              {{::controlTreatment.name}}
               <inline-help help-key="regression-control"></inline-help>
             </td>
           </tr>
@@ -83,7 +95,7 @@
             <td class="large-6 text-right">
               <strong>effects type</strong>
             </td>
-            <td>
+            <td id="model-effects-type">
               {{::result.linearModel}}
               <inline-help help-key="effects-type"></inline-help>
             </td>
@@ -92,11 +104,11 @@
             <td class="large-6 text-right">
               <strong>outcome scale</strong>
             </td>
-            <td ng-if="model.outcomeScale">
+            <td id="model-outcome-scale" ng-if="model.outcomeScale">
               {{::model.outcomeScale}}
               <inline-help help-key="outcome-scale"></inline-help>
             </td>
-            <td ng-if="!model.outcomeScale">
+            <td id="model-outcome-scale-imputed" ng-if="!model.outcomeScale">
               {{::result.outcomeScale}} (imputed)
               <inline-help help-key="outcome-scale"></inline-help>
             </td>
@@ -105,7 +117,7 @@
             <td class="large-6 text-right">
               <strong>likelihood / link</strong>
             </td>
-            <td>
+            <td id="model-likelihood">
               {{::result.likelihood}} / {{::result.link}}
               <inline-help help-key="likelihood-link"></inline-help>
             </td>
@@ -124,8 +136,10 @@
               <strong>design adjustment</strong>
             </td>
             <td>
-              <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;  margin-bottom: 0;">
-                <li style="padding-bottom: 0.5rem">adjustment for: {{model.sensitivity.adjustmentFactor}} = {{model.sensitivity.inflationValue}}</li>
+              <ul class="no-bullet"
+                style="font-size: 0.875rem; vertical-align:top; line-height: initial;  margin-bottom: 0;">
+                <li style="padding-bottom: 0.5rem">adjustment for: {{model.sensitivity.adjustmentFactor}} =
+                  {{model.sensitivity.inflationValue}}</li>
                 <li>weighting factor : {{model.sensitivity.weightingFactor}}</li>
               </ul>
               <inline-help help-key="design-adjustment"></inline-help>
@@ -137,15 +151,15 @@
             </td>
             <td>
               <ul class="no-bullet" style="font-size: 0.875rem; vertical-align:top; line-height: initial;">
-                <li style="padding-bottom: 0.5rem">
+                <li id="burn-in-iterations" style="padding-bottom: 0.5rem">
                   burn-in: {{::result.burnInIterations}}
                   <inline-help help-key="burn-in-iterations"></inline-help>
                 </li>
-                <li style="padding-bottom: 0.5rem">
+                <li id="inference-iterations" style="padding-bottom: 0.5rem">
                   inference: {{::result.inferenceIterations}}
                   <inline-help help-key="inference-iterations"></inline-help>
                 </li>
-                <li style="padding-bottom: 0.5rem">
+                <li id="thinning-factor" style="padding-bottom: 0.5rem">
                   thinning: {{::result.thinningFactor}}
                   <inline-help help-key="thinning-factor"></inline-help>
                 </li>
@@ -154,9 +168,10 @@
           </tr>
         </table>
         <div class="button-group">
-          <button class="button" ng-if="!editMode.disableEditing" ng-click="goToRefineModel()">Refine model</button>
-          <button class="button" ng-click="goToModelData()">Get model data</button>
-          <button class="button" ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R script{{!taskInfo._links.script ? '*' : ''}}</button>
+          <button id="refine-model-button" class="button" ng-if="!editMode.disableEditing" ng-click="goToRefineModel()">Refine model</button>
+          <button id="get-model-data-button" class="button" ng-click="goToModelData()">Get model data</button>
+          <button id="get-r-script-button" class="button" ng-disabled="!taskInfo._links.script" ng-click="goToRScript()">Get R
+            script{{!taskInfo._links.script ? '*' : ''}}</button>
         </div>
         <div ng-if="!taskInfo._links.script">
           <em>*Script not available for models from before 29-03-2017</em>

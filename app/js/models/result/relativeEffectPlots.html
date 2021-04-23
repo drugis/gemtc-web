@@ -1,4 +1,5 @@
-<div ng-if="results && (model.modelType.type === 'network' || model.modelType.type === 'regression')">
+<div id="relative-effects-plots"
+  ng-if="results && (model.modelType.type === 'network' || model.modelType.type === 'regression')">
   <div class="grid-x">
     <div class="cell large-6 small-8">
       <p>
@@ -6,19 +7,20 @@
         <inline-help help-key="relative-effects"></inline-help>
       </p>
       <label>Select baseline:
-        <select ng-options="treatment.name for treatment in problem.treatments"
-          ng-model="selectedBaseline"></select>
+        <select id="relative-effect-plot-selector" ng-options="treatment.name for treatment in problem.treatments" ng-model="selectedBaseline"></select>
       </label>
     </div>
     <div class="cell large-6 small-8">
       <label ng-show="relativeEffectPlots.length > 1">
         Covariate level
-        <select ng-options="relativeEffectPlot as relativeEffectPlot.level for relativeEffectPlot in relativeEffectPlots"
+        <select
+          ng-options="relativeEffectPlot as relativeEffectPlot.level for relativeEffectPlot in relativeEffectPlots"
           ng-model="relativeEffectPlot"></select>
       </label>
     </div>
     <div class="cell">
-      <paged-svg-plot file-name="'relativeEffect'" pages="relativeEffectPlot.plots[selectedBaseline.id]"></paged-svg-plot>
+      <paged-svg-plot file-name="'relativeEffect'" pages="relativeEffectPlot.plots[selectedBaseline.id]">
+      </paged-svg-plot>
     </div>
   </div>
 </div>

@@ -39,7 +39,9 @@
     <div class="top-bar-left bar-padding">
       <ul class="menu">
         <li>
-          <a href="#" tabindex="1001">gemtc.drugis.org</a>
+          <a href="#" tabindex="1001">
+            gemtc.drugis.org
+          </a>
         </li>
       </ul>
     </div>
@@ -47,7 +49,7 @@
       <ul class="dropdown menu" data-dropdown-menu>
         <li>
           <a class="manual" href="/manual.html" target="_blank">
-            <i class="fa fa-book"></i>
+            <i id="manual-link" class="fa fa-book"></i>
             Manual
           </a>
         </li>
@@ -73,12 +75,22 @@
         <div class="cell large-offset-2 large-8 medium-12">
           <p><a href="https://gemtc.drugis.org">gemtc.drugis.org</a> enables you to
             perform Bayesian evidence synthesis. You can upload your own dataset
-            and perform the various analyses supported by the <a href="https://drugis.org/software/r-packages/gemtc">GeMTC
-              R package</a>.
-            GeMTC is also a key component of the <a href="https://addis.drugis.org">ADDIS 2</a> decision support system
-            for health care policy. If you already have a
+            and perform the various analyses supported by the
+            <a href="https://drugis.org/software/r-packages/gemtc">
+              GeMTC R package
+            </a>.
+            GeMTC is also a key component of the
+            <a href="https://addis.drugis.org">
+              ADDIS 2
+            </a>
+            decision support system for health care policy. If you already have a
             dataset ready for analysis, and only want to perform evidence synthesis,
             you can use this stand-alone version instead of the full ADDIS 2 software.
+          </p>
+          <p>An enterprise version of this software is also available. This version contains the option to share your
+            anlyses with other users. For more information on the enterprise edition have a look at our <a
+              href="http://drugis.org/services/index" target="_blank">services</a> page or send an email to
+            <a href="mailto:info@drugis.org">info@drugis.org</a>.
           </p>
         </div>
         <%= htmlWebpackPlugin.options.signin %>

@@ -15,22 +15,32 @@
   </div>
   <div class="grid-x" ng-show="analysesLoaded">
     <div class="cell">
-      <button id="add-analysis-btn" ng-show="loginUser.userNameHash === userUid" tabindex="0"
-        class="button" ng-click="createAnalysisDialog()"><i class="fa fa-plus"></i> Add new analysis</button>
+      <button id="add-analysis-button" ng-show="loginUser.userNameHash === userUid" tabindex="0" class="button"
+        ng-click="createAnalysisDialog()"><i class="fa fa-plus"></i> Add new analysis</button>
     </div>
     <div class="cell large-6 medium-8">
-      <em ng-show="analyses.length === 0">No analyses have been created</em>
+      <em id="empty-analyses-message" ng-show="analyses.length === 0">No analyses have been created</em>
       <table ng-show="analyses.length > 0">
         <tr>
           <th class="large-3">Name</th>
           <th class="large-9">Outcome name
             <inline-help help-key="outcome"></inline-help>
           </th>
+          <th></th>
         </tr>
         <tr ng-repeat="analysis in analyses">
           <td style="vertical-align: top;">
-            <a ui-sref="networkMetaAnalysis({analysisId: analysis.id})">{{analysis.title}}</a></td>
+            <a id="analysis-title-{{ $index }}" ui-sref="networkMetaAnalysis({analysisId: analysis.id})">
+              {{analysis.title}}
+            </a>
+          </td>
           <td style="white-space: pre-wrap;">{{analysis.outcome.name}}</td>
+          <td class="text-center">
+            <a id="analysis-delete-{{ $index }}" ng-click="deleteAnalysis(analysis)" tooltip="Delete analysis"
+              style="color:red">
+              <i class="fa fa-trash"></i>
+            </a>
+          </td>
         </tr>
       </table>
     </div>

@@ -1,14 +1,14 @@
 <form id="add-comparison-funnel-plot-form" novalidate ng-submit="savePlot()">
   <div class="grid-container">
     <div class="grid-x">
-      <div class="large-9 cell">
+      <div id="add-funnel-plots-header" class="large-9 cell">
         <h3>Add a comparison-adjusted funnel plot</h3>
       </div>
     </div>
     <div class="grid-x">
       <div class="large-9 cell">
         <h4>Select comparisons</h4>
-        <button type="button" class="button small" ng-click="selectAll()">Select all</button>
+        <button id="select-all-button" type="button" class="button small" ng-click="selectAll()">Select all</button>
         <button type="button" class="button small" ng-click="deselectAll()">Deselect all</button>
 
         <label for="comparison-checkbox-{{$index}}" ng-repeat="comparison in comparisons">
@@ -22,12 +22,12 @@
     </div>
     <div class="grid-x modal-bottom-button-bar">
       <div class="large-9 cell">
-        <button id="submit-add-model-btn" class="button success" type="submit" ng-disabled="isAddButtonDisabled()">
+        <button id="confirm-add-funnel-plots-button" class="button success" type="submit" ng-disabled="isAddButtonDisabled()">
           Add
         </button>
       </div>
     </div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

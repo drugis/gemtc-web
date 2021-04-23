@@ -2,7 +2,7 @@
   <div class="grid-container">
     <div class="grid-x">
       <div class="cell end">
-        <h3 class="ng-scope">{{outcomeWithAnalysis.outcome.name || outcomeWithAnalysis.name}} baseline
+        <h3 id="set-baseline-header" class="ng-scope">{{outcomeWithAnalysis.outcome.name || outcomeWithAnalysis.name}} baseline
           distribution
         </h3>
       </div>
@@ -42,7 +42,7 @@
       ng-if="baselineDistribution.type === 'dbeta-cloglog' || baselineDistribution.type === 'dbeta-logit'">
       <div class="cell large-6 medium-6">
         <label>alpha
-          <input type="number" ng-model="baselineDistribution.alpha" ng-change="valueChanged()">
+          <input id="alpha-parameter-input" type="number" ng-model="baselineDistribution.alpha" ng-change="valueChanged()">
         </label>
       </div>
       <div class="cell large-6 medium-6">
@@ -132,11 +132,11 @@
 
     <div class="grid-x">
       <div class="cell">
-        <button ng-disabled="hasInValidBaseline" class="button success" type="submit">Set
+        <button id="confirm-set-baseline-button" ng-disabled="hasInValidBaseline" class="button success" type="submit">Set
         </button>
       </div>
     </div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

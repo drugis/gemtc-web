@@ -5,17 +5,16 @@
   <div class="cell large-8 end">
     <hr>
   </div>
-</div>
-<!-- end Convergence diagnostics header -->
+  <!-- end Convergence diagnostics header -->
 
-<div class="grid-x" ng-if="result">
   <div class="cell large-8 medium-6 small-12">
-    <table id="convergenceCopy">
+    <table id="convergence-diagnostics-table">
       <caption>Per-parameter convergence diagnostics</caption>
       <thead>
         <tr>
           <td colspan="3"></td>
-          <td colspan="2">Potential scale reduction factor (PSRF)
+          <td colspan="2">
+            Potential scale reduction factor (PSRF)
             <inline-help help-key="potential-scale-reduction-factor"></inline-help>
           </td>
           <td></td>
@@ -23,40 +22,44 @@
         <tr>
           <td>Parameter</td>
           <td>Standard deviation</td>
-          <td>Time-series S.E.
+          <td>
+            Time-series S.E.
             <inline-help help-key="time-series-standard-error"></inline-help>
           </td>
           <td>Point estimate</td>
           <td>97.5% quantile</td>
-          <td class="large-2"></td>
+          <td></td>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="diagnostic in diagnostics">
-          <td>{{diagnostic.label}}</td>
+          <td id="diagnostic-label-{{ $index }}">
+            {{diagnostic.label}}
+          </td>
           <td>{{result.summaries.statistics[diagnostic.key].SD}}</td>
-          <td>{{result.summaries.statistics[diagnostic.key]['Time-series SE']}}</td>
+          <td>
+            {{result.summaries.statistics[diagnostic.key]['Time-series SE']}}
+          </td>
           <td>{{diagnostic['Point est.']}}</td>
           <td>{{diagnostic['Upper C.I.']}}</td>
           <td class="button-cell">
-            <graph-modal diagnostics-map="diagnosticMap" selected-comparison="diagnostic" />
+            <graph-modal diagnostics-map="diagnosticMap" selected-comparison="diagnostic" parameter-index="$index" />
         </tr>
       </tbody>
     </table>
   </div>
   <div class="cell large-4">
-    <button class="button small info clipboard-button" data-clipboard-target="#convergenceCopy">
+    <button class="button small info clipboard-button" data-clipboard-target="#convergence-diagnostics-table">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
-</div>
-<!-- end Convergence diagnostics content -->
+  <!-- end Convergence diagnostics content -->
 
-<div class="grid-x" ng-if="result">
   <div class="cell large-8 medium-6 small-12">
     <!-- gemtc stand-alone does not set editMode-->
     <button id="open-run-length-dialog-btn" ng-hide="editMode.disableEditing" ng-click="openRunLengthDialog()"
-      class="button">Extend run-length</button>
+      class="button">
+      Extend run-length
+    </button>
   </div>
-
 </div>

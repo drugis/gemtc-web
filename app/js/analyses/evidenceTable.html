@@ -25,16 +25,22 @@
         </thead>
         <tbody>
           <tr ng-repeat="treatment in tableRows">
-            <td rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}"
+            <td id="study-title-{{ $index }}" rowspan="{{treatment.studyRowSpan}}" ng-show="{{treatment.showStudyColumn}}"
               style="vertical-align: top;">
               {{treatment.studyTitle}}
+              <a id="edit-study-title-{{ $index }}" ng-click="editStudyTitle(treatment.studyTitle)" tooltip="Edit study title" ng-if="!editmode.disableEditing">
+                <i class="fa fa-edit"></i>
+              </a>
             </td>
             <td ng-repeat="covariate in treatment.covariatesColumns" rowspan="{{treatment.studyRowSpan}}"
               ng-show="{{treatment.showStudyColumn}}" style="vertical-align:top" class="text-center">
               {{covariate.data}}
             </td>
-            <td>
+            <td id="treatment-title-{{ $index }}">
               {{treatment.treatmentTitle}}
+              <a id="edit-treatment-title-{{ $index }}" ng-click="editTreatmentName(treatment)" tooltip="Edit treatment name" ng-if="!editmode.disableEditing">
+                <i class="fa fa-edit"></i>
+              </a>
             </td>
             <td class="text-center" ng-show="outcomeType === 'dichotomous' || outcomeType === 'survival'">
               {{treatment.evidence.responders}}

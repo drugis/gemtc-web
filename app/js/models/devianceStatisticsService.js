@@ -40,14 +40,15 @@ define(['lodash'], function(_) {
     function getStudyName(id, problem) {
       if (problem.relativeEffectData.data[id] &&
         problem.relativeEffectData.data[id].otherArms &&
-        problem.relativeEffectData.data[id].otherArms[0]
+        problem.relativeEffectData.data[id].otherArms[0] &&
+        problem.relativeEffectData.data[id].otherArms[0].study
       ) {
         return problem.relativeEffectData.data[id].otherArms[0].study;
-      }
-      else {
+      } else {
         return id;
       }
     }
+    
     return {
       buildAbsoluteTable: buildAbsoluteTable,
       buildRelativeTable: buildRelativeTable

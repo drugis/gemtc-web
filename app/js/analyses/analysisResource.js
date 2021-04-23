@@ -9,6 +9,18 @@ define([], function() {
       setPrimaryModel: {
         url: '/analyses/:analysisId/setPrimaryModel',
         method: 'POST',
+      },
+      setTitle: {
+        url: '/analyses/:analysisId/setTitle',
+        method: 'PUT'
+      },
+      setOutcome: {
+        url: '/analyses/:analysisId/setOutcome',
+        method: 'PUT'
+      },
+      setProblem: {
+        url: '/analyses/:analysisId/setProblem',
+        method: 'PUT'
       }
     });
   };
