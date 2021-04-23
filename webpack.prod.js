@@ -37,7 +37,7 @@ module.exports = merge(common, {
       template: 'app/signin.ejs',
       inject: 'head',
       chunks: ['signin'],
-      signin: fs.readFileSync(require.resolve('signin/localSignin.html'))
+      signin: fs.readFileSync(require.resolve('signin/googleSignin.html'))
     }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
