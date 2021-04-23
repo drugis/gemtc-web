@@ -9,7 +9,7 @@ RUN apt upgrade -y -f -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="-
 
 # Install nodejs
 RUN apt install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt install -y nodejs git
 
 RUN npm install -g yarn

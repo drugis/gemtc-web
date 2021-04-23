@@ -12,27 +12,30 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.css$/,
-        loaders: [MiniCssExtractPlugin.loader, 'css-loader']
+        use: [{loader: MiniCssExtractPlugin.loader}, {loader: 'css-loader'}]
       },
       {
         test: /\.m?js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader?cacheDirectory',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: ['@babel/plugin-proposal-object-rest-spread']
+        use: [
+          {
+            loader: 'babel-loader?cacheDirectory',
+            options: {
+              presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread']
+            }
           }
-        }
+        ]
       }
     ]
   },
   optimization: {
     minimizer: [
       new TerserPlugin({
-        cache: true,
         parallel: true,
-        sourceMap: true // set to true if you want JS source maps
+        terserOptions: {
+          sourceMap: true
+        }
       }),
       new OptimizeCSSAssetsPlugin({})
     ]
