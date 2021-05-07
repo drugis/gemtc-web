@@ -56,7 +56,7 @@ jobs:
         run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'cd gemtc-web && git checkout develop && git pull'
 
       - name: update database on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'gemtc-web/liquibase/update-db.sh update'
+        run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'cd gemtc-web/liquibase &&./update-db.sh update'
 
       - name: stop GeMTC docker container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'docker stop gemtc'
