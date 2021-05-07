@@ -1,0 +1,92 @@
+name: GeMTC-test | push | deploy
+
+on:
+  push:
+    branches: ops/addDeployWorkflow
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: ['12']
+        os: [ubuntu-16.04]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.deployPrivateKey }}
+
+      - name: create ssl files
+        run: |
+          mkdir ssl
+          echo "${{ secrets.pataviClientCrt }}" > ssl/crt.pem
+          echo "${{ secrets.pataviClientKey }}" > ssl/key.pem
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+      - name: run yarn
+        run: yarn
+
+      - name: unit tests
+        id: tests
+        run: yarn test
+
+      - name: docker login
+        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
+
+      - name: build docker image
+        run: ./build-docker-with-tag.sh GOOGLE Test test
+
+      # - name: docker push
+      #   run: docker push addis/mcda:test
+
+      # - name: pull latest from drugis on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && git checkout develop && git pull'
+      # # StrictHostKeyChecking=no ensures no prompt for 'add to known hosts'
+
+      # - name: stop MCDA docker container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
+
+      # - name: update database on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/liquibase/update-db.sh update'
+
+      # - name: remove container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
+
+      # - name: run MCDA container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/run-mcda-from-registry.sh'
+
+      # - name: prune docker on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker system prune -f'
+
+      # - name: docker registry garbage collection
+      #   run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
+
+      # - name: notify on slack channel on failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'MCDA-test deploy failed'
+
+      # - name: notify on slack channel on success
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'MCDA-test deployed'
