@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'lodash'], function(angular, _) {
+define(['angular', 'lodash'], function (angular, _) {
   var dependencies = [
     '$scope',
     '$q',
@@ -12,7 +12,7 @@ define(['angular', 'lodash'], function(angular, _) {
     'ProblemResource',
     'CreateModelService'
   ];
-  var CreateModelController = function(
+  var CreateModelController = function (
     $scope,
     $q,
     $stateParams,
@@ -42,10 +42,12 @@ define(['angular', 'lodash'], function(angular, _) {
     $scope.isAllowedLeaveOneOut = isAllowedLeaveOneOut;
     $scope.isNumber = isNumber;
     $scope.pairwiseSubTypeChange = pairwiseSubTypeChange;
+    $scope.invertPairwiseComparison = invertPairwiseComparison;
     $scope.resetLeaveOneOut = resetLeaveOneOut;
 
     // init
-    var pageTitle = $state.current.name === 'createModel' ? 'Create model' : 'Refine model';
+    var pageTitle =
+      $state.current.name === 'createModel' ? 'Create model' : 'Refine model';
     PageTitleService.setPageTitle('CreateModelController', pageTitle);
 
     $scope.model = {
@@ -65,7 +67,7 @@ define(['angular', 'lodash'], function(angular, _) {
       treatmentInteraction: 'shared',
       leaveOneOut: {}
     };
-        
+
     $scope.isTaskTooLong = false;
     $scope.isValidHeterogeneityPrior = true;
     $scope.selectedCovariateValueHasNullValues = false;
@@ -75,20 +77,37 @@ define(['angular', 'lodash'], function(angular, _) {
     };
 
     $scope.problem = ProblemResource.get($stateParams);
-    $scope.problem.$promise.then(function(problem) {
-      $scope.comparisonOptions = CreateModelService.createPairwiseOptions(problem);
+    $scope.problem.$promise.then(function (problem) {
+      $scope.comparisonOptions = CreateModelService.createPairwiseOptions(
+        problem
+      );
       $scope.nodeSplitOptions = AnalysisService.createNodeSplitOptions(problem);
-      $scope.binaryCovariateNames = ModelService.getBinaryCovariateNames(problem);
-      $scope.isProblemWithCovariates = ModelService.isProblemWithCovariates(problem);
-      $scope.likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(problem);
-      $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions(problem, $scope.model.modelType.mainType);
+      $scope.binaryCovariateNames = ModelService.getBinaryCovariateNames(
+        problem
+      );
+      $scope.isProblemWithCovariates = ModelService.isProblemWithCovariates(
+        problem
+      );
+      $scope.likelihoodLinkOptions = AnalysisService.createLikelihoodLinkOptions(
+        problem
+      );
+      $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions(
+        problem,
+        $scope.model.modelType.mainType
+      );
 
       $scope.model.pairwiseComparison = CreateModelService.createPairWiseComparison(
-        $scope.model.pairwiseComparison, $scope.comparisonOptions);
+        $scope.model.pairwiseComparison,
+        $scope.comparisonOptions
+      );
       $scope.model.nodeSplitComparison = CreateModelService.createNodeSplitComparison(
-        $scope.model.nodeSplitComparison, $scope.nodeSplitOptions);
+        $scope.model.nodeSplitComparison,
+        $scope.nodeSplitOptions
+      );
       $scope.model.likelihoodLink = CreateModelService.createLikelihoodLink(
-        $scope.model.likelihoodLink, $scope.likelihoodLinkOptions);
+        $scope.model.likelihoodLink,
+        $scope.likelihoodLinkOptions
+      );
 
       setCovariateOptions(problem);
 
@@ -97,8 +116,14 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function setCovariateOptions(problem) {
       if (problem.studyLevelCovariates) {
-        $scope.covariateOptions = CreateModelService.buildCovariateOptions(problem);
-        $scope.model = CreateModelService.getModelWithCovariates($scope.model, problem, $scope.covariateOptions);
+        $scope.covariateOptions = CreateModelService.buildCovariateOptions(
+          problem
+        );
+        $scope.model = CreateModelService.getModelWithCovariates(
+          $scope.model,
+          problem,
+          $scope.covariateOptions
+        );
       }
     }
 
@@ -113,14 +138,23 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function covariateChange() {
-      $scope.variableIsBinary = ModelService.isVariableBinary($scope.model.covariateOption, $scope.problem);
-      if ($scope.variableIsBinary && $scope.model.modelType.mainType === 'regression') {
+      $scope.variableIsBinary = ModelService.isVariableBinary(
+        $scope.model.covariateOption,
+        $scope.problem
+      );
+      if (
+        $scope.variableIsBinary &&
+        $scope.model.modelType.mainType === 'regression'
+      ) {
         $scope.model.levels = [0, 1];
       } else {
         $scope.model.levels = [];
       }
 
-      $scope.covariateBounds = ModelService.getCovariateBounds($scope.model.covariateOption, $scope.problem);
+      $scope.covariateBounds = ModelService.getCovariateBounds(
+        $scope.model.covariateOption,
+        $scope.problem
+      );
     }
 
     function modelTypeChange() {
@@ -128,7 +162,9 @@ define(['angular', 'lodash'], function(angular, _) {
 
       if (mainType === 'network') {
         $scope.model.modelType.subType = '';
-        $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions($scope.problem);
+        $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions(
+          $scope.problem
+        );
         $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
       }
       if (mainType === 'pairwise') {
@@ -138,7 +174,9 @@ define(['angular', 'lodash'], function(angular, _) {
         $scope.model.modelType.subType = 'all-node-split';
       }
       if (mainType === 'regression') {
-        $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions($scope.problem);
+        $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions(
+          $scope.problem
+        );
         $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
         $scope.model.modelType.subType = '';
         covariateChange();
@@ -151,18 +189,39 @@ define(['angular', 'lodash'], function(angular, _) {
       resetLeaveOneOut();
     }
 
+    function invertPairwiseComparison() {
+      var selectedComparison = $scope.model.pairwiseComparison;
+      [selectedComparison.from, selectedComparison.to] = [
+        selectedComparison.to,
+        selectedComparison.from
+      ];
+      selectedComparison.label =
+        selectedComparison.from.name + ' - ' + selectedComparison.to.name;
+    }
+
     function resetLeaveOneOut() {
       $scope.model.leaveOneOut = {};
 
       if (isValidModelTypeForLeaveOneOut()) {
-        $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions($scope.problem);
+        $scope.leaveOneOutOptions = CreateModelService.createLeaveOneOutOptions(
+          $scope.problem
+        );
 
-        if ($scope.model.modelType.mainType === 'pairwise' && $scope.model.modelType.subType === 'specific-pairwise') {
-          $scope.leaveOneOutOptions = _.filter($scope.leaveOneOutOptions, function(option) {
-            return _.find($scope.model.pairwiseComparison.studies, function(study) {
-              return study.title === option;
-            });
-          });
+        if (
+          $scope.model.modelType.mainType === 'pairwise' &&
+          $scope.model.modelType.subType === 'specific-pairwise'
+        ) {
+          $scope.leaveOneOutOptions = _.filter(
+            $scope.leaveOneOutOptions,
+            function (option) {
+              return _.find(
+                $scope.model.pairwiseComparison.studies,
+                function (study) {
+                  return study.title === option;
+                }
+              );
+            }
+          );
         }
         if ($scope.leaveOneOutOptions.length > 0) {
           $scope.model.leaveOneOut.omittedStudy = $scope.leaveOneOutOptions[0];
@@ -184,7 +243,9 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function heterogeneityParamsChange() {
-      $scope.isValidHeterogeneityPrior = CreateModelService.heterogeneityParamsChange($scope.model.heterogeneityPrior);
+      $scope.isValidHeterogeneityPrior = CreateModelService.heterogeneityParamsChange(
+        $scope.model.heterogeneityPrior
+      );
     }
 
     function changeIsWeighted() {
@@ -201,13 +262,20 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function isValidModelTypeForLeaveOneOut() {
       var mainType = $scope.model.modelType.mainType;
-      return mainType === 'network' ||
-        (mainType === 'pairwise' && $scope.model.modelType.subType === 'specific-pairwise') ||
-        mainType === 'regression';
+      return (
+        mainType === 'network' ||
+        (mainType === 'pairwise' &&
+          $scope.model.modelType.subType === 'specific-pairwise') ||
+        mainType === 'regression'
+      );
     }
 
     function isAllowedLeaveOneOut() {
-      return isValidModelTypeForLeaveOneOut() && $scope.leaveOneOutOptions && $scope.leaveOneOutOptions.length > 0;
+      return (
+        isValidModelTypeForLeaveOneOut() &&
+        $scope.leaveOneOutOptions &&
+        $scope.leaveOneOutOptions.length > 0
+      );
     }
 
     function changeIsLeaveOneOut(newValue) {
@@ -223,21 +291,24 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function variableHasNAValues(covariateName, problem) {
       var entryMap = _.keyBy(problem.entries, 'study');
-      return _.find(entryMap, function(entry) {
-        return problem.studyLevelCovariates[entry.study][covariateName] === null;
+      return _.find(entryMap, function (entry) {
+        return (
+          problem.studyLevelCovariates[entry.study][covariateName] === null
+        );
       });
     }
 
     function addLevel(newLevel) {
       $scope.model.levels.push(newLevel);
-      $scope.model.levels.sort(function(a, b) {
+      $scope.model.levels.sort(function (a, b) {
         return a - b;
       });
       $scope.newLevel = undefined;
     }
 
     function addLevelOnEnter($event, newLevel) {
-      if ($event.which === 13 && !levelAlreadyPresent(newLevel)) { // 13 == enter key
+      if ($event.which === 13 && !levelAlreadyPresent(newLevel)) {
+        // 13 == enter key
         addLevel(newLevel);
         $event.stopPropagation();
         $event.preventDefault();
@@ -249,12 +320,17 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function isCovariateLevelOutOfBounds(level) {
-      return level < $scope.covariateBounds.min || level > $scope.covariateBounds.max;
+      return (
+        level < $scope.covariateBounds.min || level > $scope.covariateBounds.max
+      );
     }
 
     function isAddButtonDisabled(model, problem) {
-      $scope.selectedCovariateValueHasNullValues = model.modelType.mainType === 'regression' && variableHasNAValues(model.covariateOption, problem);
-      return !model ||
+      $scope.selectedCovariateValueHasNullValues =
+        model.modelType.mainType === 'regression' &&
+        variableHasNAValues(model.covariateOption, problem);
+      return (
+        !model ||
         !model.title ||
         !!$scope.isAddingModel ||
         !model.likelihoodLink ||
@@ -263,7 +339,8 @@ define(['angular', 'lodash'], function(angular, _) {
         (model.outcomeScale.type === 'fixed' &&
           !angular.isNumber(model.outcomeScale.value)) ||
         $scope.selectedCovariateValueHasNullValues ||
-        !!($scope.isWeighted && model.sensitivity.weightingFactor === undefined);
+        !!($scope.isWeighted && model.sensitivity.weightingFactor === undefined)
+      );
     }
 
     function isNumber(value) {
@@ -272,34 +349,54 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function createModel(model) {
       $scope.isAddingModel = true;
-      if (model.modelType.subType === 'all-pairwise' || model.modelType.subType === 'all-node-split') {
-        var modelsToCreate = ModelService.createModelBatch(model, $scope.comparisonOptions, $scope.nodeSplitOptions);
-        var creationPromises = _.map(modelsToCreate, function(modelToCreate) {
-          return createAndPostModel(modelToCreate, function() { });
+      if (
+        model.modelType.subType === 'all-pairwise' ||
+        model.modelType.subType === 'all-node-split'
+      ) {
+        var modelsToCreate = ModelService.createModelBatch(
+          model,
+          $scope.comparisonOptions,
+          $scope.nodeSplitOptions
+        );
+        var creationPromises = _.map(modelsToCreate, function (modelToCreate) {
+          return createAndPostModel(modelToCreate, function () {});
         });
-        $q.all(creationPromises).then(function() {
+        $q.all(creationPromises).then(function () {
           $state.go('networkMetaAnalysis', $stateParams);
         });
       } else if (model.leaveOneOut.subType === 'all-leave-one-out') {
-        var leaveOneOutModels = ModelService.createLeaveOneOutBatch(model, $scope.leaveOneOutOptions);
-        var leaveOneOutPromises = _.map(leaveOneOutModels, function(modelToCreate) {
-          return createAndPostModel(modelToCreate, function() { });
-        });
-        $q.all(leaveOneOutPromises).then(function() {
+        var leaveOneOutModels = ModelService.createLeaveOneOutBatch(
+          model,
+          $scope.leaveOneOutOptions
+        );
+        var leaveOneOutPromises = _.map(
+          leaveOneOutModels,
+          function (modelToCreate) {
+            return createAndPostModel(modelToCreate, function () {});
+          }
+        );
+        $q.all(leaveOneOutPromises).then(function () {
           $state.go('networkMetaAnalysis', $stateParams);
         });
       } else {
-        createAndPostModel(model, function(result) {
-          $state.go('model', _.extend({}, $stateParams, {
-            modelId: result.id
-          }));
+        createAndPostModel(model, function (result) {
+          $state.go(
+            'model',
+            _.extend({}, $stateParams, {
+              modelId: result.id
+            })
+          );
         });
       }
     }
 
     function createAndPostModel(frontEndModel, successFunction) {
       var model = ModelService.cleanModel(frontEndModel);
-      return ModelResource.save(_.omit($stateParams, 'modelId'), model, successFunction).$promise;
+      return ModelResource.save(
+        _.omit($stateParams, 'modelId'),
+        model,
+        successFunction
+      ).$promise;
     }
   };
 

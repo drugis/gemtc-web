@@ -77,6 +77,10 @@
               ng-model="model.pairwiseComparison" ng-change="resetLeaveOneOut()" id="comparison-select"
               ng-disabled="model.modelType.subType !== 'specific-pairwise'"></select>
           </div>
+          <div class="cell large-6">
+            <button id="invert-pairwise-button" class="button" type="button" ng-click="invertPairwiseComparison()" 
+              ng-disabled="model.modelType.subType !== 'specific-pairwise'">Invert</button>
+          </div>
         </div>
       </div>
 
