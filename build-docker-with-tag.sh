@@ -20,7 +20,7 @@ then
   exit 1
 fi
 
-TAG = "$3"
+TAG="$3"
 if [ "$TAG" = "" ]
 then
   echo TAG argument not provided
