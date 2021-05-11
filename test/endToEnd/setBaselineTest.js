@@ -13,17 +13,14 @@ const analysesService = require('./analyses/analysesService');
 const modelService = require('./models/modelService');
 
 function beforeEach(browser) {
-  browser.resizeWindow(1366, 728);
-  loginService.login(browser)
-    .waitForElementVisible('#analyses-header');
+  browser.resizeWindow(1366, 1000);
+  loginService.login(browser).waitForElementVisible('#analyses-header');
   analysesService.addDefaultAnalysis(browser);
   modelService.addDefaultModel(browser);
 }
 
 function afterEach(browser) {
-  analysesService
-    .deleteFromList(browser)
-    .end();
+  analysesService.deleteFromList(browser).end();
 }
 
 function setBaseline(browser) {
@@ -31,6 +28,7 @@ function setBaseline(browser) {
     .waitForElementVisible('#no-baseline-warning')
     .click('#set-baseline-distribution-button')
     .waitForElementVisible('#set-baseline-header')
+    .waitForElementVisible('#confirm-set-baseline-button:enabled')
     .click('#confirm-set-baseline-button')
     .waitForElementVisible('#absolute-effects-table');
 }

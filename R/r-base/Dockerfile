@@ -13,7 +13,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q build-essential libcurl
 RUN R -e 'install.packages("plyr", repos="http://cran.rstudio.com/"); if (!require("plyr")) quit(save="no", status=8)'
 RUN R -e 'install.packages("igraph", repos="http://cran.rstudio.com/"); if (!require("igraph")) quit(save="no", status=8)'
 # Up-to-date meta package requires R >= 3.5.0
-RUN R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/meta/meta_3.8-0.tar.gz", repos=NULL, type="source"); if (!require("meta")) quit(save="no", status=8)'
+RUN R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/meta/meta_4.9-2.tar.gz", repos=NULL, type="source"); if (!require("meta")) quit(save="no", status=8)'
 RUN R -e 'install.packages("base64enc", repos="http://cran.rstudio.com/"); if (!require("meta")) quit(save="no", status=8)'
 RUN R -e 'install.packages("truncnorm", repos="http://cran.rstudio.com/"); if (!require("truncnorm")) quit(save="no", status=8)'
 
