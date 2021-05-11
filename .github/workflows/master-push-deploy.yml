@@ -46,17 +46,23 @@ jobs:
       - name: docker login
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
+      - name: build patavi docker iamge
+        run: docker build --tag addis/patavi-gemtc-worker:live R/
+
+      - name: docker push patavi
+        run: docker push addis/patavi-gemtc-worker:live
+
       # - name: build docker image
       #   run: ./build-docker-with-tag.sh GOOGLE Live live
 
       # - name: docker push
       #   run: docker push addis/gemtc:live
 
-      - name: pull latest from drugis on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'cd gemtc-web && git checkout master && git pull'
+      # - name: pull latest from drugis on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'cd gemtc-web && git checkout master && git pull'
 
-      - name: update database on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'cd gemtc-web/liquibase &&./update-db.sh update'
+      # - name: update database on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'cd gemtc-web/liquibase &&./update-db.sh update'
 
       # - name: stop GeMTC docker container on the server
       #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker stop gemtc'
@@ -70,8 +76,8 @@ jobs:
       # - name: prune docker on the server
       #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker system prune -f'
 
-      # - name: docker registry garbage collection
-      #   run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
+      - name: docker registry garbage collection
+        run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
 
       # - name: notify on slack channel on failure
       #   if: failure()
