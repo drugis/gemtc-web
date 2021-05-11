@@ -47,10 +47,10 @@ jobs:
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
       - name: build patavi docker iamge
-        run: docker build --tag addis/patavi-gemtc-worker:live R/
+        run: docker build --tag addis/patavi-gemtc-worker:test R/
 
       - name: docker push patavi
-        run: docker push addis/patavi-gemtc-worker:live
+        run: docker push addis/patavi-gemtc-worker:test
 
       # - name: build docker image
       #   run: ./build-docker-with-tag.sh GOOGLE Test test

@@ -1,4 +1,4 @@
-FROM gemtc/r-base-amqp
+FROM addis/patavi-gemtc-worker-base
 
 ADD gemtc.R /var/lib/patavi/gemtc.R
 
