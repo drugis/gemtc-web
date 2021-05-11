@@ -1,0 +1,91 @@
+name: GeMTC-live | push | deploy
+
+on:
+  push:
+    branches: ops/addMasterDeployWorkflow
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: ['12']
+        os: [ubuntu-16.04]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.deployPrivateKey }}
+
+      - name: create ssl files
+        run: |
+          mkdir ssl
+          echo "${{ secrets.pataviClientCrt }}" > ssl/crt.pem
+          echo "${{ secrets.pataviClientKey }}" > ssl/key.pem
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+      - name: run yarn
+        run: yarn
+
+      - name: unit tests
+        id: tests
+        run: yarn test
+
+      - name: docker login
+        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
+
+      - name: build docker image
+        run: ./build-docker-with-tag.sh GOOGLE Live live
+
+      # - name: docker push
+      #   run: docker push addis/gemtc:live
+
+      # - name: pull latest from drugis on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'cd gemtc-web && git checkout develop && git pull'
+
+      # - name: update database on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'cd gemtc-web/liquibase &&./update-db.sh update'
+
+      # - name: stop GeMTC docker container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker stop gemtc'
+
+      # - name: remove container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker rm gemtc'
+
+      # - name: run GeMTC container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'gemtc-web/run-gemtc-from-registry.sh'
+
+      # - name: prune docker on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker system prune -f'
+
+      # - name: docker registry garbage collection
+      #   run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
+
+      # - name: notify on slack channel on failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'GeMTC deploy failed'
+
+      # - name: notify on slack channel on success
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'GeMTC deployed'
