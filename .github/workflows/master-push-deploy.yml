@@ -73,6 +73,9 @@ jobs:
       # - name: run GeMTC container on the server
       #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'gemtc-web/run-gemtc-from-registry.sh'
 
+      # - name: run patavi container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org './run-gemtc-worker.sh'
+
       # - name: prune docker on the server
       #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker system prune -f'
 
