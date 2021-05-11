@@ -2,7 +2,7 @@ name: GeMTC-test | push | deploy
 
 on:
   push:
-    branches: develop
+    branches: ops/addDeployWorkflow
 
 jobs:
   test:
