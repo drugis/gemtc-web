@@ -1,11 +1,31 @@
 'use strict';
 const {merge} = require('webpack-merge');
-const dev = require('./webpack.dev');
+const common = require('./webpack.common');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let fs = require('fs');
 
-module.exports = merge(dev, {
+module.exports = merge(common, {
+  mode: 'development',
+  devtool: 'inline-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        loader: 'style-loader',
+        options: {
+          esModule: false
+        }
+      },
+      {
+        test: /\.css$/,
+        loader: 'css-loader',
+        options: {
+          esModule: false
+        }
+      }
+    ]
+  },
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'signin.html',

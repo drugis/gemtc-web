@@ -9,7 +9,8 @@
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
     "build-local-login": "webpack --config webpack.local.js",
-    "dev": "webpack --config webpack.dev.js --watch"
+    "dev": "webpack --config webpack.dev.js --watch",
+    "test-end-to-end": "nightwatch -c nightwatch.conf.js"
   },
   "repository": {
     "type": "git",
