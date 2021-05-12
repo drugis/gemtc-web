@@ -3,17 +3,20 @@
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Create fixed effect pairwise specific pair model': fixedEffectSpecificPairwiseModel,
+  'Create fixed effect pairwise specific pair model':
+    fixedEffectSpecificPairwiseModel,
   'Create fixed effect pairwise model': fixedEffectPairwiseModel,
   'Create new network model using relative data': relativeNetworkModel,
   'Create new network model': netWorkModel,
   'Create new nodesplit specific model': nodesplitSpecificModel,
   'Create new meta regression model': metaRegressionModel,
   'Create new fixed consistency model': fixedConsistencyModel,
-  'Create consistency model leaving one specific study out': leaveSpecificStudyOutConsistencyModel,
+  'Create consistency model leaving one specific study out':
+    leaveSpecificStudyOutConsistencyModel,
   'Create design adjusted consistency model': designAdjustedConsistencyModel,
   'Create model with non-default prior': nonDefaultPriorModel,
-  'Create model with non-default run length parameters': nonDefaultRunLengthModel,
+  'Create model with non-default run length parameters':
+    nonDefaultRunLengthModel,
   'Extend run length of an existing model': extendRunLenthModel
 };
 
@@ -33,9 +36,21 @@ const networkModelSettings = {
 };
 
 function verifyPairwiseModelContents(browser, modelIndex) {
-  browser.click('#model-title-' + modelIndex)
-    .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT);
-  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME, 'pairwise', 'fixed')
+  browser
+    .click('#model-title-' + modelIndex)
+    .waitForElementVisible(
+      '#model-settings-section',
+      constants.MODEL_WAIT_TIME_OUT
+    );
+  return modelService
+    .verifyCommonContent(
+      browser,
+      constants.MODEL_TITLE,
+      constants.ANALYSIS_TITLE,
+      constants.OUTCOME,
+      'pairwise',
+      'fixed'
+    )
     .assert.containsText('#model-pairwise-comparison', 'Fluoxetine — ')
     .waitForElementVisible('#relative-effects-table')
     .waitForElementVisible('#study-effect-forest-plot')
@@ -52,7 +67,14 @@ function verifyPairwiseModelContents(browser, modelIndex) {
 }
 
 function verifyMetaRegressionModelContents(browser) {
-  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME, 'regression')
+  return modelService
+    .verifyCommonContent(
+      browser,
+      constants.MODEL_TITLE,
+      constants.ANALYSIS_TITLE,
+      constants.OUTCOME,
+      'regression'
+    )
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#covariate-effect-plot')
     .waitForElementVisible('#meta-regression-table')
@@ -65,7 +87,15 @@ function verifyMetaRegressionModelContents(browser) {
 }
 
 function verifyFixedConsistencyModelContents(browser) {
-  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME, 'network', 'fixed')
+  return modelService
+    .verifyCommonContent(
+      browser,
+      constants.MODEL_TITLE,
+      constants.ANALYSIS_TITLE,
+      constants.OUTCOME,
+      'network',
+      'fixed'
+    )
     .assert.containsText('#model-likelihood', 'binom / logit')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#relative-effects-table')
@@ -77,7 +107,13 @@ function verifyFixedConsistencyModelContents(browser) {
 }
 
 function verifyLeaveOneOutModelContents(browser) {
-  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME)
+  return modelService
+    .verifyCommonContent(
+      browser,
+      constants.MODEL_TITLE,
+      constants.ANALYSIS_TITLE,
+      constants.OUTCOME
+    )
     .assert.containsText('#model-sub-type', 'leave one out')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#random-effects-standard-deviation')
@@ -89,7 +125,13 @@ function verifyLeaveOneOutModelContents(browser) {
 }
 
 function verifyDesignAdjustedModelContents(browser) {
-  return modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME)
+  return modelService
+    .verifyCommonContent(
+      browser,
+      constants.MODEL_TITLE,
+      constants.ANALYSIS_TITLE,
+      constants.OUTCOME
+    )
     .assert.containsText('#model-likelihood', 'normal / identity')
     .waitForElementVisible('#convergence-diagnostics-table')
     .waitForElementVisible('#random-effects-standard-deviation')
@@ -104,8 +146,7 @@ function verifyDesignAdjustedModelContents(browser) {
 
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
-  loginService.login(browser)
-    .waitForElementVisible('#analyses-header');
+  loginService.login(browser).waitForElementVisible('#analyses-header');
 }
 
 function afterEach(browser) {
@@ -123,9 +164,20 @@ function fixedEffectSpecificPairwiseModel(browser) {
 
   analysesService.addDefaultAnalysis(browser);
   modelService.addModel(browser, modelSettings);
-  modelService.verifyCommonContent(browser, constants.MODEL_TITLE, constants.ANALYSIS_TITLE, constants.OUTCOME, 'pairwise', 'fixed')
+  modelService
+    .verifyCommonContent(
+      browser,
+      constants.MODEL_TITLE,
+      constants.ANALYSIS_TITLE,
+      constants.OUTCOME,
+      'pairwise',
+      'fixed'
+    )
     .assert.containsText('#model-pairwise-comparison', pairwiseComparison)
-    .assert.containsText('#diagnostic-label-0', 'd.2.3 (Fluoxetine, Paroxetine)')
+    .assert.containsText(
+      '#diagnostic-label-0',
+      'd.2.3 (Fluoxetine, Paroxetine)'
+    )
     .waitForElementVisible('#relative-effects-table')
     .waitForElementVisible('#study-effect-forest-plot')
     .waitForElementVisible('#study-effect-funnel-plot')
@@ -147,7 +199,8 @@ function fixedEffectPairwiseModel(browser) {
   };
 
   analysesService.addDefaultAnalysis(browser);
-  modelService.addModel(browser, modelSettings)
+  modelService
+    .addModel(browser, modelSettings)
     .waitForElementVisible('#model-title-0')
     .waitForElementVisible('#model-title-1');
   verifyPairwiseModelContents(browser, 0);
@@ -157,7 +210,8 @@ function fixedEffectPairwiseModel(browser) {
 function relativeNetworkModel(browser) {
   analysesService.addAnalysis(browser, '/parkinson-shared.csv');
   modelService.addModel(browser, networkModelSettings);
-  modelService.verifyNetworkModelContents(browser)
+  modelService
+    .verifyNetworkModelContents(browser)
     .waitForElementVisible('#contrast-residual-deviance-table');
 }
 
@@ -175,7 +229,8 @@ function nodesplitSpecificModel(browser) {
     modelSubType: '#node-split-specific-type-radio'
   };
   analysesService.addDefaultAnalysis(browser);
-  modelService.addModel(browser, modelSettings)
+  modelService
+    .addModel(browser, modelSettings)
     .assert.containsText('#model-label', constants.MODEL_TITLE)
     .assert.containsText('#model-view-analysis', constants.ANALYSIS_TITLE)
     .assert.containsText('#model-view-outcome', constants.OUTCOME)
@@ -237,8 +292,8 @@ function nonDefaultPriorModel(browser) {
 function nonDefaultRunLengthModel(browser) {
   analysesService.addDefaultAnalysis(browser);
   modelService.addModelWithRunLengthParameters(browser, networkModelSettings);
-  browser
-    .assert.containsText('#burn-in-iterations', 1000)
+  browser.assert
+    .containsText('#burn-in-iterations', 1000)
     .assert.containsText('#inference-iterations', 2000)
     .assert.containsText('#thinning-factor', 2);
 }
@@ -257,7 +312,10 @@ function extendRunLenthModel(browser) {
     .clearValue('#nr-thinning-factor-input')
     .setValue('#nr-thinning-factor-input', 2)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', constants.MODEL_WAIT_TIME_OUT)
+    .waitForElementVisible(
+      '#model-settings-section',
+      constants.MODEL_WAIT_TIME_OUT
+    )
     .assert.containsText('#model-label', refinedModelTitle)
     .assert.containsText('#burn-in-iterations', 1000)
     .assert.containsText('#inference-iterations', 2000)
