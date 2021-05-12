@@ -9,7 +9,7 @@ module.exports = {
   'Create new network model using relative data': relativeNetworkModel,
   'Create new network model': netWorkModel,
   'Create new nodesplit specific model': nodesplitSpecificModel,
-  // 'Create new meta regression model': metaRegressionModel, FIXME re-enable once gemtc package is fixed
+  'Create new meta regression model': metaRegressionModel,
   'Create new fixed consistency model': fixedConsistencyModel,
   'Create consistency model leaving one specific study out':
     leaveSpecificStudyOutConsistencyModel,
