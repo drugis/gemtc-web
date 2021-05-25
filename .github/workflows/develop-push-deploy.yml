@@ -115,8 +115,8 @@ jobs:
            addis/gemtc:test"
 
       # Without sleep, prune will remove the container.
-      - name: Sleep for 30 seconds
-        run: sleep 30
+      - name: Sleep for 60 seconds
+        run: sleep 60
 
       - name: prune docker on GeMTC server
         run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'docker system prune -f'
