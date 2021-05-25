@@ -36,42 +36,42 @@ jobs:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
-      # - name: run yarn
-      #   run: yarn
+      - name: run yarn
+        run: yarn
 
-      # - name: unit tests
-      #   id: tests
-      #   run: yarn test
+      - name: unit tests
+        id: tests
+        run: yarn test
 
-      # - name: docker login
-      #   run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
+      - name: docker login
+        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
-      # - name: build patavi docker image
-      #   run: docker build --tag addis/patavi-gemtc-worker:live R/
+      - name: build patavi docker image
+        run: docker build --tag addis/patavi-gemtc-worker:live R/
 
-      # - name: docker push patavi
-      #   run: docker push addis/patavi-gemtc-worker:live
+      - name: docker push patavi
+        run: docker push addis/patavi-gemtc-worker:live
 
-      # - name: build docker image
-      #   run: ./build-docker.sh GOOGLE Live live
+      - name: build docker image
+        run: ./build-docker.sh GOOGLE Live live
 
-      # - name: docker push
-      #   run: docker push addis/gemtc:live
+      - name: docker push
+        run: docker push addis/gemtc:live
 
-      # - name: stop Patavi docker container on the server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker stop amqp-gemtc-multipart || true'
+      - name: stop Patavi docker container on the server
+        run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker stop amqp-gemtc-multipart || true'
 
-      # - name: delete Patavi docker container on the server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker rm amqp-gemtc-multipart || true'
+      - name: delete Patavi docker container on the server
+        run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker rm amqp-gemtc-multipart || true'
 
-      # - name: stop GeMTC docker container on the server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker stop gemtc || true'
+      - name: stop GeMTC docker container on the server
+        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker stop gemtc || true'
 
-      # - name: remove GeMTC container on the server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker rm gemtc || true'
+      - name: remove GeMTC container on the server
+        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker rm gemtc || true'
 
-      # - name: pull image on server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker pull addis/gemtc:live'
+      - name: pull image on server
+        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker pull addis/gemtc:live'
 
       - name: update database
         run: |
@@ -82,64 +82,64 @@ jobs:
            -e "LIQUIBASE_USERNAME=gemtc" \
            -e "LIQUIBASE_PASSWORD=${{ secrets.gemtcLiveDbPassword }}" \
            -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
-           webdevops/liquibase:postgres changelogSync
+           webdevops/liquibase:postgres update
 
-      # - name: run patavi container on the server
-      #   run: >
-      #     ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org \
-      #     "docker run -d --link rabbit:rabbit \
-      #      -e PATAVI_BROKER_HOST=rabbit \
-      #      -e PATAVI_BROKER_USER=admin \
-      #      -e PATAVI_BROKER_PASSWORD=${{ secrets.pataviLiveBrokerPassword }} \
-      #      --name amqp-gemtc-multipart \
-      #      addis/patavi-gemtc-worker:live"
+      - name: run patavi container on the server
+        run: >
+          ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org \
+          "docker run -d --link rabbit:rabbit \
+           -e PATAVI_BROKER_HOST=rabbit \
+           -e PATAVI_BROKER_USER=admin \
+           -e PATAVI_BROKER_PASSWORD=${{ secrets.pataviLiveBrokerPassword }} \
+           --name amqp-gemtc-multipart \
+           addis/patavi-gemtc-worker:live"
 
-      # - name: run GeMTC container on the server
-      #   run: >
-      #     ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org \
-      #     "docker run -d --name gemtc \
-      #      -e GEMTC_GOOGLE_KEY=${{ secrets.googleKeyLive }} \
-      #      -e GEMTC_GOOGLE_SECRET=${{ secrets.googleSecretLive }} \
-      #      -e GEMTC_COOKIE_SECRET=${{ secrets.cookieSecretLive }} \
-      #      -e DB_HOST=psql.drugis.org \
-      #      -e GEMTC_DB=gemtc \
-      #      -e GEMTC_DB_HOST=psql.drugis.org \
-      #      -e GEMTC_DB_USERNAME=gemtc \
-      #      -e GEMTC_DB_PASSWORD=${{ secrets.gemtcLiveDbPassword }} \
-      #      -e PATAVI_HOST=patavi.drugis.org \
-      #      -e PATAVI_PORT=443 \
-      #      -e PATAVI_CLIENT_KEY=/var/lib/gemtc/ssl/key.pem \
-      #      -e PATAVI_CLIENT_CRT=/var/lib/gemtc/ssl/crt.pem \
-      #      -e GEMTC_HOST=https://gemtc.drugis.org \
-      #      -p 3001:3001 \
-      #      addis/gemtc:live"
+      - name: run GeMTC container on the server
+        run: >
+          ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org \
+          "docker run -d --name gemtc \
+           -e GEMTC_GOOGLE_KEY=${{ secrets.googleKeyLive }} \
+           -e GEMTC_GOOGLE_SECRET=${{ secrets.googleSecretLive }} \
+           -e GEMTC_COOKIE_SECRET=${{ secrets.cookieSecretLive }} \
+           -e DB_HOST=psql.drugis.org \
+           -e GEMTC_DB=gemtc \
+           -e GEMTC_DB_HOST=psql.drugis.org \
+           -e GEMTC_DB_USERNAME=gemtc \
+           -e GEMTC_DB_PASSWORD=${{ secrets.gemtcLiveDbPassword }} \
+           -e PATAVI_HOST=patavi.drugis.org \
+           -e PATAVI_PORT=443 \
+           -e PATAVI_CLIENT_KEY=/var/lib/gemtc/ssl/key.pem \
+           -e PATAVI_CLIENT_CRT=/var/lib/gemtc/ssl/crt.pem \
+           -e GEMTC_HOST=https://gemtc.drugis.org \
+           -p 3001:3001 \
+           addis/gemtc:live"
 
-      # # Without sleep, prune will remove the container.
-      # - name: Sleep for 60 seconds
-      #   run: sleep 60
+      # Without sleep, prune will remove the container.
+      - name: Sleep for 60 seconds
+        run: sleep 60
 
-      # - name: prune docker on GeMTC server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker system prune -f'
+      - name: prune docker on GeMTC server
+        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker system prune -f'
 
-      # - name: prune docker on the patavi server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker system prune -f'
+      - name: prune docker on the patavi server
+        run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker system prune -f'
 
-      # - name: docker registry garbage collection
-      #   run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
+      - name: docker registry garbage collection
+        run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
 
-      # - name: notify on slack channel on failure
-      #   if: failure()
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: 'Develop push:'
-      #     SLACK_MESSAGE: 'GeMTC deploy failed'
+      - name: notify on slack channel on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: 'Develop push:'
+          SLACK_MESSAGE: 'GeMTC deploy failed'
 
-      # - name: notify on slack channel on success
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: 'Develop push:'
-      #     SLACK_MESSAGE: 'GeMTC deployed'
+      - name: notify on slack channel on success
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: 'Develop push:'
+          SLACK_MESSAGE: 'GeMTC deployed'
