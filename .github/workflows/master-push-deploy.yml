@@ -2,7 +2,7 @@ name: GeMTC-live | push | deploy
 
 on:
   push:
-    branches: ops/updateWorkflows
+    branches: master
 
 jobs:
   test:
@@ -58,6 +58,12 @@ jobs:
       - name: docker push
         run: docker push addis/gemtc:live
 
+      - name: pull image on server
+        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker pull addis/gemtc:live'
+
+       name: pull Patavi image on server
+        run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker pull addis/patavi-gemtc-worker:live'
+
       - name: stop Patavi docker container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker stop amqp-gemtc-multipart || true'
 
@@ -69,9 +75,6 @@ jobs:
 
       - name: remove GeMTC container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker rm gemtc || true'
-
-      - name: pull image on server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker pull addis/gemtc:live'
 
       - name: update database
         run: |
