@@ -61,7 +61,7 @@ jobs:
       - name: pull image on server
         run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker pull addis/gemtc:live'
 
-       name: pull Patavi image on server
+      - name: pull Patavi image on server
         run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker pull addis/patavi-gemtc-worker:live'
 
       - name: stop Patavi docker container on the server
