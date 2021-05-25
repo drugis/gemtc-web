@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['12']
-        os: [ubuntu-16.04]
+        os: [ubuntu-20.04]
 
     steps:
       - uses: actions/checkout@v2
@@ -53,7 +53,7 @@ jobs:
         run: docker push addis/patavi-gemtc-worker:live
 
       - name: build docker image
-        run: ./build-docker-with-tag.sh GOOGLE Live live
+        run: ./build-docker.sh GOOGLE Live live
 
       - name: docker push
         run: docker push addis/gemtc:live

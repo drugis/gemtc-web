@@ -2,7 +2,7 @@ name: GeMTC-test | push | deploy
 
 on:
   push:
-    branches: develop
+    branches: ops/updateWorkflows
 
 jobs:
   test:
@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['12']
-        os: [ubuntu-16.04]
+        os: [ubuntu-20.04]
 
     steps:
       - uses: actions/checkout@v2
@@ -36,65 +36,110 @@ jobs:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
-      - name: run yarn
-        run: yarn
+      # - name: run yarn
+      #   run: yarn
 
-      - name: unit tests
-        id: tests
-        run: yarn test
+      # - name: unit tests
+      #   id: tests
+      #   run: yarn test
 
-      - name: docker login
-        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
+      # - name: docker login
+      #   run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
-      - name: build patavi docker iamge
-        run: docker build --tag addis/patavi-gemtc-worker:test R/
+      # - name: build patavi docker iamge
+      #   run: docker build --tag addis/patavi-gemtc-worker:test R/
 
-      - name: docker push patavi
-        run: docker push addis/patavi-gemtc-worker:test
+      # - name: docker push patavi
+      #   run: docker push addis/patavi-gemtc-worker:test
 
-      - name: build docker image
-        run: ./build-docker-with-tag.sh GOOGLE Test test
+      # - name: build docker image
+      #   run: ./build-docker.sh GOOGLE Test test
 
-      - name: docker push
-        run: docker push addis/gemtc:test
+      # - name: docker push
+      #   run: docker push addis/gemtc:test
 
-      - name: pull latest from drugis on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'cd gemtc-web && git checkout develop && git pull'
+      # - name: stop Patavi docker container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi-test.drugis.org 'docker stop amqp-gemtc-multipart || true'
 
-      - name: update database on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'cd gemtc-web/liquibase &&./update-db.sh update'
+      # - name: delete Patavi docker container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi-test.drugis.org 'docker rm amqp-gemtc-multipart || true'
 
-      - name: stop GeMTC docker container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'docker stop gemtc'
+      # - name: stop GeMTC docker container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'docker stop gemtc'
 
-      - name: remove container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'docker rm gemtc'
+      # - name: remove GeMTC container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'docker rm gemtc'
 
-      - name: run GeMTC container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'gemtc-web/run-gemtc-from-registry.sh'
+      # - name: pull image on server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'docker pull addis/gemtc:test'
 
-      - name: run patavi container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@patavi-test.drugis.org './run-gemtc-worker.sh'
+      - name: update database
+        run: |
+          cd liquibase
+          for i in ../changesets/create-database-changeset-*.sql; do cat $i >> liquibase-changelog.sql; done
+          docker run --rm -v $(pwd):/liquibase/ --network host \
+           -e "LIQUIBASE_URL=jdbc:postgresql://psql-test.drugis.org:5432/gemtc" \
+           -e "LIQUIBASE_USERNAME=gemtc" \
+           -e "LIQUIBASE_PASSWORD=${{ secrets.gemtcTestDbPassword }}" \
+           -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
+           webdevops/liquibase:postgres changelogSync
 
-      - name: prune docker on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'docker system prune -f'
+      # - name: run patavi container on the server
+      #   run: >
+      #     ssh -o StrictHostKeyChecking=no deploy@patavi-test.drugis.org \
+      #     "docker run -d --link rabbit:rabbit \
+      #      -e PATAVI_BROKER_HOST=rabbit \
+      #      -e PATAVI_BROKER_USER=admin \
+      #      -e PATAVI_BROKER_PASSWORD=${{ secrets.pataviTestBrokerPassword }} \
+      #      --name amqp-gemtc-multipart \
+      #      addis/patavi-gemtc-worker:test"
 
-      - name: docker registry garbage collection
-        run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
+      # - name: run GeMTC container on the server
+      #   run: >
+      #     ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org \
+      #     "docker run -d --name gemtc \
+      #      -e GEMTC_GOOGLE_KEY=${{ secrets.googleKeyTest }} \
+      #      -e GEMTC_GOOGLE_SECRET=${{ secrets.googleSecretTest }} \
+      #      -e GEMTC_COOKIE_SECRET=${{ secrets.cookieSecretTest }} \
+      #      -e DB_HOST=psql-test.drugis.org \
+      #      -e GEMTC_DB=gemtc \
+      #      -e GEMTC_DB_HOST=psql-test.drugis.org \
+      #      -e GEMTC_DB_USERNAME=gemtc \
+      #      -e GEMTC_DB_PASSWORD=${{ secrets.gemtcTestDbPassword }} \
+      #      -e PATAVI_HOST=patavi-test.drugis.org \
+      #      -e PATAVI_PORT=443 \
+      #      -e PATAVI_CLIENT_KEY=/var/lib/gemtc/ssl/key.pem \
+      #      -e PATAVI_CLIENT_CRT=/var/lib/gemtc/ssl/crt.pem \
+      #      -e GEMTC_HOST=https://gemtc-test.drugis.org \
+      #      -p 8084:3001 \
+      #      addis/gemtc:test"
 
-      - name: notify on slack channel on failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: 'Develop push:'
-          SLACK_MESSAGE: 'GeMTC-test deploy failed'
+      # # Without sleep, prune will remove the container.
+      # - name: Sleep for 30 seconds
+      #   run: sleep 30
 
-      - name: notify on slack channel on success
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: 'Develop push:'
-          SLACK_MESSAGE: 'GeMTC-test deployed'
+      # - name: prune docker on GeMTC server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org 'docker system prune -f'
+
+      # - name: prune docker on the patavi server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi-test.drugis.org 'docker system prune -f'
+
+      # - name: docker registry garbage collection
+      #   run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
+
+      # - name: notify on slack channel on failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'GeMTC-test deploy failed'
+
+      # - name: notify on slack channel on success
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'GeMTC-test deployed'
