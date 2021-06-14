@@ -44,13 +44,19 @@ app.use(
 );
 app.use(bodyparser.json({limit: '5mb'}));
 
-StartupDiagnostics.runStartupDiagnostics((errorBody) => {
-  if (errorBody) {
-    initError(errorBody);
-  } else {
-    initApp();
-  }
-});
+function runDiagnostics(numberOftries) {
+  StartupDiagnostics.runStartupDiagnostics((errorBody) => {
+    if (numberOftries <= 0) {
+      process.exit(1);
+    } else if (errorBody) {
+      setTimeout(_.partial(runDiagnostics, numberOftries - 1), 10000);
+    } else {
+      initApp();
+    }
+  });
+}
+
+runDiagnostics(6);
 
 function initApp() {
   var authenticationMethod = process.env.GEMTC_AUTHENTICATION_METHOD;
@@ -121,18 +127,6 @@ function initApp() {
   });
   app.use(errorHandler);
   app.listen(3001);
-}
-
-function initError(errorBody) {
-  app.get('*', function (req, res) {
-    res
-      .status(httpStatus.INTERNAL_SERVER_ERROR)
-      .set('Content-Type', 'text/html')
-      .send(errorBody);
-  });
-  app.listen(3001, function () {
-    logger.error('Access the diagnostics summary at http://localhost:3001');
-  });
 }
 
 function setRequiredRights() {
