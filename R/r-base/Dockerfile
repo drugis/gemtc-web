@@ -1,11 +1,11 @@
 # Dockerfile for the GeMTC Patavi worker
-# You need the patavi/worker-aqmp base image
-FROM patavi/worker-amqp
+FROM addis/patavi-worker-base
 
 USER root
 
+RUN add-apt-repository ppa:c2d4u.team/c2d4u4.0+
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-api-3 r-cran-coda
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-coda
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-rjags
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-xml
 
@@ -19,7 +19,4 @@ RUN R -e 'install.packages("truncnorm", repos="http://cran.rstudio.com/"); if (!
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-rglpk
 
-# RUN R -e 'install.packages("gemtc", repos="http://cran.rstudio.com/"); if (!require("gemtc")) quit(save="no", status=8)'
-COPY gemtc_0.8-3.tar.gz gemtc_0.8.tar.gz
-RUN R -e 'install.packages("gemtc_0.8.tar.gz", repos=NULL, type="source"); if (!require("gemtc")) quit(save="no", status=8)'
-
+RUN R -e 'install.packages("gemtc", repos="http://cran.rstudio.com/"); if (!require("gemtc")) quit(save="no", status=8)'

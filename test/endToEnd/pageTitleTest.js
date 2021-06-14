@@ -18,8 +18,7 @@ const modelService = require('./models/modelService');
 const errorService = require('./util/errorService');
 
 function addAnalysisAndModel(browser) {
-  loginService.login(browser)
-    .waitForElementVisible('#analyses-header');
+  loginService.login(browser).waitForElementVisible('#analyses-header');
   analysesService.addDefaultAnalysis(browser);
   modelService.addDefaultModel(browser);
   return browser;
@@ -37,43 +36,42 @@ function loginPage(browser) {
   browser
     .url(constants.TEST_URL)
     .waitForElementVisible('#signinButton')
-    .getTitle(function(title) {
+    .getTitle(function (title) {
       browser.assert.equal(title, 'gemtc.drugis.org');
     });
   errorService.isErrorBarNotPresent(browser);
 }
 
 function analysesView(browser) {
-  loginService.login(browser)
+  loginService
+    .login(browser)
     .waitForElementVisible('#analyses-header')
-    .getTitle(function(title) {
+    .getTitle(function (title) {
       browser.assert.equal(title, 'Analyses');
     });
   errorService.isErrorBarHidden(browser);
 }
 
 function modelsView(browser) {
-  loginService.login(browser)
-    .waitForElementVisible('#analyses-header');
-  analysesService.addDefaultAnalysis(browser)
-    .getTitle(function(title) {
-      browser.assert.equal(title, constants.ANALYSIS_TITLE);
-      analysesService.deleteFromList(browser);
-    });
+  loginService.login(browser).waitForElementVisible('#analyses-header');
+  analysesService.addDefaultAnalysis(browser).getTitle(function (title) {
+    browser.assert.equal(title, constants.ANALYSIS_TITLE);
+    analysesService.deleteFromList(browser);
+  });
 }
 
 function modeltitlesView(browser) {
-  addAnalysisAndModel(browser)
-    .getTitle(function(title) {
-      browser.assert.equal(title, constants.MODEL_TITLE);
-      analysesService.deleteFromList(browser);
-    });
+  addAnalysisAndModel(browser).getTitle(function (title) {
+    browser.assert.equal(title, constants.MODEL_TITLE);
+    analysesService.deleteFromList(browser);
+  });
 }
 
 function RefineModelView(browser) {
   addAnalysisAndModel(browser)
     .click('#refine-model-button')
-    .getTitle(function(title) {
+    .waitForElementVisible('#create-model-header')
+    .getTitle(function (title) {
       browser.assert.equal(title, 'Refine model');
       analysesService.deleteFromList(browser);
     });
@@ -82,7 +80,7 @@ function RefineModelView(browser) {
 function NodesplitOverview(browser) {
   addAnalysisAndModel(browser)
     .click('#node-split-overview-link')
-    .getTitle(function(title) {
+    .getTitle(function (title) {
       browser.assert.equal(title, constants.MODEL_TITLE);
       analysesService.deleteFromList(browser);
     });

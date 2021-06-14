@@ -1,6 +1,6 @@
 {
   "name": "gemtc-web",
-  "version": "0.10.0",
+  "version": "0.10.4",
   "description": "gemtc",
   "main": "gemtc.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
     "build-local-login": "webpack --config webpack.local.js",
-    "dev": "webpack --config webpack.dev.js --watch"
+    "dev": "webpack --config webpack.dev.js --watch",
+    "test-end-to-end": "nightwatch -c nightwatch.conf.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,6 @@
   "homepage": "https://github.com/drugis/gemtc-web",
   "dependencies": {
     "async": "~3.2.0",
-    "body-parser": "^1.19.0",
     "connect-pg-simple": "~6.2.1",
     "cookie-parser": "~1.4.5",
     "csurf": "~1.11.0",
@@ -35,8 +35,8 @@
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "passport": "passport-next/passport#^3.1.0",
     "passport-google-oauth20": "^2.0.0",
-    "pg": "~8.3.3",
-    "signin": "https://github.com/drugis/signin#0.1.8",
+    "pg": "~8.6.0",
+    "signin": "https://github.com/drugis/signin#0.1.9",
     "startup-diagnostics": "drugis/startup-diagnostics#1.1.1",
     "winston": "~3.3.3"
   },
@@ -65,27 +65,27 @@
     "css-loader": "^4.3.0",
     "d3": "~3.5.6",
     "error-reporting": "drugis/error-reporting#~1.3.3",
-    "export-directive": "drugis/export-directive#1.3.2",
+    "export-directive": "drugis/export-directive#1.3.4",
     "file-loader": "^6.1.0",
     "font-awesome": "~4.7.0",
     "foundation-sites": "~6.6.3",
     "geckodriver": "^1.20.0",
     "help-popup": "drugis/help-popup#0.5.1",
-    "html-webpack-plugin": "^4.4.1",
+    "html-webpack-plugin": "^5.3.1",
     "jasmine-core": "~3.6.0",
     "jquery": "~3.5.1",
     "json-loader": "^0.5.7",
-    "karma": "5.2.2",
+    "karma": "6.3.2",
     "karma-chrome-launcher": "~3.1.0",
-    "karma-firefox-launcher": "~1.3.0",
+    "karma-firefox-launcher": "~2.1.0",
     "karma-jasmine": "~4.0.1",
     "karma-junit-reporter": "~2.0.1",
-    "karma-webpack": "^4.0.2",
-    "katex": "^0.12.0",
-    "mini-css-extract-plugin": "^0.11.2",
-    "mocha": "^8.1.3",
-    "moment": "^2.28.0",
-    "nightwatch": "^1.4.2",
+    "karma-webpack": "^5.0.0",
+    "katex": "^0.13.2",
+    "mini-css-extract-plugin": "^1.5.0",
+    "mocha": "^8.3.2",
+    "moment": "^2.29.1",
+    "nightwatch": "^1.6.3",
     "nvd3": "~1.8.6",
     "page-title-service": "drugis/page-title-service#1.0.5",
     "papaparse": "~5.3.0",
@@ -98,9 +98,9 @@
     "tocbot": "^4.12.0",
     "url-loader": "^4.1.0",
     "vanilla-back-to-top": "^7.2.1",
-    "webpack": "~4.44.2",
-    "webpack-cli": "~3.3.12",
-    "webpack-merge": "~5.1.4"
+    "webpack": "~5.35.0",
+    "webpack-cli": "~4.6.0",
+    "webpack-merge": "~5.7.3"
   },
   "engines": {
     "yarn": ">= 1.0.0"

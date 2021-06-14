@@ -13,16 +13,13 @@ const modelService = require('./models/modelService');
 
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
-  loginService.login(browser)
-    .waitForElementVisible('#analyses-header');
+  loginService.login(browser).waitForElementVisible('#analyses-header');
   analysesService.addDefaultAnalysis(browser);
   modelService.addDefaultModel(browser);
 }
 
 function afterEach(browser) {
-  analysesService
-    .deleteFromList(browser)
-    .end();
+  analysesService.deleteFromList(browser).end();
 }
 
 function refineModel(browser) {
@@ -32,7 +29,7 @@ function refineModel(browser) {
     .waitForElementVisible('#create-model-header')
     .setValue('#title-input', newModelTitle)
     .click('#submit-add-model-button')
-    .waitForElementVisible('#model-settings-section', 10000)
+    .waitForElementVisible('#model-settings-section', 20000)
     .click('#breadcrumbs-analysis')
     .waitForElementVisible('#analysis-header')
     .assert.containsText('#model-0', constants.MODEL_TITLE)

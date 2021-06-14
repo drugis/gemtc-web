@@ -7,7 +7,6 @@ var appEnvironmentSettings = {
 var express = require('express');
 var session = require('express-session');
 var helmet = require('helmet');
-var bodyparser = require('body-parser');
 var _ = require('lodash');
 var csurf = require('csurf');
 var httpStatus = require('http-status-codes');
@@ -42,7 +41,7 @@ app.use(
     contentSecurityPolicy: false
   })
 );
-app.use(bodyparser.json({limit: '5mb'}));
+app.use(express.json({limit: '5mb'}));
 
 function runDiagnostics(numberOftries) {
   StartupDiagnostics.runStartupDiagnostics((errorBody) => {
