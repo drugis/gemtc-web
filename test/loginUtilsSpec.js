@@ -65,19 +65,29 @@ describe('loginUtils', function () {
 
   describe('setXSRFTokenMiddleware', function () {
     it('should set a cookie with the session csrfSecret', function () {
-      var token = 'token';
-      var request = {
-        csrfToken: function () {
+      const cookieSettings = {sameSite: 'lax'};
+      const token = 'token';
+      const request = {
+        csrfToken: () => {
           return token;
         }
       };
-      var response = {
+      const response = {
         cookie: chai.spy()
       };
-      var next = chai.spy();
+      const next = chai.spy();
 
-      loginUtils.setXSRFTokenMiddleware(request, response, next);
-      expect(response.cookie).to.have.been.called.with('XSRF-TOKEN', token);
+      loginUtils.setXSRFTokenMiddleware(
+        cookieSettings,
+        request,
+        response,
+        next
+      );
+      expect(response.cookie).to.have.been.called.with(
+        'XSRF-TOKEN',
+        token,
+        cookieSettings
+      );
       expect(next).to.have.been.called();
     });
   });
