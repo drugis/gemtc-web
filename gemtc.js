@@ -9,7 +9,6 @@ var session = require('express-session');
 var helmet = require('helmet');
 var _ = require('lodash');
 var csurf = require('csurf');
-var httpStatus = require('http-status-codes');
 var dbUtil = require('./standalone-app/dbUtil');
 var db = require('./standalone-app/db')(dbUtil.connectionConfig);
 var loginUtils = require('./standalone-app/loginUtils');
@@ -22,12 +21,19 @@ var mcdaPataviTaskRouter = require('./standalone-app/mcdaPataviTaskRouter');
 var errorHandler = require('./standalone-app/errorHandler');
 var logger = require('./standalone-app/logger');
 var StartupDiagnostics = require('startup-diagnostics')(db, logger, 'GeMTC');
+const {StatusCodes} = require('http-status-codes');
+
+const cookieSettings = {
+  maxAge: 60 * 60 * 1000, // 1 hour
+  secure: false,
+  sameSite: 'lax'
+};
 
 function rightsCallback(response, next, userId, error, workspace) {
   if (error) {
     next(error);
   } else if (workspace.owner !== userId) {
-    response.status(403).send('Insufficient user rights');
+    response.status(StatusCodes.FORBIDDEN).send('Insufficient user rights');
   } else {
     next();
   }
@@ -69,10 +75,7 @@ function initApp() {
     proxy: process.env.GEMTC_USE_PROXY,
     rolling: true,
     saveUninitialized: true,
-    cookie: {
-      maxAge: 60 * 60 * 1000, // 1 hour
-      secure: false
-    }
+    cookie: cookieSettings
   };
   app.use(session(sessionOptions));
   switch (authenticationMethod) {
@@ -105,7 +108,7 @@ function initApp() {
     res.sendFile(__dirname + '/app/lexicon.json');
   });
   app.use('/css/fonts', express.static('./dist/fonts'));
-  app.use(loginUtils.setXSRFTokenMiddleware);
+  app.use(_.partial(loginUtils.setXSRFTokenMiddleware, cookieSettings));
   app.all('*', loginUtils.securityMiddleware);
   app.use('/user', function (req, res) {
     res.json(_.omit(req.user, ['username', 'id', 'password']));
@@ -119,7 +122,7 @@ function initApp() {
       return next(error);
     }
     if (error && error.type === signin.SIGNIN_ERROR) {
-      res.status(401).send('login failed');
+      res.status(StatusCodes.UNAUTHORIZED).send('login failed');
     } else {
       next(error);
     }

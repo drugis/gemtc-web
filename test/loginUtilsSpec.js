@@ -63,47 +63,6 @@ describe('loginUtils', function () {
     });
   });
 
-  describe('csrfValue', function () {
-    describe("should extract the token from the request's body", function () {
-      it('for the body._csrf', function () {
-        var request = {
-          body: {
-            _csrf: 'token'
-          }
-        };
-        var token = loginUtils.csrfValue(request);
-        expect(token).to.equal(request.body._csrf);
-      });
-      it('for the query._csrf', function () {
-        var request = {
-          query: {
-            _csrf: 'token'
-          }
-        };
-        var token = loginUtils.csrfValue(request);
-        expect(token).to.equal(request.query._csrf);
-      });
-      it('for the headers x-csrf-token', function () {
-        var request = {
-          headers: {
-            'x-csrf-token': 'token'
-          }
-        };
-        var token = loginUtils.csrfValue(request);
-        expect(token).to.equal(request.headers['x-csrf-token']);
-      });
-      it('for the headers x-xsrf-token', function () {
-        var request = {
-          headers: {
-            'x-xsrf-token': 'token'
-          }
-        };
-        var token = loginUtils.csrfValue(request);
-        expect(token).to.equal(request.headers['x-xsrf-token']);
-      });
-    });
-  });
-
   describe('setXSRFTokenMiddleware', function () {
     it('should set a cookie with the session csrfSecret', function () {
       var token = 'token';
