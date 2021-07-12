@@ -1,9 +1,9 @@
 # Dockerfile for the GeMTC Patavi worker
-# You need the patavi/worker-aqmp base image
-FROM patavi/worker-amqp
+FROM addis/patavi-worker-base
 
 USER root
 
+RUN add-apt-repository ppa:c2d4u.team/c2d4u4.0+
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN R -e 'install.packages("plyr", repos="http://cran.rstudio.com/"); if (!require("plyr")) quit(save="no", status=8)'
 RUN R -e 'install.packages("coda", repos="http://cran.rstudio.com/"); if (!require("coda")) quit(save="no", status=8)'
