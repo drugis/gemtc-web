@@ -19,9 +19,11 @@ const httpsOptions = {
   port: process.env.PATAVI_PORT || 3000
 };
 
+const protocol = process.env.SECURE_TRAFFIC === 'false' ? http : https;
+
 function getJson(url, callback) {
   const opts = urlModule.parse(url);
-  https
+  protocol
     .get(opts, function (res) {
       res.setEncoding('utf8');
       let body = '';
@@ -92,9 +94,11 @@ function create(problem, params, callback) {
       'X-client-name': 'GeMTC-open'
     }
   };
-  const protocol = process.env.SECURE_TRAFFIC === 'false' ? http : https;
   const postReq = protocol.request({...httpsOptions, ...reqOptions}, (res) => {
-    if (res.statusCode === httpStatus.CREATED && res.headers.location) {
+    if (
+      res.statusCode === httpStatus.StatusCodes.CREATED &&
+      res.headers.location
+    ) {
       callback(null, res.headers.location);
     } else {
       callback('Error queueing task: server returned code ' + res.statusCode);
@@ -107,10 +111,10 @@ function create(problem, params, callback) {
 function deleteTask(id, callback) {
   const reqOptions = urlModule.parse(id);
   reqOptions.method = 'DELETE';
-  const deleteReq = https.request(
+  const deleteReq = protocol.request(
     _.extend(httpsOptions, reqOptions),
     function (res) {
-      if (res.statusCode === httpStatus.OK) {
+      if (res.statusCode === httpStatus.StatusCodes.OK) {
         callback(null);
       } else {
         callback('Error deleting task: server returned code ' + res.statusCode);

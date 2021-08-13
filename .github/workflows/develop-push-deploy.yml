@@ -19,12 +19,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.deployPrivateKey }}
 
-      - name: create ssl files
-        run: |
-          mkdir ssl
-          echo "${{ secrets.pataviClientCrt }}" > ssl/crt.pem
-          echo "${{ secrets.pataviClientKey }}" > ssl/key.pem
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -87,7 +81,7 @@ jobs:
            -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
            webdevops/liquibase:postgres update
 
-      - name: run patavi container on the server
+      - name: run patavi worker container on the server
         run: >
           ssh -o StrictHostKeyChecking=no deploy@patavi-test.drugis.org \
           "docker run -d --link rabbit:rabbit \
@@ -112,6 +106,8 @@ jobs:
            -e PATAVI_HOST=patavi-test.drugis.org \
            -e PATAVI_PORT=443 \
            -e GEMTC_HOST=https://gemtc-test.drugis.org \
+           -e SECURE_TRAFFIC=true \
+           -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} \
            -p 8084:3001 \
            addis/gemtc:test"
 
