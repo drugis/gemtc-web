@@ -63,62 +63,31 @@ describe('loginUtils', function () {
     });
   });
 
-  describe('csrfValue', function () {
-    describe("should extract the token from the request's body", function () {
-      it('for the body._csrf', function () {
-        var request = {
-          body: {
-            _csrf: 'token'
-          }
-        };
-        var token = loginUtils.csrfValue(request);
-        expect(token).to.equal(request.body._csrf);
-      });
-      it('for the query._csrf', function () {
-        var request = {
-          query: {
-            _csrf: 'token'
-          }
-        };
-        var token = loginUtils.csrfValue(request);
-        expect(token).to.equal(request.query._csrf);
-      });
-      it('for the headers x-csrf-token', function () {
-        var request = {
-          headers: {
-            'x-csrf-token': 'token'
-          }
-        };
-        var token = loginUtils.csrfValue(request);
-        expect(token).to.equal(request.headers['x-csrf-token']);
-      });
-      it('for the headers x-xsrf-token', function () {
-        var request = {
-          headers: {
-            'x-xsrf-token': 'token'
-          }
-        };
-        var token = loginUtils.csrfValue(request);
-        expect(token).to.equal(request.headers['x-xsrf-token']);
-      });
-    });
-  });
-
   describe('setXSRFTokenMiddleware', function () {
     it('should set a cookie with the session csrfSecret', function () {
-      var token = 'token';
-      var request = {
-        csrfToken: function () {
+      const cookieSettings = {sameSite: 'lax'};
+      const token = 'token';
+      const request = {
+        csrfToken: () => {
           return token;
         }
       };
-      var response = {
+      const response = {
         cookie: chai.spy()
       };
-      var next = chai.spy();
+      const next = chai.spy();
 
-      loginUtils.setXSRFTokenMiddleware(request, response, next);
-      expect(response.cookie).to.have.been.called.with('XSRF-TOKEN', token);
+      loginUtils.setXSRFTokenMiddleware(
+        cookieSettings,
+        request,
+        response,
+        next
+      );
+      expect(response.cookie).to.have.been.called.with(
+        'XSRF-TOKEN',
+        token,
+        cookieSettings
+      );
       expect(next).to.have.been.called();
     });
   });
