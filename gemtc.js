@@ -9,7 +9,6 @@ var session = require('express-session');
 var helmet = require('helmet');
 var _ = require('lodash');
 var csurf = require('csurf');
-var httpStatus = require('http-status-codes');
 var dbUtil = require('./standalone-app/dbUtil');
 var db = require('./standalone-app/db')(dbUtil.connectionConfig);
 var loginUtils = require('./standalone-app/loginUtils');

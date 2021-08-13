@@ -93,8 +93,6 @@ docker run -d \
  -e GEMTC_HOST=https://$HOST_NAME \
  -e GEMTC_DB_USERNAME=gemtc \
  -e GEMTC_DB_PASSWORD=develop \
- -e PATAVI_CLIENT_CRT=ssl/crt.pem \
- -e PATAVI_CLIENT_KEY=ssl/key.pem \
  -e PATAVI_HOST=$HOST_NAME \
   addis/gemtc
 

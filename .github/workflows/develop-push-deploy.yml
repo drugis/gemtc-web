@@ -111,8 +111,6 @@ jobs:
            -e GEMTC_DB_PASSWORD=${{ secrets.gemtcTestDbPassword }} \
            -e PATAVI_HOST=patavi-test.drugis.org \
            -e PATAVI_PORT=443 \
-           -e PATAVI_CLIENT_KEY=/var/lib/gemtc/ssl/key.pem \
-           -e PATAVI_CLIENT_CRT=/var/lib/gemtc/ssl/crt.pem \
            -e GEMTC_HOST=https://gemtc-test.drugis.org \
            -p 8084:3001 \
            addis/gemtc:test"

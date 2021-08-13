@@ -111,8 +111,6 @@ jobs:
            -e GEMTC_DB_PASSWORD=${{ secrets.gemtcLiveDbPassword }} \
            -e PATAVI_HOST=patavi.drugis.org \
            -e PATAVI_PORT=443 \
-           -e PATAVI_CLIENT_KEY=/var/lib/gemtc/ssl/key.pem \
-           -e PATAVI_CLIENT_CRT=/var/lib/gemtc/ssl/crt.pem \
            -e GEMTC_HOST=https://gemtc.drugis.org \
            -p 3001:3001 \
            addis/gemtc:live"

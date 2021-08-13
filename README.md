@@ -1,10 +1,8 @@
-gemtc-web
-=========
+# gemtc-web
 
 User interface for evidence synthesis based on the [gemtc R package](https://github.com/gertvv/gemtc) and [Patavi](https://github.com/drugis/patavi). For more information on all components of the [ADDIS project](https://github.com/drugis/addis-core), please refer to the [overall readme](https://github.com/drugis/addis-core/blob/master/OVERALL-README.md).
 
-Architecture
-------------
+## Architecture
 
 The Gemtc-web system consists of several components:
 
@@ -12,8 +10,7 @@ The Gemtc-web system consists of several components:
 
 The web frontend talks to a NodeJS backend, which performs user and data management, and queues R tasks in patavi. Data are stored in a PostgreSQL database, and patavi model results are also cached there. Patavi R tasks expose a websocket URL to the frontend, which listens there for progress updates and results. Running gemtc model tasks requires at least one patagi gemtc worker.
 
-Prerequisites for running gemtc-web
------------------------------------
+## Prerequisites for running gemtc-web
 
 - A PostgreSQL instance with an initialised database. You can create one in a docker container by running the `setup-db.sh` script. Make sure to change the passwords from the default.
 
@@ -35,11 +32,9 @@ Create the schema (shell script)
 
 - At least one gemtc patavi worker, started by executing the `run-worker.sh` script.
 
-Running as Docker container
-===========================
+# Running as Docker container
 
-Building the image (optional)
------------------------------
+## Building the image (optional)
 
 You can build a new local image by executing the `build-docker.sh` script. This would be required for example if you wish to change the default SSL keys. Note that this script assumes that your keys are present in an `ssl` subdirectory of the main gemtc directory. Also note that, if your patavi server presents a certificate that is not trusted by default, there should be a CA certificate for the signing certificate authority of your patavi container in this directory. The default patavi server image presents a certificate signed by the Drugis [self-signed certificate authority](https://drugis.org/files/ca-crt.pem)
 
@@ -53,14 +48,14 @@ For local signin, there are several further dependencies (assuming a version of 
 
 After installing these dependencies, you can add users for the `LOCAL` signin method by using the `add-user.sh` script.
 
-Running the container
------------------------
+## Running the container
 
 Execute the `run-gemtc-docker.sh` script.
 
 If you built the container with a specific login method arugment, you should run the `run-gemtc-docker.sh` script with the same one.
 
 e.g.:
+
 ```
 ./build-docker.sh LOCAL
 ./run-gemtc-docker.sh LOCAL
@@ -70,23 +65,22 @@ e.g.:
 
 Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
 
-Development
------------
+## Development
 
 If you wish to run the application locally for development, follow these steps:
 
 - (Optional) Initialise and update the scss from the drugis main project
 
-    git submodule init
-    git submodule update
+  git submodule init
+  git submodule update
 
 - Compile the scss to css using compass
 
-    compass compile
+  compass compile
 
 - Use yarn to install the dependencies
 
-    yarn
+  yarn
 
 - Ensure that your prerequisites are in place (see above)
 
@@ -103,9 +97,6 @@ If you wish to run the application locally for development, follow these steps:
     export GEMTC_AUTHENTICATION_METHOD=GOOGLE
     export PATAVI_HOST=localhost
     export PATAVI_PORT=3000
-    export PATAVI_CLIENT_KEY=path-to/app-env-key.pem
-    export PATAVI_CLIENT_CRT=path-to/app-env-crt.pem
-    export PATAVI_CA=path-to/provider-name.crt
 ```
 
 Note: this google key/secret combination expects the server to run at localhost:3001
@@ -122,8 +113,8 @@ Run the application
 
 Now visit the app at http://localhost:3001
 
-Running tests
--------------
+## Running tests
+
 The Angular app is tested by karma:
 
     npx karma start
