@@ -15,5 +15,5 @@ docker run -d \
  -e GEMTC_AUTHENTICATION_METHOD=$ATHENTICATION_METHOD \
  -e PATAVI_HOST=localdocker \
  -e SECURE_TRAFFIC=false \ 
- -e PATAVI_API_KEY=someToken \
+ -e PATAVI_API_KEY=someApiKey \
   addis/gemtc

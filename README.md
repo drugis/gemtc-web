@@ -95,7 +95,7 @@ If you wish to run the application locally for development, follow these steps:
     export GEMTC_AUTHENTICATION_METHOD=GOOGLE
     export PATAVI_HOST=localhost
     export PATAVI_PORT=3000
-    export PATAVI_API_KEY=someToken
+    export PATAVI_API_KEY=someApiKey
     export SECURE_TRAFFIC=false
 ```
 

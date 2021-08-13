@@ -104,7 +104,6 @@ jobs:
            -e GEMTC_DB_USERNAME=gemtc \
            -e GEMTC_DB_PASSWORD=${{ secrets.gemtcLiveDbPassword }} \
            -e PATAVI_HOST=patavi.drugis.org \
-           -e PATAVI_PORT=443 \
            -e GEMTC_HOST=https://gemtc.drugis.org \   
            -e SECURE_TRAFFIC=true \
            -e PATAVI_API_KEY=${{ secrets.pataviApiKeyLive }} \
