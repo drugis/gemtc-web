@@ -1,28 +1,29 @@
 'use strict';
-var logger = require('./logger'),
-  async = require('async'),
-  modelRepository = require('./modelRepository'),
-  pataviHandlerService = require('./pataviHandlerService'),
-  pataviTaskRepository = require('./pataviTaskRepository'),
-  analysisRepository = require('./analysisRepository'),
-  httpStatus = require('http-status-codes');
-var modelCache;
+const logger = require('./logger');
+const async = require('async');
+const modelRepository = require('./modelRepository');
+const pataviHandlerService = require('./pataviHandlerService');
+const pataviTaskRepository = require('./pataviTaskRepository');
+const analysisRepository = require('./analysisRepository');
+const httpStatus = require('http-status-codes');
+let modelCache;
+
 module.exports = {
-  getPataviTask: getPataviTask,
-  getMcdaPataviTask: getMcdaPataviTask
+  getPataviTask,
+  getMcdaPataviTask
 };
 
-
 function getPataviTask(request, response) {
-  var modelId = request.params.modelId;
-  var analysisId = request.params.analysisId;
+  const modelId = request.params.modelId;
+  const analysisId = request.params.analysisId;
 
-  var createdUrlCache;
-  async.waterfall([
-      function(callback) {
+  let createdUrlCache;
+  async.waterfall(
+    [
+      (callback) => {
         modelRepository.get(modelId, callback);
       },
-      function(model, callback) {
+      (model, callback) => {
         modelCache = model;
         if (model.taskUrl) {
           response.json({
@@ -33,44 +34,45 @@ function getPataviTask(request, response) {
           analysisRepository.get(analysisId, callback);
         }
       },
-      function(analysis, callback) {
+      (analysis, callback) => {
         pataviHandlerService.createPataviTask(analysis, modelCache, callback);
       },
-      function(createdUrl, callback) {
+      (createdUrl, callback) => {
         createdUrlCache = createdUrl;
         modelRepository.setTaskUrl(modelCache.id, createdUrl, callback);
       },
-      function() {
-        response
-          .status(httpStatus.CREATED)
-          .json({
-            uri: createdUrlCache
-          });
+      () => {
+        response.status(httpStatus.CREATED).json({
+          uri: createdUrlCache
+        });
       }
     ],
-    function(error) {
+    (error) => {
       if (error && error !== 'stop') {
         logger.error(error);
         response.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
         response.end();
       }
-    });
+    }
+  );
 }
 
 function getMcdaPataviTask(request, response) {
   logger.debug('getMcdaPataviTask, ' + request.body);
 
-  pataviTaskRepository.create(request.body, 'service=smaa_v2&ttl=PT5M', function(error, taskUrl) {
-    if (error && error !== 'stop') {
-      logger.error(error);
-      response.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
-      response.end();
-    } else {
-      response
-        .status(httpStatus.CREATED)
-        .json({
+  pataviTaskRepository.create(
+    request.body,
+    'service=smaa_v2&ttl=PT5M',
+    (error, taskUrl) => {
+      if (error && error !== 'stop') {
+        logger.error(error);
+        response.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+        response.end();
+      } else {
+        response.status(httpStatus.CREATED).json({
           uri: taskUrl
         });
+      }
     }
-  });
+  );
 }

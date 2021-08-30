@@ -36,7 +36,7 @@
     "passport-google-oauth20": "^2.0.0",
     "pg": "~8.6.0",
     "signin": "https://github.com/drugis/signin#0.1.9",
-    "startup-diagnostics": "drugis/startup-diagnostics#1.1.4",
+    "startup-diagnostics": "drugis/startup-diagnostics#1.2.1",
     "winston": "~3.3.3"
   },
   "devDependencies": {

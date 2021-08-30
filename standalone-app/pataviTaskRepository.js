@@ -1,66 +1,47 @@
 'use strict';
-var logger = require('./logger'),
-  _ = require('lodash'),
-  fs = require('fs'),
-  https = require('https'),
-  async = require('async'),
-  urlModule = require('url'),
-  httpStatus = require('http-status-codes');
+const logger = require('./logger');
+const _ = require('lodash');
+const https = require('https');
+const http = require('http');
+const async = require('async');
+const urlModule = require('url');
+const httpStatus = require('http-status-codes');
 
 module.exports = {
-  getResult: getResult,
-  getPataviTasksStatus: getPataviTasksStatus,
-  create: createPataviTask,
-  deleteTask: deleteTask
+  getResult,
+  getPataviTasksStatus,
+  create,
+  deleteTask
 };
 
-var httpsOptions = {
+const httpsOptions = {
   hostname: process.env.PATAVI_HOST || 'localhost',
   port: process.env.PATAVI_PORT || 3000
 };
 
-try {
-  httpsOptions.key = fs.readFileSync(process.env.PATAVI_CLIENT_KEY);
-} catch (e) {
-  logger.error('could not read patavi client key at: ' + process.env.PATAVI_CLIENT_KEY);
-  httpsOptions.key = 'empty-key';
-}
-
-try {
-  httpsOptions.cert = fs.readFileSync(process.env.PATAVI_CLIENT_CRT);
-} catch (e) {
-  logger.error('could not read patavi client certivicate key at: ' + process.env.PATAVI_CLIENT_CRT);
-  httpsOptions.cert = 'empty-client-crt';
-}
-
-try {
-  httpsOptions.ca = fs.readFileSync(process.env.PATAVI_CA);
-} catch (e) {
-  logger.warn('could not read patavi certivicate authority at: ' + process.env.PATAVI_CA);
-}
+const protocol = process.env.SECURE_TRAFFIC === 'false' ? http : https;
 
 function getJson(url, callback) {
-  var opts = urlModule.parse(url);
-  if (httpsOptions.ca) {
-    opts.ca = httpsOptions.ca;
-  }
-  https.get(opts, function(res) {
-    res.setEncoding('utf8');
-    var body = '';
-    res.on('data', function(chunk) {
-      body += chunk;
+  const opts = urlModule.parse(url);
+  protocol
+    .get(opts, function (res) {
+      res.setEncoding('utf8');
+      let body = '';
+      res.on('data', function (chunk) {
+        body += chunk;
+      });
+      res.on('end', function () {
+        callback(null, JSON.parse(body));
+      });
+    })
+    .on('error', function (err) {
+      callback(err);
     });
-    res.on('end', function() {
-      callback(null, JSON.parse(body));
-    });
-  }).on('error', function(err) {
-    callback(err);
-  });
 }
 
 function getResult(taskUrl, callback) {
   logger.debug('pataviTaskRepository.getResult');
-  getJson(taskUrl, function(err, result) {
+  getJson(taskUrl, function (err, result) {
     if (err) {
       return callback(err);
     }
@@ -69,7 +50,7 @@ function getResult(taskUrl, callback) {
         description: 'no result found'
       });
     }
-    getJson(result._links.results.href, function(err, result) {
+    getJson(result._links.results.href, function (err, result) {
       if (err) {
         return callback(err);
       }
@@ -83,7 +64,7 @@ function getPataviTasksStatus(taskUrls, callback) {
 
   function getTaskStatus(taskUrl, callback) {
     logger.debug('getting ' + taskUrl);
-    getJson(taskUrl, function(err, result) {
+    getJson(taskUrl, function (err, result) {
       if (err) {
         return callback(err);
       }
@@ -93,7 +74,7 @@ function getPataviTasksStatus(taskUrls, callback) {
       });
     });
   }
-  async.map(taskUrls, getTaskStatus, function(err, results) {
+  async.map(taskUrls, getTaskStatus, function (err, results) {
     if (err) {
       return callback(err);
     }
@@ -101,18 +82,23 @@ function getPataviTasksStatus(taskUrls, callback) {
   });
 }
 
-function createPataviTask(problem, params, callback) {
+function create(problem, params, callback) {
   logger.debug('pataviTaskRepository.createPataviTask; params: ' + params);
-  var paramStr = params ? '?' + params : '';
-  var reqOptions = {
-    path: '/task' + paramStr,
+  const path = `/task${params ? '?' + params : ''}`;
+  const reqOptions = {
+    path: path,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-api-key': process.env.PATAVI_API_KEY,
+      'X-client-name': 'GeMTC-open'
     }
   };
-  var postReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
-    if (res.statusCode === httpStatus.CREATED && res.headers.location) {
+  const postReq = protocol.request({...httpsOptions, ...reqOptions}, (res) => {
+    if (
+      res.statusCode === httpStatus.StatusCodes.CREATED &&
+      res.headers.location
+    ) {
       callback(null, res.headers.location);
     } else {
       callback('Error queueing task: server returned code ' + res.statusCode);
@@ -123,14 +109,17 @@ function createPataviTask(problem, params, callback) {
 }
 
 function deleteTask(id, callback) {
-  var reqOptions = urlModule.parse(id);
+  const reqOptions = urlModule.parse(id);
   reqOptions.method = 'DELETE';
-  var deleteReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
-    if (res.statusCode === httpStatus.OK) {
-      callback(null);
-    } else {
-      callback('Error deleting task: server returned code ' + res.statusCode);
+  const deleteReq = protocol.request(
+    _.extend(httpsOptions, reqOptions),
+    function (res) {
+      if (res.statusCode === httpStatus.StatusCodes.OK) {
+        callback(null);
+      } else {
+        callback('Error deleting task: server returned code ' + res.statusCode);
+      }
     }
-  });
+  );
   deleteReq.end();
 }

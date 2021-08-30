@@ -29,7 +29,6 @@ fi
 
 mkdir -p docker
 cp -Rf standalone-app docker
-cp -Rf ssl docker
 cp -Rf public docker
 cp -Rf app docker
 cp -f webpack* docker
