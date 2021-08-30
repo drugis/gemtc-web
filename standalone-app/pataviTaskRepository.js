@@ -1,10 +1,9 @@
 'use strict';
 const logger = require('./logger');
 const _ = require('lodash');
-const https = require('https');
 const http = require('http');
 const async = require('async');
-const urlModule = require('url');
+const {URL} = require('url');
 const httpStatus = require('http-status-codes');
 
 module.exports = {
@@ -22,7 +21,7 @@ const httpsOptions = {
 const protocol = process.env.SECURE_TRAFFIC === 'false' ? http : https;
 
 function getJson(url, callback) {
-  const opts = urlModule.parse(url);
+  const opts = new URL(url);
   protocol
     .get(opts, function (res) {
       res.setEncoding('utf8');
@@ -109,8 +108,15 @@ function create(problem, params, callback) {
 }
 
 function deleteTask(id, callback) {
-  const reqOptions = urlModule.parse(id);
-  reqOptions.method = 'DELETE';
+  const reqOptions = {
+    ...new URL(id),
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-api-key': process.env.PATAVI_API_KEY,
+      'X-client-name': 'GeMTC-open'
+    }
+  };
   const deleteReq = protocol.request(
     _.extend(httpsOptions, reqOptions),
     function (res) {
