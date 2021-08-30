@@ -1,6 +1,7 @@
 'use strict';
 const logger = require('./logger');
 const _ = require('lodash');
+const https = require('https');
 const http = require('http');
 const async = require('async');
 const {URL} = require('url');
