@@ -19,9 +19,9 @@ rancher kubectl create configmap gemtc-settings \
   -n drugis \
   --from-literal=GEMTC_AUTHENTICATION_METHOD=GOOGLE \
   --from-literal=GEMTC_DB_USERNAME=gemtc \
+  --from-literal=GEMTC_DB=gemtc \
   --from-literal=GEMTC_HOST=https://gemtc.edge.molgenis.org \
-  --from-literal=GEMTC_DB_HOST=postgres \
-  --from-literal=DB_HOST=gemtc \
+  --from-literal=DB_HOST=postgres \
   --from-literal=PATAVI_HOST=patavi.edge.molgenis.org \
   --from-literal=SECURE_TRAFFIC=true
 
@@ -29,7 +29,7 @@ rancher kubectl delete secret passwords -n drugis
 rancher kubectl create secret generic passwords \
  -n drugis \
  --from-literal=rabbit-password=develop \
- --from-literal=PATAVI_API_KEY=badassApiKey
+ --from-literal=PATAVI_API_KEY=coolkeybro
 
 rancher kubectl delete configmap patavi-settings -n drugis
 rancher kubectl create configmap patavi-settings \

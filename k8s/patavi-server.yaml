@@ -4,7 +4,7 @@ metadata:
   name: patavi-server
   namespace: drugis
 spec:
-  type: Service
+  type: NodePort
   ports:
     - port: 3000
   selector:
@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: patavi-server
-          image: addis/patavi:secure5
+          image: addis/patavi:secure6
           envFrom:
             - configMapRef:
                 name: patavi-settings

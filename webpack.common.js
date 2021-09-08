@@ -5,9 +5,17 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 let basePath = path.join(__dirname, '/');
 let fs = require('fs');
 
-const MATOMO_VERSION = process.env.MATOMO_VERSION
-  ? process.env.MATOMO_VERSION
-  : 'Test';
+function getMatomo() {
+  const MATOMO_VERSION = process.env.MATOMO_VERSION
+    ? process.env.MATOMO_VERSION
+    : 'None';
+
+  return MATOMO_VERSION === 'None'
+    ? ''
+    : fs.readFileSync(
+        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
+      );
+}
 
 let config = {
   entry: {
@@ -90,18 +98,14 @@ let config = {
       template: 'app/index.ejs',
       inject: 'head',
       chunks: ['main'],
-      matomo: fs.readFileSync(
-        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
-      )
+      matomo: getMatomo()
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',
       template: 'app/manual.ejs',
       inject: 'head',
       chunks: ['manual'],
-      matomo: fs.readFileSync(
-        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
-      )
+      matomo: getMatomo()
     }),
     new CleanWebpackPlugin()
   ],

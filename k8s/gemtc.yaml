@@ -4,7 +4,7 @@ metadata:
   name: gemtc
   namespace: drugis
 spec:
-  type: Service
+  type: NodePort
   ports:
     - port: 3002
   selector:
