@@ -5,14 +5,14 @@ rancher kubectl create secret generic gemtc-secrets \
   -n drugis \
   --from-literal=GEMTC_COOKIE_SECRET=GDFBDF#$%*asdfg098 \
   --from-literal=GEMTC_GOOGLE_SECRET=WFU_VvlxrsyNLVUDkkTVgvfQ \
+  --from-literal=GEMTC_DB_PASSWORD=develop \
   --from-literal=GEMTC_GOOGLE_KEY=290619536014-abnf3o5knc423o0n25939ql4ga0m0809.apps.googleusercontent.com
 
 rancher kubectl delete secret db-credentials -n drugis
 rancher kubectl create secret generic db-credentials \
   -n drugis \
   --from-literal=POSTGRES_PASSWORD=develop \
-  --from-literal=PATAVI_DB_PASSWORD=develop \
-  --from-literal=GEMTC_DB_PASSWORD=develop
+  --from-literal=PATAVI_DB_PASSWORD=develop 
 
 rancher kubectl delete configmap gemtc-settings -n drugis
 rancher kubectl create configmap gemtc-settings \
@@ -22,6 +22,7 @@ rancher kubectl create configmap gemtc-settings \
   --from-literal=GEMTC_DB=gemtc \
   --from-literal=GEMTC_HOST=https://gemtc.edge.molgenis.org \
   --from-literal=DB_HOST=postgres \
+  --from-literal=PATAVI_PORT=443 \
   --from-literal=PATAVI_HOST=patavi.edge.molgenis.org \
   --from-literal=SECURE_TRAFFIC=true
 
@@ -45,7 +46,7 @@ rancher kubectl create configmap patavi-settings \
   --from-literal=SECURE_TRAFFIC=true \
   --from-literal=PATAVI_PROXY_HOST=patavi.edge.molgenis.org 
 
-rancher kubectl apply -f postgres.yaml #not 100%, does not include pv and pv claim, those were done manually
+rancher kubectl apply -f postgres.yaml #not 100%, does not include pv (postgres volume) and pv claim, those were done manually
 rancher kubectl apply -f rabbitmq.yaml
 rancher kubectl apply -f patavi-server.yaml
 rancher kubectl apply -f patavi-db-init.yaml

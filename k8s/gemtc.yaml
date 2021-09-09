@@ -32,22 +32,22 @@ spec:
             - name: GEMTC_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: db-credentials
+                  name: gemtc-secrets
                   key: GEMTC_DB_PASSWORD
             - name: GEMTC_COOKIE_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: mcda-secrets
+                  name: gemtc-secrets
                   key: GEMTC_COOKIE_SECRET
             - name: GEMTC_GOOGLE_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: mcda-secrets
+                  name: gemtc-secrets
                   key: GEMTC_GOOGLE_SECRET
             - name: GEMTC_GOOGLE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: mcda-secrets
+                  name: gemtc-secrets
                   key: GEMTC_GOOGLE_KEY
             - name: PATAVI_API_KEY
               valueFrom:
@@ -56,7 +56,7 @@ spec:
                   key: PATAVI_API_KEY
           envFrom:
             - configMapRef:
-                name: mcda-settings
+                name: gemtc-settings
           ports:
-            - name: mcda
+            - name: gemtc
               containerPort: 3002
