@@ -1,4 +1,4 @@
-FROM phusion/baseimage:master
+FROM phusion/baseimage:18.04-1.0.0
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -13,7 +13,6 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt install -y nodejs git
 
 RUN npm install -g yarn
-RUN npm install -g forever
 
 RUN useradd --create-home --home /var/lib/gemtc gemtc
 
@@ -26,10 +25,10 @@ ENV HOME /var/lib/gemtc
 
 RUN yarn
 ARG MATOMO_VERSION
-RUN if [ "$MATOMO_VERSION" != "" ] ; then export MATOMO_VERSION=$MATOMO_VERSION ; else export MATOMO_VERSION='Test' ; fi
+RUN if [ "$MATOMO_VERSION" != "" ] ; then export MATOMO_VERSION=$MATOMO_VERSION ; else export MATOMO_VERSION='None' ; fi
 ARG WEBPACK_COMMAND
 RUN if [ "$WEBPACK_COMMAND" != ""  ] ; then npm run $WEBPACK_COMMAND ; else npm run build-prod ; fi
 
 EXPOSE 3001
 
-CMD ["forever", "gemtc.js"]
+CMD ["node", "gemtc.js"]
