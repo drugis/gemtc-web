@@ -94,7 +94,7 @@ jobs:
       - name: run GeMTC container on the server
         run: >
           ssh -o StrictHostKeyChecking=no deploy@gemtc-test.drugis.org \
-          "docker run -d --name gemtc \
+          "docker run -d --name=gemtc \
            -e GEMTC_GOOGLE_KEY=${{ secrets.googleKeyTest }} \
            -e GEMTC_GOOGLE_SECRET=${{ secrets.googleSecretTest }} \
            -e GEMTC_COOKIE_SECRET=${{ secrets.cookieSecretTest }} \
