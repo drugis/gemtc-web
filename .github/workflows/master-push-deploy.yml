@@ -94,7 +94,7 @@ jobs:
       - name: run GeMTC container on the server
         run: >
           ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org \
-          "docker run -d --name gemtc \
+          'docker run \
            -e GEMTC_GOOGLE_KEY=${{ secrets.googleKeyLive }} \
            -e GEMTC_GOOGLE_SECRET=${{ secrets.googleSecretLive }} \
            -e GEMTC_COOKIE_SECRET=${{ secrets.cookieSecretLive }} \
@@ -107,8 +107,8 @@ jobs:
            -e GEMTC_HOST=https://gemtc.drugis.org \   
            -e SECURE_TRAFFIC=true \
            -e PATAVI_API_KEY=${{ secrets.pataviApiKeyLive }} \
-           -p 3001:3001 \
-           addis/gemtc:live"
+           -d --name gemtc -p 3001:3001 \
+           addis/gemtc:live'
 
       # Without sleep, prune will remove the container.
       - name: Sleep for 60 seconds
