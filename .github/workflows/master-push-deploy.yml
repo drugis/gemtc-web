@@ -107,7 +107,7 @@ jobs:
            -e GEMTC_HOST=https://gemtc.drugis.org \   
            -e SECURE_TRAFFIC=true \
            -e PATAVI_API_KEY=${{ secrets.pataviApiKeyLive }} \
-           -d --name gemtc -p 3001:3001 \
+           -d --name=gemtc -p 3001:3001 \
            addis/gemtc:live'
 
       # Without sleep, prune will remove the container.
