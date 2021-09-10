@@ -26,7 +26,7 @@ ENV HOME /var/lib/gemtc
 
 RUN yarn
 ARG MATOMO_VERSION
-RUN if [ "$MATOMO_VERSION" != "" ] ; then export MATOMO_VERSION=$MATOMO_VERSION ; else export MATOMO_VERSION='Test' ; fi
+RUN if [ "$MATOMO_VERSION" != "" ] ; then export MATOMO_VERSION=$MATOMO_VERSION ; else export MATOMO_VERSION='None' ; fi
 ARG WEBPACK_COMMAND
 RUN if [ "$WEBPACK_COMMAND" != ""  ] ; then npm run $WEBPACK_COMMAND ; else npm run build-prod ; fi
 
