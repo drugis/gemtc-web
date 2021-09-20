@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gemtc-test
+  namespace: drugis-test
+spec:
+  type: NodePort
+  ports:
+    - port: 3002
+  selector:
+    app: gemtc-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gemtc-test
+  namespace: drugis-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gemtc-test
+  template:
+    metadata:
+      labels:
+        app: gemtc-test
+    spec:
+      containers:
+        - name: gemtc-test
+          image: addis/gemtc:k8s
+          env:
+            - name: GEMTC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gemtc-test-secrets
+                  key: GEMTC_DB_PASSWORD
+            - name: GEMTC_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: gemtc-test-secrets
+                  key: GEMTC_COOKIE_SECRET
+            - name: GEMTC_GOOGLE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: gemtc-test-secrets
+                  key: GEMTC_GOOGLE_SECRET
+            - name: GEMTC_GOOGLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gemtc-test-secrets
+                  key: GEMTC_GOOGLE_KEY
+            - name: PATAVI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: passwords
+                  key: PATAVI_API_KEY
+          envFrom:
+            - configMapRef:
+                name: gemtc-test-settings
+          ports:
+            - name: gemtc-test
+              containerPort: 3002

@@ -31,7 +31,7 @@ spec:
       volumeMounts:
         - name: patavi-data
           mountPath: /patavi-data
-    - name: create-patavi-user-and-db
+    - name: create-patavi-user
       image: postgres:10.8
       env:
         - name: PGUSER
@@ -48,7 +48,20 @@ spec:
               key: PATAVI_DB_PASSWORD
       command: ['sh', '-c']
       args:
-        - psql -h postgres -c "CREATE USER patavi WITH PASSWORD '$(PATAVI_DB_PASSWORD)'" -c "CREATE database patavi encoding 'utf-8'"
+        - psql -h postgres -c "DO \$\$ BEGIN CREATE ROLE patavi LOGIN PASSWORD '$(MCDAWEB_DB_PASSWORD)'; EXCEPTION WHEN DUPLICATE_OBJECT THEN RAISE NOTICE 'not creating role patavi -- it already exists'; END \$\$"
+    - name: create-patavi-db
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_PASSWORD
+      command: ['sh', '-c']
+      args:
+        - psql -h postgres -c "SELECT 1 FROM pg_database WHERE datname = 'patavi'" | grep -q 1 || psql -h postgres -c "CREATE DATABASE patavi"
   containers:
     - name: update-schema
       image: postgres:10.8

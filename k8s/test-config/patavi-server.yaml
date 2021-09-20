@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: patavi-server
+  namespace: drugis-test
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+  selector:
+    app: patavi-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patavi-server
+  namespace: drugis-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: patavi-server
+  template:
+    metadata:
+      labels:
+        app: patavi-server
+    spec:
+      containers:
+        - name: patavi-server
+          image: addis/patavi:secure6
+          envFrom:
+            - configMapRef:
+                name: patavi-settings
+          env:
+            - name: PATAVI_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: PATAVI_DB_PASSWORD
+            - name: PATAVI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: passwords
+                  key: PATAVI_API_KEY
+          ports:
+            - name: patavi-server
+              containerPort: 3000

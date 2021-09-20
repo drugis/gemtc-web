@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patavi-smaa-worker
+  namespace: drugis-test
+  labels:
+    app: patavi-smaa-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: patavi-smaa-worker
+  template:
+    metadata:
+      labels:
+        app: patavi-smaa-worker
+    spec:
+      containers:
+        - name: patavi-smaa-worker
+          image: 'addis/patavi-smaa-worker'
+          envFrom:
+            - configMapRef:
+                name: patavi-settings
+          env:
+            - name: PATAVI_BROKER_HOST
+              value: 'rabbitmq'

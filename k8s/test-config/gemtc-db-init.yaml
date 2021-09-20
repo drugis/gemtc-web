@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: gemtc-db-init
-  namespace: drugis
+  namespace: drugis-test
   labels:
     app: gemtc-db-init
 spec:
@@ -26,12 +26,12 @@ spec:
         [
           'sh',
           '-c',
-          'wget -O /schema-data/gemtc-schema.sql https://raw.githubusercontent.com/drugis/gemtc-web/master/liquibase/liquibase-changelog.sql'
+          'wget -O /schema-data/gemtc-schema.sql https://raw.githubusercontent.com/drugis/gemtc-web/develop/liquibase/liquibase-changelog.sql'
         ]
       volumeMounts:
         - name: schema-data
           mountPath: /schema-data
-    - name: create-gemtc-user
+    - name: create-gemtc-test-user
       image: postgres:10.8
       env:
         - name: PGUSER
@@ -44,24 +44,38 @@ spec:
         - name: GEMTC_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: gemtc-secrets
+              name: gemtc-test-secrets
               key: GEMTC_DB_PASSWORD
       command: ['sh', '-c']
       args:
-        - psql -h postgres -c  "CREATE USER gemtc WITH PASSWORD '$(GEMTC_DB_PASSWORD)'" -c  "CREATE database gemtc encoding 'utf-8'"
+        - psql -h postgres -c  "DO \$\$ BEGIN CREATE ROLE gemtctest LOGIN PASSWORD '$(GEMTC_DB_PASSWORD)'; EXCEPTION WHEN DUPLICATE_OBJECT THEN RAISE NOTICE 'not creating role gemtctest -- it already exists'; END \$\$"
+    - name: create-gemtc-database
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_PASSWORD
+
+      command: ['sh', '-c']
+      args:
+        - psql -h postgres -c "SELECT 1 FROM pg_database WHERE datname = 'gemtctest'" | grep -q 1 || psql -h postgres -c "CREATE DATABASE gemtctest"
   restartPolicy: Never
   containers:
     - name: run-liquibase
       image: webdevops/liquibase:postgres
       env:
         - name: LIQUIBASE_URL
-          value: 'jdbc:postgresql://postgres:5432/gemtc'
+          value: 'jdbc:postgresql://postgres:5432/gemtctest'
         - name: LIQUIBASE_USERNAME
-          value: 'gemtc'
+          value: 'gemtctest'
         - name: LIQUIBASE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: gemtc-secrets
+              name: gemtc-test-secrets
               key: GEMTC_DB_PASSWORD
         - name: LIQUIBASE_CHANGELOG
           value: '/schema-data/gemtc-schema.sql'

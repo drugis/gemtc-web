@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: patavi-db-init
+  namespace: drugis-test
+  labels:
+    app: patavi-db-init
+spec:
+  initContainers:
+    - name: wait-for-db
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_PASSWORD
+      command: ['sh', '-c']
+      args:
+        - until psql -h postgres -c  "select version();"; do echo waiting for postgres; sleep 2; done;
+    - name: get-patavi-schema
+      image: busybox:1.28
+      command:
+        [
+          'sh',
+          '-c',
+          'wget -O /patavi-data/patavi-schema.sql https://raw.githubusercontent.com/drugis/patavi/master/server/schema.sql'
+        ]
+      volumeMounts:
+        - name: patavi-data
+          mountPath: /patavi-data
+    - name: create-patavi-user
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_PASSWORD
+        - name: PATAVI_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PATAVI_DB_PASSWORD
+      command: ['sh', '-c']
+      args:
+        - psql -h postgres -c "DO \$\$ BEGIN CREATE ROLE patavi LOGIN PASSWORD '$(PATAVI_DB_PASSWORD)'; EXCEPTION WHEN DUPLICATE_OBJECT THEN RAISE NOTICE 'not creating role patavi -- it already exists'; END \$\$"
+    - name: create-patavi-db
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_PASSWORD
+      command: ['sh', '-c']
+      args:
+        - psql -h postgres -c "SELECT 1 FROM pg_database WHERE datname = 'patavi'" | grep -q 1 || psql -h postgres -c "CREATE DATABASE patavi"
+  containers:
+    - name: update-schema
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: patavi
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PATAVI_DB_PASSWORD
+      command:
+        ['sh', '-c', 'psql -h postgres -f /patavi-data/patavi-schema.sql']
+      volumeMounts:
+        - name: patavi-data
+          mountPath: /patavi-data
+  restartPolicy: Never
+  volumes:
+    - name: patavi-data
+      emptyDir: {}

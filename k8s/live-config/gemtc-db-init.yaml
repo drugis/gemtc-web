@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gemtc-db-init
+  namespace: drugis
+  labels:
+    app: gemtc-db-init
+spec:
+  initContainers:
+    - name: wait-for-db
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_PASSWORD
+      command: ['sh', '-c']
+      args:
+        - until psql -h postgres -c  "select version();"; do echo waiting for postgres; sleep 2; done;
+    - name: get-gemtc-schema
+      image: busybox:1.28
+      command:
+        [
+          'sh',
+          '-c',
+          'wget -O /schema-data/gemtc-schema.sql https://raw.githubusercontent.com/drugis/gemtc-web/master/liquibase/liquibase-changelog.sql'
+        ]
+      volumeMounts:
+        - name: schema-data
+          mountPath: /schema-data
+    - name: create-gemtc-user
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_PASSWORD
+        - name: GEMTC_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gemtc-secrets
+              key: GEMTC_DB_PASSWORD
+      command: ['sh', '-c']
+      args:
+        - psql -h postgres -c  "DO \$\$ BEGIN CREATE ROLE gemtc LOGIN PASSWORD '$(GEMTC_DB_PASSWORD)'; EXCEPTION WHEN DUPLICATE_OBJECT THEN RAISE NOTICE 'not creating role gemtc -- it already exists'; END \$\$"
+    - name: create-gemtc-database
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_PASSWORD
+
+      command: ['sh', '-c']
+      args:
+        - psql -h postgres -c "SELECT 1 FROM pg_database WHERE datname = 'gemtc'" | grep -q 1 || psql -h postgres -c "CREATE DATABASE gemtc"
+  restartPolicy: Never
+  containers:
+    - name: run-liquibase
+      image: webdevops/liquibase:postgres
+      env:
+        - name: LIQUIBASE_URL
+          value: 'jdbc:postgresql://postgres:5432/gemtc'
+        - name: LIQUIBASE_USERNAME
+          value: 'gemtc'
+        - name: LIQUIBASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gemtc-secrets
+              key: GEMTC_DB_PASSWORD
+        - name: LIQUIBASE_CHANGELOG
+          value: '/schema-data/gemtc-schema.sql'
+      args:
+        - 'update'
+      volumeMounts:
+        - name: schema-data
+          mountPath: /schema-data
+  volumes:
+    - name: schema-data
+      emptyDir: {}

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patavi-gemtc-worker
+  namespace: drugis-test
+  labels:
+    app: patavi-gemtc-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: patavi-gemtc-worker
+  template:
+    metadata:
+      labels:
+        app: patavi-gemtc-worker
+    spec:
+      containers:
+        - name: patavi-gemtc-worker
+          image: 'addis/patavi-gemtc-worker'
+          envFrom:
+            - configMapRef:
+                name: patavi-settings
+          env:
+            - name: PATAVI_BROKER_HOST
+              value: 'rabbitmq'
