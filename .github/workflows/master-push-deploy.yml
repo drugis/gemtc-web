@@ -73,8 +73,6 @@ jobs:
       - name: update database
         run: |
           cd liquibase
-          rm liquibase-changelog.sql
-          for i in ../changesets/create-database-changeset-*.sql; do cat $i >> liquibase-changelog.sql; done
           docker run --rm -v $(pwd):/liquibase/ --network host \
            -e "LIQUIBASE_URL=jdbc:postgresql://psql.drugis.org:5432/gemtc" \
            -e "LIQUIBASE_USERNAME=gemtc" \
