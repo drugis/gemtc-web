@@ -40,11 +40,11 @@ jobs:
       - name: docker login
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
-      - name: build patavi docker image
-        run: docker build --tag addis/patavi-gemtc-worker:live R/
+      # - name: build patavi docker image
+      #   run: docker build --tag addis/patavi-gemtc-worker:live R/
 
-      - name: docker push patavi
-        run: docker push addis/patavi-gemtc-worker:live
+      # - name: docker push patavi
+      #   run: docker push addis/patavi-gemtc-worker:live
 
       - name: build docker image
         run: ./build-docker.sh GOOGLE Live live
@@ -55,14 +55,14 @@ jobs:
       - name: pull image on server
         run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker pull addis/gemtc:live'
 
-      - name: pull Patavi image on server
-        run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker pull addis/patavi-gemtc-worker:live'
+      # - name: pull Patavi image on server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker pull addis/patavi-gemtc-worker:live'
 
-      - name: stop Patavi docker container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker stop amqp-gemtc-multipart || true'
+      # - name: stop Patavi docker container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker stop amqp-gemtc-multipart || true'
 
-      - name: delete Patavi docker container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker rm amqp-gemtc-multipart || true'
+      # - name: delete Patavi docker container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker rm amqp-gemtc-multipart || true'
 
       - name: stop GeMTC docker container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker stop gemtc || true'
@@ -80,15 +80,15 @@ jobs:
            -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
            webdevops/liquibase:postgres update
 
-      - name: run patavi worker container on the server
-        run: >
-          ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org \
-          "docker run -d --link rabbit:rabbit \
-           -e PATAVI_BROKER_HOST=rabbit \
-           -e PATAVI_BROKER_USER=admin \
-           -e PATAVI_BROKER_PASSWORD=${{ secrets.pataviLiveBrokerPassword }} \
-           --name amqp-gemtc-multipart \
-           addis/patavi-gemtc-worker:live"
+      # - name: run patavi worker container on the server
+      #   run: >
+      #     ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org \
+      #     "docker run -d --link rabbit:rabbit \
+      #      -e PATAVI_BROKER_HOST=rabbit \
+      #      -e PATAVI_BROKER_USER=admin \
+      #      -e PATAVI_BROKER_PASSWORD=${{ secrets.pataviLiveBrokerPassword }} \
+      #      --name amqp-gemtc-multipart \
+      #      addis/patavi-gemtc-worker:live"
 
       - name: run GeMTC container on the server
         run: >
@@ -102,11 +102,11 @@ jobs:
            -e GEMTC_DB_HOST=psql.drugis.org \
            -e GEMTC_DB_USERNAME=gemtc \
            -e GEMTC_DB_PASSWORD=${{ secrets.gemtcLiveDbPassword }} \
-           -e PATAVI_HOST=patavi.drugis.org \
+           -e PATAVI_HOST=patavi.dev.molgenis.org \
            -e PATAVI_PORT=443 \
            -e GEMTC_HOST=https://gemtc.drugis.org \
            -e SECURE_TRAFFIC=true \
-           -e PATAVI_API_KEY=${{ secrets.pataviApiKeyLive }} \
+           -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} \
            -d --name=gemtc -p 3001:3001 \
            addis/gemtc:live'
 
@@ -117,8 +117,8 @@ jobs:
       - name: prune docker on GeMTC server
         run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker system prune -f'
 
-      - name: prune docker on the patavi server
-        run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker system prune -f'
+      # - name: prune docker on the patavi server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker system prune -f'
 
       - name: docker registry garbage collection
         run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
