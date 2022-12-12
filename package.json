@@ -5,7 +5,7 @@
   "main": "gemtc.js",
   "scripts": {
     "start": "node gemtc",
-    "test": "mocha && karma start --singleRun=true",
+    "test": "set GEMTC_HOST=http://localhost && mocha && karma start --singleRun=true",
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
     "build-local-login": "webpack --config webpack.local.js",
