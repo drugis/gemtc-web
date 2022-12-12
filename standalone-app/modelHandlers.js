@@ -23,7 +23,8 @@ function find(request, response, next) {
 
     var { modelsWithTask, modelsWithoutTask } = modelService.partitionModels(modelsResult);
     if (modelsWithTask.length) {
-      var taskUrls = _.map(modelsWithTask, 'taskUrl');
+      const protocol = process.env.GEMTC_HOST.split('://')[0] + '://';
+      var taskUrls = _.map(modelsWithTask, (model) => protocol + model.taskUrl.split('://')[1]);
       pataviTaskRepository.getPataviTasksStatus(taskUrls, function(error, pataviResult) {
         if (error) {
           errorCallback(next, error);
