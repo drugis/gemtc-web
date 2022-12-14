@@ -6,6 +6,7 @@ const http = require('http');
 const async = require('async');
 const {URL} = require('url');
 const httpStatus = require('http-status-codes');
+const fixProtocol = require('./util').fixProtocol;
 
 module.exports = {
   getResult,
@@ -99,7 +100,7 @@ function create(problem, params, callback) {
       res.statusCode === httpStatus.StatusCodes.CREATED &&
       res.headers.location
     ) {
-      callback(null, res.headers.location);
+      callback(null, fixProtocol(res.headers.location));
     } else {
       callback('Error queueing task: server returned code ' + res.statusCode);
     }

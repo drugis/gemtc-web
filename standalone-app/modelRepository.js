@@ -2,6 +2,7 @@
 var logger = require('./logger');
 var dbUtil = require('./dbUtil');
 var _ = require('lodash');
+const { fixProtocol } = require('./util');
 var db = require('./db')(dbUtil.connectionConfig);
 var columnString = 'title, analysisId, linearModel,' +
   ' burn_in_iterations, inference_iterations, ' +
@@ -15,7 +16,7 @@ function mapModelRow(modelRow) {
     title: modelRow.title,
     linearModel: modelRow.linearmodel,
     analysisId: modelRow.analysisid,
-    taskUrl: modelRow.taskurl,
+    taskUrl: fixProtocol(modelRow.taskurl),
     modelType: modelRow.modeltype,
     burnInIterations: modelRow.burn_in_iterations,
     inferenceIterations: modelRow.inference_iterations,
@@ -35,6 +36,7 @@ function mapModelRow(modelRow) {
 
   return model;
 }
+
 
 function findByAnalysis(analysisId, callback) {
   logger.debug('modelRepository.findByAnalysis, where analysisId = ' + analysisId);
