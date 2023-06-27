@@ -23,7 +23,7 @@ function find(request, response, next) {
 
     var { modelsWithTask, modelsWithoutTask } = modelService.partitionModels(modelsResult);
     if (modelsWithTask.length) {
-      var taskUrls = _.map(modelsWithTask, 'taskUrl');
+      const taskUrls = _.map(modelsWithTask, 'taskUrl');
       pataviTaskRepository.getPataviTasksStatus(taskUrls, function(error, pataviResult) {
         if (error) {
           errorCallback(next, error);

@@ -23,10 +23,10 @@ function partitionModels(models) {
 }
 
 function decorateWithRunStatus(models, pataviResult) {
-  var tasks = _.keyBy(pataviResult, 'id');
+  var tasks = _.keyBy(pataviResult, (result) => _.last(result.id.split('/')));
   return _.map(models, function(model) {
     return _.extend(model, {
-      runStatus: tasks[model.taskUrl].runStatus
+      runStatus: tasks[_.last(model.taskUrl.split('/'))].runStatus
     });
   });
 }

@@ -78,7 +78,7 @@ describe('the model service', function() {
 
     describe('decorateWithRunStatus', function() {
       it('should append a runStatus parameter to the models', function() {
-        var taskUrl = 'taskUrl';
+        var taskUrl = 'http://host.com/taskUrl';
         var runStatus = 'runStatus';
         var models = [{
           taskUrl: taskUrl

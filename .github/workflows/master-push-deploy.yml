@@ -10,22 +10,19 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['12']
-        os: [ubuntu-20.04]
+        node-version: ['18']
+        os: [ubuntu-22.04]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: webfactory/ssh-agent@v0.4.1
-        with:
-          ssh-private-key: ${{ secrets.deployPrivateKey }}
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
@@ -37,91 +34,85 @@ jobs:
         id: tests
         run: yarn test
 
-      - name: docker login
-        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
-
-      # - name: build patavi docker image
-      #   run: docker build --tag addis/patavi-gemtc-worker:live R/
-
-      # - name: docker push patavi
-      #   run: docker push addis/patavi-gemtc-worker:live
+      - name: build patavi docker image
+        run: docker build --tag addis/patavi-gemtc-worker:live R/
 
       - name: build docker image
         run: ./build-docker.sh GOOGLE Live live
 
+      - name: docker login
+        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
+
+      - name: docker push patavi
+        run: docker push addis/patavi-gemtc-worker:live
+
       - name: docker push
         run: docker push addis/gemtc:live
 
-      - name: pull image on server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker pull addis/gemtc:live'
-
-      # - name: pull Patavi image on server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker pull addis/patavi-gemtc-worker:live'
-
-      # - name: stop Patavi docker container on the server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker stop amqp-gemtc-multipart || true'
-
-      # - name: delete Patavi docker container on the server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker rm amqp-gemtc-multipart || true'
-
-      - name: stop GeMTC docker container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker stop gemtc || true'
-
-      - name: remove GeMTC container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker rm gemtc || true'
-
-      - name: update database
+      - name: Configure SSH
         run: |
-          cd liquibase
-          docker run --rm -v $(pwd):/liquibase/ --network host \
-           -e "LIQUIBASE_URL=jdbc:postgresql://psql.drugis.org:5432/gemtc" \
-           -e "LIQUIBASE_USERNAME=gemtc" \
-           -e "LIQUIBASE_PASSWORD=${{ secrets.gemtcLiveDbPassword }}" \
-           -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
-           webdevops/liquibase:postgres update
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519.key
+          chmod 600 ~/.ssh/id_ed25519.key
+          cat >>~/.ssh/config <<END
+          Host jumphost
+            HostName $SSH_JUMP_HOST
+            User $SSH_JUMP_USER
+            IdentityFile ~/.ssh/id_ed25519.key
+            StrictHostKeyChecking no
+          Host internalserver
+            HostName $SSH_INTERNAL_HOST
+            User $SSH_INTERNAL_USER  
+            IdentityFile ~/.ssh/id_ed25519.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_JUMP_USER: ${{ secrets.liveJumpHostUser }}
+          SSH_KEY: ${{ secrets.deployPrivateKey }}
+          SSH_JUMP_HOST: ${{ secrets.liveJumpHost }}
+          SSH_INTERNAL_HOST: ${{ secrets.liveInternalServer }}
+          SSH_INTERNAL_USER: ${{ secrets.liveInternalUser }}
 
-      # - name: run patavi worker container on the server
-      #   run: >
-      #     ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org \
-      #     "docker run -d --link rabbit:rabbit \
-      #      -e PATAVI_BROKER_HOST=rabbit \
-      #      -e PATAVI_BROKER_USER=admin \
-      #      -e PATAVI_BROKER_PASSWORD=${{ secrets.pataviLiveBrokerPassword }} \
-      #      --name amqp-gemtc-multipart \
-      #      addis/patavi-gemtc-worker:live"
+      - name: pull latest from github on the server
+        run: ssh -J jumphost internalserver 'cd git/gemtc-web && git checkout master && git pull'
 
-      - name: run GeMTC container on the server
+      - name: pull image on server
+        run: ssh -J jumphost internalserver 'podman pull addis/gemtc:live'
+
+      - name: remove service on the server
         run: >
-          ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org \
-          'docker run \
-           -e GEMTC_GOOGLE_KEY=${{ secrets.googleKeyLive }} \
-           -e GEMTC_GOOGLE_SECRET=${{ secrets.googleSecretLive }} \
-           -e GEMTC_COOKIE_SECRET=${{ secrets.cookieSecretLive }} \
-           -e DB_HOST=psql.drugis.org \
-           -e GEMTC_DB=gemtc \
-           -e GEMTC_DB_HOST=psql.drugis.org \
-           -e GEMTC_DB_USERNAME=gemtc \
-           -e GEMTC_DB_PASSWORD=${{ secrets.gemtcLiveDbPassword }} \
-           -e PATAVI_HOST=patavi.dev.molgenis.org \
-           -e PATAVI_PORT=443 \
-           -e GEMTC_HOST=https://gemtc.drugis.org \
-           -e SECURE_TRAFFIC=true \
-           -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} \
-           -d --name=gemtc -p 3001:3001 \
-           addis/gemtc:live'
+          ssh -J jumphost internalserver \
+          "if  systemctl list-unit-files | grep gemtc
+            then
+            systemctl stop gemtc
+            systemctl disable gemtc
+            rm -f /etc/systemd/system/gemtc.service
+            systemctl daemon-reload
+            fi"
 
-      # Without sleep, prune will remove the container.
-      - name: Sleep for 60 seconds
-        run: sleep 60
+      - name: remove container on the server
+        run: ssh -J jumphost internalserver "podman rm -f gemtc || true"
 
-      - name: prune docker on GeMTC server
-        run: ssh -o StrictHostKeyChecking=no deploy@gemtc.drugis.org 'docker system prune -f'
+      - name: run liquibase
+        run: ssh -J jumphost internalserver './run-gemtc-liquibase.sh'
 
-      # - name: prune docker on the patavi server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@patavi.drugis.org 'docker system prune -f'
+      - name: run gemtc container on the server
+        run: ssh -J jumphost internalserver './run-gemtc.sh'
 
-      - name: docker registry garbage collection
-        run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
+      - name: generate gemtc system service file
+        run: >
+          ssh -J jumphost internalserver \
+          'podman generate systemd --name gemtc > /etc/systemd/system/gemtc.service'
+
+      - name: stop gemtc container
+        run: ssh -J jumphost internalserver 'podman stop gemtc'
+
+      - name: start gemtc service
+        run: >
+          ssh -J jumphost internalserver \
+          "systemctl daemon-reload && \
+            systemctl enable gemtc && \
+            systemctl start gemtc"
 
       - name: notify on slack channel on failure
         if: failure()

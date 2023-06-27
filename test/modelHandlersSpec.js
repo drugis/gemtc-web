@@ -51,7 +51,7 @@ describe('the model handlers', function() {
       };
       var next = chai.spy();
       var runStatus = 'done';
-      var taskUrl = 'url';
+      var taskUrl = 'http://url';
       var expectedModelArray = [{
         taskUrl: taskUrl,
         runStatus: runStatus

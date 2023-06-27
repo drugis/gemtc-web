@@ -60,6 +60,7 @@ describe('the patavi task repository', function () {
       pataviTaskRepository.getResult('http://123.com', callback);
     });
   });
+
   describe('getPataviTasksStatus', function () {
     it('should get the task status for the given uris', function (done) {
       var url1 = 'http://url1.com',
@@ -94,19 +95,20 @@ describe('the patavi task repository', function () {
       pataviTaskRepository.getPataviTasksStatus(urls, expectationsCallback);
     });
   });
+
   describe('create', function () {
     it('should post the problem to patavi, and return the task url from the response location', function (done) {
       var problem = {};
       var checkResponseAndCleanup = function (error, createdurl) {
         chaiExpect(error).to.equal(null);
-        chaiExpect(createdurl).to.equal('createdUrl');
+        chaiExpect(createdurl).to.equal('http://host.com/createdUrl');
         httpsStub.request.restore();
         done();
       };
       var response = {
         statusCode: 201,
         headers: {
-          location: 'createdUrl'
+          location: 'http://host.com/createdUrl'
         }
       };
       sinon
