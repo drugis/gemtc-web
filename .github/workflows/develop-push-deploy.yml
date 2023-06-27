@@ -37,14 +37,14 @@ jobs:
       - name: build patavi docker image
         run: docker build --tag addis/patavi-gemtc-worker:test R/
 
+      - name: build docker image
+        run: ./build-docker.sh GOOGLE Test test
+
       - name: docker login
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
       - name: docker push patavi
         run: docker push addis/patavi-gemtc-worker:test
-
-      - name: build docker image
-        run: ./build-docker.sh GOOGLE Test test
 
       - name: docker push
         run: docker push addis/gemtc:test
