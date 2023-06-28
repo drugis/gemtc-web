@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/drugis/gemtc-web",
   "dependencies": {
-    "async": "~3.2.0",
+    "async": "~3.2.2",
     "connect-pg-simple": "~6.2.1",
     "cookie-parser": "~1.4.5",
     "csurf": "~1.11.0",
